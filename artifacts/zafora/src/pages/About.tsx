@@ -49,10 +49,10 @@ const VALUES = [
 ];
 
 const STATS = [
-  { value: "12+", label: "African Countries Active" },
-  { value: "$2.4B+", label: "Project Value Advised" },
-  { value: "6", label: "Infrastructure Sectors" },
-  { value: "95%", label: "Client Retention Rate" },
+  { value: "2025", label: "Founded — Tampa, FL, USA" },
+  { value: "5+", label: "Global Market Regions" },
+  { value: "6", label: "Core Focus Areas" },
+  { value: "Global", label: "Strategic Partnerships" },
 ];
 
 const TEAM = [
@@ -100,12 +100,10 @@ const SECTORS = [
 ];
 
 const MILESTONES = [
-  { year: "2014", event: "Zafora Holding incorporated in Accra, Ghana, focused on public infrastructure advisory." },
-  { year: "2016", event: "First cross-border project: $180M transport corridor advisory spanning Ghana and Côte d'Ivoire." },
-  { year: "2018", event: "Established Government Review Center methodology, formalising compliance and bankability standards." },
-  { year: "2020", event: "Expanded into East Africa; advised on $450M water access programme in Kenya and Tanzania." },
-  { year: "2022", event: "Launched digital infrastructure practice. Portfolio exceeds $1.5B in total advised project value." },
-  { year: "2024", event: "Active pipeline of 6 flagship projects spanning energy, healthcare, and smart infrastructure." },
+  { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
+  { year: "Mid 2025", event: "Initiated relationship-building efforts and market research focused on infrastructure, technology, and development opportunities across Africa, the Caribbean, and emerging international markets. Expanded focus toward infrastructure intelligence, smart development, and strategic consulting." },
+  { year: "Late 2025", event: "Began developing strategic initiatives involving infrastructure visibility systems, smart operational ecosystems, technology-enabled development strategies, and international business partnerships." },
+  { year: "2026", event: "Continuing to build strategic relationships and positioning for international opportunities involving infrastructure, technology, consulting, operational transformation, and global development initiatives across emerging and established markets." },
 ];
 
 export default function About() {
@@ -123,10 +121,10 @@ export default function About() {
                 About Zafora Holding
               </motion.div>
               <motion.h1 {...fade(0.1)} className="text-5xl md:text-6xl font-bold tracking-tight text-[#10231f] leading-[1.08] mb-6">
-                Africa's infrastructure bridge — from vision to reality.
+                Bridging global opportunities through infrastructure intelligence.
               </motion.h1>
               <motion.p {...fade(0.2)} className="text-xl text-[#65736f] leading-relaxed mb-10 max-w-xl">
-                Zafora Holding is a pan-African infrastructure advisory and project development firm that connects sovereign governments, institutional investors, and world-class contractors to build the continent's future.
+                Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.
               </motion.p>
               <motion.div {...fade(0.3)} className="flex flex-wrap gap-4">
                 <Link href="/submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#173f35] text-white font-semibold hover:bg-[#245d4e] transition-all shadow-md">
@@ -166,10 +164,10 @@ export default function About() {
 
               <div className="mt-10 grid grid-cols-2 gap-4 relative z-10">
                 {[
-                  { label: "Founded", value: "2014" },
-                  { label: "Headquarters", value: "Accra, Ghana" },
-                  { label: "Team Size", value: "45+ professionals" },
-                  { label: "Languages", value: "English, French, Arabic" },
+                  { label: "Founded", value: "January 2025" },
+                  { label: "Headquarters", value: "Tampa, FL, USA" },
+                  { label: "Contact", value: "Office@zaforaholding.com" },
+                  { label: "Markets", value: "Africa · Americas · Caribbean" },
                 ].map((item, i) => (
                   <div key={i} className="bg-white/10 rounded-xl p-4">
                     <div className="text-white/50 text-xs mb-0.5">{item.label}</div>
@@ -185,26 +183,26 @@ export default function About() {
                 <Users className="h-3.5 w-3.5" /> Who We Are
               </motion.div>
               <motion.h2 {...fade(0.1)} className="text-4xl font-bold text-[#10231f] mb-6 leading-tight">
-                A firm built for Africa's infrastructure moment.
+                A company built for global infrastructure opportunities.
               </motion.h2>
               <motion.div {...fade(0.15)} className="space-y-4 text-[#65736f] leading-relaxed text-lg">
                 <p>
-                  Founded in 2014 and headquartered in Accra, Ghana, Zafora Holding brings together experts in project finance, government relations, engineering procurement, and institutional investment to deliver critical infrastructure across the continent.
+                  Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built with a vision to bridge global opportunities through infrastructure intelligence, strategic partnerships, technology-driven solutions, and international business development.
                 </p>
                 <p>
-                  We operate at the intersection of public policy and private capital — understanding the political constraints governments face, the risk requirements investors demand, and the execution realities contractors navigate.
+                  We support public and private sector initiatives by connecting innovation, operational strategy, and scalable development opportunities across emerging and developed markets.
                 </p>
                 <p>
-                  Our team of 45+ professionals spans 12 African countries, providing both regional depth and continental reach that few advisory firms can match.
+                  Our organization is built around the belief that the future of infrastructure, technology, logistics, energy, communications, and smart development requires trusted partnerships, transparency, strategic execution, and long-term vision.
                 </p>
               </motion.div>
 
               <motion.div {...fade(0.25)} className="mt-8 space-y-3">
                 {[
-                  "Project structuring that satisfies multilateral standards",
-                  "Government-to-investor translation at every stage",
-                  "On-the-ground presence across 12 countries",
-                  "End-to-end advisory: feasibility to commissioning",
+                  "Strategic infrastructure development & modernization",
+                  "Government & enterprise operational solutions",
+                  "International partnerships across global markets",
+                  "Technology-enabled development strategies",
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-[#173f35] shrink-0 mt-0.5" />
@@ -225,7 +223,7 @@ export default function About() {
               <Eye className="h-3.5 w-3.5" /> Purpose & Direction
             </div>
             <h2 className="text-4xl font-bold text-[#10231f] mb-4">Mission, Vision & Purpose</h2>
-            <p className="text-[#65736f] text-lg">Everything we do flows from a single conviction: Africa's infrastructure future cannot wait.</p>
+            <p className="text-[#65736f] text-lg">Everything we do flows from a single conviction: infrastructure development must be driven by trust, innovation, and execution excellence.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -235,21 +233,21 @@ export default function About() {
                 icon: <Target className="h-7 w-7" />,
                 color: "border-t-[#173f35]",
                 bg: "bg-white",
-                text: "To structure, fund, and deliver transformative infrastructure projects across Africa by bridging the gap between visionary governments, strategic investors, and world-class contractors.",
+                text: "To create strategic global partnerships and deliver innovative infrastructure, technology, and development solutions that drive sustainable growth, operational efficiency, and long-term economic impact.",
               },
               {
                 label: "Our Vision",
                 icon: <Eye className="h-7 w-7" />,
                 color: "border-t-[#c59b4a]",
                 bg: "bg-[#173f35] text-white",
-                text: "An Africa where every citizen has access to modern, reliable infrastructure — and where no viable project fails simply for lack of a capable advisor at the table.",
+                text: "To become a globally recognized infrastructure and strategic solutions company that bridges international opportunities, emerging technologies, and large-scale development initiatives through trust, innovation, and execution excellence.",
               },
               {
                 label: "Our Purpose",
                 icon: <Globe className="h-7 w-7" />,
                 color: "border-t-[#10231f]",
                 bg: "bg-white",
-                text: "To prove that African infrastructure development can be transparent, bankable, and community-positive — creating a template for responsible development at scale.",
+                text: "To demonstrate that infrastructure development — across any market — can be transparent, scalable, and community-positive, creating a trusted template for responsible global development.",
               },
             ].map((card, i) => (
               <motion.div key={i} {...fade(i * 0.1)} className={`rounded-2xl border-t-4 ${card.color} ${card.bg} p-8 shadow-sm border border-[#e5ded3]`}>
@@ -325,8 +323,8 @@ export default function About() {
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <TrendingUp className="h-3.5 w-3.5" /> Our Journey
             </div>
-            <h2 className="text-4xl font-bold text-[#10231f] mb-4">A decade of infrastructure impact</h2>
-            <p className="text-[#65736f] text-lg">From a single advisory mandate to a continent-wide practice.</p>
+            <h2 className="text-4xl font-bold text-[#10231f] mb-4">Building a Global Vision</h2>
+            <p className="text-[#65736f] text-lg">From a bold founding vision to strategic global positioning.</p>
           </motion.div>
 
           <div className="relative max-w-3xl mx-auto">
@@ -338,7 +336,7 @@ export default function About() {
                 <motion.div key={i} {...fade(i * 0.08)} className="flex gap-8 items-start">
                   <div className="w-[104px] shrink-0 flex flex-col items-center">
                     <div className="w-10 h-10 rounded-full bg-[#173f35] text-white flex items-center justify-center text-xs font-bold z-10 shrink-0">
-                      {m.year.slice(2)}
+                      {m.year.slice(-2)}
                     </div>
                     <div className="text-sm font-bold text-[#173f35] mt-1">{m.year}</div>
                   </div>
@@ -357,7 +355,7 @@ export default function About() {
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fade(0)} className="text-center max-w-xl mx-auto mb-12">
             <h2 className="text-3xl font-bold text-[#10231f] mb-3">Sectors we operate in</h2>
-            <p className="text-[#65736f]">Our practice covers the full breadth of African infrastructure needs.</p>
+            <p className="text-[#65736f]">Our practice spans critical infrastructure development across global markets.</p>
           </motion.div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-4 max-w-3xl mx-auto">
             {SECTORS.map((s, i) => (

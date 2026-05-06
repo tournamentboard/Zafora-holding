@@ -78,7 +78,7 @@ export default function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#173f35] opacity-60"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#173f35]"></span>
                 </span>
-                Pan-African Infrastructure Advisory · Est. 2014
+                Strategic Infrastructure &amp; Consulting · Est. 2025
               </motion.div>
 
               <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-7">

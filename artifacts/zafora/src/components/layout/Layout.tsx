@@ -45,14 +45,14 @@ export default function Layout({ children }: { children: ReactNode }) {
                 style={{ filter: "brightness(0) invert(1)" }}
               />
               <p className="text-white/55 text-sm leading-relaxed mb-6">
-                Pan-African infrastructure advisory connecting governments, investors, and contractors to develop and deliver critical infrastructure across Africa.
+                U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.
               </p>
               <div className="flex flex-col gap-2.5 text-sm text-white/55">
-                <a href="mailto:info@zaforaholding.com" className="flex items-center gap-2 hover:text-[#c59b4a] transition-colors">
-                  <Mail className="h-4 w-4 shrink-0" /> info@zaforaholding.com
+                <a href="mailto:Office@zaforaholding.com" className="flex items-center gap-2 hover:text-[#c59b4a] transition-colors">
+                  <Mail className="h-4 w-4 shrink-0" /> Office@zaforaholding.com
                 </a>
                 <span className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 shrink-0" /> Accra, Ghana · Lagos · Nairobi
+                  <MapPin className="h-4 w-4 shrink-0" /> Tampa, FL, USA · Global Markets
                 </span>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           {/* Bottom bar */}
           <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-white/35">
-              © {new Date().getFullYear()} Zafora Holding. All rights reserved. Accra, Ghana.
+              © {new Date().getFullYear()} Zafora Holding. All rights reserved. Tampa, FL, USA.
             </p>
             <div className="flex items-center gap-6 text-xs text-white/35">
               <span>Government Consulting · Project Development · Global Partnerships</span>
