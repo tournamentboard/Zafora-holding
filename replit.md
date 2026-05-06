@@ -44,6 +44,7 @@ Admin login password: `zafora2024` (stored in localStorage, MVP only)
 ## Product
 
 - **Home** — Hero with stats, services overview, featured project preview, CTA
+- **About Us** — Company story, mission/vision/values, leadership team, timeline, sectors, CTA
 - **Services** — 6 consulting service cards with AI-generated images
 - **Project Pipeline** — Filterable grid of infrastructure projects (by sector + funding status), "Express Interest" modal
 - **Government Review Center** — Capability statement, compliance/governance, evaluation signals

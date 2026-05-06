@@ -8,6 +8,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const links = [
+    { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
     { href: "/projects", label: "Pipeline" },
     { href: "/government", label: "Government Review" },
