@@ -23,6 +23,11 @@ const DEFAULT_STEPS = [
 ];
 
 const SETTING_DEFAULTS: Record<string, object> = {
+  notifications: {
+    adminEmail: "Office@zaforaholding.com",
+    notifyOnInquiry: true,
+    notifyOnInterest: true,
+  },
   hero: {
     headline: "Structuring, funding, and delivering high-impact projects.",
     subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",

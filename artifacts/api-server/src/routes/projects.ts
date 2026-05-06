@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { db, projectsTable, projectInterestsTable } from "@workspace/db";
 import { eq, desc, count, and, ilike, sql } from "drizzle-orm";
+import { sendInterestNotification } from "../email";
 import {
   CreateProjectBody,
   ListProjectsQueryParams,
@@ -134,6 +135,9 @@ router.post("/projects/:id/interests", async (req, res) => {
     .where(eq(projectsTable.id, projectId));
 
   res.status(201).json(interest);
+
+  const [project] = await db.select({ name: projectsTable.name }).from(projectsTable).where(eq(projectsTable.id, projectId));
+  sendInterestNotification(interest, project?.name ?? `Project #${projectId}`).catch(() => {});
 });
 
 export default router;

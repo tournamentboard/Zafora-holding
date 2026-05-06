@@ -6,6 +6,7 @@ import documentsRouter from "./documents";
 import statsRouter from "./stats";
 import servicesRouter from "./services";
 import contentRouter from "./content";
+import notificationsRouter from "./notifications";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(documentsRouter);
 router.use(statsRouter);
 router.use(servicesRouter);
 router.use(contentRouter);
+router.use(notificationsRouter);
 
 export default router;

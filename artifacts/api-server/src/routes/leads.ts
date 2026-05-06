@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db, leadsTable } from "@workspace/db";
 import { eq, desc, count, and, gte } from "drizzle-orm";
 import { CreateLeadBody, ListLeadsQueryParams, UpdateLeadBody } from "@workspace/api-zod";
+import { sendInquiryNotification } from "../email";
 
 const router = Router();
 
@@ -49,6 +50,7 @@ router.post("/leads", async (req, res) => {
     status: "new",
   }).returning();
   res.status(201).json(lead);
+  sendInquiryNotification(lead).catch(() => {});
 });
 
 router.get("/leads/:id", async (req, res) => {
