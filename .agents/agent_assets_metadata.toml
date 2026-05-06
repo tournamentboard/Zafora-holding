@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "fG4PgZFuPoEZDz855P5Nc"
+uri = "file://artifacts/zafora/src/assets/hero-bg.png"
+type = "image"
+title = "Hero background infrastructure"
+
+[[generated]]
+id = "C58dVWjMVBIXM-893X6rP"
+uri = "file://artifacts/zafora/src/assets/service-gov.png"
+type = "image"
+title = "Government Advisory Service"
+
+[[generated]]
+id = "J4OYqmqCex_dfiRg5baXp"
+uri = "file://artifacts/zafora/src/assets/service-project.png"
+type = "image"
+title = "Project Development Service"
+
+[[generated]]
+id = "ot_y1TKCDZLevSj8AWJu4"
+uri = "file://artifacts/zafora/src/assets/service-funding.png"
+type = "image"
+title = "Funding Advisory Service"

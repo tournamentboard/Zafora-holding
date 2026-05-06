@@ -1,0 +1,440 @@
+requirements to build this exact Zafora Holding site as an interactive, fully functional platform based on the HTML site you shared.
+
+Zafora Holding Website — Full Build Requirements
+1. Core Website Pages
+1. Home Page
+
+Must include:
+
+Sticky header navigation
+Zafora logo
+Hero section
+Main call-to-action buttons:
+Partner With Us
+View Project Pipeline
+Explore Consulting Services
+Trust badges
+Stats cards
+Executive dashboard-style preview
+Mobile responsive layout
+2. Services Page / Section
+
+Must include all service cards:
+
+Government Advisory
+Contracting & Procurement
+Project Development
+Funding Advisory
+Project Management Support
+Market Entry Consulting
+
+Each service should have:
+
+Image
+Icon
+Short description
+Bullet points
+“Request Consultation” button
+3. Government Review Center
+
+Must include:
+
+Capability Statement section
+Compliance & Governance section
+Delivery Readiness section
+Government evaluation signals:
+Legal Entity & Corporate Profile
+Relevant Experience
+Financial & Funding Strategy
+Risk Controls
+Local Impact
+Execution Model
+Partner Ecosystem
+Procurement Path
+
+Interactive requirements:
+
+“Request Capability Pack” form
+“Review Governance” form
+Downloadable PDF capability statement
+Admin upload area for government documents
+4. Project Pipeline
+
+Must include:
+
+Project cards
+Project filters:
+All Projects
+Energy
+Water
+Transport
+Healthcare
+Seeking Funding
+Investor Ready
+
+Each project should include:
+
+Project name
+Sector
+Country / region
+Funding status
+Estimated value
+Zafora role
+Partner need
+Interest count
+“Express Interest” button
+
+Interactive requirements:
+
+Filter projects by sector/status
+Project detail modal or page
+Partner interest form
+Admin can add/edit/delete projects
+Admin can mark status as:
+Seeking Funding
+Investor Ready
+Government Review
+Partially Funded
+Funded
+Closed
+5. Submit Project / Consultation Request
+
+The current form should become fully functional.
+
+Fields:
+
+Full Name
+Organization
+Email Address
+Country / Region
+Request Type
+Project Sector
+Message / Project Details
+
+Add these recommended fields:
+
+Phone Number
+Budget / Funding Need
+Project Timeline
+Government / Private / Investor / Contractor selector
+Upload supporting documents
+Consent checkbox
+CAPTCHA / spam protection
+
+After submission:
+
+Save to database
+Send confirmation email to user
+Send notification email to Zafora admin
+Show success message
+Create lead record in admin dashboard
+2. User Roles
+Public Visitor
+
+Can:
+
+View site
+Browse services
+View public project pipeline
+Submit consultation request
+Express interest in projects
+Request capability pack
+Government Reviewer
+
+Can:
+
+Request capability pack
+Submit advisory inquiry
+Review government-ready information
+Download approved documents if granted access
+Investor / DFI Partner
+
+Can:
+
+View project pipeline
+Filter investor-ready projects
+Express interest
+Submit funding inquiry
+Contractor / EPC Partner
+
+Can:
+
+View project opportunities
+Express interest
+Submit capability information
+Request partnership call
+Zafora Admin
+
+Can:
+
+Manage leads
+Manage project pipeline
+Upload documents
+Review submissions
+Update project statuses
+Export leads
+View analytics
+Super Admin
+
+Can:
+
+Manage all admins
+View all financial/project interest data
+Control website content
+Manage document access
+View full audit logs
+3. Admin Dashboard Requirements
+Admin Dashboard Modules
+1. Lead Inbox
+
+Admin can view:
+
+Consultation requests
+Project submissions
+Capability pack requests
+Investor interests
+Contractor partnership requests
+
+Lead statuses:
+
+New
+Reviewed
+Contacted
+Qualified
+Proposal Sent
+In Progress
+Closed
+Rejected
+2. Project Management
+
+Admin can:
+
+Add new project
+Edit project
+Delete project
+Upload project image
+Assign project sector
+Assign country
+Assign funding status
+Set estimated value
+Track partner interest count
+3. Document Center
+
+Admin can upload:
+
+Capability Statement
+Company Profile
+Governance Document
+Project Briefs
+Investor Decks
+Compliance Documents
+
+Document visibility:
+
+Public
+Private
+Government-only
+Investor-only
+Admin-only
+4. Contact Management / CRM
+
+Track:
+
+Name
+Organization
+Email
+Phone
+Country
+Role type
+Request type
+Lead source
+Notes
+Follow-up date
+Status
+5. Analytics
+
+Track:
+
+Total site visitors
+Form submissions
+Project interest clicks
+Most viewed projects
+Most requested services
+Countries represented
+Government inquiries
+Investor inquiries
+Contractor inquiries
+4. Database Requirements
+Tables Needed
+users
+
+Stores admin and approved partner accounts.
+
+roles
+
+Stores user role types.
+
+leads
+
+Stores all contact and consultation requests.
+
+projects
+
+Stores project pipeline data.
+
+project_interests
+
+Stores investor, government, and partner interest submissions.
+
+services
+
+Stores consulting services.
+
+documents
+
+Stores uploaded PDFs and files.
+
+document_access_logs
+
+Tracks who viewed/downloaded sensitive documents.
+
+sectors
+
+Stores sector categories.
+
+countries
+
+Stores project locations.
+
+audit_logs
+
+Tracks admin changes.
+
+settings
+
+Stores website settings, email routing, branding, and contact info.
+
+5. Backend Functional Requirements
+
+The backend must support:
+
+Contact form submission
+Project submission
+Express interest submission
+Email notifications
+Admin login
+Role-based permissions
+Project CRUD
+Lead management
+Document upload/download
+Secure file storage
+Analytics tracking
+CAPTCHA spam protection
+Export to CSV/PDF
+
+Recommended stack:
+
+Frontend: Next.js + React
+Database: Supabase PostgreSQL
+Auth: Supabase Auth
+Storage: Supabase Storage
+Hosting: Vercel
+Email: Resend, SendGrid, or Mailgun
+Forms: Server actions or API routes
+Payments later: Stripe
+6. Interactive Frontend Requirements
+
+Add these interactive features:
+
+Mobile hamburger menu
+Smooth scroll navigation
+Active navigation highlight
+Project filters
+Project detail modal
+Form validation
+Loading states
+Success/error messages
+File upload
+Animated cards
+Search projects by country, sector, or status
+Download buttons for public documents
+Protected document access for private materials
+7. Security Requirements
+
+Must include:
+
+Admin login
+Role-based access control
+Protected admin routes
+Secure document access
+CAPTCHA
+Rate limiting
+Form spam protection
+Audit logs
+Data encryption
+Input validation
+File upload restrictions
+No public access to sensitive documents
+8. Email Automation Requirements
+
+System should send:
+
+To User
+Thank-you confirmation
+Project interest confirmation
+Capability pack request confirmation
+To Admin
+New consultation request alert
+New project submission alert
+New investor interest alert
+New government inquiry alert
+9. Content Management Requirements
+
+Admin should be able to edit:
+
+Hero headline
+Hero paragraph
+Services
+Projects
+Sectors
+About section
+Mission
+Vision
+Values
+CTA text
+Footer
+Contact email
+Uploaded documents
+10. Launch Checklist
+
+Before launch:
+
+Replace local logo path with hosted logo
+Connect all forms to backend
+Add real email address
+Add privacy policy
+Add terms of use
+Add cookie notice if using analytics
+Add Google Analytics or Plausible
+Add SEO metadata
+Add Open Graph image
+Compress images
+Test mobile view
+Test form submissions
+Test admin permissions
+Test document downloads
+Test email notifications
+Phase 1 MVP Recommendation
+
+Build this first:
+
+Public website
+Functional consultation form
+Project pipeline with filters
+Express interest form
+Admin dashboard
+Lead inbox
+Project management
+Document upload/download
+Email notifications
+Basic analytics

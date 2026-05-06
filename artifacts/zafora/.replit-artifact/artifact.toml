@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Zafora Holding"
+version = "1.0.0"
+id = "artifacts/zafora"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21324
+
+[services.development]
+run = "pnpm --filter @workspace/zafora run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/zafora", "run", "build" ]
+publicDir = "artifacts/zafora/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21324"
+BASE_PATH = "/"

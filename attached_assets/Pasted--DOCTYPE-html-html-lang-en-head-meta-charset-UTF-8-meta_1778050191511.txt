@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zafora Holding | Government Consulting & Project Development</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --ink: #10231f;
+      --muted: #65736f;
+      --soft: #8a958f;
+      --line: #e5ded3;
+      --gold: #c59b4a;
+      --gold-soft: #f6ead2;
+      --green: #173f35;
+      --green-2: #245d4e;
+      --sand: #efe3cf;
+      --blue: #385c7a;
+      --blue-soft: #e6eef4;
+      --red: #b85c4b;
+      --red-soft: #f7dfd9;
+      --radius: 22px;
+      --shadow: 0 20px 50px rgba(16, 35, 31, 0.10);
+      --shadow-soft: 0 12px 34px rgba(16, 35, 31, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(197,155,74,.17), transparent 34rem),
+        radial-gradient(circle at 90% 12%, rgba(36,93,78,.12), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, calc(100% - 36px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(247, 244, 239, 0.86);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 850;
+      letter-spacing: -0.035em;
+      font-size: 1.15rem;
+    }
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--green), var(--gold));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 950;
+      box-shadow: 0 12px 24px rgba(23,63,53,.18);
+    }
+    .nav-links { display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 0.95rem; }
+    .nav-links a:hover { color: var(--green); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 13px 18px;
+      border: 1px solid transparent;
+      font-weight: 780;
+      font-size: 0.94rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--green); color: white; box-shadow: 0 14px 30px rgba(23,63,53,.20); }
+    .btn-primary:hover { background: var(--green-2); transform: translateY(-1px); }
+    .btn-outline { border-color: var(--line); background: rgba(255,255,255,.78); color: var(--green); }
+    .btn-outline:hover { border-color: var(--gold); background: white; transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: #1d170c; box-shadow: 0 14px 30px rgba(197,155,74,.22); }
+
+    .hero { padding: 70px 0 48px; overflow: hidden; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 42px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--green);
+      background: rgba(255,255,255,.78);
+      font-weight: 800;
+      font-size: .85rem;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+    h1 {
+      font-size: clamp(2.75rem, 6vw, 5.95rem);
+      line-height: .92;
+      letter-spacing: -0.078em;
+      margin-bottom: 24px;
+    }
+    .hero p {
+      font-size: 1.18rem;
+      color: var(--muted);
+      max-width: 710px;
+      margin-bottom: 28px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .trust-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 720;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+      max-width: 760px;
+    }
+    .stat {
+      background: rgba(255,255,255,.78);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+    .stat strong { display: block; font-size: 1.5rem; color: var(--green); letter-spacing: -0.045em; }
+    .stat span { color: var(--muted); font-size: .9rem; }
+
+    .executive-visual {
+      min-height: 600px;
+      border-radius: 36px;
+      padding: 20px;
+      background: linear-gradient(160deg, var(--green), #0f2923 62%, #1b4038);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      color: white;
+    }
+    .executive-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(transparent 31px, rgba(255,255,255,.045) 32px),
+        linear-gradient(90deg, transparent 31px, rgba(255,255,255,.045) 32px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at 55% 40%, black, transparent 76%);
+    }
+    .executive-visual::after {
+      content: "";
+      position: absolute;
+      width: 360px; height: 360px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%;
+      right: -80px; top: -70px;
+    }
+    .photo-panel {
+      position: relative;
+      z-index: 1;
+      height: 250px;
+      border-radius: 26px;
+      background:
+        linear-gradient(rgba(16,35,31,.08), rgba(16,35,31,.45)),
+        linear-gradient(135deg, rgba(197,155,74,.85), rgba(56,92,122,.75)),
+        url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255,255,255,.18);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+      overflow: hidden;
+    }
+    .photo-panel h3 { font-size: 1.55rem; letter-spacing: -0.04em; line-height: 1.05; max-width: 380px; }
+    .visual-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: .75fr 1.25fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .visual-tile {
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 22px;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .visual-tile small { color: rgba(255,255,255,.64); font-weight: 750; }
+    .visual-tile strong { display: block; margin-top: 8px; font-size: 1.65rem; letter-spacing: -0.05em; }
+    .pipeline-mini { display: grid; gap: 10px; }
+    .mini-project {
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 18px;
+      padding: 14px;
+      display: grid;
+      gap: 7px;
+    }
+    .mini-project .top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    .mini-project strong { font-size: .95rem; }
+    .mini-project p { color: rgba(255,255,255,.70); margin: 0; font-size: .82rem; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: .70rem;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.1);
+      white-space: nowrap;
+    }
+    .tag.gold { color: #ffe0a3; }
+    .tag.green { color: #bff6dc; }
+    .tag.blue { color: #cfe9ff; }
+    .tag.red { color: #ffd2ca; }
+
+    section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 30px; }
+    .section-head h2 { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; letter-spacing: -0.057em; max-width: 780px; }
+    .section-head p { color: var(--muted); max-width: 480px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .card {
+      background: rgba(255,255,255,.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .card:hover { transform: translateY(-2px); transition: .22s ease; box-shadow: var(--shadow); }
+    .icon {
+      width: 46px; height: 46px;
+      border-radius: 15px;
+      background: var(--sand);
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      color: var(--green);
+      font-size: 1.25rem;
+    }
+    .icon svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .card h3 { font-size: 1.18rem; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .card p, .card li { color: var(--muted); font-size: .95rem; }
+    .card ul { margin-left: 18px; display: grid; gap: 6px; }
+
+    .image-band {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .image-card {
+      min-height: 330px;
+      border-radius: 34px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 28px;
+      color: white;
+    }
+    .image-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(16,35,31,.05), rgba(16,35,31,.78));
+    }
+    .image-card > div { position: relative; z-index: 1; }
+    .image-card h3 { font-size: 2rem; line-height: 1; letter-spacing: -0.05em; margin-bottom: 8px; }
+    .image-card p { color: rgba(255,255,255,.76); max-width: 560px; }
+    .img-1 { background-image: url('https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=1400&q=80'); }
+    .img-2 { background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80'); }
+
+    .process {
+      background: var(--green);
+      color: white;
+      border-radius: 36px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .process::after {
+      content: "";
+      position: absolute;
+      inset: auto -120px -160px auto;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(197,155,74,.25), transparent 70%);
+    }
+    .process .section-head p { color: rgba(255,255,255,.68); }
+    .steps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; position: relative; z-index: 1; }
+    .step {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(255,255,255,.07);
+      min-height: 150px;
+    }
+    .step span { display: block; color: #f4d99a; font-weight: 950; margin-bottom: 26px; }
+    .step strong { display: block; line-height: 1.12; }
+
+    .projects-shell {
+      background: rgba(255,255,255,.58);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+    }
+    .projects-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .filter-chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.86);
+      color: var(--muted);
+      padding: 10px 13px;
+      border-radius: 999px;
+      font-weight: 780;
+      font-size: .88rem;
+    }
+    .filter-chip.active { color: white; background: var(--green); border-color: var(--green); }
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 100%;
+    }
+    .project-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .status {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .76rem;
+      font-weight: 900;
+    }
+    .seeking { background: var(--red-soft); color: var(--red); }
+    .partial { background: #fff1cf; color: #936814; }
+    .ready { background: var(--blue-soft); color: var(--blue); }
+    .funded { background: #dff2e8; color: var(--green-2); }
+    .project-detail {
+      background: #fbfaf7;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .project-detail b { color: var(--ink); }
+    .interest-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--gold-soft), #fff);
+      border: 1px solid var(--line);
+      margin-top: auto;
+    }
+    .avatar-stack { display: flex; align-items: center; }
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: .72rem;
+      font-weight: 900;
+      color: white;
+      background: var(--green);
+      border: 2px solid white;
+      margin-left: -8px;
+    }
+    .avatar:first-child { margin-left: 0; background: var(--gold); color: #21180b; }
+    .avatar:nth-child(2) { background: var(--blue); }
+    .interest-bar small { color: var(--muted); font-weight: 750; }
+
+    .split {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+    .feature-panel {
+      background: linear-gradient(145deg, #fff, var(--sand));
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+    .feature-panel h2 { font-size: 2.7rem; line-height: 1; letter-spacing: -0.055em; margin-bottom: 18px; }
+    .feature-panel p { color: var(--muted); }
+
+    .sector-card { min-height: 135px; display: flex; flex-direction: column; justify-content: space-between; }
+    .sector-card span { color: var(--gold); font-weight: 950; }
+
+    .engagement-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+    }
+    .engagement-card {
+      border-radius: 30px;
+      overflow: hidden;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+    .engagement-image {
+      height: 190px;
+      background-size: cover;
+      background-position: center;
+    }
+    .engagement-card:nth-child(1) .engagement-image { background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1000&q=80'); }
+    .engagement-card:nth-child(2) .engagement-image { background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=80'); }
+    .engagement-card:nth-child(3) .engagement-image { background-image: url('https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=1000&q=80'); }
+    .engagement-body { padding: 22px; }
+    .engagement-body p { color: var(--muted); font-size: .95rem; margin-top: 8px; }
+
+    .cta {
+      background: linear-gradient(135deg, var(--green), #132f28);
+      color: white;
+      border-radius: 38px;
+      padding: 46px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+    .cta h2 { font-size: clamp(2rem, 4vw, 3.3rem); letter-spacing: -0.055em; line-height: 1; margin-bottom: 12px; }
+    .cta p { color: rgba(255,255,255,.72); max-width: 680px; }
+    .cta .btn-primary { background: white; color: var(--green); }
+    .cta .btn-outline { color: white; border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.08); }
+
+    .contact-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 15px;
+      font: inherit;
+      background: white;
+      color: var(--ink);
+    }
+    textarea { min-height: 130px; resize: vertical; grid-column: 1 / -1; }
+    .full { grid-column: 1 / -1; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 34px 0;
+      color: var(--muted);
+    }
+    .footer-grid { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+    @media (max-width: 980px) {
+      .nav-links { display: none; }
+      .hero-grid, .split, .cta, .contact-card, .image-band, .visual-content { grid-template-columns: 1fr; }
+      .executive-visual { min-height: auto; }
+      .grid-3, .engagement-grid { grid-template-columns: 1fr 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr 1fr 1fr; }
+      .section-head { align-items: start; flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+      .container { width: min(100% - 24px, 1200px); }
+      .hero { padding-top: 42px; }
+      .stats-row, .grid-3, .grid-4, .steps, .engagement-grid { grid-template-columns: 1fr; }
+      .process, .cta, .projects-shell { border-radius: 26px; padding: 22px; }
+      .card { padding: 20px; }
+      .nav { height: 68px; }
+      .brand span:last-child { display: none; }
+      .photo-panel { height: 220px; }
+      .image-card { min-height: 260px; border-radius: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a href="#home" class="brand">
+        <span class="brand-mark">ZH</span>
+        <span>Zafora Holding</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#projects">Projects</a>
+        <a href="#sectors">Sectors</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="#contact" class="btn btn-primary">Request Consultation</a>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Government Consulting · Project Development · Global Partnerships</div>
+          <h1>Structuring, funding, and delivering high-impact projects.</h1>
+          <p>Zafora Holding helps governments, investors, and private partners plan, finance, and execute infrastructure and development projects across Africa and global emerging markets.</p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Partner With Us</a>
+            <a href="#projects" class="btn btn-outline">View Project Pipeline</a>
+            <a href="#services" class="btn btn-gold">Explore Consulting Services</a>
+          </div>
+          <div class="trust-strip">
+            <span class="trust-pill">✓ Government-ready documentation</span>
+            <span class="trust-pill">✓ PPP & funding advisory</span>
+            <span class="trust-pill">✓ Project lifecycle governance</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat"><strong>360°</strong><span>Project lifecycle support</span></div>
+            <div class="stat"><strong>Global</strong><span>Africa-first advisory reach</span></div>
+            <div class="stat"><strong>PPP</strong><span>Government + private sector alignment</span></div>
+          </div>
+        </div>
+
+        <aside class="executive-visual" aria-label="Executive project dashboard preview">
+          <div class="photo-panel">
+            <h3>Executive advisory for governments, funders, and delivery partners.</h3>
+          </div>
+          <div class="visual-content">
+            <div class="visual-tile">
+              <small>Pipeline Interest</small>
+              <strong>18</strong>
+              <p>Partner inquiries under review</p>
+            </div>
+            <div class="pipeline-mini">
+              <div class="mini-project">
+                <div class="top"><strong>Solar Mini-Grid Expansion</strong><span class="tag gold">Seeking Funding</span></div>
+                <p>Ghana · Energy · Feasibility · Zafora Role: Project Structuring</p>
+              </div>
+              <div class="mini-project">
+                <div class="top"><strong>Water Access Modernization</strong><span class="tag blue">Investor Ready</span></div>
+                <p>Nigeria · Water · Structuring · Zafora Role: Funding Advisory</p>
+              </div>
+              <div class="mini-project">
+                <div class="top"><strong>Regional Logistics Corridor</strong><span class="tag green">Partially Funded</span></div>
+                <p>East Africa · Transport · PPP Review · Zafora Role: Partner Alignment</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="container image-band">
+        <div class="image-card img-1">
+          <div>
+            <h3>A credible digital front door for government work.</h3>
+            <p>The website is designed to help public-sector decision makers quickly understand Zafora Holding’s services, project discipline, and partnership model.</p>
+          </div>
+        </div>
+        <div class="image-card img-2">
+          <div>
+            <h3>From opportunity to execution.</h3>
+            <p>Built around consulting, funding readiness, project structure, and partner engagement.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Built for governments, investors, and execution partners.</h2>
+          <p>Zafora Holding connects public-sector priorities with funding strategy, compliant procurement, qualified partners, and project execution discipline.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div><h3>Governments</h3><p>Support for policy goals, public programs, procurement planning, project structuring, and development priorities.</p></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Investors & DFIs</h3><p>Clear project briefs, risk review, funding readiness, pipeline visibility, and capital alignment.</p></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M7 21V8l5-5 5 5v13"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></div><h3>Contractors & EPC Firms</h3><p>Opportunity access, bid support, local partner coordination, delivery planning, and project governance.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-head">
+          <h2>Consulting services that move projects from idea to execution.</h2>
+          <p>These services create immediate value before, during, and after funding or procurement begins.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h3>Government Advisory</h3><ul><li>Strategic planning</li><li>Infrastructure roadmaps</li><li>Program design</li><li>Policy and stakeholder alignment</li></ul></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/></svg></div><h3>Contracting & Procurement</h3><ul><li>RFP/RFQ strategy</li><li>Bid and proposal support</li><li>Compliance documentation</li><li>Contract readiness</li></ul></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg></div><h3>Project Development</h3><ul><li>Feasibility studies</li><li>Business case development</li><li>Scope definition</li><li>Risk assessment</li></ul></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 16 4-4 3 3 5-7"/></svg></div><h3>Funding Advisory</h3><ul><li>Investor readiness</li><li>Capital strategy</li><li>PPP structuring</li><li>Grant and DFI alignment</li></ul></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>Project Management Support</h3><ul><li>PMO setup</li><li>Milestone tracking</li><li>Reporting governance</li><li>Vendor coordination</li></ul></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20"/><path d="M12 2a15.3 15.3 0 0 0 0 20"/></svg></div><h3>Market Entry Consulting</h3><ul><li>Africa market strategy</li><li>Local partner development</li><li>Regulatory navigation</li><li>Expansion planning</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container process">
+        <div class="section-head">
+          <h2>Our project delivery model.</h2>
+          <p>A clear lifecycle approach that helps stakeholders understand how Zafora Holding turns opportunities into executable projects.</p>
+        </div>
+        <div class="steps">
+          <div class="step"><span>01</span><strong>Identify Opportunity</strong></div>
+          <div class="step"><span>02</span><strong>Assess Feasibility</strong></div>
+          <div class="step"><span>03</span><strong>Structure Project</strong></div>
+          <div class="step"><span>04</span><strong>Align Stakeholders</strong></div>
+          <div class="step"><span>05</span><strong>Secure Funding Strategy</strong></div>
+          <div class="step"><span>06</span><strong>Support Execution</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <div class="section-head">
+          <h2>Active & upcoming project pipeline.</h2>
+          <p>Designed to help governments, investors, and execution partners review opportunities by stage, sector, geography, and funding status.</p>
+        </div>
+        <div class="projects-shell">
+          <div class="projects-toolbar">
+            <span class="filter-chip active">All Projects</span>
+            <span class="filter-chip">Energy</span>
+            <span class="filter-chip">Water</span>
+            <span class="filter-chip">Transport</span>
+            <span class="filter-chip">Healthcare</span>
+            <span class="filter-chip">Seeking Funding</span>
+            <span class="filter-chip">Investor Ready</span>
+          </div>
+          <div class="grid-3">
+            <article class="card project-card">
+              <div class="project-meta"><span class="status seeking">Seeking Funding</span><span class="status ready">Feasibility</span></div>
+              <h3>Solar Mini-Grid Expansion — Ghana</h3>
+              <p>Distributed energy project focused on rural and commercial power access.</p>
+              <div class="project-detail"><span><b>Sector:</b> Energy</span><span><b>Estimated Value:</b> $25M</span><span><b>Zafora Role:</b> Project Structuring & Investor Advisory</span><span><b>Need:</b> Investors and EPC partners</span></div>
+              <div class="interest-bar"><div class="avatar-stack"><span class="avatar">DF</span><span class="avatar">EP</span><span class="avatar">GV</span></div><small>7 partner interests</small></div>
+              <a href="#contact" class="btn btn-outline">Express Interest</a>
+            </article>
+            <article class="card project-card">
+              <div class="project-meta"><span class="status ready">Investor Ready</span><span class="status partial">Structuring</span></div>
+              <h3>Water Access Modernization — Nigeria</h3>
+              <p>Water infrastructure upgrade targeting improved access, treatment, and distribution.</p>
+              <div class="project-detail"><span><b>Sector:</b> Water</span><span><b>Estimated Value:</b> $40M</span><span><b>Zafora Role:</b> Funding Advisory & Partner Alignment</span><span><b>Need:</b> DFI, PPP, and technical partners</span></div>
+              <div class="interest-bar"><div class="avatar-stack"><span class="avatar">DF</span><span class="avatar">PR</span><span class="avatar">TC</span></div><small>11 partner interests</small></div>
+              <a href="#contact" class="btn btn-outline">Express Interest</a>
+            </article>
+            <article class="card project-card">
+              <div class="project-meta"><span class="status partial">Partially Funded</span><span class="status ready">PPP Review</span></div>
+              <h3>Regional Logistics Corridor — East Africa</h3>
+              <p>Transport and logistics corridor concept supporting trade, agriculture, and regional commerce.</p>
+              <div class="project-detail"><span><b>Sector:</b> Transport & Logistics</span><span><b>Estimated Value:</b> $80M</span><span><b>Zafora Role:</b> PPP Structuring</span><span><b>Need:</b> Public-private implementation partners</span></div>
+              <div class="interest-bar"><div class="avatar-stack"><span class="avatar">GV</span><span class="avatar">LG</span><span class="avatar">EP</span></div><small>5 partner interests</small></div>
+              <a href="#contact" class="btn btn-outline">Express Interest</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Engagement paths for serious stakeholders.</h2>
+          <p>Clear entry points make the site more useful for governments, investors, contractors, and companies seeking market entry.</p>
+        </div>
+        <div class="engagement-grid">
+          <div class="engagement-card"><div class="engagement-image"></div><div class="engagement-body"><h3>Request Advisory Support</h3><p>For governments or agencies needing planning, procurement, compliance, or project structuring support.</p></div></div>
+          <div class="engagement-card"><div class="engagement-image"></div><div class="engagement-body"><h3>Submit a Project</h3><p>For public or private stakeholders with projects that need feasibility, funding, partners, or execution support.</p></div></div>
+          <div class="engagement-card"><div class="engagement-image"></div><div class="engagement-body"><h3>Explore Partnership</h3><p>For EPCs, investors, DFIs, NGOs, and technology firms seeking qualified opportunities and market alignment.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sectors">
+      <div class="container">
+        <div class="section-head">
+          <h2>Sectors we support.</h2>
+          <p>Zafora Holding focuses on practical sectors where governments and partners need planning, capital, compliance, and execution support.</p>
+        </div>
+        <div class="grid-4">
+          <div class="card sector-card"><span>01</span><h3>Energy</h3></div>
+          <div class="card sector-card"><span>02</span><h3>Water</h3></div>
+          <div class="card sector-card"><span>03</span><h3>Transportation</h3></div>
+          <div class="card sector-card"><span>04</span><h3>Healthcare</h3></div>
+          <div class="card sector-card"><span>05</span><h3>Agriculture</h3></div>
+          <div class="card sector-card"><span>06</span><h3>Housing</h3></div>
+          <div class="card sector-card"><span>07</span><h3>Digital Infrastructure</h3></div>
+          <div class="card sector-card"><span>08</span><h3>Education</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container split">
+        <div class="feature-panel">
+          <h2>About Zafora Holding</h2>
+          <p>Zafora Holding is a consulting and project development firm built to help governments, investors, contractors, and private partners move high-impact projects from strategy to funding to execution.</p>
+          <br />
+          <p>Our focus is Africa and global emerging markets, where infrastructure, development, and public-private partnerships can unlock long-term economic value.</p>
+        </div>
+        <div class="grid-3" style="grid-template-columns: 1fr;">
+          <div class="card"><h3>Mission</h3><p>To connect governments, capital, and capable partners to deliver projects that create lasting economic, social, and infrastructure impact.</p></div>
+          <div class="card"><h3>Vision</h3><p>To become a trusted global advisory and project development firm recognized for helping emerging markets transform opportunities into funded, executable projects.</p></div>
+          <div class="card"><h3>Values</h3><p>Transparency, execution, accountability, partnership, and long-term development impact.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Why governments and partners choose Zafora.</h2>
+          <p>We combine consulting discipline with project development thinking, giving stakeholders a clear bridge between planning, funding, and delivery.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><h3>Structured Methodology</h3><p>Clear project lifecycle steps from concept through execution support.</p></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Compliance-Aware</h3><p>Government-aligned documentation, procurement support, and reporting discipline.</p></div>
+          <div class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Partner-Driven</h3><p>Connecting public needs with funders, contractors, and qualified delivery partners.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2>Ready to structure, fund, or support your next project?</h2>
+            <p>Submit a project, request a consultation, or start a partnership conversation with Zafora Holding.</p>
+          </div>
+          <div class="hero-actions">
+            <a href="mailto:info@zaforaholding.com" class="btn btn-primary">Email Zafora</a>
+            <a href="#submit" class="btn btn-outline">Submit Project</a>
+          </div>
+        </div>
+        <div id="submit" class="card" style="margin-top: 22px;">
+          <h3 style="margin-bottom: 14px;">Project / Consultation Request</h3>
+          <form class="contact-card">
+            <input class="input" type="text" placeholder="Full Name" />
+            <input class="input" type="text" placeholder="Organization" />
+            <input class="input" type="email" placeholder="Email Address" />
+            <input class="input" type="text" placeholder="Country / Region" />
+            <select><option>Request Type</option><option>Government Advisory</option><option>Project Funding</option><option>Procurement Support</option><option>Partnership</option><option>Submit a Project</option></select>
+            <select><option>Project Sector</option><option>Energy</option><option>Water</option><option>Transportation</option><option>Healthcare</option><option>Agriculture</option><option>Digital Infrastructure</option><option>Other</option></select>
+            <textarea placeholder="Tell us about the project, funding need, timeline, or consulting request."></textarea>
+            <button class="btn btn-primary full" type="button">Submit Request</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="brand"><span class="brand-mark">ZH</span><span>Zafora Holding</span></div>
+      <p>Government consulting, project development, funding advisory, and global partnerships.</p>
+      <p>© 2026 Zafora Holding. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

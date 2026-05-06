@@ -3,20 +3,32 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Zafora Holding API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: leads
+    description: Lead / consultation request operations
+  - name: projects
+    description: Project pipeline operations
+  - name: interests
+    description: Project interest operations
+  - name: documents
+    description: Document management operations
+  - name: stats
+    description: Analytics and statistics
+  - name: services
+    description: Consulting services
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +36,379 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /leads:
+    get:
+      operationId: listLeads
+      tags: [leads]
+      summary: List all leads
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: requestType
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: List of leads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  leads:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Lead"
+                  total:
+                    type: integer
+                required: [leads, total]
+    post:
+      operationId: createLead
+      tags: [leads]
+      summary: Submit consultation request or lead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLeadBody"
+      responses:
+        "201":
+          description: Lead created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+
+  /leads/{id}:
+    get:
+      operationId: getLead
+      tags: [leads]
+      summary: Get a single lead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lead
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+    patch:
+      operationId: updateLead
+      tags: [leads]
+      summary: Update lead status or notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateLeadBody"
+      responses:
+        "200":
+          description: Updated lead
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects
+      parameters:
+        - name: sector
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: country
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Project"
+                  total:
+                    type: integer
+                required: [projects, total]
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectBody"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a single project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update project (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectBody"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete project (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /projects/{id}/interests:
+    get:
+      operationId: listProjectInterests
+      tags: [interests]
+      summary: List interests for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of interests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  interests:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProjectInterest"
+                  total:
+                    type: integer
+                required: [interests, total]
+    post:
+      operationId: expressInterest
+      tags: [interests]
+      summary: Express interest in a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpressInterestBody"
+      responses:
+        "201":
+          description: Interest recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectInterest"
+
+  /documents:
+    get:
+      operationId: listDocuments
+      tags: [documents]
+      summary: List documents
+      parameters:
+        - name: visibility
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Document"
+                  total:
+                    type: integer
+                required: [documents, total]
+    post:
+      operationId: createDocument
+      tags: [documents]
+      summary: Upload a document (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDocumentBody"
+      responses:
+        "201":
+          description: Document created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /documents/{id}:
+    delete:
+      operationId: deleteDocument
+      tags: [documents]
+      summary: Delete a document (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /stats:
+    get:
+      operationId: getStats
+      tags: [stats]
+      summary: Get dashboard statistics
+      responses:
+        "200":
+          description: Statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /stats/projects:
+    get:
+      operationId: getProjectStats
+      tags: [stats]
+      summary: Get project statistics by sector
+      responses:
+        "200":
+          description: Project stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bySector:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SectorStat"
+                  byStatus:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/StatusStat"
+                required: [bySector, byStatus]
+
+  /services:
+    get:
+      operationId: listServices
+      tags: [services]
+      summary: List all consulting services
+      responses:
+        "200":
+          description: List of services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Service"
+                required: [services]
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +416,333 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        country:
+          type: string
+        requestType:
+          type: string
+        projectSector:
+          type: string
+          nullable: true
+        message:
+          type: string
+        budgetFundingNeed:
+          type: string
+          nullable: true
+        projectTimeline:
+          type: string
+          nullable: true
+        roleType:
+          type: string
+          nullable: true
+        status:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        followUpDate:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, fullName, organization, email, country, requestType, message, status, createdAt]
+
+    CreateLeadBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        country:
+          type: string
+        requestType:
+          type: string
+        projectSector:
+          type: string
+          nullable: true
+        message:
+          type: string
+        budgetFundingNeed:
+          type: string
+          nullable: true
+        projectTimeline:
+          type: string
+          nullable: true
+        roleType:
+          type: string
+          nullable: true
+      required: [fullName, organization, email, country, requestType, message]
+
+    UpdateLeadBody:
+      type: object
+      properties:
+        status:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        followUpDate:
+          type: string
+          nullable: true
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        sector:
+          type: string
+        country:
+          type: string
+        region:
+          type: string
+          nullable: true
+        fundingStatus:
+          type: string
+        estimatedValue:
+          type: string
+        zaforaRole:
+          type: string
+        partnerNeed:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        interestCount:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, name, sector, country, fundingStatus, estimatedValue, zaforaRole, interestCount, createdAt, updatedAt]
+
+    CreateProjectBody:
+      type: object
+      properties:
+        name:
+          type: string
+        sector:
+          type: string
+        country:
+          type: string
+        region:
+          type: string
+          nullable: true
+        fundingStatus:
+          type: string
+        estimatedValue:
+          type: string
+        zaforaRole:
+          type: string
+        partnerNeed:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+      required: [name, sector, country, fundingStatus, estimatedValue, zaforaRole]
+
+    UpdateProjectBody:
+      type: object
+      properties:
+        name:
+          type: string
+        sector:
+          type: string
+        country:
+          type: string
+        region:
+          type: string
+          nullable: true
+        fundingStatus:
+          type: string
+        estimatedValue:
+          type: string
+        zaforaRole:
+          type: string
+        partnerNeed:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+
+    ProjectInterest:
+      type: object
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        fullName:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        roleType:
+          type: string
+        message:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, projectId, fullName, organization, email, roleType, createdAt]
+
+    ExpressInterestBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        roleType:
+          type: string
+        message:
+          type: string
+          nullable: true
+      required: [fullName, organization, email, roleType]
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        documentType:
+          type: string
+        visibility:
+          type: string
+        fileUrl:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, title, documentType, visibility, createdAt]
+
+    CreateDocumentBody:
+      type: object
+      properties:
+        title:
+          type: string
+        documentType:
+          type: string
+        visibility:
+          type: string
+        fileUrl:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+      required: [title, documentType, visibility]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalLeads:
+          type: integer
+        totalProjects:
+          type: integer
+        totalInterests:
+          type: integer
+        totalDocuments:
+          type: integer
+        newLeadsThisMonth:
+          type: integer
+        activeProjects:
+          type: integer
+        leadsByStatus:
+          type: array
+          items:
+            $ref: "#/components/schemas/StatusStat"
+        recentLeads:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lead"
+      required: [totalLeads, totalProjects, totalInterests, totalDocuments, newLeadsThisMonth, activeProjects, leadsByStatus, recentLeads]
+
+    SectorStat:
+      type: object
+      properties:
+        sector:
+          type: string
+        count:
+          type: integer
+        totalValue:
+          type: string
+      required: [sector, count, totalValue]
+
+    StatusStat:
+      type: object
+      properties:
+        status:
+          type: string
+        count:
+          type: integer
+      required: [status, count]
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        bullets:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+          nullable: true
+      required: [id, name, icon, description, bullets]
