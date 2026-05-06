@@ -1,16 +1,23 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { ShieldAlert, LogOut, LayoutDashboard, Users, FolderKanban, FileText, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText, Eye, EyeOff } from "lucide-react";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsTable from "@/components/admin/ProjectsTable";
 import DashboardHome from "@/components/admin/DashboardHome";
 import DocumentsTable from "@/components/admin/DocumentsTable";
+import logo from "@/assets/logo.png";
+
+const TABS = [
+  { id: "dashboard", label: "Overview", icon: LayoutDashboard, desc: "Stats & recent activity" },
+  { id: "leads", label: "Inquiries", icon: Inbox, desc: "People who contacted you" },
+  { id: "projects", label: "Projects", icon: FolderOpen, desc: "Your project pipeline" },
+  { id: "documents", label: "Documents", icon: FileText, desc: "Files & reports" },
+];
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
 
@@ -27,6 +34,7 @@ export default function Admin() {
       setError(false);
     } else {
       setError(true);
+      setPassword("");
     }
   };
 
@@ -37,108 +45,148 @@ export default function Admin() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-secondary/50" />
-        <div className="w-full max-w-md bg-card border border-border p-8 rounded-2xl shadow-2xl relative z-10">
-          <div className="flex flex-col items-center mb-8">
-            <div className="p-4 bg-primary/10 rounded-full mb-4">
-              <ShieldAlert className="h-10 w-10 text-primary" />
-            </div>
-            <h1 className="text-2xl font-serif font-bold text-white">Zafora Admin</h1>
-            <p className="text-muted-foreground text-sm text-center mt-2">Restricted Area. Authorized Personnel Only.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <img src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
+            <h1 className="text-2xl font-bold text-[#10231f] mb-1">Admin Sign In</h1>
+            <p className="text-[#65736f] text-sm">Enter your password to manage the website</p>
           </div>
-          
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Input 
-                type="password" 
-                placeholder="Enter access code" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`bg-background border-border ${error ? 'border-destructive focus-visible:ring-destructive' : ''}`}
-                autoFocus
-              />
-              {error && <p className="text-destructive text-sm">Invalid access code</p>}
+
+          <div className="bg-white rounded-2xl border border-[#e5ded3] shadow-lg p-8">
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-[#10231f] mb-2">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => { setPassword(e.target.value); setError(false); }}
+                    className={`w-full border rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] ${error ? "border-red-400 bg-red-50" : "border-[#e5ded3] bg-[#f7f4ef]"}`}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a958f] hover:text-[#10231f]"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {error && (
+                  <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
+                    <Lock size={14} /> Wrong password. Please try again.
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 rounded-xl bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-colors"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <Link href="/" className="text-sm text-[#65736f] hover:text-[#173f35] transition-colors">
+                ← Back to website
+              </Link>
             </div>
-            <Button type="submit" className="w-full font-bold">
-              Verify Identity <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </form>
-          <div className="mt-8 text-center">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-white transition-colors">
-              ← Return to public site
-            </Link>
           </div>
         </div>
       </div>
     );
   }
 
+  const activeTabInfo = TABS.find(t => t.id === activeTab)!;
+
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen flex" style={{ background: "#f7f4ef" }}>
       {/* Sidebar */}
-      <aside className="w-64 bg-secondary border-r border-border hidden md:flex flex-col">
-        <div className="h-20 flex items-center px-6 border-b border-border">
-          <span className="text-xl font-serif font-bold text-white tracking-tight">
-            ZAFORA<span className="text-primary">.Admin</span>
-          </span>
+      <aside className="w-72 bg-white border-r border-[#e5ded3] hidden md:flex flex-col shadow-sm">
+        <div className="h-20 flex items-center px-6 border-b border-[#e5ded3]">
+          <img src={logo} alt="Zafora Holding" className="h-10 w-auto object-contain" />
         </div>
-        
-        <nav className="flex-1 p-4 space-y-2">
-          <button 
-            onClick={() => setActiveTab("dashboard")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-white hover:bg-white/5'}`}
-          >
-            <LayoutDashboard className="h-4 w-4" /> Dashboard
-          </button>
-          <button 
-            onClick={() => setActiveTab("leads")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'leads' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-white hover:bg-white/5'}`}
-          >
-            <Users className="h-4 w-4" /> Lead Inbox
-          </button>
-          <button 
-            onClick={() => setActiveTab("projects")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'projects' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-white hover:bg-white/5'}`}
-          >
-            <FolderKanban className="h-4 w-4" /> Project Pipeline
-          </button>
-          <button 
-            onClick={() => setActiveTab("documents")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'documents' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-white hover:bg-white/5'}`}
-          >
-            <FileText className="h-4 w-4" /> Document Center
-          </button>
+
+        <div className="px-4 py-2 mt-2">
+          <p className="text-xs font-semibold text-[#8a958f] uppercase tracking-wider px-2 mb-2">Website Manager</p>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-1">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${
+                  isActive
+                    ? "bg-[#173f35] text-white shadow-md"
+                    : "text-[#65736f] hover:bg-[#efe3cf] hover:text-[#10231f]"
+                }`}
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                <div>
+                  <div className="font-semibold text-sm">{tab.label}</div>
+                  <div className={`text-xs ${isActive ? "text-white/70" : "text-[#8a958f]"}`}>{tab.desc}</div>
+                </div>
+              </button>
+            );
+          })}
         </nav>
-        
-        <div className="p-4 border-t border-border">
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors">
-            <LogOut className="h-4 w-4" /> Terminate Session
+
+        <div className="p-4 border-t border-[#e5ded3]">
+          <Link href="/" className="flex items-center gap-2 px-4 py-2 text-sm text-[#65736f] hover:text-[#173f35] rounded-lg hover:bg-[#efe3cf] transition-colors mb-1">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            View Website
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <LogOut className="h-4 w-4" /> Sign Out
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Mobile header */}
-        <header className="md:hidden h-16 border-b border-border bg-secondary flex items-center justify-between px-4">
-          <span className="font-serif font-bold text-white">Admin Portal</span>
-          <button onClick={handleLogout} className="p-2 text-muted-foreground hover:text-white">
-            <LogOut className="h-5 w-5" />
+      <main className="flex-1 flex flex-col min-w-0">
+        {/* Top bar */}
+        <header className="h-16 border-b border-[#e5ded3] bg-white flex items-center justify-between px-4 md:px-8">
+          <div>
+            <h1 className="font-bold text-[#10231f] text-lg">{activeTabInfo.label}</h1>
+            <p className="text-xs text-[#8a958f] hidden md:block">{activeTabInfo.desc}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden md:inline">Sign Out</span>
           </button>
         </header>
 
-        {/* Mobile tabs */}
-        <div className="md:hidden flex overflow-x-auto bg-secondary border-b border-border p-2 gap-2">
-          {["dashboard", "leads", "projects", "documents"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap ${activeTab === tab ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
+        {/* Mobile tab bar */}
+        <div className="md:hidden flex overflow-x-auto bg-white border-b border-[#e5ded3] px-2 py-2 gap-1">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                  isActive ? "bg-[#173f35] text-white" : "text-[#65736f]"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex-1 overflow-auto p-4 md:p-8">
