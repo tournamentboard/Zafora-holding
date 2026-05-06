@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { usePageTitle } from "@/hooks/use-page-title";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
   Landmark, Zap, Droplets, Truck, Stethoscope, ArrowRight,
@@ -108,6 +109,7 @@ const MILESTONES = [
 ];
 
 export default function About() {
+  usePageTitle("About Us");
   return (
     <div className="flex flex-col">
 

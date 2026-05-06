@@ -12,7 +12,7 @@ A full-stack, mobile-friendly website for Zafora Holding — an African infrastr
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
 
-Admin login password: `zafora2024` (stored in localStorage, MVP only)
+Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 
 ## Stack
 
@@ -32,6 +32,8 @@ Admin login password: `zafora2024` (stored in localStorage, MVP only)
 - `lib/api-client-react/src/generated/` — Generated React Query hooks
 - `lib/api-zod/src/generated/api.ts` — Generated Zod schemas for server
 - `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services)
+- `artifacts/zafora/src/hooks/use-page-title.ts` — Per-page document.title hook
+- `artifacts/zafora/public/` — favicon.svg, opengraph.jpg, hero assets
 
 ## Architecture decisions
 
@@ -43,26 +45,29 @@ Admin login password: `zafora2024` (stored in localStorage, MVP only)
 
 ## Product
 
-- **Home** — Hero with stats, services overview, featured project preview, CTA
-- **About Us** — Company story, mission/vision/values, leadership team, timeline, sectors, CTA
-- **Services** — 6 consulting service cards with AI-generated images
-- **Project Pipeline** — Filterable grid of infrastructure projects (by sector + funding status), "Express Interest" modal
-- **Government Review Center** — Capability statement, compliance/governance, evaluation signals
-- **Submit Request** — Full consultation/project submission form
-- **Admin Dashboard** — Lead inbox with status management, project CRUD, document center, analytics charts (password-protected)
+- **Home** — Hero, scrolling ticker, image band, stats, services preview, delivery model, testimonial, pipeline preview, sectors, CTA
+- **About Us** — Company story, mission/vision/values, 6 core values, leadership team, timeline, sectors, CTA
+- **Services** — Hero mosaic, stats strip, 6 service cards with images, CTA
+- **Project Pipeline** — Filterable grid (sector + funding status + search), "Express Interest" modal
+- **Government Review Center** — Full-width hero image, stats, capability cards, evaluation framework, sidebar
+- **Submit Request** — Trust sidebar + 3-step numbered form
+- **Admin Dashboard** — Lead inbox, project CRUD, document center, analytics (password-protected at /admin)
+- **404 Page** — Branded with logo, navigation back to home/pipeline
 
 ## User preferences
 
 - Mobile-first, responsive design
 - Light cream (#f7f4ef) background + deep forest green (#173f35) primary + gold (#c59b4a) accent palette
-- Light frosted glass navbar, white cards, warm sand tones
+- Dark footer (#10231f) — 4-column: brand, navigation, services, engage CTA
 - No emojis anywhere in the UI
+- Bigger logo (h-16 in navbar, h-24 navbar height)
 
 ## Gotchas
 
 - After any OpenAPI spec change, run `pnpm --filter @workspace/api-spec run codegen` — it patches index.ts automatically
 - `pnpm run dev` at workspace root is NOT supported — run workflows individually
 - Wouter v3 nested Switch: use `<Route>` (no path) as catch-all in outer Switch, not `<Route path="/">`
+- CSS ticker animation lives in `index.css` as `@keyframes ticker` / `.ticker-track`
 
 ## Pointers
 

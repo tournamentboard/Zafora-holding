@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { usePageTitle } from "@/hooks/use-page-title";
 import {
   Shield, FileCheck, Scale, Users, Target, Activity,
   ArrowRight, CheckCircle2, Globe, TrendingUp, Lock,
@@ -33,6 +34,7 @@ const capabilities = [
 ];
 
 export default function Government() {
+  usePageTitle("Government Review Center");
   return (
     <div className="flex flex-col">
 

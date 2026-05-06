@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
+import { usePageTitle } from "@/hooks/use-page-title";
 import {
   ShieldCheck, Clock, Users, Globe, CheckCircle2, ArrowRight,
   Lock, Star, TrendingUp, Briefcase, Landmark,
@@ -20,6 +21,7 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Submit() {
+  usePageTitle("Submit a Request");
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const createLead = useCreateLead();

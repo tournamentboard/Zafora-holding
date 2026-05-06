@@ -7,11 +7,13 @@ import { Search, DollarSign, Users, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import ExpressInterestModal from "./ExpressInterestModal";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const SECTORS = ["All", "Energy", "Water", "Transport", "Healthcare", "Digital"];
 const STATUSES = ["All", "Seeking Funding", "Investor Ready", "Partially Funded", "Funded"];
 
 export default function Projects() {
+  usePageTitle("Project Pipeline");
   const [sector, setSector] = useState("All");
   const [status, setStatus] = useState("All");
   const [search, setSearch] = useState("");

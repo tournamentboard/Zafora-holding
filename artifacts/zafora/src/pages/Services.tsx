@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePageTitle } from "@/hooks/use-page-title";
 import {
   ShieldCheck, TrendingUp, Anchor, Landmark, Briefcase, Globe,
   ArrowRight, CheckCircle2, Zap, Droplets, Truck, Stethoscope,
@@ -35,6 +36,7 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Services() {
+  usePageTitle("Services");
   const { data, isLoading } = useListServices();
 
   return (

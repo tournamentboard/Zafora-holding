@@ -2,6 +2,7 @@ import { useListProjects, useListServices } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { usePageTitle } from "@/hooks/use-page-title";
 import {
   ArrowRight, Briefcase, Landmark, ShieldCheck, ArrowUpRight, BarChart3,
   Building, Globe, Zap, Droplets, Truck, Stethoscope, CheckCircle2,
@@ -52,6 +53,7 @@ const SERVICE_ICONS: Record<number, React.ReactNode> = {
 };
 
 export default function Home() {
+  usePageTitle("Home");
   const { data: projectsData } = useListProjects({ limit: 3 });
   const { data: servicesData } = useListServices();
 
