@@ -1,0 +1,518 @@
+requirements for a Landing Page Management Admin Tool so your team can easily update every section, image, CTA, project, service, and footer item on the Zafora Holding landing page without touching code. This is based on the landing page content you provided.
+
+Landing Page Management Admin Tool Requirements
+1. Main Purpose
+
+The admin tool should allow approved admins to update the full Zafora Holding landing page from one dashboard, including:
+
+Hero section
+Stats and numbers
+Services
+Pillars
+Project pipeline
+Countries and sectors
+Methodology steps
+Leadership/about content
+Images and icons
+Buttons and links
+Footer information
+Contact details
+SEO content
+
+The goal is simple: no developer needed for normal content updates.
+
+2. Admin Roles
+Super Admin
+
+Full control over everything.
+
+Can:
+
+Edit all landing page content
+Upload images
+Publish updates live
+Approve drafts
+Manage admins
+View change history
+Restore previous versions
+Control contact info
+Control SEO
+Control footer
+Manage project pipeline
+
+Content Admin
+
+Can update regular content but cannot publish without approval.
+
+Can:
+
+Edit text
+Upload images
+Create draft updates
+Update services
+Update sectors
+Update methodology
+Update project cards
+
+Cannot:
+
+Publish live changes
+Delete major sections
+Change admin users
+Edit billing or system settings
+
+Reviewer / Approver
+
+Can review and approve changes.
+
+Can:
+
+Preview landing page changes
+Approve or reject drafts
+Leave comments
+Publish approved updates
+
+Viewer
+
+Read-only access.
+
+Can:
+
+View content
+Preview page
+Review current live version
+
+3. Dashboard Sections
+A. Hero Section Manager
+
+Admin should be able to update:
+
+Headline
+Subheadline
+Hero background image or video
+Primary button text
+Primary button link
+Secondary button text
+Secondary button link
+Hero badges
+Hero stats
+
+Example fields:
+
+Company headline
+Short description
+“Partner With Us” button
+“View Pipeline” button
+Project value advised
+Countries active
+Client retention
+
+B. Stats Manager
+
+Admin should be able to update numbers shown on the landing page.
+
+Fields:
+
+Project Value Advised
+African Countries
+Client Retention
+Infrastructure Sectors
+Global Inquiries
+Years Active
+
+Each stat should include:
+
+Label
+Number
+Suffix, such as “+” or “%”
+Short description
+Visibility toggle
+
+C. Services Manager
+
+Admin should be able to add, edit, reorder, or hide services.
+
+Service fields:
+
+Service name
+Category
+Short description
+Bullet points
+Icon
+Button text
+Button link
+Status: active / hidden
+
+Current service examples:
+
+Government Advisory
+Project Finance
+Contracting & Procurement
+Project Development
+PPP Structuring
+Capital Raising
+ESG Compliance
+Procurement
+
+D. Project Pipeline Manager
+
+Admin should be able to manage all pipeline cards.
+
+Project fields:
+
+Project name
+Country
+Sector
+Estimated value
+Project status
+Zafora role
+Description
+Funding stage
+Number of interested partners
+CTA text
+CTA link
+Project image or icon
+Visibility toggle
+
+Example statuses:
+
+Seeking Funding
+Funded
+Government Review
+Under Review
+Open for Partners
+Closed
+
+E. Countries & Markets Manager
+
+Admin should be able to update countries listed on the page.
+
+Fields:
+
+Country name
+Region
+Active / inactive
+Display order
+
+Current examples:
+
+Rwanda
+Nigeria
+Kenya
+Ghana
+Egypt
+Tanzania
+Ethiopia
+Senegal
+Côte d'Ivoire
+Uganda
+Mozambique
+Morocco
+Angola
+Cameroon
+
+F. Sectors Manager
+
+Admin should be able to manage sector cards.
+
+Sector fields:
+
+Sector name
+Short description
+Icon
+Image
+Status
+Display order
+
+Current sectors:
+
+Energy
+Water
+Transport
+Healthcare
+Digital
+Agriculture
+
+G. Pillars / Audience Manager
+
+Admin should be able to update the “Built for ecosystem leaders” section.
+
+Audience cards:
+
+Governments
+Investors & DFIs
+Contractors & EPC
+
+Each card should include:
+
+Title
+Description
+Bullet points
+Icon
+CTA button
+CTA link
+
+H. Methodology Manager
+
+Admin should be able to update the delivery model steps.
+
+Fields:
+
+Step number
+Step title
+Step description
+Icon
+Display order
+Visibility toggle
+
+Current steps:
+
+Origination & Screening
+Feasibility & Structuring
+Capital Raising
+Procurement
+Execution Oversight
+Operations & Handover
+
+I. About Us Manager
+
+Admin should be able to update:
+
+Company story
+Mission
+Vision
+Who We Are section
+Founded date
+Headquarters
+Leadership message
+Company summary
+About page CTA
+
+Important editable company info:
+
+Founded in January 2025
+U.S.-based company
+Headquartered in Tampa, Florida
+Office email
+Physical address
+
+J. CTA Section Manager
+
+Admin should be able to update call-to-action sections.
+
+Fields:
+
+CTA headline
+CTA description
+Primary button text
+Primary button link
+Secondary button text
+Secondary button link
+Background image
+Visibility toggle
+
+Example:
+
+“Ready to build?”
+“Your next infrastructure project starts here.”
+
+K. Footer Manager
+
+Admin should be able to update:
+
+Company description
+Email
+Address
+Navigation links
+Service links
+Engage message
+Sector links
+Copyright year
+Legal links
+Social media links
+
+4. Image & Media Manager
+
+Admin should be able to:
+
+Upload images
+Replace existing images
+Crop images
+Add alt text
+Compress images
+Organize images by section
+Delete unused images
+Preview how images look on desktop and mobile
+
+Image fields:
+
+File name
+Image
+Alt text
+Section used
+Uploaded by
+Upload date
+
+5. Button & Link Manager
+
+Every button should be editable.
+
+Fields:
+
+Button text
+Button destination
+Open in same tab / new tab
+Button style
+Visibility
+
+Examples:
+
+Partner With Us
+View Pipeline
+Start a Project
+Engage Practice
+Express Interest
+Start Submission
+Register Interest
+Start a Conversation
+
+6. SEO Manager
+
+Admin should be able to update:
+
+Page title
+Meta description
+SEO keywords
+Open Graph title
+Open Graph description
+Social share image
+Canonical URL
+Index / no-index setting
+
+7. Preview Before Publishing
+
+The admin tool must include:
+
+Desktop preview
+Tablet preview
+Mobile preview
+Draft preview link
+Side-by-side live vs draft preview
+
+No change should go live until approved by Super Admin or Approver.
+
+8. Draft & Publishing Workflow
+
+Recommended workflow:
+
+Create edit
+Save as draft
+Preview draft
+Submit for approval
+Approve or reject
+Publish live
+Save version history
+
+Statuses:
+
+Draft
+Pending Review
+Approved
+Published
+Rejected
+Archived
+
+9. Version History
+
+Every update should be saved.
+
+Track:
+
+Who changed it
+What changed
+When it changed
+Old version
+New version
+Published version
+Restore button
+
+This protects the site from accidental mistakes.
+
+10. Security Requirements
+
+The admin tool should include:
+
+Secure login
+Role-based access control
+Two-factor authentication
+Password reset
+Session timeout
+Admin activity log
+Change approval workflow
+No public access to admin pages
+
+Finance or business-sensitive controls should only be available to Super Admin.
+
+11. Recommended Database Tables
+
+Core tables:
+
+users
+admin_roles
+landing_page_sections
+section_content
+media_library
+services
+projects
+countries
+sectors
+methodology_steps
+cta_blocks
+footer_links
+seo_settings
+content_versions
+publish_history
+admin_activity_logs
+
+12. Best Simple Admin Layout
+
+The admin dashboard should have a clean left-side menu:
+
+Dashboard
+Hero Section
+Stats
+Services
+Projects
+Countries
+Sectors
+Methodology
+About Us
+CTA Sections
+Footer
+Images
+SEO
+Preview
+Publish Center
+Admin Users
+Activity Log
+
+13. Must-Have Phase 1 Features
+
+For Phase 1, build only what is needed:
+
+Admin login
+Role permissions
+Edit landing page sections
+Image upload
+Project pipeline manager
+Services manager
+About Us manager
+Footer manager
+SEO manager
+Preview before publish
+Publish approval
+Version history
+
+14. Final Requirement Statement
+
+Zafora Holding needs a simple content management admin tool that allows authorized admins to update the full landing page, manage project pipeline content, edit services, replace images, control CTA buttons, update company information, manage SEO, preview changes, and publish approved updates without touching code. The system must include role-based permissions, draft approval, version history, image management, and secure admin access.
