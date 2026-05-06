@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText, Eye, EyeOff } from "lucide-react";
+import { Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText, Eye, EyeOff, Settings } from "lucide-react";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsTable from "@/components/admin/ProjectsTable";
 import DashboardHome from "@/components/admin/DashboardHome";
 import DocumentsTable from "@/components/admin/DocumentsTable";
+import SettingsPanel from "@/components/admin/SettingsPanel";
 import logo from "@/assets/logo.png";
 
 const TABS = [
@@ -12,6 +13,7 @@ const TABS = [
   { id: "leads", label: "Inquiries", icon: Inbox, desc: "People who contacted you" },
   { id: "projects", label: "Projects", icon: FolderOpen, desc: "Your project pipeline" },
   { id: "documents", label: "Documents", icon: FileText, desc: "Files & reports" },
+  { id: "settings", label: "Settings", icon: Settings, desc: "Password & data export" },
 ];
 
 export default function Admin() {
@@ -28,7 +30,8 @@ export default function Admin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "zafora2024") {
+    const storedPassword = localStorage.getItem("zafora_admin_password") || "zafora2024";
+    if (password === storedPassword) {
       setIsAuthenticated(true);
       localStorage.setItem("zafora_admin_auth", "true");
       setError(false);
@@ -194,6 +197,7 @@ export default function Admin() {
           {activeTab === "leads" && <LeadsTable />}
           {activeTab === "projects" && <ProjectsTable />}
           {activeTab === "documents" && <DocumentsTable />}
+          {activeTab === "settings" && <SettingsPanel />}
         </div>
       </main>
     </div>

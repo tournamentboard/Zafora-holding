@@ -130,6 +130,14 @@ export interface CreateDocumentBody {
   description?: string | null;
 }
 
+export interface UpdateDocumentBody {
+  title?: string;
+  documentType?: string;
+  visibility?: string;
+  fileUrl?: string | null;
+  description?: string | null;
+}
+
 export interface StatusStat {
   status: string;
   count: number;

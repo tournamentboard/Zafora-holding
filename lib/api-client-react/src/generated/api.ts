@@ -36,6 +36,7 @@ import type {
   ListServices200,
   Project,
   ProjectInterest,
+  UpdateDocumentBody,
   UpdateLeadBody,
   UpdateProjectBody,
 } from "./api.schemas";
@@ -1259,6 +1260,93 @@ export const useCreateDocument = <
   TContext
 > => {
   return useMutation(getCreateDocumentMutationOptions(options));
+};
+
+/**
+ * @summary Update a document (admin)
+ */
+export const getUpdateDocumentUrl = (id: number) => {
+  return `/api/documents/${id}`;
+};
+
+export const updateDocument = async (
+  id: number,
+  updateDocumentBody: UpdateDocumentBody,
+  options?: RequestInit,
+): Promise<Document> => {
+  return customFetch<Document>(getUpdateDocumentUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateDocumentBody),
+  });
+};
+
+export const getUpdateDocumentMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateDocument>>,
+    TError,
+    { id: number; data: BodyType<UpdateDocumentBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateDocument>>,
+  TError,
+  { id: number; data: BodyType<UpdateDocumentBody> },
+  TContext
+> => {
+  const mutationKey = ["updateDocument"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateDocument>>,
+    { id: number; data: BodyType<UpdateDocumentBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateDocument(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateDocumentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateDocument>>
+>;
+export type UpdateDocumentMutationBody = BodyType<UpdateDocumentBody>;
+export type UpdateDocumentMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a document (admin)
+ */
+export const useUpdateDocument = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateDocument>>,
+    TError,
+    { id: number; data: BodyType<UpdateDocumentBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateDocument>>,
+  TError,
+  { id: number; data: BodyType<UpdateDocumentBody> },
+  TContext
+> => {
+  return useMutation(getUpdateDocumentMutationOptions(options));
 };
 
 /**

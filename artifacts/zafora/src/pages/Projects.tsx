@@ -18,12 +18,18 @@ export default function Projects() {
   const [status, setStatus] = useState("All");
   const [search, setSearch] = useState("");
 
-  const queryParams: any = {};
-  if (sector !== "All") queryParams.sector = sector;
-  if (status !== "All") queryParams.status = status;
-  if (search) queryParams.search = search;
+  const { data: rawData, isLoading, error } = useListProjects({});
 
-  const { data, isLoading, error } = useListProjects(queryParams);
+  // Client-side filtering supports multi-sector (comma-separated in DB)
+  const data = {
+    ...rawData,
+    projects: rawData?.projects?.filter(p => {
+      const sectorMatch = sector === "All" || p.sector.split(",").map(s => s.trim()).some(s => s.toLowerCase() === sector.toLowerCase());
+      const statusMatch = status === "All" || p.fundingStatus.toLowerCase().replace(/_/g, " ") === status.toLowerCase() || p.fundingStatus === status;
+      const searchMatch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.country.toLowerCase().includes(search.toLowerCase()) || (p.description || "").toLowerCase().includes(search.toLowerCase());
+      return sectorMatch && statusMatch && searchMatch;
+    }),
+  };
 
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
 

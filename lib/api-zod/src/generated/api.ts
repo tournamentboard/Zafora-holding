@@ -316,6 +316,31 @@ export const CreateDocumentBody = zod.object({
 });
 
 /**
+ * @summary Update a document (admin)
+ */
+export const UpdateDocumentParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateDocumentBody = zod.object({
+  title: zod.string().optional(),
+  documentType: zod.string().optional(),
+  visibility: zod.string().optional(),
+  fileUrl: zod.string().nullish(),
+  description: zod.string().nullish(),
+});
+
+export const UpdateDocumentResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  documentType: zod.string(),
+  visibility: zod.string(),
+  fileUrl: zod.string().nullish(),
+  description: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+/**
  * @summary Delete a document (admin)
  */
 export const DeleteDocumentParams = zod.object({

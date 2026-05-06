@@ -48,10 +48,10 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - **Home** — Hero, scrolling ticker, image band, stats, services preview, delivery model, testimonial, pipeline preview, sectors, CTA
 - **About Us** — Company story, mission/vision/values, 6 core values, leadership team, timeline, sectors, CTA
 - **Services** — Hero mosaic, stats strip, 6 service cards with images, CTA
-- **Project Pipeline** — Filterable grid (sector + funding status + search), "Express Interest" modal
+- **Project Pipeline** — Filterable grid (sector + funding status + search), "Express Interest" modal; multi-sector handled client-side
 - **Government Review Center** — Full-width hero image, stats, capability cards, evaluation framework, sidebar
 - **Submit Request** — Trust sidebar + 3-step numbered form
-- **Admin Dashboard** — Lead inbox, project CRUD, document center, analytics (password-protected at /admin)
+- **Admin Dashboard** — 5 tabs: Overview (stats + management tips), Inquiries (CRM), Projects (multi-sector CRUD), Documents (preview + edit), Settings (password change + CSV export)
 - **404 Page** — Branded with logo, navigation back to home/pipeline
 
 ## User preferences
@@ -68,6 +68,9 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - `pnpm run dev` at workspace root is NOT supported — run workflows individually
 - Wouter v3 nested Switch: use `<Route>` (no path) as catch-all in outer Switch, not `<Route path="/">`
 - CSS ticker animation lives in `index.css` as `@keyframes ticker` / `.ticker-track`
+- Project `sector` field stores comma-separated multi-sector values (e.g. "Energy,Transport"); Projects.tsx filters client-side
+- Admin password is stored in localStorage key `zafora_admin_password` (fallback: `zafora2024`); Settings tab lets you change it
+- Document preview works for Google Drive, Dropbox, OneDrive, and direct PDF URLs — transforms to embeddable URL in DocumentsTable
 
 ## Pointers
 

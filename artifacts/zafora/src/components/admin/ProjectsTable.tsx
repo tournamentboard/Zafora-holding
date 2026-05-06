@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useListProjects, useCreateProject, useDeleteProject, useUpdateProject, useListProjectInterests } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, X, Users, MapPin, DollarSign, ChevronDown, ChevronUp, Eye } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Users, MapPin, DollarSign, Eye, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 
-const SECTORS = ["Energy", "Water", "Transport", "Healthcare", "Agriculture", "Housing", "Digital", "Education"];
+const SECTORS = ["Energy", "Water", "Transport", "Healthcare", "Agriculture", "Housing", "Digital", "Education", "Logistics", "Telecom"];
 const FUNDING_STATUSES = [
   { value: "seeking_funding", label: "Seeking Funding", color: "bg-red-100 text-red-600" },
   { value: "investor_ready", label: "Investor Ready", color: "bg-blue-100 text-blue-700" },
@@ -23,35 +23,93 @@ const SECTOR_COLORS: Record<string, string> = {
   Housing: "bg-orange-100 text-orange-700",
   Digital: "bg-teal-100 text-teal-700",
   Education: "bg-indigo-100 text-indigo-700",
+  Logistics: "bg-cyan-100 text-cyan-700",
+  Telecom: "bg-pink-100 text-pink-700",
 };
 
 function getFundingInfo(value: string) {
   return FUNDING_STATUSES.find(s => s.value === value) || { label: value, color: "bg-gray-100 text-gray-600" };
 }
 
-function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
+function parseSectors(sector: string): string[] {
+  return sector ? sector.split(",").map(s => s.trim()).filter(Boolean) : [];
+}
+
+// ── Multi-Sector Picker ────────────────────────────────────────────
+function SectorPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const selected = parseSectors(value);
+  const toggle = (sector: string) => {
+    const next = selected.includes(sector)
+      ? selected.filter(s => s !== sector)
+      : [...selected, sector];
+    onChange(next.join(","));
+  };
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <div className="space-y-2">
+      <div className="flex flex-wrap gap-2">
+        {SECTORS.map(sector => {
+          const isSelected = selected.includes(sector);
+          return (
+            <button
+              key={sector}
+              type="button"
+              onClick={() => toggle(sector)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                isSelected
+                  ? "bg-[#173f35] text-white border-[#173f35] shadow-sm"
+                  : "bg-white text-[#65736f] border-[#e5ded3] hover:border-[#173f35] hover:text-[#173f35]"
+              }`}
+            >
+              {sector}
+            </button>
+          );
+        })}
+      </div>
+      {selected.length === 0 && (
+        <p className="text-xs text-amber-600 font-medium">Select at least one sector.</p>
+      )}
+      {selected.length > 0 && (
+        <p className="text-xs text-[#65736f]">{selected.length} sector{selected.length > 1 ? "s" : ""} selected: {selected.join(", ")}</p>
+      )}
+    </div>
+  );
+}
+
+// ── Project Form ───────────────────────────────────────────────────
+function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
+  const defaultSectors = defaultValues?.sector || "";
+  const [sectors, setSectors] = useState(defaultSectors);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!sectors) { alert("Please select at least one sector."); return; }
+    onSubmit(e, sectors);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Project Name *</label>
         <input name="name" defaultValue={defaultValues?.name} required placeholder="e.g. Lagos Water Treatment Plant"
           className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Sector *</label>
-          <div className="relative">
-            <select name="sector" defaultValue={defaultValues?.sector || "Energy"}
-              className="w-full appearance-none border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef] pr-8">
-              {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8a958f] pointer-events-none" />
-          </div>
+      <div>
+        <label className="block text-sm font-semibold text-[#10231f] mb-2">Sectors * <span className="text-xs font-normal text-[#8a958f]">(select all that apply)</span></label>
+        <div className="bg-[#f7f4ef] border border-[#e5ded3] rounded-xl p-4">
+          <SectorPicker value={sectors} onChange={setSectors} />
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Country *</label>
           <input name="country" defaultValue={defaultValues?.country} required placeholder="e.g. Nigeria"
+            className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Region</label>
+          <input name="region" defaultValue={defaultValues?.region} placeholder="e.g. West Africa"
             className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
         </div>
       </div>
@@ -82,18 +140,24 @@ function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
 
       <div>
         <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Partner Needs</label>
-        <input name="partnerNeed" defaultValue={defaultValues?.partnerNeed} placeholder="e.g. Investors, EPC Contractors"
+        <input name="partnerNeed" defaultValue={defaultValues?.partnerNeed} placeholder="e.g. Investors, EPC Contractors, Technology Partners"
           className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Description</label>
-        <textarea name="description" defaultValue={defaultValues?.description} placeholder="A brief description of the project..."
-          rows={3}
+        <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Project Description</label>
+        <textarea name="description" defaultValue={defaultValues?.description} placeholder="A brief description of the project, its goals, and why it matters..."
+          rows={4}
           className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef] resize-none" />
       </div>
 
-      <div className="flex gap-3 pt-2">
+      <div>
+        <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Project Image URL <span className="text-xs font-normal text-[#8a958f]">(optional)</span></label>
+        <input name="imageUrl" defaultValue={defaultValues?.imageUrl} placeholder="https://... (paste an image URL for the project card)"
+          className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
+      </div>
+
+      <div className="flex gap-3 pt-1">
         <button type="submit" className="flex-1 py-3 rounded-xl bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-colors">
           {buttonText}
         </button>
@@ -107,6 +171,7 @@ function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
   );
 }
 
+// ── Main Component ─────────────────────────────────────────────────
 export default function ProjectsTable() {
   const { data, isLoading, refetch } = useListProjects();
   const createProject = useCreateProject();
@@ -117,8 +182,9 @@ export default function ProjectsTable() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [viewingInterestsId, setViewingInterestsId] = useState<number | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreate = async (e: React.FormEvent<HTMLFormElement>, sectors: string) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     try {
@@ -126,13 +192,15 @@ export default function ProjectsTable() {
         // @ts-ignore
         data: {
           name: formData.get("name") as string,
-          sector: formData.get("sector") as string,
+          sector: sectors,
           country: formData.get("country") as string,
+          region: (formData.get("region") as string) || undefined,
           fundingStatus: formData.get("fundingStatus") as string,
           estimatedValue: formData.get("estimatedValue") as string,
           zaforaRole: formData.get("zaforaRole") as string,
-          partnerNeed: formData.get("partnerNeed") as string || undefined,
-          description: formData.get("description") as string || undefined,
+          partnerNeed: (formData.get("partnerNeed") as string) || undefined,
+          description: (formData.get("description") as string) || undefined,
+          imageUrl: (formData.get("imageUrl") as string) || undefined,
         }
       });
       toast({ title: "Project added to your website!" });
@@ -143,7 +211,7 @@ export default function ProjectsTable() {
     }
   };
 
-  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>, sectors: string) => {
     e.preventDefault();
     if (!editingProject) return;
     const formData = new FormData(e.currentTarget);
@@ -153,13 +221,15 @@ export default function ProjectsTable() {
         // @ts-ignore
         data: {
           name: formData.get("name") as string,
-          sector: formData.get("sector") as string,
+          sector: sectors,
           country: formData.get("country") as string,
+          region: (formData.get("region") as string) || undefined,
           fundingStatus: formData.get("fundingStatus") as string,
           estimatedValue: formData.get("estimatedValue") as string,
           zaforaRole: formData.get("zaforaRole") as string,
-          partnerNeed: formData.get("partnerNeed") as string || undefined,
-          description: formData.get("description") as string || undefined,
+          partnerNeed: (formData.get("partnerNeed") as string) || undefined,
+          description: (formData.get("description") as string) || undefined,
+          imageUrl: (formData.get("imageUrl") as string) || undefined,
         }
       });
       toast({ title: "Project updated!" });
@@ -225,29 +295,51 @@ export default function ProjectsTable() {
 
         {data?.projects?.map((project) => {
           const fundingInfo = getFundingInfo(project.fundingStatus);
-          const sectorColor = SECTOR_COLORS[project.sector] || "bg-gray-100 text-gray-600";
+          const sectorList = parseSectors(project.sector);
           const isEditing = editingProject?.id === project.id;
+          const isExpanded = expandedId === project.id;
 
           return (
             <div key={project.id} className="bg-white border border-[#e5ded3] rounded-2xl shadow-sm overflow-hidden">
               <div className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${sectorColor}`}>{project.sector}</span>
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${fundingInfo.color}`}>{fundingInfo.label}</span>
+                    {/* Sector tags */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                      {sectorList.map(s => (
+                        <span key={s} className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${SECTOR_COLORS[s] || "bg-gray-100 text-gray-600"}`}>{s}</span>
+                      ))}
+                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${fundingInfo.color}`}>{fundingInfo.label}</span>
                     </div>
+
                     <h3 className="text-lg font-bold text-[#10231f] mb-2">{project.name}</h3>
+
                     <div className="flex flex-wrap items-center gap-4 text-sm text-[#65736f]">
-                      <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{project.country}</span>
+                      <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{project.country}{project.region ? ` · ${project.region}` : ""}</span>
                       <span className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" />{project.estimatedValue}</span>
                       <button
                         onClick={() => setViewingInterestsId(project.id)}
                         className="flex items-center gap-1 text-[#173f35] font-semibold hover:underline"
                       >
-                        <Users className="h-3.5 w-3.5" />{project.interestCount || 0} people interested
+                        <Users className="h-3.5 w-3.5" />{project.interestCount || 0} interested
                       </button>
                     </div>
+
+                    {/* Expand description */}
+                    {project.description && (
+                      <button
+                        onClick={() => setExpandedId(isExpanded ? null : project.id)}
+                        className="flex items-center gap-1 mt-2 text-xs text-[#8a958f] hover:text-[#173f35] transition-colors"
+                      >
+                        {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                        {isExpanded ? "Hide description" : "Show description"}
+                      </button>
+                    )}
+                    {isExpanded && project.description && (
+                      <p className="mt-2 text-sm text-[#65736f] leading-relaxed bg-[#f7f4ef] rounded-xl px-4 py-3">
+                        {project.description}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex gap-2 shrink-0">
@@ -263,7 +355,7 @@ export default function ProjectsTable() {
                       className={`p-2.5 rounded-xl border transition-colors ${isEditing ? "bg-[#173f35] text-white border-[#173f35]" : "border-[#e5ded3] text-[#65736f] hover:bg-[#f7f4ef]"}`}
                       title="Edit project"
                     >
-                      {isEditing ? <ChevronUp className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                      <Pencil className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(project.id, project.name)}
@@ -351,5 +443,3 @@ function InterestsModal({ projectId, onClose }: { projectId: number; onClose: ()
     </div>
   );
 }
-
-import { Mail } from "lucide-react";

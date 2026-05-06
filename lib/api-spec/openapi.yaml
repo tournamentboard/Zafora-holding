@@ -340,6 +340,29 @@ paths:
                 $ref: "#/components/schemas/Document"
 
   /documents/{id}:
+    patch:
+      operationId: updateDocument
+      tags: [documents]
+      summary: Update a document (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDocumentBody"
+      responses:
+        "200":
+          description: Document updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
     delete:
       operationId: deleteDocument
       tags: [documents]
@@ -681,6 +704,22 @@ components:
           type: string
           nullable: true
       required: [title, documentType, visibility]
+
+    UpdateDocumentBody:
+      type: object
+      properties:
+        title:
+          type: string
+        documentType:
+          type: string
+        visibility:
+          type: string
+        fileUrl:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
 
     DashboardStats:
       type: object
