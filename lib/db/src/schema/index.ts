@@ -3,3 +3,6 @@ export * from "./projects";
 export * from "./project_interests";
 export * from "./documents";
 export * from "./services";
+export * from "./content_stats";
+export * from "./methodology_steps";
+export * from "./site_settings";

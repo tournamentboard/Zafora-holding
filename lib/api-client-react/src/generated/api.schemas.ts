@@ -62,7 +62,6 @@ export interface Project {
   imageUrl?: string | null;
   interestCount: number;
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface CreateProjectBody {
@@ -138,6 +137,106 @@ export interface UpdateDocumentBody {
   description?: string | null;
 }
 
+export interface Service {
+  id: number;
+  name: string;
+  icon: string;
+  description: string;
+  bullets: string[];
+  imageUrl?: string | null;
+  category?: string | null;
+  displayOrder: number;
+  visible: boolean;
+}
+
+export interface CreateServiceBody {
+  name: string;
+  icon?: string;
+  description: string;
+  bullets: string[];
+  imageUrl?: string | null;
+  category?: string | null;
+  displayOrder?: number;
+  visible?: boolean;
+}
+
+export interface UpdateServiceBody {
+  name?: string;
+  icon?: string;
+  description?: string;
+  bullets?: string[];
+  imageUrl?: string | null;
+  category?: string | null;
+  displayOrder?: number;
+  visible?: boolean;
+}
+
+export interface ContentStat {
+  id: number;
+  label: string;
+  value: string;
+  suffix?: string | null;
+  description?: string | null;
+  iconName?: string | null;
+  displayOrder: number;
+  visible: boolean;
+}
+
+export interface CreateContentStatBody {
+  label: string;
+  value: string;
+  suffix?: string | null;
+  description?: string | null;
+  iconName?: string | null;
+  displayOrder?: number;
+  visible?: boolean;
+}
+
+export interface UpdateContentStatBody {
+  label?: string;
+  value?: string;
+  suffix?: string | null;
+  description?: string | null;
+  iconName?: string | null;
+  displayOrder?: number;
+  visible?: boolean;
+}
+
+export interface MethodologyStep {
+  id: number;
+  stepNumber: number;
+  title: string;
+  description: string;
+  iconName?: string | null;
+  displayOrder: number;
+  visible: boolean;
+}
+
+export interface CreateMethodologyStepBody {
+  stepNumber: number;
+  title: string;
+  description: string;
+  iconName?: string | null;
+  displayOrder?: number;
+  visible?: boolean;
+}
+
+export interface UpdateMethodologyStepBody {
+  stepNumber?: number;
+  title?: string;
+  description?: string;
+  iconName?: string | null;
+  displayOrder?: number;
+  visible?: boolean;
+}
+
+export interface SiteSetting {
+  id: number;
+  key: string;
+  value: string;
+  updatedAt: string;
+}
+
 export interface StatusStat {
   status: string;
   count: number;
@@ -160,15 +259,6 @@ export interface SectorStat {
   totalValue: string;
 }
 
-export interface Service {
-  id: number;
-  name: string;
-  icon: string;
-  description: string;
-  bullets: string[];
-  imageUrl?: string | null;
-}
-
 export type ListLeadsParams = {
   status?: string;
   requestType?: string;
@@ -184,8 +274,8 @@ export type ListLeads200 = {
 export type ListProjectsParams = {
   sector?: string;
   status?: string;
-  country?: string;
   search?: string;
+  limit?: number;
 };
 
 export type ListProjects200 = {
@@ -195,7 +285,6 @@ export type ListProjects200 = {
 
 export type ListProjectInterests200 = {
   interests: ProjectInterest[];
-  total: number;
 };
 
 export type ListDocumentsParams = {
@@ -214,4 +303,16 @@ export type GetProjectStats200 = {
 
 export type ListServices200 = {
   services: Service[];
+};
+
+export type ListContentStats200 = {
+  stats: ContentStat[];
+};
+
+export type ListMethodologySteps200 = {
+  steps: MethodologyStep[];
+};
+
+export type UpdateSiteSettingsBody = {
+  value: string;
 };

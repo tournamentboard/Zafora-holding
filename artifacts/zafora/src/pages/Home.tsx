@@ -1,4 +1,4 @@
-import { useListProjects, useListServices } from "@workspace/api-client-react";
+import { useListProjects, useListServices, useListContentStats, useListMethodologySteps } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -52,10 +52,36 @@ const SERVICE_ICONS: Record<number, React.ReactNode> = {
   5: <Award className="w-7 h-7" />,
 };
 
+const FALLBACK_STATS = [
+  { id: -1, label: "Project Value Advised", value: "$2.4B", suffix: "+", displayOrder: 0, visible: true },
+  { id: -2, label: "African Countries Active", value: "12", suffix: "+", displayOrder: 1, visible: true },
+  { id: -3, label: "Client Retention Rate", value: "95", suffix: "%", displayOrder: 2, visible: true },
+  { id: -4, label: "Infrastructure Sectors", value: "6", suffix: "", displayOrder: 3, visible: true },
+];
+
+const FALLBACK_STEPS = [
+  { id: -1, stepNumber: 1, title: "Origination & Screening", description: "Identifying viable national projects and conducting preliminary technical and economic viability assessments.", iconName: "Target", displayOrder: 0, visible: true },
+  { id: -2, stepNumber: 2, title: "Feasibility & Structuring", description: "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks.", iconName: "ShieldCheck", displayOrder: 1, visible: true },
+  { id: -3, stepNumber: 3, title: "Capital Raising", description: "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity.", iconName: "DollarSign", displayOrder: 2, visible: true },
+  { id: -4, stepNumber: 4, title: "Procurement", description: "Transparent, competitive tendering to select world-class EPC contractors and technology partners.", iconName: "Handshake", displayOrder: 3, visible: true },
+  { id: -5, stepNumber: 5, title: "Execution Oversight", description: "Stringent project management, milestone tracking, and quality assurance during construction.", iconName: "TrendingUp", displayOrder: 4, visible: true },
+  { id: -6, stepNumber: 6, title: "Operations & Handover", description: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts.", iconName: "Award", displayOrder: 5, visible: true },
+];
+
 export default function Home() {
   usePageTitle("Home");
   const { data: projectsData } = useListProjects({ limit: 3 });
   const { data: servicesData } = useListServices();
+  const { data: contentStatsData } = useListContentStats();
+  const { data: methodologyData } = useListMethodologySteps();
+
+  const siteStats = (contentStatsData?.stats?.filter(s => s.visible) ?? []).length > 0
+    ? contentStatsData!.stats.filter(s => s.visible)
+    : FALLBACK_STATS;
+
+  const methodologySteps = (methodologyData?.steps?.filter(s => s.visible) ?? []).length > 0
+    ? methodologyData!.steps.filter(s => s.visible)
+    : FALLBACK_STEPS;
 
   return (
     <div className="flex flex-col overflow-x-hidden">
@@ -119,13 +145,9 @@ export default function Home() {
               </motion.div>
 
               <motion.div {...fadeUp(0.5)} className="grid grid-cols-3 gap-6 pt-8 border-t border-[#e5ded3]">
-                {[
-                  { value: "$2.4B+", label: "Project Value Advised" },
-                  { value: "12+", label: "African Countries" },
-                  { value: "95%", label: "Client Retention" },
-                ].map((s, i) => (
+                {siteStats.slice(0, 3).map((s, i) => (
                   <div key={i}>
-                    <div className="text-2xl lg:text-3xl font-bold text-[#173f35] tracking-tight mb-1">{s.value}</div>
+                    <div className="text-2xl lg:text-3xl font-bold text-[#173f35] tracking-tight mb-1">{s.value}{s.suffix}</div>
                     <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest leading-tight">{s.label}</div>
                   </div>
                 ))}
@@ -313,15 +335,12 @@ export default function Home() {
         </div>
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: "$2.4B+", label: "Project Value Advised", icon: <DollarSign className="h-6 w-6" /> },
-              { value: "12+", label: "African Countries Active", icon: <Globe className="h-6 w-6" /> },
-              { value: "95%", label: "Client Retention Rate", icon: <Award className="h-6 w-6" /> },
-              { value: "6", label: "Infrastructure Sectors", icon: <Briefcase className="h-6 w-6" /> },
-            ].map((s, i) => (
-              <motion.div key={i} {...fadeInView(i * 0.08)} className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-[#c59b4a] mb-2">{s.icon}</div>
-                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">{s.value}</div>
+            {siteStats.map((s, i) => (
+              <motion.div key={s.id} {...fadeInView(i * 0.08)} className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-[#c59b4a] mb-2">
+                  <BarChart3 className="h-6 w-6" />
+                </div>
+                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">{s.value}{s.suffix}</div>
                 <div className="text-sm font-semibold text-white/60 uppercase tracking-widest">{s.label}</div>
               </motion.div>
             ))}
@@ -393,24 +412,17 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[
-                  { num: "01", icon: <Target className="h-5 w-5" />, title: "Origination & Screening", desc: "Identifying viable national projects and conducting preliminary technical and economic viability assessments." },
-                  { num: "02", icon: <ShieldCheck className="h-5 w-5" />, title: "Feasibility & Structuring", desc: "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks." },
-                  { num: "03", icon: <DollarSign className="h-5 w-5" />, title: "Capital Raising", desc: "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity." },
-                  { num: "04", icon: <Handshake className="h-5 w-5" />, title: "Procurement", desc: "Transparent, competitive tendering to select world-class EPC contractors and technology partners." },
-                  { num: "05", icon: <TrendingUp className="h-5 w-5" />, title: "Execution Oversight", desc: "Stringent project management, milestone tracking, and quality assurance during construction." },
-                  { num: "06", icon: <Award className="h-5 w-5" />, title: "Operations & Handover", desc: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts." },
-                ].map((step, i) => (
-                  <motion.div key={i} {...fadeInView(i * 0.07)} className="group flex gap-5">
+                {methodologySteps.map((step, i) => (
+                  <motion.div key={step.id} {...fadeInView(i * 0.07)} className="group flex gap-5">
                     <div className="flex flex-col items-center gap-2 shrink-0">
                       <div className="w-10 h-10 rounded-xl bg-[#c59b4a]/20 border border-[#c59b4a]/30 flex items-center justify-center text-[#c59b4a]">
-                        {step.icon}
+                        <Target className="h-5 w-5" />
                       </div>
-                      <div className="text-xs font-bold text-[#c59b4a]/60">{step.num}</div>
+                      <div className="text-xs font-bold text-[#c59b4a]/60">{String(step.stepNumber).padStart(2, "0")}</div>
                     </div>
                     <div>
                       <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
-                      <p className="text-white/55 text-sm leading-relaxed">{step.desc}</p>
+                      <p className="text-white/55 text-sm leading-relaxed">{step.description}</p>
                     </div>
                   </motion.div>
                 ))}

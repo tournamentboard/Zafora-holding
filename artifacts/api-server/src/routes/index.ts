@@ -5,6 +5,7 @@ import projectsRouter from "./projects";
 import documentsRouter from "./documents";
 import statsRouter from "./stats";
 import servicesRouter from "./services";
+import contentRouter from "./content";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(projectsRouter);
 router.use(documentsRouter);
 router.use(statsRouter);
 router.use(servicesRouter);
+router.use(contentRouter);
 
 export default router;

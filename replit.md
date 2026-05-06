@@ -31,7 +31,8 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - `lib/api-spec/openapi.yaml` — OpenAPI contract (source of truth)
 - `lib/api-client-react/src/generated/` — Generated React Query hooks
 - `lib/api-zod/src/generated/api.ts` — Generated Zod schemas for server
-- `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services)
+- `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services, content_stats, methodology_steps, site_settings)
+- `artifacts/zafora/src/components/admin/` — All admin panel components
 - `artifacts/zafora/src/hooks/use-page-title.ts` — Per-page document.title hook
 - `artifacts/zafora/public/` — favicon.svg, opengraph.jpg, hero assets
 
@@ -45,13 +46,22 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 
 ## Product
 
-- **Home** — Hero, scrolling ticker, image band, stats, services preview, delivery model, testimonial, pipeline preview, sectors, CTA
+- **Home** — Hero (API-driven), scrolling ticker, image band, stats (API-driven), services preview, delivery model (API-driven), testimonial, pipeline preview, sectors, CTA
 - **About Us** — Company story, mission/vision/values, 6 core values, leadership team, timeline, sectors, CTA
 - **Services** — Hero mosaic, stats strip, 6 service cards with images, CTA
 - **Project Pipeline** — Filterable grid (sector + funding status + search), "Express Interest" modal; multi-sector handled client-side
 - **Government Review Center** — Full-width hero image, stats, capability cards, evaluation framework, sidebar
 - **Submit Request** — Trust sidebar + 3-step numbered form
-- **Admin Dashboard** — 5 tabs: Overview (stats + management tips), Inquiries (CRM), Projects (multi-sector CRUD), Documents (preview + edit), Settings (password change + CSV export)
+- **Admin Dashboard** — Grouped sidebar (Overview, Content, Pipeline, CRM, Admin):
+  - **Dashboard** — Stats & recent activity
+  - **Site Settings** — Hero text/CTAs, Footer contact info, SEO per-page (tabs)
+  - **Site Stats** — Edit homepage numbers (value, suffix, label, icon, visibility)
+  - **Services** — Full CRUD: name, icon, description, bullets, category, image, order
+  - **Methodology** — Edit/add/delete/reorder delivery model steps
+  - **Projects** — Multi-sector CRUD with tag picker
+  - **Documents** — Preview modal + edit + description
+  - **Inquiries** — Full CRM with lead statuses and notes
+  - **Settings** — Password change + CSV export
 - **404 Page** — Branded with logo, navigation back to home/pipeline
 
 ## User preferences

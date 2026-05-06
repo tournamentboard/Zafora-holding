@@ -5,7 +5,7 @@ import {
   CreateProjectBody,
   ListProjectsQueryParams,
   UpdateProjectBody,
-  GetProjectParams,
+  UpdateProjectParams,
   ExpressInterestBody,
   ListProjectInterestsParams,
 } from "@workspace/api-zod";
@@ -59,7 +59,7 @@ router.post("/projects", async (req, res) => {
 });
 
 router.get("/projects/:id", async (req, res) => {
-  const parsed = GetProjectParams.safeParse({ id: parseInt(req.params.id) });
+  const parsed = UpdateProjectParams.safeParse({ id: parseInt(req.params.id) });
   if (!parsed.success) { res.status(400).json({ error: "Invalid id" }); return; }
   const [project] = await db.select().from(projectsTable).where(eq(projectsTable.id, parsed.data.id));
   if (!project) { res.status(404).json({ error: "Not found" }); return; }

@@ -22,6 +22,8 @@ tags:
     description: Analytics and statistics
   - name: services
     description: Consulting services
+  - name: content
+    description: Editable site content (stats, methodology, settings)
 
 paths:
   /healthz:
@@ -150,14 +152,14 @@ paths:
           in: query
           schema:
             type: string
-        - name: country
-          in: query
-          schema:
-            type: string
         - name: search
           in: query
           schema:
             type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
       responses:
         "200":
           description: List of projects
@@ -176,7 +178,7 @@ paths:
     post:
       operationId: createProject
       tags: [projects]
-      summary: Create a new project (admin)
+      summary: Create a new project
       requestBody:
         required: true
         content:
@@ -185,34 +187,17 @@ paths:
               $ref: "#/components/schemas/CreateProjectBody"
       responses:
         "201":
-          description: Created project
+          description: Project created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Project"
 
   /projects/{id}:
-    get:
-      operationId: getProject
-      tags: [projects]
-      summary: Get a single project
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Project
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Project"
     patch:
       operationId: updateProject
       tags: [projects]
-      summary: Update project (admin)
+      summary: Update a project
       parameters:
         - name: id
           in: path
@@ -235,7 +220,7 @@ paths:
     delete:
       operationId: deleteProject
       tags: [projects]
-      summary: Delete project (admin)
+      summary: Delete a project
       parameters:
         - name: id
           in: path
@@ -269,9 +254,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ProjectInterest"
-                  total:
-                    type: integer
-                required: [interests, total]
+                required: [interests]
     post:
       operationId: expressInterest
       tags: [interests]
@@ -431,6 +414,255 @@ paths:
                     items:
                       $ref: "#/components/schemas/Service"
                 required: [services]
+    post:
+      operationId: createService
+      tags: [services]
+      summary: Create a service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateServiceBody"
+      responses:
+        "201":
+          description: Service created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+
+  /services/{id}:
+    patch:
+      operationId: updateService
+      tags: [services]
+      summary: Update a service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateServiceBody"
+      responses:
+        "200":
+          description: Updated service
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+    delete:
+      operationId: deleteService
+      tags: [services]
+      summary: Delete a service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /content/stats:
+    get:
+      operationId: listContentStats
+      tags: [content]
+      summary: List editable site stats
+      responses:
+        "200":
+          description: List of stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ContentStat"
+                required: [stats]
+    post:
+      operationId: createContentStat
+      tags: [content]
+      summary: Create a content stat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContentStatBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentStat"
+
+  /content/stats/{id}:
+    patch:
+      operationId: updateContentStat
+      tags: [content]
+      summary: Update a content stat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContentStatBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentStat"
+    delete:
+      operationId: deleteContentStat
+      tags: [content]
+      summary: Delete a content stat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /content/methodology:
+    get:
+      operationId: listMethodologySteps
+      tags: [content]
+      summary: List methodology steps
+      responses:
+        "200":
+          description: List of steps
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  steps:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MethodologyStep"
+                required: [steps]
+    post:
+      operationId: createMethodologyStep
+      tags: [content]
+      summary: Create a methodology step
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMethodologyStepBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MethodologyStep"
+
+  /content/methodology/{id}:
+    patch:
+      operationId: updateMethodologyStep
+      tags: [content]
+      summary: Update a methodology step
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMethodologyStepBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MethodologyStep"
+    delete:
+      operationId: deleteMethodologyStep
+      tags: [content]
+      summary: Delete a methodology step
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /content/settings/{key}:
+    get:
+      operationId: getSiteSettings
+      tags: [content]
+      summary: Get site settings by key
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Settings value
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteSetting"
+    patch:
+      operationId: updateSiteSettings
+      tags: [content]
+      summary: Update site settings by key
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+              required: [value]
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteSetting"
 
 components:
   schemas:
@@ -562,9 +794,7 @@ components:
           type: integer
         createdAt:
           type: string
-        updatedAt:
-          type: string
-      required: [id, name, sector, country, fundingStatus, estimatedValue, zaforaRole, interestCount, createdAt, updatedAt]
+      required: [id, name, sector, country, fundingStatus, estimatedValue, zaforaRole, interestCount, createdAt]
 
     CreateProjectBody:
       type: object
@@ -721,6 +951,217 @@ components:
           type: string
           nullable: true
 
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        bullets:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+      required: [id, name, icon, description, bullets, displayOrder, visible]
+
+    CreateServiceBody:
+      type: object
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        bullets:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+      required: [name, description, bullets]
+
+    UpdateServiceBody:
+      type: object
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        bullets:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+
+    ContentStat:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        value:
+          type: string
+        suffix:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        iconName:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+      required: [id, label, value, displayOrder, visible]
+
+    CreateContentStatBody:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: string
+        suffix:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        iconName:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+      required: [label, value]
+
+    UpdateContentStatBody:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: string
+        suffix:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        iconName:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+
+    MethodologyStep:
+      type: object
+      properties:
+        id:
+          type: integer
+        stepNumber:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        iconName:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+      required: [id, stepNumber, title, description, displayOrder, visible]
+
+    CreateMethodologyStepBody:
+      type: object
+      properties:
+        stepNumber:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        iconName:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+      required: [stepNumber, title, description]
+
+    UpdateMethodologyStepBody:
+      type: object
+      properties:
+        stepNumber:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        iconName:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        visible:
+          type: boolean
+
+    SiteSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        value:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, key, value, updatedAt]
+
     DashboardStats:
       type: object
       properties:
@@ -765,23 +1206,3 @@ components:
         count:
           type: integer
       required: [status, count]
-
-    Service:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        icon:
-          type: string
-        description:
-          type: string
-        bullets:
-          type: array
-          items:
-            type: string
-        imageUrl:
-          type: string
-          nullable: true
-      required: [id, name, icon, description, bullets]

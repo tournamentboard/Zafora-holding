@@ -1,4 +1,4 @@
-import { pgTable, text, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -9,6 +9,9 @@ export const servicesTable = pgTable("services", {
   description: text("description").notNull(),
   bullets: text("bullets").array().notNull().default([]),
   imageUrl: text("image_url"),
+  category: text("category"),
+  displayOrder: integer("display_order").notNull().default(0),
+  visible: boolean("visible").notNull().default(true),
 });
 
 export const insertServiceSchema = createInsertSchema(servicesTable).omit({ id: true });

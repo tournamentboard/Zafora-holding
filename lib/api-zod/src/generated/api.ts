@@ -132,8 +132,8 @@ export const UpdateLeadResponse = zod.object({
 export const ListProjectsQueryParams = zod.object({
   sector: zod.coerce.string().optional(),
   status: zod.coerce.string().optional(),
-  country: zod.coerce.string().optional(),
   search: zod.coerce.string().optional(),
+  limit: zod.coerce.number().optional(),
 });
 
 export const ListProjectsResponse = zod.object({
@@ -152,14 +152,13 @@ export const ListProjectsResponse = zod.object({
       imageUrl: zod.string().nullish(),
       interestCount: zod.number(),
       createdAt: zod.string(),
-      updatedAt: zod.string(),
     }),
   ),
   total: zod.number(),
 });
 
 /**
- * @summary Create a new project (admin)
+ * @summary Create a new project
  */
 export const CreateProjectBody = zod.object({
   name: zod.string(),
@@ -175,31 +174,7 @@ export const CreateProjectBody = zod.object({
 });
 
 /**
- * @summary Get a single project
- */
-export const GetProjectParams = zod.object({
-  id: zod.coerce.number(),
-});
-
-export const GetProjectResponse = zod.object({
-  id: zod.number(),
-  name: zod.string(),
-  sector: zod.string(),
-  country: zod.string(),
-  region: zod.string().nullish(),
-  fundingStatus: zod.string(),
-  estimatedValue: zod.string(),
-  zaforaRole: zod.string(),
-  partnerNeed: zod.string().nullish(),
-  description: zod.string().nullish(),
-  imageUrl: zod.string().nullish(),
-  interestCount: zod.number(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-});
-
-/**
- * @summary Update project (admin)
+ * @summary Update a project
  */
 export const UpdateProjectParams = zod.object({
   id: zod.coerce.number(),
@@ -232,11 +207,10 @@ export const UpdateProjectResponse = zod.object({
   imageUrl: zod.string().nullish(),
   interestCount: zod.number(),
   createdAt: zod.string(),
-  updatedAt: zod.string(),
 });
 
 /**
- * @summary Delete project (admin)
+ * @summary Delete a project
  */
 export const DeleteProjectParams = zod.object({
   id: zod.coerce.number(),
@@ -263,7 +237,6 @@ export const ListProjectInterestsResponse = zod.object({
       createdAt: zod.string(),
     }),
   ),
-  total: zod.number(),
 });
 
 /**
@@ -416,6 +389,220 @@ export const ListServicesResponse = zod.object({
       description: zod.string(),
       bullets: zod.array(zod.string()),
       imageUrl: zod.string().nullish(),
+      category: zod.string().nullish(),
+      displayOrder: zod.number(),
+      visible: zod.boolean(),
     }),
   ),
+});
+
+/**
+ * @summary Create a service
+ */
+export const CreateServiceBody = zod.object({
+  name: zod.string(),
+  icon: zod.string().optional(),
+  description: zod.string(),
+  bullets: zod.array(zod.string()),
+  imageUrl: zod.string().nullish(),
+  category: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+  visible: zod.boolean().optional(),
+});
+
+/**
+ * @summary Update a service
+ */
+export const UpdateServiceParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateServiceBody = zod.object({
+  name: zod.string().optional(),
+  icon: zod.string().optional(),
+  description: zod.string().optional(),
+  bullets: zod.array(zod.string()).optional(),
+  imageUrl: zod.string().nullish(),
+  category: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+  visible: zod.boolean().optional(),
+});
+
+export const UpdateServiceResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  icon: zod.string(),
+  description: zod.string(),
+  bullets: zod.array(zod.string()),
+  imageUrl: zod.string().nullish(),
+  category: zod.string().nullish(),
+  displayOrder: zod.number(),
+  visible: zod.boolean(),
+});
+
+/**
+ * @summary Delete a service
+ */
+export const DeleteServiceParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List editable site stats
+ */
+export const ListContentStatsResponse = zod.object({
+  stats: zod.array(
+    zod.object({
+      id: zod.number(),
+      label: zod.string(),
+      value: zod.string(),
+      suffix: zod.string().nullish(),
+      description: zod.string().nullish(),
+      iconName: zod.string().nullish(),
+      displayOrder: zod.number(),
+      visible: zod.boolean(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a content stat
+ */
+export const CreateContentStatBody = zod.object({
+  label: zod.string(),
+  value: zod.string(),
+  suffix: zod.string().nullish(),
+  description: zod.string().nullish(),
+  iconName: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+  visible: zod.boolean().optional(),
+});
+
+/**
+ * @summary Update a content stat
+ */
+export const UpdateContentStatParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateContentStatBody = zod.object({
+  label: zod.string().optional(),
+  value: zod.string().optional(),
+  suffix: zod.string().nullish(),
+  description: zod.string().nullish(),
+  iconName: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+  visible: zod.boolean().optional(),
+});
+
+export const UpdateContentStatResponse = zod.object({
+  id: zod.number(),
+  label: zod.string(),
+  value: zod.string(),
+  suffix: zod.string().nullish(),
+  description: zod.string().nullish(),
+  iconName: zod.string().nullish(),
+  displayOrder: zod.number(),
+  visible: zod.boolean(),
+});
+
+/**
+ * @summary Delete a content stat
+ */
+export const DeleteContentStatParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List methodology steps
+ */
+export const ListMethodologyStepsResponse = zod.object({
+  steps: zod.array(
+    zod.object({
+      id: zod.number(),
+      stepNumber: zod.number(),
+      title: zod.string(),
+      description: zod.string(),
+      iconName: zod.string().nullish(),
+      displayOrder: zod.number(),
+      visible: zod.boolean(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a methodology step
+ */
+export const CreateMethodologyStepBody = zod.object({
+  stepNumber: zod.number(),
+  title: zod.string(),
+  description: zod.string(),
+  iconName: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+  visible: zod.boolean().optional(),
+});
+
+/**
+ * @summary Update a methodology step
+ */
+export const UpdateMethodologyStepParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateMethodologyStepBody = zod.object({
+  stepNumber: zod.number().optional(),
+  title: zod.string().optional(),
+  description: zod.string().optional(),
+  iconName: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+  visible: zod.boolean().optional(),
+});
+
+export const UpdateMethodologyStepResponse = zod.object({
+  id: zod.number(),
+  stepNumber: zod.number(),
+  title: zod.string(),
+  description: zod.string(),
+  iconName: zod.string().nullish(),
+  displayOrder: zod.number(),
+  visible: zod.boolean(),
+});
+
+/**
+ * @summary Delete a methodology step
+ */
+export const DeleteMethodologyStepParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Get site settings by key
+ */
+export const GetSiteSettingsParams = zod.object({
+  key: zod.coerce.string(),
+});
+
+export const GetSiteSettingsResponse = zod.object({
+  id: zod.number(),
+  key: zod.string(),
+  value: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update site settings by key
+ */
+export const UpdateSiteSettingsParams = zod.object({
+  key: zod.coerce.string(),
+});
+
+export const UpdateSiteSettingsBody = zod.object({
+  value: zod.string(),
+});
+
+export const UpdateSiteSettingsResponse = zod.object({
+  id: zod.number(),
+  key: zod.string(),
+  value: zod.string(),
+  updatedAt: zod.string(),
 });
