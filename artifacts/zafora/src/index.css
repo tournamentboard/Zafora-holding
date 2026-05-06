@@ -39,23 +39,6 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-destructive-border: var(--destructive-border);
 
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
-
-  --color-sidebar: hsl(var(--sidebar));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-primary-border: var(--sidebar-primary-border);
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-accent-border: var(--sidebar-accent-border);
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
-
   --font-sans: var(--app-font-sans);
   --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
@@ -67,73 +50,65 @@
 }
 
 :root {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
+  --background: 40 25% 95%; /* #f7f4ef */
+  --foreground: 167 37% 10%; /* #10231f */
 
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 217 33% 17%;
+  --card: 0 0% 100%; /* #ffffff */
+  --card-foreground: 167 37% 10%;
+  --card-border: 38 27% 86%; /* #e5ded3 */
 
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
-  --popover-border: 217 33% 17%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 167 37% 10%;
+  --popover-border: 38 27% 86%;
 
-  --primary: 43 74% 49%;
-  --primary-foreground: 222 47% 11%;
+  --primary: 165 46% 17%; /* #173f35 */
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 164 44% 25%; /* #245d4e */
+  --secondary-foreground: 0 0% 100%;
 
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 40 25% 95%; /* #f7f4ef */
+  --muted-foreground: 163 6% 42%; /* #65736f */
 
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 42 47% 53%; /* #c59b4a */
+  --accent-foreground: 167 37% 10%;
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 8 46% 51%; /* #b85c4b */
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 43 74% 49%;
+  --border: 38 27% 86%;
+  --input: 38 27% 86%;
+  --ring: 165 46% 17%;
 
   --radius: 0.5rem;
 
   --app-font-sans: 'Inter', sans-serif;
-  --app-font-serif: Georgia, serif;
+  --app-font-serif: 'Inter', sans-serif;
   --app-font-mono: Menlo, monospace;
 }
 
 .dark {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
-  
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 217 33% 17%;
-  
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
-  --popover-border: 217 33% 17%;
-  
-  --primary: 43 74% 49%;
-  --primary-foreground: 222 47% 11%;
-  
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 43 74% 49%;
+  --background: 40 25% 95%;
+  --foreground: 167 37% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 167 37% 10%;
+  --card-border: 38 27% 86%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 167 37% 10%;
+  --popover-border: 38 27% 86%;
+  --primary: 165 46% 17%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 164 44% 25%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 40 25% 95%;
+  --muted-foreground: 163 6% 42%;
+  --accent: 42 47% 53%;
+  --accent-foreground: 167 37% 10%;
+  --destructive: 8 46% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 38 27% 86%;
+  --input: 38 27% 86%;
+  --ring: 165 46% 17%;
 }
 
 @layer base {
@@ -141,6 +116,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply text-foreground font-sans antialiased;
+    background: radial-gradient(circle at top left, rgba(197,155,74,.17), transparent 34rem),
+                radial-gradient(circle at 90% 12%, rgba(36,93,78,.12), transparent 30rem),
+                #f7f4ef;
+    min-height: 100vh;
   }
 }

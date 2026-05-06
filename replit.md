@@ -53,7 +53,8 @@ Admin login password: `zafora2024` (stored in localStorage, MVP only)
 ## User preferences
 
 - Mobile-first, responsive design
-- Dark navy + gold color palette
+- Light cream (#f7f4ef) background + deep forest green (#173f35) primary + gold (#c59b4a) accent palette
+- Light frosted glass navbar, white cards, warm sand tones
 - No emojis anywhere in the UI
 
 ## Gotchas

@@ -65,60 +65,60 @@ export default function Submit() {
   };
 
   return (
-    <div className="flex flex-col pb-24">
+    <div className="flex flex-col pb-24 bg-[#f7f4ef]">
       {/* Header */}
-      <section className="bg-secondary py-16 border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">Submit Request</h1>
-          <p className="text-lg text-muted-foreground">
+      <section className="pt-24 pb-16 text-center">
+        <div className="container mx-auto px-4 md:px-8 max-w-3xl">
+          <h1 className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-6">Submit Request</h1>
+          <p className="text-xl text-[#65736f] leading-relaxed">
             Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, provide details below to engage our team.
           </p>
         </div>
       </section>
 
       {/* Form Section */}
-      <section className="py-12 container mx-auto px-4 md:px-8">
-        <div className="max-w-3xl mx-auto bg-card border border-border p-6 md:p-10 rounded-2xl shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-8">
+      <section className="container mx-auto px-4 md:px-8 pb-12">
+        <div className="max-w-3xl mx-auto bg-white border border-[#e5ded3] p-8 md:p-12 rounded-[36px] shadow-xl">
+          <form onSubmit={handleSubmit} className="space-y-10">
             
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-white border-b border-border pb-2">Contact Details</h2>
+              <h2 className="text-2xl font-bold text-[#10231f] tracking-tight border-b border-[#e5ded3] pb-4">Contact Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name <span className="text-destructive">*</span></Label>
-                  <Input id="fullName" name="fullName" required placeholder="Enter your name" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="fullName" className="text-[#10231f] font-semibold text-sm">Full Name <span className="text-[#b85c4b]">*</span></Label>
+                  <Input id="fullName" name="fullName" required placeholder="Enter your name" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="organization">Organization / Ministry <span className="text-destructive">*</span></Label>
-                  <Input id="organization" name="organization" required placeholder="Company or Entity Name" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="organization" className="text-[#10231f] font-semibold text-sm">Organization / Ministry <span className="text-[#b85c4b]">*</span></Label>
+                  <Input id="organization" name="organization" required placeholder="Company or Entity Name" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Work Email <span className="text-destructive">*</span></Label>
-                  <Input id="email" name="email" type="email" required placeholder="name@organization.com" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="email" className="text-[#10231f] font-semibold text-sm">Work Email <span className="text-[#b85c4b]">*</span></Label>
+                  <Input id="email" name="email" type="email" required placeholder="name@organization.com" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" name="phone" placeholder="+1 234 567 8900" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="phone" className="text-[#10231f] font-semibold text-sm">Phone Number</Label>
+                  <Input id="phone" name="phone" placeholder="+1 234 567 8900" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
                 </div>
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="country">Country of Origin <span className="text-destructive">*</span></Label>
-                  <Input id="country" name="country" required placeholder="e.g. Nigeria, UK, USA" />
+                <div className="space-y-2.5 md:col-span-2">
+                  <Label htmlFor="country" className="text-[#10231f] font-semibold text-sm">Country of Origin <span className="text-[#b85c4b]">*</span></Label>
+                  <Input id="country" name="country" required placeholder="e.g. Nigeria, UK, USA" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6 pt-6 border-t border-border">
-              <h2 className="text-2xl font-bold text-white border-b border-border pb-2">Request Information</h2>
+            <div className="space-y-6 pt-2">
+              <h2 className="text-2xl font-bold text-[#10231f] tracking-tight border-b border-[#e5ded3] pb-4">Request Information</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="requestType">Nature of Request <span className="text-destructive">*</span></Label>
+                <div className="space-y-2.5">
+                  <Label htmlFor="requestType" className="text-[#10231f] font-semibold text-sm">Nature of Request <span className="text-[#b85c4b]">*</span></Label>
                   <select 
                     id="requestType" 
                     name="requestType" 
                     defaultValue={defaultType}
                     required 
-                    className="flex h-10 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
                   >
                     <option value="consultation">General Consultation</option>
                     <option value="project_submission">Submit a Project</option>
@@ -128,12 +128,12 @@ export default function Submit() {
                   </select>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="roleType">Your Role</Label>
+                <div className="space-y-2.5">
+                  <Label htmlFor="roleType" className="text-[#10231f] font-semibold text-sm">Your Role</Label>
                   <select 
                     id="roleType" 
                     name="roleType" 
-                    className="flex h-10 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
                   >
                     <option value="">Select Role...</option>
                     <option value="government">Government Official</option>
@@ -144,12 +144,12 @@ export default function Submit() {
                   </select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="projectSector">Target Sector (if applicable)</Label>
+                <div className="space-y-2.5">
+                  <Label htmlFor="projectSector" className="text-[#10231f] font-semibold text-sm">Target Sector (if applicable)</Label>
                   <select 
                     id="projectSector" 
                     name="projectSector" 
-                    className="flex h-10 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
                   >
                     <option value="">Select Sector...</option>
                     <option value="Energy">Energy & Power</option>
@@ -160,35 +160,35 @@ export default function Submit() {
                   </select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="budgetFundingNeed">Estimated Value / Funding Need</Label>
-                  <Input id="budgetFundingNeed" name="budgetFundingNeed" placeholder="e.g. $50M - $100M" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="budgetFundingNeed" className="text-[#10231f] font-semibold text-sm">Estimated Value / Funding Need</Label>
+                  <Input id="budgetFundingNeed" name="budgetFundingNeed" placeholder="e.g. $50M - $100M" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="projectTimeline">Expected Timeline</Label>
-                <Input id="projectTimeline" name="projectTimeline" placeholder="e.g. Q3 2024, Immediate" />
+              <div className="space-y-2.5">
+                <Label htmlFor="projectTimeline" className="text-[#10231f] font-semibold text-sm">Expected Timeline</Label>
+                <Input id="projectTimeline" name="projectTimeline" placeholder="e.g. Q3 2024, Immediate" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="message">Message / Details <span className="text-destructive">*</span></Label>
+              <div className="space-y-2.5">
+                <Label htmlFor="message" className="text-[#10231f] font-semibold text-sm">Message / Details <span className="text-[#b85c4b]">*</span></Label>
                 <Textarea 
                   id="message" 
                   name="message" 
                   required
                   placeholder="Provide a high-level overview of your project, advisory need, or proposal." 
-                  className="min-h-[150px]"
+                  className="min-h-[160px] bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl p-4 resize-y"
                 />
               </div>
             </div>
 
             <div className="pt-6">
-              <Button type="submit" size="lg" className="w-full font-bold text-lg h-14" disabled={loading}>
+              <Button type="submit" size="lg" className="w-full font-bold text-base h-14 rounded-full bg-[#173f35] text-white hover:bg-[#173f35]/90 shadow-md" disabled={loading}>
                 {loading ? "Submitting securely..." : "Submit Request"}
               </Button>
-              <p className="text-xs text-center text-muted-foreground mt-4">
-                All submitted information is treated with strict confidentiality.
+              <p className="text-xs font-medium text-center text-[#8a958f] mt-5">
+                All submitted information is treated with strict confidentiality by Zafora Holding.
               </p>
             </div>
           </form>

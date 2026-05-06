@@ -48,44 +48,44 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-card border-border">
+      <DialogContent className="sm:max-w-[500px] bg-white border-[#e5ded3] rounded-[24px] p-8">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-white">Express Interest</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogTitle className="text-3xl font-bold text-[#10231f] tracking-tight">Express Interest</DialogTitle>
+          <DialogDescription className="text-[#65736f] text-base mt-2">
             Provide your details below to request more information or express investment intent for this project.
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input id="fullName" name="fullName" required placeholder="Jane Doe" className="bg-background border-border" />
+        <form onSubmit={handleSubmit} className="space-y-5 mt-6">
+          <div className="grid grid-cols-2 gap-5">
+            <div className="space-y-2.5">
+              <Label htmlFor="fullName" className="text-[#10231f] font-semibold text-sm">Full Name</Label>
+              <Input id="fullName" name="fullName" required placeholder="Jane Doe" className="bg-[#f7f4ef] border-[#e5ded3] h-11 rounded-xl focus-visible:ring-[#173f35]" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="organization">Organization</Label>
-              <Input id="organization" name="organization" required placeholder="Acme Capital" className="bg-background border-border" />
+            <div className="space-y-2.5">
+              <Label htmlFor="organization" className="text-[#10231f] font-semibold text-sm">Organization</Label>
+              <Input id="organization" name="organization" required placeholder="Acme Capital" className="bg-[#f7f4ef] border-[#e5ded3] h-11 rounded-xl focus-visible:ring-[#173f35]" />
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required placeholder="jane@example.com" className="bg-background border-border" />
+          <div className="grid grid-cols-2 gap-5">
+            <div className="space-y-2.5">
+              <Label htmlFor="email" className="text-[#10231f] font-semibold text-sm">Email</Label>
+              <Input id="email" name="email" type="email" required placeholder="jane@example.com" className="bg-[#f7f4ef] border-[#e5ded3] h-11 rounded-xl focus-visible:ring-[#173f35]" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone (optional)</Label>
-              <Input id="phone" name="phone" placeholder="+1 234 567 890" className="bg-background border-border" />
+            <div className="space-y-2.5">
+              <Label htmlFor="phone" className="text-[#10231f] font-semibold text-sm">Phone (optional)</Label>
+              <Input id="phone" name="phone" placeholder="+1 234 567 890" className="bg-[#f7f4ef] border-[#e5ded3] h-11 rounded-xl focus-visible:ring-[#173f35]" />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="roleType">Your Role</Label>
+          <div className="space-y-2.5">
+            <Label htmlFor="roleType" className="text-[#10231f] font-semibold text-sm">Your Role</Label>
             <select 
               id="roleType" 
               name="roleType" 
               required 
-              className="flex h-10 w-full rounded-md border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-11 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-3 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
             >
               <option value="investor">Investor / Financier</option>
               <option value="contractor">EPC Contractor</option>
@@ -96,21 +96,21 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
             </select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="message">Message (optional)</Label>
+          <div className="space-y-2.5">
+            <Label htmlFor="message" className="text-[#10231f] font-semibold text-sm">Message (optional)</Label>
             <Textarea 
               id="message" 
               name="message" 
               placeholder="Any specific questions or areas of interest?" 
-              className="bg-background border-border min-h-[100px]"
+              className="bg-[#f7f4ef] border-[#e5ded3] min-h-[100px] rounded-xl p-3 focus-visible:ring-[#173f35]"
             />
           </div>
 
-          <div className="pt-4 flex justify-end gap-2 border-t border-border mt-6">
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+          <div className="pt-6 flex justify-end gap-3">
+            <Button type="button" variant="outline" onClick={onClose} disabled={loading} className="rounded-full border-[#e5ded3] text-[#10231f] font-semibold">
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="rounded-full bg-[#173f35] text-white hover:bg-[#173f35]/90 font-semibold px-6">
               {loading ? "Submitting..." : "Submit Interest"}
             </Button>
           </div>
