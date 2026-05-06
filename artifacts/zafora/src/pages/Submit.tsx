@@ -6,29 +6,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { motion } from "framer-motion";
+import {
+  ShieldCheck, Clock, Users, Globe, CheckCircle2, ArrowRight,
+  Lock, Star, TrendingUp, Briefcase, Landmark,
+} from "lucide-react";
+
+const fadeInView = (delay = 0) => ({
+  initial: { opacity: 0, y: 16 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.5, delay },
+});
 
 export default function Submit() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const createLead = useCreateLead();
   const [loading, setLoading] = useState(false);
-
-  // Read URL params for defaults
   const [defaultType, setDefaultType] = useState("consultation");
-  
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("type") === "government") {
-      setDefaultType("government_advisory");
-    }
+    if (params.get("type") === "government") setDefaultType("government_advisory");
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    
     const formData = new FormData(e.currentTarget);
-    
     try {
       await createLead.mutateAsync({
         // @ts-ignore
@@ -46,152 +52,247 @@ export default function Submit() {
           roleType: (formData.get("roleType") as string) || undefined,
         }
       });
-      
-      toast({
-        title: "Request Submitted",
-        description: "Your inquiry has been successfully submitted. Our advisory team will review and contact you shortly.",
-      });
-      
+      toast({ title: "Request Submitted", description: "Your inquiry has been submitted. Our advisory team will contact you within 48 hours." });
       setLocation("/");
-    } catch (error) {
-      toast({
-        title: "Submission Failed",
-        description: "There was an error submitting your request. Please try again or contact us directly.",
-        variant: "destructive"
-      });
+    } catch {
+      toast({ title: "Submission Failed", description: "Please try again or contact us directly.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col pb-24 bg-[#f7f4ef]">
-      {/* Header */}
-      <section className="pt-24 pb-16 text-center">
-        <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          <h1 className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-6">Submit Request</h1>
-          <p className="text-xl text-[#65736f] leading-relaxed">
-            Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, provide details below to engage our team.
-          </p>
+    <div className="flex flex-col bg-[#f7f4ef]">
+
+      {/* Hero header */}
+      <section className="relative bg-white border-b border-[#e5ded3] pt-28 pb-16 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#173f35]/6 rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 relative z-10 text-center max-w-3xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
+            <Briefcase className="h-3.5 w-3.5" /> Start a Conversation
+          </motion.div>
+          <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-5 leading-[1.06]">
+            Submit Your Request
+          </motion.h1>
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-xl text-[#65736f] leading-relaxed">
+            Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, share your details below.
+          </motion.p>
         </div>
       </section>
 
-      {/* Form Section */}
-      <section className="container mx-auto px-4 md:px-8 pb-12">
-        <div className="max-w-3xl mx-auto bg-white border border-[#e5ded3] p-8 md:p-12 rounded-[36px] shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-10">
-            
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-[#10231f] tracking-tight border-b border-[#e5ded3] pb-4">Contact Details</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2.5">
-                  <Label htmlFor="fullName" className="text-[#10231f] font-semibold text-sm">Full Name <span className="text-[#b85c4b]">*</span></Label>
-                  <Input id="fullName" name="fullName" required placeholder="Enter your name" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+      {/* Form + Sidebar */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 items-start max-w-6xl mx-auto">
+
+            {/* Left sidebar — trust signals */}
+            <div className="space-y-5 lg:sticky lg:top-32">
+              {/* Why Zafora */}
+              <motion.div {...fadeInView()} className="bg-[#173f35] rounded-[28px] p-7 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#c59b4a]/15 rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+                <div className="relative z-10">
+                  <div className="text-[#c59b4a] mb-4"><Star className="h-6 w-6" /></div>
+                  <h3 className="font-bold text-white text-lg mb-3">Why submit to Zafora?</h3>
+                  <ul className="space-y-3">
+                    {[
+                      "Senior advisor review within 48 hours",
+                      "No-obligation preliminary assessment",
+                      "Direct DFI and investor connections",
+                      "Full confidentiality guaranteed",
+                      "Active in 12+ African countries",
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-white/75">
+                        <CheckCircle2 className="h-4 w-4 text-[#c59b4a] shrink-0 mt-0.5" /> {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="space-y-2.5">
-                  <Label htmlFor="organization" className="text-[#10231f] font-semibold text-sm">Organization / Ministry <span className="text-[#b85c4b]">*</span></Label>
-                  <Input id="organization" name="organization" required placeholder="Company or Entity Name" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+              </motion.div>
+
+              {/* Stats */}
+              <motion.div {...fadeInView(0.05)} className="bg-white border border-[#e5ded3] rounded-[28px] p-6">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#8a958f] mb-4">Our Track Record</h4>
+                <div className="space-y-4">
+                  {[
+                    { icon: <TrendingUp className="h-4 w-4" />, value: "$2.4B+", label: "Value Advised" },
+                    { icon: <Globe className="h-4 w-4" />, value: "12+", label: "Countries" },
+                    { icon: <Users className="h-4 w-4" />, value: "95%", label: "Client Retention" },
+                  ].map((s, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-[#f7f4ef] text-[#173f35] flex items-center justify-center shrink-0">{s.icon}</div>
+                      <div>
+                        <div className="font-bold text-[#10231f] text-base">{s.value}</div>
+                        <div className="text-xs text-[#8a958f]">{s.label}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-2.5">
-                  <Label htmlFor="email" className="text-[#10231f] font-semibold text-sm">Work Email <span className="text-[#b85c4b]">*</span></Label>
-                  <Input id="email" name="email" type="email" required placeholder="name@organization.com" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+              </motion.div>
+
+              {/* Who should submit */}
+              <motion.div {...fadeInView(0.1)} className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[28px] p-6">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#8a958f] mb-4">Who This Is For</h4>
+                <div className="space-y-3">
+                  {[
+                    { icon: <Landmark className="h-4 w-4" />, label: "Government ministries & agencies" },
+                    { icon: <TrendingUp className="h-4 w-4" />, label: "Investors & development finance" },
+                    { icon: <Briefcase className="h-4 w-4" />, label: "Project developers & sponsors" },
+                    { icon: <Users className="h-4 w-4" />, label: "EPC contractors & operators" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2.5 text-sm font-medium text-[#65736f]">
+                      <div className="w-7 h-7 rounded-lg bg-white border border-[#e5ded3] text-[#173f35] flex items-center justify-center">{item.icon}</div>
+                      {item.label}
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-2.5">
-                  <Label htmlFor="phone" className="text-[#10231f] font-semibold text-sm">Phone Number</Label>
-                  <Input id="phone" name="phone" placeholder="+1 234 567 8900" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+              </motion.div>
+
+              {/* Response time */}
+              <motion.div {...fadeInView(0.15)} className="bg-white border border-[#e5ded3] rounded-[28px] p-5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-[14px] bg-[#efe3cf] text-[#c59b4a] flex items-center justify-center shrink-0">
+                  <Clock className="h-6 w-6" />
                 </div>
-                <div className="space-y-2.5 md:col-span-2">
-                  <Label htmlFor="country" className="text-[#10231f] font-semibold text-sm">Country of Origin <span className="text-[#b85c4b]">*</span></Label>
-                  <Input id="country" name="country" required placeholder="e.g. Nigeria, UK, USA" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+                <div>
+                  <div className="font-bold text-[#10231f] text-sm">48-hour response</div>
+                  <div className="text-xs text-[#65736f]">A senior advisor will review your submission and respond within two business days.</div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            <div className="space-y-6 pt-2">
-              <h2 className="text-2xl font-bold text-[#10231f] tracking-tight border-b border-[#e5ded3] pb-4">Request Information</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2.5">
-                  <Label htmlFor="requestType" className="text-[#10231f] font-semibold text-sm">Nature of Request <span className="text-[#b85c4b]">*</span></Label>
-                  <select 
-                    id="requestType" 
-                    name="requestType" 
-                    defaultValue={defaultType}
-                    required 
-                    className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
-                  >
-                    <option value="consultation">General Consultation</option>
-                    <option value="project_submission">Submit a Project</option>
-                    <option value="funding">Funding Inquiry</option>
-                    <option value="government_advisory">Government Advisory</option>
-                    <option value="partnership">Partnership Proposal</option>
-                  </select>
-                </div>
-                
-                <div className="space-y-2.5">
-                  <Label htmlFor="roleType" className="text-[#10231f] font-semibold text-sm">Your Role</Label>
-                  <select 
-                    id="roleType" 
-                    name="roleType" 
-                    className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
-                  >
-                    <option value="">Select Role...</option>
-                    <option value="government">Government Official</option>
-                    <option value="investor">Investor / Fund</option>
-                    <option value="developer">Project Developer</option>
-                    <option value="contractor">EPC Contractor</option>
-                    <option value="consultant">Consultant</option>
-                  </select>
+            {/* Right — form */}
+            <motion.div {...fadeInView(0.05)} className="bg-white border border-[#e5ded3] p-8 md:p-12 rounded-[36px] shadow-lg">
+              <form onSubmit={handleSubmit} className="space-y-10">
+
+                {/* Contact Details */}
+                <div>
+                  <div className="flex items-center gap-2 mb-6 pb-4 border-b border-[#e5ded3]">
+                    <div className="w-8 h-8 rounded-full bg-[#173f35] text-white flex items-center justify-center text-sm font-bold">1</div>
+                    <h2 className="text-xl font-bold text-[#10231f]">Contact Details</h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {[
+                      { id: "fullName", label: "Full Name", placeholder: "Your full name", required: true, type: "text" },
+                      { id: "organization", label: "Organization / Ministry", placeholder: "Company or entity name", required: true, type: "text" },
+                      { id: "email", label: "Work Email", placeholder: "name@organization.com", required: true, type: "email" },
+                      { id: "phone", label: "Phone Number", placeholder: "+1 234 567 8900", required: false, type: "tel" },
+                    ].map(field => (
+                      <div key={field.id} className="space-y-2">
+                        <Label htmlFor={field.id} className="text-[#10231f] font-semibold text-sm">
+                          {field.label} {field.required && <span className="text-[#b85c4b]">*</span>}
+                        </Label>
+                        <Input
+                          id={field.id} name={field.id} type={field.type}
+                          required={field.required} placeholder={field.placeholder}
+                          className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl"
+                        />
+                      </div>
+                    ))}
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="country" className="text-[#10231f] font-semibold text-sm">Country <span className="text-[#b85c4b]">*</span></Label>
+                      <Input id="country" name="country" required placeholder="e.g. Nigeria, Kenya, Egypt" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-2.5">
-                  <Label htmlFor="projectSector" className="text-[#10231f] font-semibold text-sm">Target Sector (if applicable)</Label>
-                  <select 
-                    id="projectSector" 
-                    name="projectSector" 
-                    className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 py-2 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
-                  >
-                    <option value="">Select Sector...</option>
-                    <option value="Energy">Energy & Power</option>
-                    <option value="Water">Water & Sanitation</option>
-                    <option value="Transport">Transport & Logistics</option>
-                    <option value="Healthcare">Healthcare Infrastructure</option>
-                    <option value="Multiple">Multiple Sectors</option>
-                  </select>
+                {/* Request Information */}
+                <div>
+                  <div className="flex items-center gap-2 mb-6 pb-4 border-b border-[#e5ded3]">
+                    <div className="w-8 h-8 rounded-full bg-[#173f35] text-white flex items-center justify-center text-sm font-bold">2</div>
+                    <h2 className="text-xl font-bold text-[#10231f]">Request Information</h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="requestType" className="text-[#10231f] font-semibold text-sm">Nature of Request <span className="text-[#b85c4b]">*</span></Label>
+                      <select id="requestType" name="requestType" defaultValue={defaultType} required
+                        className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]">
+                        <option value="consultation">General Consultation</option>
+                        <option value="project_submission">Submit a Project</option>
+                        <option value="funding">Funding Inquiry</option>
+                        <option value="government_advisory">Government Advisory</option>
+                        <option value="partnership">Partnership Proposal</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="roleType" className="text-[#10231f] font-semibold text-sm">Your Role</Label>
+                      <select id="roleType" name="roleType"
+                        className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]">
+                        <option value="">Select Role...</option>
+                        <option value="government">Government Official</option>
+                        <option value="investor">Investor / Fund</option>
+                        <option value="developer">Project Developer</option>
+                        <option value="contractor">EPC Contractor</option>
+                        <option value="consultant">Consultant</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="projectSector" className="text-[#10231f] font-semibold text-sm">Target Sector</Label>
+                      <select id="projectSector" name="projectSector"
+                        className="flex h-12 w-full rounded-xl border border-[#e5ded3] bg-[#f7f4ef] px-4 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]">
+                        <option value="">Select Sector...</option>
+                        <option value="Energy">Energy & Power</option>
+                        <option value="Water">Water & Sanitation</option>
+                        <option value="Transport">Transport & Logistics</option>
+                        <option value="Healthcare">Healthcare Infrastructure</option>
+                        <option value="Digital">Digital Infrastructure</option>
+                        <option value="Multiple">Multiple Sectors</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="budgetFundingNeed" className="text-[#10231f] font-semibold text-sm">Estimated Value / Funding Need</Label>
+                      <Input id="budgetFundingNeed" name="budgetFundingNeed" placeholder="e.g. $50M – $100M" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="projectTimeline" className="text-[#10231f] font-semibold text-sm">Expected Timeline</Label>
+                      <Input id="projectTimeline" name="projectTimeline" placeholder="e.g. Q3 2025, Immediate, 18 months" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-2.5">
-                  <Label htmlFor="budgetFundingNeed" className="text-[#10231f] font-semibold text-sm">Estimated Value / Funding Need</Label>
-                  <Input id="budgetFundingNeed" name="budgetFundingNeed" placeholder="e.g. $50M - $100M" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
+                {/* Message */}
+                <div>
+                  <div className="flex items-center gap-2 mb-6 pb-4 border-b border-[#e5ded3]">
+                    <div className="w-8 h-8 rounded-full bg-[#173f35] text-white flex items-center justify-center text-sm font-bold">3</div>
+                    <h2 className="text-xl font-bold text-[#10231f]">Your Message</h2>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-[#10231f] font-semibold text-sm">Message / Project Details <span className="text-[#b85c4b]">*</span></Label>
+                    <Textarea
+                      id="message" name="message" required
+                      placeholder="Provide a high-level overview of your project, advisory need, or proposal. The more detail you share, the better we can prepare for our first conversation."
+                      className="min-h-[160px] bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl p-4 resize-y text-sm"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-2.5">
-                <Label htmlFor="projectTimeline" className="text-[#10231f] font-semibold text-sm">Expected Timeline</Label>
-                <Input id="projectTimeline" name="projectTimeline" placeholder="e.g. Q3 2024, Immediate" className="h-12 bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl" />
-              </div>
-
-              <div className="space-y-2.5">
-                <Label htmlFor="message" className="text-[#10231f] font-semibold text-sm">Message / Details <span className="text-[#b85c4b]">*</span></Label>
-                <Textarea 
-                  id="message" 
-                  name="message" 
-                  required
-                  placeholder="Provide a high-level overview of your project, advisory need, or proposal." 
-                  className="min-h-[160px] bg-[#f7f4ef] border-[#e5ded3] focus-visible:ring-[#173f35] rounded-xl p-4 resize-y"
-                />
-              </div>
-            </div>
-
-            <div className="pt-6">
-              <Button type="submit" size="lg" className="w-full font-bold text-base h-14 rounded-full bg-[#173f35] text-white hover:bg-[#173f35]/90 shadow-md" disabled={loading}>
-                {loading ? "Submitting securely..." : "Submit Request"}
-              </Button>
-              <p className="text-xs font-medium text-center text-[#8a958f] mt-5">
-                All submitted information is treated with strict confidentiality by Zafora Holding.
-              </p>
-            </div>
-          </form>
+                {/* Submit */}
+                <div className="pt-2">
+                  <Button type="submit" size="lg" disabled={loading}
+                    className="w-full font-bold text-base h-14 rounded-full bg-[#173f35] text-white hover:bg-[#245d4e] shadow-lg hover:shadow-xl transition-all">
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                        Submitting securely...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        Submit Request <ArrowRight className="h-5 w-5" />
+                      </span>
+                    )}
+                  </Button>
+                  <div className="flex items-center justify-center gap-2 text-xs font-medium text-[#8a958f] mt-4">
+                    <Lock className="h-3.5 w-3.5 text-[#173f35]" />
+                    All submitted information is treated with strict confidentiality by Zafora Holding.
+                  </div>
+                </div>
+              </form>
+            </motion.div>
+          </div>
         </div>
       </section>
     </div>

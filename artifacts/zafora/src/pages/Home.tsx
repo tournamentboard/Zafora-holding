@@ -2,150 +2,185 @@ import { useListProjects, useListServices } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Briefcase, Landmark, ShieldCheck, ArrowUpRight, BarChart3, Building, Globe, Zap, Droplets, Truck, Stethoscope, Wheat, Home as HomeIcon, Wifi, GraduationCap, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight, Briefcase, Landmark, ShieldCheck, ArrowUpRight, BarChart3,
+  Building, Globe, Zap, Droplets, Truck, Stethoscope, CheckCircle2,
+  TrendingUp, Award, Users, Target, Handshake, MapPin, DollarSign,
+  Wifi, Leaf, Home as HomeIcon, GraduationCap, ChevronRight,
+} from "lucide-react";
+
+const TICKER_ITEMS = [
+  "Rwanda", "Nigeria", "Kenya", "Ghana", "Egypt", "Tanzania", "Ethiopia", "Senegal",
+  "Côte d'Ivoire", "Uganda", "Mozambique", "Morocco", "Angola", "Cameroon",
+  "Energy", "Water", "Transport", "Healthcare", "Digital", "Agriculture",
+  "PPP Advisory", "Project Finance", "ESG Compliance", "DFI Funding",
+];
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay },
+});
+
+const fadeInView = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.55, delay },
+});
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "funded": return "bg-[#e5f5e9] text-[#173f35] border-[#173f35]/20";
+    case "investor_ready": return "bg-[#e6eef4] text-[#385c7a] border-[#385c7a]/20";
+    case "partially_funded": return "bg-[#f6ead2] text-[#c59b4a] border-[#c59b4a]/20";
+    case "seeking_funding": return "bg-[#f7dfd9] text-[#b85c4b] border-[#b85c4b]/20";
+    default: return "bg-gray-100 text-gray-700 border-gray-200";
+  }
+};
+
+const formatStatus = (status: string) =>
+  status.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+
+const SERVICE_ICONS: Record<number, React.ReactNode> = {
+  0: <Landmark className="w-7 h-7" />,
+  1: <Briefcase className="w-7 h-7" />,
+  2: <ShieldCheck className="w-7 h-7" />,
+  3: <TrendingUp className="w-7 h-7" />,
+  4: <Globe className="w-7 h-7" />,
+  5: <Award className="w-7 h-7" />,
+};
 
 export default function Home() {
   const { data: projectsData } = useListProjects({ limit: 3 });
   const { data: servicesData } = useListServices();
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "funded": return "bg-[#e5f5e9] text-[#173f35] border-[#173f35]/20";
-      case "investor_ready": return "bg-[#e6eef4] text-[#385c7a] border-[#385c7a]/20";
-      case "partially_funded": return "bg-[#f6ead2] text-[#c59b4a] border-[#c59b4a]/20";
-      case "seeking_funding": return "bg-[#f7dfd9] text-[#b85c4b] border-[#b85c4b]/20";
-      default: return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
-  const formatStatus = (status: string) => {
-    return status.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-  };
-
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="pt-24 pb-20 overflow-hidden">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
+    <div className="flex flex-col overflow-x-hidden">
+
+      {/* ── HERO ─────────────────────────────────────────────────── */}
+      <section className="pt-28 pb-20 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-[#c59b4a]/8 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 -left-48 w-96 h-96 bg-[#173f35]/6 rounded-full blur-3xl" />
+        </div>
+
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
+
             {/* Left */}
             <div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-3 py-1.5 rounded-full text-xs font-semibold text-[#173f35] mb-8"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#173f35]"></span>
-                Government Consulting · Project Development · Global Partnerships
-              </motion.div>
-              
-              <motion.h1 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-5xl md:text-6xl lg:text-[76px] font-bold tracking-[-0.05em] text-[#10231f] leading-[1.05] mb-6"
-              >
-                Structuring, funding, and delivering high-impact projects.
-              </motion.h1>
-              
-              <motion.p 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-xl md:text-2xl text-[#65736f] mb-10 max-w-xl leading-relaxed font-medium"
-              >
-                Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.
-              </motion.p>
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="flex flex-wrap items-center gap-4 mb-12"
-              >
-                <Button asChild size="lg" className="rounded-full bg-[#173f35] hover:bg-[#173f35]/90 text-white h-14 px-8 text-base font-semibold">
-                  <Link href="/submit">Partner With Us</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="rounded-full bg-white border-[#e5ded3] text-[#173f35] hover:bg-[#f7f4ef] h-14 px-8 text-base font-semibold">
-                  <Link href="/projects">View Project Pipeline</Link>
-                </Button>
-                <Button asChild variant="ghost" size="lg" className="rounded-full bg-[#c59b4a] hover:bg-[#c59b4a]/90 text-[#10231f] h-14 px-8 text-base font-semibold border-none">
-                  <Link href="/services">Explore Consulting Services</Link>
-                </Button>
+              <motion.div {...fadeUp(0)} className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-4 py-2 rounded-full text-xs font-bold text-[#173f35] mb-8 shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#173f35] opacity-60"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#173f35]"></span>
+                </span>
+                Pan-African Infrastructure Advisory · Est. 2014
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="flex flex-wrap gap-3 mb-10"
-              >
-                {["Government-ready documentation", "PPP & funding advisory", "Project lifecycle governance"].map((pill, i) => (
-                  <span key={i} className="text-xs font-semibold text-[#173f35] bg-[#173f35]/5 px-3 py-1.5 rounded-full">
-                    {pill}
+              <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-7">
+                Structuring,{" "}
+                <span className="relative">
+                  <span className="relative z-10">funding,</span>
+                  <span className="absolute bottom-1 left-0 right-0 h-3 bg-[#c59b4a]/25 -z-0 rounded" />
+                </span>{" "}
+                and delivering high-impact projects.
+              </motion.h1>
+
+              <motion.p {...fadeUp(0.2)} className="text-xl md:text-2xl text-[#65736f] mb-10 max-w-xl leading-relaxed">
+                Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.
+              </motion.p>
+
+              <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-3 mb-10">
+                <Link href="/submit" className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                  Partner With Us <ArrowRight className="h-5 w-5" />
+                </Link>
+                <Link href="/projects" className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-white border border-[#e5ded3] text-[#173f35] font-bold text-base hover:border-[#173f35] hover:shadow-md transition-all">
+                  View Pipeline
+                </Link>
+                <Link href="/services" className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-md">
+                  Our Services
+                </Link>
+              </motion.div>
+
+              <motion.div {...fadeUp(0.4)} className="flex flex-wrap gap-2 mb-10">
+                {[
+                  { icon: <ShieldCheck className="h-3.5 w-3.5" />, label: "Government-ready documentation" },
+                  { icon: <TrendingUp className="h-3.5 w-3.5" />, label: "PPP & funding advisory" },
+                  { icon: <Target className="h-3.5 w-3.5" />, label: "Project lifecycle governance" },
+                ].map((item, i) => (
+                  <span key={i} className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#173f35] bg-[#173f35]/8 border border-[#173f35]/15 px-3 py-1.5 rounded-full">
+                    {item.icon} {item.label}
                   </span>
                 ))}
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="grid grid-cols-3 gap-6 pt-8 border-t border-[#e5ded3]"
-              >
-                <div>
-                  <div className="text-3xl font-bold text-[#10231f] tracking-tight mb-1">360°</div>
-                  <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest">Project lifecycle</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-[#10231f] tracking-tight mb-1">Global</div>
-                  <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest">Africa-first</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-[#10231f] tracking-tight mb-1">PPP</div>
-                  <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest">Government + private</div>
-                </div>
+              <motion.div {...fadeUp(0.5)} className="grid grid-cols-3 gap-6 pt-8 border-t border-[#e5ded3]">
+                {[
+                  { value: "$2.4B+", label: "Project Value Advised" },
+                  { value: "12+", label: "African Countries" },
+                  { value: "95%", label: "Client Retention" },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <div className="text-2xl lg:text-3xl font-bold text-[#173f35] tracking-tight mb-1">{s.value}</div>
+                    <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest leading-tight">{s.label}</div>
+                  </div>
+                ))}
               </motion.div>
             </div>
 
-            {/* Right - Dark Green Panel */}
+            {/* Right — Dark Green Panel */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7 }}
-              className="bg-gradient-to-br from-[#173f35] to-[#0f2923] rounded-[36px] p-6 lg:p-8 shadow-2xl relative overflow-hidden"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="bg-gradient-to-br from-[#173f35] via-[#1a4a3e] to-[#0f2923] rounded-[36px] p-6 lg:p-8 shadow-2xl relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-              
-              <div className="relative z-10 mb-6 h-[250px] rounded-[26px] overflow-hidden flex flex-col justify-end p-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" 
-                  alt="Executive advisory" 
+              <div className="absolute top-0 right-0 w-80 h-80 bg-[#c59b4a]/12 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#245d4e]/40 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+
+              {/* Hero image */}
+              <div className="relative z-10 mb-5 h-[220px] rounded-[24px] overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80"
+                  alt="Infrastructure advisory"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/90 via-[#10231f]/40 to-transparent"></div>
-                <h3 className="relative z-10 text-white font-bold text-2xl max-w-sm tracking-tight">
-                  Executive advisory for governments, funders, and delivery partners.
-                </h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/90 via-[#10231f]/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-5 z-10">
+                  <div className="text-[#c59b4a] text-xs font-bold uppercase tracking-wider mb-1">Executive Advisory</div>
+                  <h3 className="text-white font-bold text-xl leading-tight">For governments, funders, and delivery partners.</h3>
+                </div>
+                {/* Live indicator */}
+                <div className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+                  </span>
+                  <span className="text-white text-[10px] font-semibold">Active Pipeline</span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-4 relative z-10">
-                <div className="bg-white/10 backdrop-blur border border-white/10 rounded-[20px] p-6 flex flex-col justify-center">
-                  <div className="text-sm font-medium text-white/60 mb-2">Pipeline Interest</div>
-                  <div className="text-4xl font-bold text-white mb-1 tracking-tight">1,240+</div>
-                  <div className="text-sm font-medium text-[#c59b4a]">Partner inquiries</div>
+              <div className="grid grid-cols-[1fr_1.8fr] gap-4 relative z-10">
+                {/* Stats mini card */}
+                <div className="bg-white/10 backdrop-blur border border-white/15 rounded-[18px] p-5 flex flex-col justify-center">
+                  <div className="text-white/60 text-xs font-semibold mb-2">Partner Interests</div>
+                  <div className="text-4xl font-bold text-white tracking-tight mb-1">1,240+</div>
+                  <div className="text-sm font-semibold text-[#c59b4a]">Global inquiries</div>
                 </div>
-                
-                <div className="bg-white/5 backdrop-blur border border-white/5 rounded-[20px] p-4 flex flex-col gap-3">
-                  {projectsData?.projects?.slice(0, 3).map((project) => (
-                    <Link key={project.id} href="/projects" className="group bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl p-3 transition-colors flex items-center justify-between">
-                      <div className="truncate pr-4">
-                        <div className="text-sm font-bold text-white truncate">{project.name}</div>
-                        <div className="text-xs text-white/60 truncate">{project.sector} · {project.country}</div>
+
+                {/* Project mini-list */}
+                <div className="bg-white/5 border border-white/8 rounded-[18px] p-4 flex flex-col gap-2.5">
+                  <div className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">Live Projects</div>
+                  {projectsData?.projects?.slice(0, 3).map((p) => (
+                    <Link key={p.id} href="/projects" className="group bg-white/6 hover:bg-white/12 border border-white/8 rounded-xl p-2.5 transition-all flex items-center justify-between gap-2">
+                      <div className="truncate">
+                        <div className="text-sm font-bold text-white truncate">{p.name}</div>
+                        <div className="text-[10px] text-white/50 truncate">{p.sector} · {p.country}</div>
                       </div>
-                      <span className="text-[10px] uppercase tracking-widest font-semibold px-2 py-1 rounded bg-[#c59b4a]/20 text-[#c59b4a] whitespace-nowrap">
-                        {formatStatus(project.fundingStatus)}
+                      <span className="text-[9px] uppercase tracking-wide font-bold px-2 py-1 rounded-lg bg-[#c59b4a]/20 text-[#c59b4a] whitespace-nowrap shrink-0">
+                        {formatStatus(p.fundingStatus)}
                       </span>
                     </Link>
                   ))}
@@ -156,126 +191,226 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Image Band Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="h-[400px] md:h-[500px] rounded-[30px] overflow-hidden relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=1400&q=80" 
-                alt="Government" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/80 via-[#10231f]/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-8 md:p-12">
-                <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">A credible digital front door for government work.</h3>
-              </div>
-            </div>
-            <div className="h-[400px] md:h-[500px] rounded-[30px] overflow-hidden relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80" 
-                alt="Execution" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/80 via-[#10231f]/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-8 md:p-12">
-                <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">From opportunity to execution.</h3>
-              </div>
-            </div>
+      {/* ── SCROLLING TICKER ─────────────────────────────────────── */}
+      <div className="py-4 bg-[#173f35] overflow-hidden border-y border-[#245d4e]">
+        <div className="flex whitespace-nowrap">
+          <div className="ticker-track flex items-center gap-0 shrink-0">
+            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+              <span key={i} className="inline-flex items-center text-white/70 text-sm font-semibold px-6">
+                {item}
+                <span className="ml-6 text-[#c59b4a] font-bold">·</span>
+              </span>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Built for governments section */}
-      <section className="py-24">
+      {/* ── IMAGE BAND ───────────────────────────────────────────── */}
+      <section className="py-10">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">Built for ecosystem leaders</h2>
-            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">Zafora connects the three critical pillars of infrastructure development.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { title: "Governments", desc: "Originate projects, structure concessions, and access global capital without overburdening sovereign debt.", icon: <Landmark className="w-8 h-8 text-[#173f35]" /> },
-              { title: "Investors & DFIs", desc: "Access a curated pipeline of derisked, ESG-compliant infrastructure assets with clear yield parameters.", icon: <BarChart3 className="w-8 h-8 text-[#173f35]" /> },
-              { title: "Contractors & EPC", desc: "Discover bankable projects ready for execution, and partner with reputable global sponsors.", icon: <Building className="w-8 h-8 text-[#173f35]" /> }
-            ].map((card, i) => (
-              <div key={i} className="bg-white rounded-[30px] p-8 border border-[#e5ded3] shadow-[0_12px_34px_rgba(16,35,31,0.04)]">
-                <div className="w-16 h-16 rounded-[16px] bg-[#efe3cf] flex items-center justify-center mb-6">
-                  {card.icon}
+              {
+                img: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80",
+                label: "Government Advisory",
+                tag: "Sovereign partnerships",
+              },
+              {
+                img: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+                label: "Project Finance",
+                tag: "DFI & private capital",
+              },
+              {
+                img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80",
+                label: "Execution Oversight",
+                tag: "Delivery excellence",
+              },
+            ].map((item, i) => (
+              <motion.div key={i} {...fadeInView(i * 0.1)} className="relative h-72 rounded-[28px] overflow-hidden group cursor-pointer">
+                <img src={item.img} alt={item.label} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/85 via-[#10231f]/20 to-transparent" />
+                <div className="absolute top-4 left-4">
+                  <span className="bg-[#c59b4a] text-[#10231f] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">{item.tag}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#10231f] mb-3">{card.title}</h3>
-                <p className="text-[#65736f] leading-relaxed">{card.desc}</p>
-              </div>
+                <div className="absolute bottom-0 left-0 p-6">
+                  <h3 className="text-white font-bold text-xl">{item.label}</h3>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-24 bg-[#ffffff] border-y border-[#e5ded3]">
+      {/* ── WHO WE SERVE ─────────────────────────────────────────── */}
+      <section className="py-24">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">Advisory & Services</h2>
-              <p className="text-xl text-[#65736f]">End-to-end structuring, funding, and delivery solutions.</p>
+          <motion.div {...fadeInView()} className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
+              <Users className="h-3.5 w-3.5" /> Built for ecosystem leaders
             </div>
-            <Button asChild variant="outline" className="rounded-full">
-              <Link href="/services">View All Services <ArrowRight className="ml-2 w-4 h-4" /></Link>
-            </Button>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">Three pillars. One platform.</h2>
+            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">Zafora connects the critical actors that make infrastructure happen at scale.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                title: "Governments",
+                desc: "Originate projects, structure concessions, and access global capital without overburdening sovereign debt.",
+                icon: <Landmark className="w-8 h-8" />,
+                img: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=600&q=80",
+                bullets: ["Policy-to-project structuring", "Sovereign balance sheet protection", "Multilateral DFI liaison"],
+                color: "from-[#173f35] to-[#245d4e]",
+              },
+              {
+                title: "Investors & DFIs",
+                desc: "Access a curated pipeline of derisked, ESG-compliant infrastructure assets with clear yield parameters.",
+                icon: <BarChart3 className="w-8 h-8" />,
+                img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80",
+                bullets: ["Pre-screened bankable assets", "ESG & compliance verified", "Risk-adjusted return models"],
+                color: "from-[#c59b4a] to-[#b5893a]",
+              },
+              {
+                title: "Contractors & EPC",
+                desc: "Discover bankable projects ready for execution, and partner with reputable global sponsors.",
+                icon: <Building className="w-8 h-8" />,
+                img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80",
+                bullets: ["Pre-qualified project pipeline", "Procurement facilitation", "Consortium formation support"],
+                color: "from-[#10231f] to-[#1a3530]",
+              },
+            ].map((card, i) => (
+              <motion.div key={i} {...fadeInView(i * 0.1)} className="bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm hover:shadow-xl transition-all group">
+                <div className={`relative h-48 bg-gradient-to-br ${card.color} overflow-hidden`}>
+                  <img src={card.img} alt={card.title} className="w-full h-full object-cover mix-blend-overlay opacity-50 group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 flex flex-col justify-end p-6">
+                    <div className="bg-white/15 backdrop-blur-sm rounded-xl p-2.5 w-fit mb-3 text-white">{card.icon}</div>
+                    <h3 className="text-2xl font-bold text-white">{card.title}</h3>
+                  </div>
+                </div>
+                <div className="p-7">
+                  <p className="text-[#65736f] leading-relaxed mb-5">{card.desc}</p>
+                  <ul className="space-y-2.5">
+                    {card.bullets.map((b, j) => (
+                      <li key={j} className="flex items-center gap-2.5 text-sm text-[#10231f] font-medium">
+                        <CheckCircle2 className="h-4 w-4 text-[#c59b4a] shrink-0" /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── BOLD STATS BAND ──────────────────────────────────────── */}
+      <section className="bg-[#173f35] py-16 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-10">
+          <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#c59b4a] rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { value: "$2.4B+", label: "Project Value Advised", icon: <DollarSign className="h-6 w-6" /> },
+              { value: "12+", label: "African Countries Active", icon: <Globe className="h-6 w-6" /> },
+              { value: "95%", label: "Client Retention Rate", icon: <Award className="h-6 w-6" /> },
+              { value: "6", label: "Infrastructure Sectors", icon: <Briefcase className="h-6 w-6" /> },
+            ].map((s, i) => (
+              <motion.div key={i} {...fadeInView(i * 0.08)} className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-[#c59b4a] mb-2">{s.icon}</div>
+                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">{s.value}</div>
+                <div className="text-sm font-semibold text-white/60 uppercase tracking-widest">{s.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SERVICES PREVIEW ─────────────────────────────────────── */}
+      <section className="py-24 bg-white border-y border-[#e5ded3]">
+        <div className="container mx-auto px-4 md:px-8">
+          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+                <Briefcase className="h-3.5 w-3.5" /> Advisory & Services
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">End-to-end structuring, funding, and delivery.</h2>
+              <p className="text-lg text-[#65736f]">Six specialized practices covering every phase of infrastructure development.</p>
+            </div>
+            <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#173f35] text-[#173f35] font-semibold hover:bg-[#173f35] hover:text-white transition-all whitespace-nowrap">
+              All Services <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {servicesData?.services?.slice(0, 3).map((service, i) => (
-              <div key={service.id} className="bg-white border border-[#e5ded3] p-8 rounded-[22px] shadow-[0_12px_34px_rgba(16,35,31,0.06)] hover:border-[#173f35]/30 transition-colors">
-                <div className="w-14 h-14 bg-[#f7f4ef] rounded-[14px] flex items-center justify-center mb-6 text-[#173f35]">
-                  {i === 0 ? <Landmark className="w-7 h-7" /> : i === 1 ? <Briefcase className="w-7 h-7" /> : <ShieldCheck className="w-7 h-7" />}
+              <motion.div key={service.id} {...fadeInView(i * 0.1)} className="group bg-[#f7f4ef] border border-[#e5ded3] p-8 rounded-[24px] hover:border-[#173f35]/30 hover:shadow-lg transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#173f35]/4 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="w-14 h-14 bg-[#173f35] text-[#c59b4a] rounded-[16px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-md">
+                  {SERVICE_ICONS[i]}
                 </div>
-                <h3 className="text-xl font-bold text-[#10231f] mb-4">{service.name}</h3>
-                <p className="text-[#65736f] mb-6 min-h-[80px]">{service.description}</p>
-                <ul className="space-y-3 mb-8">
+                <h3 className="text-xl font-bold text-[#10231f] mb-3">{service.name}</h3>
+                <p className="text-[#65736f] mb-6 line-clamp-3">{service.description}</p>
+                <ul className="space-y-2.5 mb-7">
                   {service.bullets?.slice(0, 3).map((bullet, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-sm text-[#10231f] font-medium">
-                      <CheckCircle2 className="w-5 h-5 text-[#c59b4a] shrink-0" />
-                      <span>{bullet}</span>
+                    <li key={idx} className="flex items-start gap-2.5 text-sm text-[#10231f] font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-[#c59b4a] shrink-0 mt-0.5" /> {bullet}
                     </li>
                   ))}
                 </ul>
-                <Link href={`/submit?service=${encodeURIComponent(service.name)}`} className="text-[#173f35] font-bold text-sm inline-flex items-center hover:underline">
-                  Engage Practice <ArrowUpRight className="ml-1 w-4 h-4" />
+                <Link href={`/submit?service=${encodeURIComponent(service.name)}`} className="inline-flex items-center gap-1.5 text-[#173f35] font-bold text-sm hover:gap-3 transition-all">
+                  Engage Practice <ChevronRight className="h-4 w-4" />
                 </Link>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Process / Delivery Model */}
+      {/* ── DELIVERY MODEL ───────────────────────────────────────── */}
       <section className="py-24">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="bg-[#173f35] rounded-[40px] p-10 md:p-16 lg:p-20 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80')] opacity-5 mix-blend-overlay object-cover"></div>
-            
+          <div className="bg-[#173f35] rounded-[40px] p-10 md:p-16 relative overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+            </div>
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">The Delivery Model</h2>
-              <p className="text-xl text-white/70 max-w-2xl mb-16">Our proprietary methodology derisks projects at every stage.</p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
-                {[
-                  { num: "01", title: "Origination & Screening", desc: "Identifying viable national projects and conducting preliminary technical and economic viability assessments." },
-                  { num: "02", title: "Feasibility & Structuring", desc: "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks." },
-                  { num: "03", title: "Capital Raising", desc: "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity." },
-                  { num: "04", title: "Procurement", desc: "Transparent, competitive tendering to select world-class EPC contractors and technology partners." },
-                  { num: "05", title: "Execution Oversight", desc: "Stringent project management, milestone tracking, and quality assurance during construction." },
-                  { num: "06", title: "Operations & Handover", desc: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts." }
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-5">
-                    <div className="text-2xl font-bold text-[#c59b4a] shrink-0">{step.num}</div>
-                    <div>
-                      <h4 className="text-xl font-bold text-white mb-2">{step.title}</h4>
-                      <p className="text-white/60 text-sm leading-relaxed">{step.desc}</p>
-                    </div>
+              <div className="flex flex-col md:flex-row justify-between items-start mb-14 gap-6">
+                <div>
+                  <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+                    <Target className="h-3.5 w-3.5" /> Our Methodology
                   </div>
+                  <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">The Delivery Model</h2>
+                  <p className="text-xl text-white/60 max-w-xl">Our proprietary methodology derisks projects at every stage — from concept to commissioning.</p>
+                </div>
+                <Link href="/submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#c59b4a] text-[#10231f] font-bold hover:bg-[#b5893a] transition-all shrink-0 shadow-lg">
+                  Start a Project <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[
+                  { num: "01", icon: <Target className="h-5 w-5" />, title: "Origination & Screening", desc: "Identifying viable national projects and conducting preliminary technical and economic viability assessments." },
+                  { num: "02", icon: <ShieldCheck className="h-5 w-5" />, title: "Feasibility & Structuring", desc: "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks." },
+                  { num: "03", icon: <DollarSign className="h-5 w-5" />, title: "Capital Raising", desc: "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity." },
+                  { num: "04", icon: <Handshake className="h-5 w-5" />, title: "Procurement", desc: "Transparent, competitive tendering to select world-class EPC contractors and technology partners." },
+                  { num: "05", icon: <TrendingUp className="h-5 w-5" />, title: "Execution Oversight", desc: "Stringent project management, milestone tracking, and quality assurance during construction." },
+                  { num: "06", icon: <Award className="h-5 w-5" />, title: "Operations & Handover", desc: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts." },
+                ].map((step, i) => (
+                  <motion.div key={i} {...fadeInView(i * 0.07)} className="group flex gap-5">
+                    <div className="flex flex-col items-center gap-2 shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-[#c59b4a]/20 border border-[#c59b4a]/30 flex items-center justify-center text-[#c59b4a]">
+                        {step.icon}
+                      </div>
+                      <div className="text-xs font-bold text-[#c59b4a]/60">{step.num}</div>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
+                      <p className="text-white/55 text-sm leading-relaxed">{step.desc}</p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -283,210 +418,248 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Project Pipeline Preview */}
+      {/* ── QUOTE / TESTIMONIAL ──────────────────────────────────── */}
+      <section className="py-20 bg-white border-y border-[#e5ded3]">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-center max-w-5xl mx-auto">
+            <motion.div {...fadeInView()} className="relative">
+              <div className="w-full aspect-square max-w-xs mx-auto lg:mx-0 rounded-[32px] overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=600&q=80" alt="Leadership" className="w-full h-full object-cover" />
+              </div>
+              <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl p-4 shadow-xl">
+                <div className="text-[#10231f] font-bold text-lg">10+</div>
+                <div className="text-[#10231f]/70 text-xs font-semibold">Years Active</div>
+              </div>
+            </motion.div>
+            <motion.div {...fadeInView(0.15)}>
+              <div className="text-6xl text-[#c59b4a] font-serif leading-none mb-4">"</div>
+              <p className="text-2xl md:text-3xl font-bold text-[#10231f] leading-snug mb-6 tracking-tight">
+                We don't wait for Africa's infrastructure gap to close itself. We build the bridge — one bankable project at a time.
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">AM</div>
+                <div>
+                  <div className="font-bold text-[#10231f]">Amara Mensah</div>
+                  <div className="text-sm text-[#65736f]">Founder & CEO, Zafora Holding</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PROJECT PIPELINE PREVIEW ─────────────────────────────── */}
       <section className="py-24 bg-[#f7f4ef]">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">Project Pipeline</h2>
-              <p className="text-xl text-[#65736f]">High-impact infrastructure assets currently seeking partners.</p>
+              <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+                <MapPin className="h-3.5 w-3.5" /> Live Pipeline
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">Project Pipeline</h2>
+              <p className="text-lg text-[#65736f]">High-impact infrastructure assets currently seeking partners.</p>
             </div>
-            <Button asChild variant="outline" className="rounded-full bg-white border-[#e5ded3] text-[#10231f] hover:bg-white/60">
-              <Link href="/projects">View Entire Portfolio</Link>
-            </Button>
-          </div>
+            <Link href="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#e5ded3] text-[#10231f] font-semibold hover:border-[#173f35] hover:shadow-md transition-all whitespace-nowrap">
+              View Entire Portfolio <ChevronRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
 
           <div className="bg-white rounded-[36px] p-8 border border-[#e5ded3] shadow-sm">
-            <div className="flex flex-wrap gap-2 mb-8">
-              <span className="px-4 py-1.5 rounded-full border border-[#173f35] bg-[#173f35] text-white text-sm font-semibold">All Projects</span>
-              <span className="px-4 py-1.5 rounded-full border border-[#e5ded3] bg-white text-[#65736f] text-sm font-semibold hover:border-[#173f35]/50">Seeking Funding</span>
-              <span className="px-4 py-1.5 rounded-full border border-[#e5ded3] bg-white text-[#65736f] text-sm font-semibold hover:border-[#173f35]/50">Investor Ready</span>
-            </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {projectsData?.projects?.slice(0, 3).map((project) => (
-                <div key={project.id} className="bg-white border border-[#e5ded3] rounded-[24px] p-6 flex flex-col hover:border-[#173f35]/30 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                  <div className="flex justify-between items-start mb-5">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#8a958f] border border-[#e5ded3] px-2 py-1 rounded-md">
+              {projectsData?.projects?.slice(0, 3).map((project, i) => (
+                <motion.div key={project.id} {...fadeInView(i * 0.08)} className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[22px] p-6 flex flex-col hover:border-[#173f35]/30 hover:shadow-md transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#8a958f] border border-[#e5ded3] bg-white px-2 py-1 rounded-lg">
                       {project.sector}
                     </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border ${getStatusColor(project.fundingStatus)}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getStatusColor(project.fundingStatus)}`}>
                       {formatStatus(project.fundingStatus)}
                     </span>
                   </div>
-                  
-                  <h3 className="text-xl font-bold text-[#10231f] mb-2 leading-snug">{project.name}</h3>
-                  <div className="text-sm font-medium text-[#65736f] mb-4">{project.country}</div>
-                  
-                  <div className="bg-[#f7f4ef] rounded-xl p-4 mb-6">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Est. Value</div>
-                        <div className="font-bold text-[#10231f]">{project.estimatedValue || "TBD"}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Zafora Role</div>
-                        <div className="font-bold text-[#10231f] truncate">{project.zaforaRole}</div>
+                  <h3 className="text-xl font-bold text-[#10231f] mb-1.5 leading-snug">{project.name}</h3>
+                  <div className="flex items-center gap-1.5 text-sm text-[#65736f] mb-5">
+                    <MapPin className="h-3.5 w-3.5" /> {project.country}
+                  </div>
+                  <div className="bg-white rounded-xl p-4 mb-5 grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Est. Value</div>
+                      <div className="font-bold text-[#10231f] flex items-center gap-1">
+                        <DollarSign className="h-3.5 w-3.5 text-[#173f35]" /> {project.estimatedValue || "TBD"}
                       </div>
                     </div>
+                    <div>
+                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Zafora Role</div>
+                      <div className="font-bold text-[#10231f] truncate">{project.zaforaRole}</div>
+                    </div>
                   </div>
-                  
                   <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#e5ded3]">
-                    <div className="text-xs font-semibold text-[#8a958f] flex items-center gap-1.5">
-                      <span className="flex -space-x-2">
-                        <span className="w-6 h-6 rounded-full bg-[#e6eef4] border-2 border-white flex items-center justify-center text-[10px] font-bold text-[#385c7a]">I</span>
-                        <span className="w-6 h-6 rounded-full bg-[#f6ead2] border-2 border-white flex items-center justify-center text-[10px] font-bold text-[#c59b4a]">C</span>
-                      </span>
-                      {project.interestCount} interests
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-[#8a958f]">
+                      <Users className="h-3.5 w-3.5" /> {project.interestCount} interested
                     </div>
-                    <Button asChild size="sm" className="rounded-full bg-[#173f35] text-white hover:bg-[#173f35]/90">
-                      <Link href="/projects">Express Interest</Link>
-                    </Button>
+                    <Link href="/projects" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f35] hover:underline">
+                      Express Interest <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Engagement Paths */}
+      {/* ── ENGAGEMENT PATHS ─────────────────────────────────────── */}
       <section className="py-24">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm flex flex-col">
-              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" alt="Submit" className="w-full h-[190px] object-cover" />
-              <div className="p-8 flex flex-col flex-1">
-                <h3 className="text-2xl font-bold text-[#10231f] mb-3">Submit a Project</h3>
-                <p className="text-[#65736f] mb-8 flex-1">Sovereign entities and developers can submit infrastructure concepts for evaluation and structuring.</p>
-                <Button asChild className="w-full rounded-full bg-[#173f35] text-white font-semibold">
-                  <Link href="/submit">Start Submission</Link>
-                </Button>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm flex flex-col">
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=600&q=80" alt="Invest" className="w-full h-[190px] object-cover" />
-              <div className="p-8 flex flex-col flex-1">
-                <h3 className="text-2xl font-bold text-[#10231f] mb-3">Invest & Fund</h3>
-                <p className="text-[#65736f] mb-8 flex-1">DFIs, private equity, and institutional investors can access our pipeline of bankable assets.</p>
-                <Button asChild variant="outline" className="w-full rounded-full border-[#173f35] text-[#173f35] font-semibold">
-                  <Link href="/projects">View Pipeline</Link>
-                </Button>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm flex flex-col">
-              <img src="https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=600&q=80" alt="Partner" className="w-full h-[190px] object-cover" />
-              <div className="p-8 flex flex-col flex-1">
-                <h3 className="text-2xl font-bold text-[#10231f] mb-3">Execution Partners</h3>
-                <p className="text-[#65736f] mb-8 flex-1">EPC contractors and operators can bid on structured projects and form delivery consortia.</p>
-                <Button asChild variant="outline" className="w-full rounded-full border-[#e5ded3] text-[#10231f] font-semibold">
-                  <Link href="/submit">Register Interest</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sectors Grid */}
-      <section className="py-24 bg-white border-y border-[#e5ded3]">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">Core Sectors</h2>
-            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">We focus on critical infrastructure that drives economic growth.</p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <motion.div {...fadeInView()} className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">How would you like to engage?</h2>
+            <p className="text-xl text-[#65736f]">Zafora works across the full infrastructure stakeholder ecosystem.</p>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { name: "Energy & Power", icon: <Zap className="w-6 h-6" /> },
-              { name: "Water & Sanitation", icon: <Droplets className="w-6 h-6" /> },
-              { name: "Transportation", icon: <Truck className="w-6 h-6" /> },
-              { name: "Healthcare", icon: <Stethoscope className="w-6 h-6" /> },
-              { name: "Agriculture", icon: <Wheat className="w-6 h-6" /> },
-              { name: "Housing", icon: <HomeIcon className="w-6 h-6" /> },
-              { name: "Digital Infra", icon: <Wifi className="w-6 h-6" /> },
-              { name: "Education", icon: <GraduationCap className="w-6 h-6" /> }
-            ].map((sector, i) => (
-              <div key={i} className="bg-[#f7f4ef] rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:bg-[#efe3cf] transition-colors cursor-pointer group">
-                <div className="text-[#c59b4a] font-bold text-lg mb-3">0{i+1}</div>
-                <div className="text-[#10231f] group-hover:text-[#173f35] mb-2">{sector.icon}</div>
-                <h4 className="font-bold text-[#10231f]">{sector.name}</h4>
-              </div>
+              {
+                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+                tag: "For Governments",
+                title: "Submit a Project",
+                desc: "Sovereign entities and developers can submit infrastructure concepts for evaluation and structuring.",
+                cta: "Start Submission",
+                href: "/submit",
+                btnClass: "bg-[#173f35] text-white",
+              },
+              {
+                img: "https://images.unsplash.com/photo-1616093875201-cc5a1b4e2a5d?auto=format&fit=crop&w=600&q=80",
+                tag: "For Investors",
+                title: "Invest & Fund",
+                desc: "DFIs, private equity, and institutional investors can access our pipeline of bankable assets.",
+                cta: "View Pipeline",
+                href: "/projects",
+                btnClass: "bg-[#c59b4a] text-[#10231f]",
+              },
+              {
+                img: "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=600&q=80",
+                tag: "For Contractors",
+                title: "Execution Partners",
+                desc: "EPC contractors and operators can bid on structured projects and form delivery consortia.",
+                cta: "Register Interest",
+                href: "/submit",
+                btnClass: "bg-white border border-[#e5ded3] text-[#10231f]",
+              },
+            ].map((card, i) => (
+              <motion.div key={i} {...fadeInView(i * 0.1)} className="group bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm hover:shadow-xl transition-all flex flex-col">
+                <div className="relative h-48 overflow-hidden">
+                  <img src={card.img} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-white/90 backdrop-blur text-[#173f35] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">{card.tag}</span>
+                  </div>
+                </div>
+                <div className="p-7 flex flex-col flex-1">
+                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">{card.title}</h3>
+                  <p className="text-[#65736f] mb-7 flex-1">{card.desc}</p>
+                  <Link href={card.href} className={`w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-full font-bold text-sm ${card.btnClass} hover:opacity-90 transition-all shadow-sm`}>
+                    {card.cta} <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* About / Why Zafora */}
-      <section className="py-24">
+      {/* ── SECTORS GRID ─────────────────────────────────────────── */}
+      <section className="py-24 bg-white border-y border-[#e5ded3]">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="bg-gradient-to-br from-[#f7f4ef] to-[#efe3cf] rounded-[36px] p-10 md:p-16 h-full flex flex-col justify-center border border-[#e5ded3]">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-6">About Zafora Holding</h2>
-              <p className="text-lg text-[#10231f] font-medium mb-6 leading-relaxed">
-                We are a specialized advisory and development firm dedicated exclusively to African infrastructure. 
-              </p>
-              <p className="text-[#65736f] leading-relaxed mb-8">
-                Our team comprises veterans from global finance, engineering, and government who understand the unique complexities of delivering mega-projects in emerging markets. We bridge the gap between local realities and international capital requirements.
-              </p>
-              <div className="mt-auto">
-                <Button asChild variant="link" className="text-[#173f35] font-bold p-0 h-auto text-base hover:no-underline">
-                  <Link href="/services" className="flex items-center">
-                    Discover our methodology <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                </Button>
-              </div>
+          <motion.div {...fadeInView()} className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+              <Globe className="h-3.5 w-3.5" /> Core Sectors
             </div>
-            
-            <div className="space-y-6">
-              {[
-                { title: "Structured Methodology", desc: "Every project follows a strict framework to ensure bankability and mitigate execution risks.", icon: <ShieldCheck className="text-[#c59b4a] w-6 h-6" /> },
-                { title: "Compliance-Aware", desc: "Deep integration of ESG standards and legal compliance required by tier-1 global investors.", icon: <FileCheck className="text-[#c59b4a] w-6 h-6" /> },
-                { title: "Partner-Driven", desc: "We act as the central node, aligning the interests of state sponsors, financiers, and contractors.", icon: <Users className="text-[#c59b4a] w-6 h-6" /> }
-              ].map((item, i) => (
-                <div key={i} className="bg-white rounded-[24px] p-8 border border-[#e5ded3] flex gap-5 shadow-sm">
-                  <div className="bg-[#f6ead2] w-12 h-12 rounded-[12px] flex items-center justify-center shrink-0">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold text-[#10231f] mb-2">{item.title}</h4>
-                    <p className="text-[#65736f] text-sm leading-relaxed">{item.desc}</p>
-                  </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">We operate across six critical sectors</h2>
+            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">Every sector that drives African economic growth and human development.</p>
+          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[
+              { icon: <Zap className="w-7 h-7" />, label: "Energy", sub: "Power grids, solar, gas", color: "bg-yellow-50 text-yellow-600 border-yellow-200" },
+              { icon: <Droplets className="w-7 h-7" />, label: "Water", sub: "Treatment, sanitation", color: "bg-blue-50 text-blue-600 border-blue-200" },
+              { icon: <Truck className="w-7 h-7" />, label: "Transport", sub: "Roads, rail, ports", color: "bg-purple-50 text-purple-600 border-purple-200" },
+              { icon: <Stethoscope className="w-7 h-7" />, label: "Healthcare", sub: "Hospitals, clinics", color: "bg-red-50 text-red-500 border-red-200" },
+              { icon: <Wifi className="w-7 h-7" />, label: "Digital", sub: "Broadband, smart city", color: "bg-teal-50 text-teal-600 border-teal-200" },
+              { icon: <Leaf className="w-7 h-7" />, label: "Agriculture", sub: "Irrigation, storage", color: "bg-green-50 text-green-600 border-green-200" },
+            ].map((s, i) => (
+              <motion.div key={i} {...fadeInView(i * 0.07)} className={`group flex flex-col items-center gap-3 p-6 rounded-[24px] border ${s.color} hover:scale-105 transition-all cursor-default shadow-sm`}>
+                <div className="group-hover:scale-110 transition-transform">{s.icon}</div>
+                <div className="text-center">
+                  <div className="font-bold text-[#10231f] text-sm">{s.label}</div>
+                  <div className="text-[10px] text-[#8a958f] mt-0.5">{s.sub}</div>
                 </div>
-              ))}
-            </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ── ABOUT TEASER ─────────────────────────────────────────── */}
       <section className="py-24">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="bg-gradient-to-r from-[#173f35] to-[#245d4e] rounded-[40px] p-10 md:p-16 lg:p-20 shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Start the conversation</h2>
-                <p className="text-xl text-white/80 max-w-lg">
-                  Submit a project, request our advisory capabilities, or explore investment opportunities.
-                </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div {...fadeInView()}>
+              <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
+                <Building className="h-3.5 w-3.5" /> Who We Are
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 lg:justify-end">
-                <Button asChild size="lg" className="rounded-full bg-white text-[#173f35] hover:bg-gray-100 h-14 px-8 text-base font-bold">
-                  <Link href="/submit">Email Zafora</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="rounded-full border-white/30 text-white hover:bg-white/10 h-14 px-8 text-base font-bold bg-transparent">
-                  <Link href="/submit?type=project_submission">Submit Project</Link>
-                </Button>
-              </div>
-            </div>
+              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A decade of African infrastructure expertise.</h2>
+              <p className="text-lg text-[#65736f] leading-relaxed mb-6">
+                Founded in 2014 and headquartered in Accra, Ghana, Zafora Holding brings together 45+ experts in project finance, government relations, engineering procurement, and institutional investment.
+              </p>
+              <p className="text-lg text-[#65736f] leading-relaxed mb-8">
+                We operate at the intersection of public policy and private capital — the sweet spot where Africa's biggest infrastructure projects get done.
+              </p>
+              <Link href="/about" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md">
+                Our Full Story <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
+            <motion.div {...fadeInView(0.15)} className="grid grid-cols-2 gap-4">
+              {[
+                { img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=400&q=80", className: "h-64 rounded-[24px]" },
+                { img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80", className: "h-48 rounded-[24px] mt-8" },
+                { img: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=400&q=80", className: "h-48 rounded-[24px] -mt-4" },
+                { img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=80", className: "h-64 rounded-[24px]" },
+              ].map((img, i) => (
+                <div key={i} className={`overflow-hidden shadow-lg ${img.className}`}>
+                  <img src={img.img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
+
+      {/* ── FINAL CTA ────────────────────────────────────────────── */}
+      <section className="py-24 bg-[#173f35] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#c59b4a]/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 text-center relative z-10">
+          <motion.div {...fadeInView()}>
+            <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-4 py-2 rounded-full text-xs font-bold mb-8">
+              <Handshake className="h-4 w-4" /> Ready to build?
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl mx-auto">
+              Your next infrastructure project starts here.
+            </h2>
+            <p className="text-xl text-white/65 mb-12 max-w-xl mx-auto leading-relaxed">
+              Whether you represent a government, investment fund, or engineering firm — we want to hear about your ambitions.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/submit" className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-xl hover:-translate-y-0.5">
+                Start a Conversation <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link href="/projects" className="inline-flex items-center gap-2 h-14 px-10 rounded-full border border-white/25 text-white font-bold text-base hover:bg-white/10 transition-all">
+                Explore Pipeline
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
     </div>
   );
 }
-
-// Ensure these imports are available in the scope
-import { FileCheck, Users } from "lucide-react";
