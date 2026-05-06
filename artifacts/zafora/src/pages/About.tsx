@@ -57,35 +57,35 @@ const STATS = [
 
 const TEAM = [
   {
-    initials: "AM",
-    name: "Amara Mensah",
-    title: "Founder & Chief Executive",
-    bio: "20+ years in African infrastructure finance and government advisory. Former Principal at the African Development Bank.",
-    location: "Accra, Ghana",
+    initials: "ZH",
+    name: "Leadership",
+    title: "Executive Team",
+    bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.",
+    location: "Tampa, FL, USA",
     color: "bg-[#173f35]",
   },
   {
-    initials: "FK",
-    name: "Fatima Kamara",
-    title: "Managing Director, Transactions",
-    bio: "Specialist in PPP structuring and DFI financing across energy and transport sectors. MBA, Wharton.",
-    location: "Lagos, Nigeria",
+    initials: "ZH",
+    name: "Advisory",
+    title: "Strategic Advisors",
+    bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.",
+    location: "Global",
     color: "bg-[#245d4e]",
   },
   {
-    initials: "RO",
-    name: "Raphael Osei",
-    title: "Director, Government Advisory",
-    bio: "Former Deputy Minister of Infrastructure with 15 years structuring national development programmes.",
-    location: "Nairobi, Kenya",
+    initials: "ZH",
+    name: "Operations",
+    title: "Operations Team",
+    bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.",
+    location: "Tampa, FL, USA",
     color: "bg-[#c59b4a]",
   },
   {
-    initials: "ZN",
-    name: "Zainab Ndoye",
-    title: "Head of Capital Markets",
-    bio: "Connects African projects with global institutional capital. Former VP at Standard Bank Group.",
-    location: "Dakar, Senegal",
+    initials: "ZH",
+    name: "Partnerships",
+    title: "Global Partnerships",
+    bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.",
+    location: "Global Markets",
     color: "bg-[#10231f]",
   },
 ];
@@ -158,9 +158,9 @@ export default function About() {
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
               <img src={logo} alt="Zafora Holding" className="h-14 w-auto mb-8 opacity-90" style={{ filter: "brightness(0) invert(1)" }} />
               <blockquote className="text-2xl font-semibold leading-snug mb-6 relative z-10">
-                "We do not wait for Africa's infrastructure gap to close itself. We build the bridge — one bankable project at a time."
+                "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets."
               </blockquote>
-              <div className="text-white/60 text-sm font-medium relative z-10">— Amara Mensah, Founder & CEO</div>
+              <div className="text-white/60 text-sm font-medium relative z-10">— Zafora Holding</div>
 
               <div className="mt-10 grid grid-cols-2 gap-4 relative z-10">
                 {[

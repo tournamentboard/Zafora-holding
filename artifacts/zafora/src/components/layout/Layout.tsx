@@ -51,8 +51,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <a href="mailto:Office@zaforaholding.com" className="flex items-center gap-2 hover:text-[#c59b4a] transition-colors">
                   <Mail className="h-4 w-4 shrink-0" /> Office@zaforaholding.com
                 </a>
-                <span className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 shrink-0" /> Tampa, FL, USA · Global Markets
+                <span className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>3030 N Rocky Point Dr W, Suite 150<br />Tampa, FL 33607, USA</span>
                 </span>
               </div>
             </div>

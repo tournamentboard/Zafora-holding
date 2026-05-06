@@ -436,13 +436,13 @@ export default function Home() {
             <motion.div {...fadeInView(0.15)}>
               <div className="text-6xl text-[#c59b4a] font-serif leading-none mb-4">"</div>
               <p className="text-2xl md:text-3xl font-bold text-[#10231f] leading-snug mb-6 tracking-tight">
-                We don't wait for Africa's infrastructure gap to close itself. We build the bridge — one bankable project at a time.
+                We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets.
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">AM</div>
+                <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">ZH</div>
                 <div>
-                  <div className="font-bold text-[#10231f]">Amara Mensah</div>
-                  <div className="text-sm text-[#65736f]">Founder & CEO, Zafora Holding</div>
+                  <div className="font-bold text-[#10231f]">Zafora Holding</div>
+                  <div className="text-sm text-[#65736f]">Tampa, FL, USA · Est. 2025</div>
                 </div>
               </div>
             </motion.div>
@@ -606,12 +606,12 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
                 <Building className="h-3.5 w-3.5" /> Who We Are
               </div>
-              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A decade of African infrastructure expertise.</h2>
+              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A global infrastructure and strategic solutions company.</h2>
               <p className="text-lg text-[#65736f] leading-relaxed mb-6">
-                Founded in 2014 and headquartered in Accra, Ghana, Zafora Holding brings together 45+ experts in project finance, government relations, engineering procurement, and institutional investment.
+                Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built to bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions.
               </p>
               <p className="text-lg text-[#65736f] leading-relaxed mb-8">
-                We operate at the intersection of public policy and private capital — the sweet spot where Africa's biggest infrastructure projects get done.
+                We support public and private sector initiatives across Africa, the Americas, the Caribbean, and emerging markets worldwide — connecting innovation with scalable development opportunities.
               </p>
               <Link href="/about" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md">
                 Our Full Story <ArrowRight className="h-4 w-4" />
