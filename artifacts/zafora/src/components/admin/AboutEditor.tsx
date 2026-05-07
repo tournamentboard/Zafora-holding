@@ -72,10 +72,10 @@ const ABOUT_DEFAULTS = {
     { title: "Excellence in Practice", desc: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement." },
   ],
   team: [
-    { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA" },
-    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global" },
-    { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA" },
-    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets" },
+    { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "" },
+    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "" },
+    { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "" },
+    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "" },
   ],
   timeline: [
     { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
@@ -315,6 +315,16 @@ export default function AboutEditor() {
                 <Field label="Location" value={member.location ?? ""} onChange={v => setArrayItem("team", i, "location", v)} placeholder="Tampa, FL, USA" />
               </div>
               <Field label="Bio" value={member.bio ?? ""} onChange={v => setArrayItem("team", i, "bio", v)} type="textarea" />
+              <div className="flex items-start gap-3">
+                <div className="flex-1">
+                  <Field label="Photo URL (optional)" value={member.photo ?? ""} onChange={v => setArrayItem("team", i, "photo", v)} placeholder="https://... (leave blank to show initials)" />
+                </div>
+                {member.photo && (
+                  <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 mt-6">
+                    <img src={member.photo} alt={member.name} className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
+                  </div>
+                )}
+              </div>
             </div>
           ))}
           {(f.team ?? []).length < 8 && (

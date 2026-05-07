@@ -3,11 +3,12 @@ import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Settings2, Globe, Layout, FileText, Info, Loader2, ExternalLink,
-  BookOpen, Landmark, Shield, Send, Plus, Trash2,
+  BookOpen, Landmark, Shield, Send, Plus, Trash2, Image,
 } from "lucide-react";
 import AboutEditor from "./AboutEditor";
+import ImagesEditor from "./ImagesEditor";
 
-type Tab = "hero" | "footer" | "about" | "seo" | "services_page" | "government_page" | "submit_page";
+type Tab = "hero" | "footer" | "about" | "seo" | "services_page" | "government_page" | "submit_page" | "images";
 
 const SEO_PAGES = [
   { key: "seo_home", label: "Home Page" },
@@ -480,6 +481,7 @@ function SubmitPageEditor() {
 const TAB_CONFIG = [
   { id: "hero" as Tab, label: "Hero Section", icon: Layout, desc: "Headline, buttons, badges" },
   { id: "about" as Tab, label: "About Us", icon: BookOpen, desc: "Story, mission & vision" },
+  { id: "images" as Tab, label: "Site Images", icon: Image, desc: "All page photos" },
   { id: "footer" as Tab, label: "Footer", icon: FileText, desc: "Contact info & copyright" },
   { id: "services_page" as Tab, label: "Services Page", icon: Landmark, desc: "Hero, stats, CTA" },
   { id: "government_page" as Tab, label: "Government Page", icon: Shield, desc: "Hero, capabilities, CTA" },
@@ -520,6 +522,7 @@ export default function SiteSettingsManager() {
       <div className="bg-white border border-[#e5ded3] rounded-2xl p-6">
         {activeTab === "hero" && <HeroEditor />}
         {activeTab === "about" && <AboutEditor />}
+        {activeTab === "images" && <ImagesEditor />}
         {activeTab === "footer" && <FooterEditor />}
         {activeTab === "services_page" && <ServicesPageEditor />}
         {activeTab === "government_page" && <GovernmentPageEditor />}

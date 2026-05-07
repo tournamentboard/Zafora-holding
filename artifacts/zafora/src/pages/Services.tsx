@@ -36,6 +36,11 @@ const STAT_ICONS = [
   <ShieldCheck className="h-5 w-5" />,
 ];
 
+const SERVICE_IMAGE_DEFAULTS = {
+  mosaicLeft: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=600&q=80",
+  mosaicRight: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=600&q=80",
+};
+
 const SERVICE_IMAGES = [
   "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=900&q=80",
@@ -65,6 +70,7 @@ export default function Services() {
   usePageTitle("Services");
   const { data, isLoading } = useListServices();
   const { data: settingsData } = useGetSiteSettings("services_page");
+  const { data: imagesData } = useGetSiteSettings("site_images");
 
   const settings = (() => {
     try {
@@ -78,6 +84,14 @@ export default function Services() {
       }
     } catch {}
     return DEFAULT_SETTINGS;
+  })();
+
+  const siteImgs = (() => {
+    try {
+      const parsed = imagesData?.value ? JSON.parse(imagesData.value) : null;
+      if (parsed?.services) return { ...SERVICE_IMAGE_DEFAULTS, ...parsed.services };
+    } catch {}
+    return SERVICE_IMAGE_DEFAULTS;
   })();
 
   return (
@@ -117,11 +131,11 @@ export default function Services() {
             {/* Hero image mosaic */}
             <motion.div {...fadeInView(0.15)} className="grid grid-cols-2 gap-4">
               <div className="h-72 rounded-[24px] overflow-hidden shadow-lg">
-                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=600&q=80" alt="Services" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                <img src={siteImgs.mosaicLeft} alt="Services" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
               </div>
               <div className="flex flex-col gap-4">
                 <div className="h-[138px] rounded-[24px] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=600&q=80" alt="Government" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                  <img src={siteImgs.mosaicRight} alt="Government" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="h-[118px] rounded-[24px] overflow-hidden shadow-lg bg-[#173f35] flex items-center justify-center">
                   <div className="text-center text-white p-4">

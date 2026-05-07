@@ -69,6 +69,23 @@ const FALLBACK_STEPS = [
   { id: -6, stepNumber: 6, title: "Operations & Handover", description: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts.", iconName: "Award", displayOrder: 5, visible: true },
 ];
 
+const HOME_IMAGE_DEFAULTS = {
+  heroPanel: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80",
+  band1: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80",
+  band2: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+  band3: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80",
+  pillar1: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=600&q=80",
+  pillar2: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80",
+  pillar3: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80",
+  engage1: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+  engage2: "https://images.unsplash.com/photo-1616093875201-cc5a1b4e2a5d?auto=format&fit=crop&w=600&q=80",
+  engage3: "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=600&q=80",
+  collage1: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=400&q=80",
+  collage2: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80",
+  collage3: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=400&q=80",
+  collage4: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=80",
+};
+
 const HERO_DEFAULTS = {
   badge: "Strategic Infrastructure & Consulting · Est. 2025",
   headline: "Structuring, funding, and delivering high-impact projects.",
@@ -94,6 +111,7 @@ export default function Home() {
   const { data: contentStatsData } = useListContentStats();
   const { data: methodologyData } = useListMethodologySteps();
   const { data: heroData } = useGetSiteSettings("hero");
+  const { data: imagesData } = useGetSiteSettings("site_images");
   const { data: testimonialsData } = useQuery<{ testimonials: any[] }>({
     queryKey: ["/api/testimonials"],
     queryFn: async () => {
@@ -109,6 +127,14 @@ export default function Home() {
       if (parsed && typeof parsed === "object") return { ...HERO_DEFAULTS, ...parsed };
     } catch {}
     return HERO_DEFAULTS;
+  })();
+
+  const imgs = (() => {
+    try {
+      const parsed = imagesData?.value ? JSON.parse(imagesData.value) : null;
+      if (parsed?.home) return { ...HOME_IMAGE_DEFAULTS, ...parsed.home };
+    } catch {}
+    return HOME_IMAGE_DEFAULTS;
   })();
 
   const featuredTestimonial = testimonialsData?.testimonials?.find((t: any) => t.visible !== false) ?? null;
@@ -200,7 +226,7 @@ export default function Home() {
               {/* Hero image */}
               <div className="relative z-10 mb-5 h-[220px] rounded-[24px] overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80"
+                  src={imgs.heroPanel}
                   alt="Infrastructure advisory"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -268,17 +294,17 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
-                img: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80",
+                img: imgs.band1,
                 label: "Government Advisory",
                 tag: "Sovereign partnerships",
               },
               {
-                img: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+                img: imgs.band2,
                 label: "Project Finance",
                 tag: "DFI & private capital",
               },
               {
-                img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80",
+                img: imgs.band3,
                 label: "Execution Oversight",
                 tag: "Delivery excellence",
               },
@@ -315,7 +341,7 @@ export default function Home() {
                 title: "Governments",
                 desc: "Originate projects, structure concessions, and access global capital without overburdening sovereign debt.",
                 icon: <Landmark className="w-8 h-8" />,
-                img: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=600&q=80",
+                img: imgs.pillar1,
                 bullets: ["Policy-to-project structuring", "Sovereign balance sheet protection", "Multilateral DFI liaison"],
                 color: "from-[#173f35] to-[#245d4e]",
               },
@@ -323,7 +349,7 @@ export default function Home() {
                 title: "Investors & DFIs",
                 desc: "Access a curated pipeline of derisked, ESG-compliant infrastructure assets with clear yield parameters.",
                 icon: <BarChart3 className="w-8 h-8" />,
-                img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80",
+                img: imgs.pillar2,
                 bullets: ["Pre-screened bankable assets", "ESG & compliance verified", "Risk-adjusted return models"],
                 color: "from-[#c59b4a] to-[#b5893a]",
               },
@@ -331,7 +357,7 @@ export default function Home() {
                 title: "Contractors & EPC",
                 desc: "Discover bankable projects ready for execution, and partner with reputable global sponsors.",
                 icon: <Building className="w-8 h-8" />,
-                img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80",
+                img: imgs.pillar3,
                 bullets: ["Pre-qualified project pipeline", "Procurement facilitation", "Consortium formation support"],
                 color: "from-[#10231f] to-[#1a3530]",
               },
@@ -570,7 +596,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+                img: imgs.engage1,
                 tag: "For Governments",
                 title: "Submit a Project",
                 desc: "Sovereign entities and developers can submit infrastructure concepts for evaluation and structuring.",
@@ -579,7 +605,7 @@ export default function Home() {
                 btnClass: "bg-[#173f35] text-white",
               },
               {
-                img: "https://images.unsplash.com/photo-1616093875201-cc5a1b4e2a5d?auto=format&fit=crop&w=600&q=80",
+                img: imgs.engage2,
                 tag: "For Investors",
                 title: "Invest & Fund",
                 desc: "DFIs, private equity, and institutional investors can access our pipeline of bankable assets.",
@@ -588,7 +614,7 @@ export default function Home() {
                 btnClass: "bg-[#c59b4a] text-[#10231f]",
               },
               {
-                img: "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=600&q=80",
+                img: imgs.engage3,
                 tag: "For Contractors",
                 title: "Execution Partners",
                 desc: "EPC contractors and operators can bid on structured projects and form delivery consortia.",
@@ -670,10 +696,10 @@ export default function Home() {
             </motion.div>
             <motion.div {...fadeInView(0.15)} className="grid grid-cols-2 gap-4">
               {[
-                { img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=400&q=80", className: "h-64 rounded-[24px]" },
-                { img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80", className: "h-48 rounded-[24px] mt-8" },
-                { img: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=400&q=80", className: "h-48 rounded-[24px] -mt-4" },
-                { img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=80", className: "h-64 rounded-[24px]" },
+                { img: imgs.collage1, className: "h-64 rounded-[24px]" },
+                { img: imgs.collage2, className: "h-48 rounded-[24px] mt-8" },
+                { img: imgs.collage3, className: "h-48 rounded-[24px] -mt-4" },
+                { img: imgs.collage4, className: "h-64 rounded-[24px]" },
               ].map((img, i) => (
                 <div key={i} className={`overflow-hidden shadow-lg ${img.className}`}>
                   <img src={img.img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />

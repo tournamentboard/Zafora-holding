@@ -47,6 +47,12 @@ const DEFAULTS = {
   sectors: DEFAULT_SECTORS,
   sectorHeadline: "Sectors we operate in",
   sectorSubheadline: "Our practice spans critical infrastructure development across global markets.",
+  team: [
+    { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "" },
+    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "" },
+    { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "" },
+    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "" },
+  ],
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
     subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
@@ -92,12 +98,6 @@ const DEFAULTS = {
     { title: "Bankable Outcomes", desc: "We structure projects to meet international finance standards — making them attractive to multilaterals, DFIs, and institutional capital." },
     { title: "Execution Focus", desc: "Advisory without delivery is incomplete. We track projects from concept to commissioning, ensuring commitments become reality on the ground." },
     { title: "Excellence in Practice", desc: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement." },
-  ],
-  team: [
-    { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA" },
-    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global" },
-    { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA" },
-    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets" },
   ],
   timeline: [
     { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
@@ -305,9 +305,15 @@ export default function About() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {d.team.map((member, i) => (
               <motion.div key={i} {...fade(i * 0.1)} className="bg-white rounded-2xl border border-[#e5ded3] overflow-hidden shadow-sm hover:shadow-md transition-all group">
-                <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-32 flex items-center justify-center`}>
-                  <span className="text-4xl font-bold text-white opacity-80">{member.initials}</span>
-                </div>
+                {member.photo ? (
+                  <div className="h-32 overflow-hidden">
+                    <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-32 flex items-center justify-center`}>
+                    <span className="text-4xl font-bold text-white opacity-80">{member.initials}</span>
+                  </div>
+                )}
                 <div className="p-5">
                   <h3 className="font-bold text-[#10231f] text-base mb-0.5">{member.name}</h3>
                   <div className="text-xs font-semibold text-[#c59b4a] mb-3">{member.title}</div>

@@ -8,6 +8,12 @@ import {
   Landmark, Award, BarChart3, ShieldCheck, Handshake,
 } from "lucide-react";
 
+const GOVT_IMAGE_DEFAULTS = {
+  heroImage: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1600&q=80",
+  mainLeft: "https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=700&q=80",
+  mainRight: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80",
+};
+
 const DEFAULT_SETTINGS = {
   hero: {
     headline: "Government Review Center",
@@ -87,6 +93,7 @@ const fadeInView = (delay = 0) => ({
 export default function Government() {
   usePageTitle("Government Review Center");
   const { data: settingsData } = useGetSiteSettings("government_page");
+  const { data: imagesData } = useGetSiteSettings("site_images");
 
   const s = (() => {
     try {
@@ -110,6 +117,14 @@ export default function Government() {
     return DEFAULT_SETTINGS;
   })();
 
+  const govImgs = (() => {
+    try {
+      const parsed = imagesData?.value ? JSON.parse(imagesData.value) : null;
+      if (parsed?.government) return { ...GOVT_IMAGE_DEFAULTS, ...parsed.government };
+    } catch {}
+    return GOVT_IMAGE_DEFAULTS;
+  })();
+
   return (
     <div className="flex flex-col">
 
@@ -117,7 +132,7 @@ export default function Government() {
       <section className="relative bg-white overflow-hidden">
         <div className="relative h-[420px] md:h-[520px] overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1600&q=80"
+            src={govImgs.heroImage}
             alt="Government advisory"
             className="w-full h-full object-cover"
           />
@@ -244,10 +259,10 @@ export default function Government() {
               {/* Image row */}
               <motion.div {...fadeInView()} className="grid grid-cols-2 gap-5">
                 <div className="h-64 rounded-[24px] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=700&q=80" alt="Infrastructure" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                  <img src={govImgs.mainLeft} alt="Infrastructure" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="h-64 rounded-[24px] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80" alt="Government" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                  <img src={govImgs.mainRight} alt="Government" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                 </div>
               </motion.div>
             </div>
