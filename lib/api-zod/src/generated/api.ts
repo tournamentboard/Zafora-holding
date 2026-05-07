@@ -134,6 +134,7 @@ export const ListProjectsQueryParams = zod.object({
   status: zod.coerce.string().optional(),
   search: zod.coerce.string().optional(),
   limit: zod.coerce.number().optional(),
+  country: zod.coerce.string().optional(),
 });
 
 export const ListProjectsResponse = zod.object({

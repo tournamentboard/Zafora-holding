@@ -276,6 +276,7 @@ export type ListProjectsParams = {
   status?: string;
   search?: string;
   limit?: number;
+  country?: string;
 };
 
 export type ListProjects200 = {

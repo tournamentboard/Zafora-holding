@@ -339,7 +339,7 @@ export default function DashboardHome({ onNavigate }: DashboardHomeProps) {
                 <div className="flex-1 bg-[#f7f4ef] rounded-full h-2.5 overflow-hidden">
                   <div
                     className="h-2.5 rounded-full bg-[#173f35] transition-all"
-                    style={{ width: `${Math.min(100, (s.count / (projectStats?.total || 1)) * 100)}%` }}
+                    style={{ width: `${Math.min(100, (s.count / (projectStats?.bySector.reduce((acc, x) => acc + x.count, 0) || 1)) * 100)}%` }}
                   />
                 </div>
                 <div className="text-xs font-bold text-[#10231f] w-5 text-right">{s.count}</div>

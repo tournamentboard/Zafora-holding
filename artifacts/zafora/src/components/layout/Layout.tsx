@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   })();
 
   const copyrightYear = footer.copyright || new Date().getFullYear();
-  const addressLines = footer.address.split("\n");
+  const addressLines: string[] = (footer.address as string).split("\n");
 
   return (
     <div className="min-h-[100dvh] flex flex-col" style={{ background: "inherit" }}>
