@@ -498,16 +498,84 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-center max-w-5xl mx-auto">
             <motion.div {...fadeInView()} className="relative">
-              <div className="w-full aspect-square max-w-xs mx-auto lg:mx-0 rounded-[32px] overflow-hidden shadow-2xl">
-                <img
-                  src={featuredTestimonial?.photoUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"}
-                  alt={featuredTestimonial?.clientName || "Leadership"}
-                  className="w-full h-full object-cover object-top"
-                />
+              {/* Global Presence Map Panel */}
+              <div className="w-full max-w-xs mx-auto lg:mx-0 rounded-[32px] overflow-hidden shadow-2xl bg-[#0a1f1a] aspect-square relative">
+                {/* SVG World Map — Africa-centered crop: viewBox 140 30 130 130 */}
+                <svg
+                  viewBox="140 30 130 130"
+                  preserveAspectRatio="xMidYMid slice"
+                  className="absolute inset-0 w-full h-full opacity-60"
+                  aria-hidden="true"
+                >
+                  {/* Grid lines */}
+                  {[45,90,135,180,225,270].map(x => (
+                    <line key={x} x1={x} y1="0" x2={x} y2="180" stroke="white" strokeWidth="0.3" strokeOpacity="0.12" />
+                  ))}
+                  {[30,60,90,120,150].map(y => (
+                    <line key={y} x1="0" y1={y} x2="360" y2={y} stroke="white" strokeWidth="0.3" strokeOpacity="0.12" />
+                  ))}
+                  {/* Africa */}
+                  <path d="M 174,54 L 189,53 L 205,57 L 212,60 L 223,78 L 230,79 L 221,91 L 220,101 L 215,112 L 198,125 L 191,119 L 192,108 L 189,95 L 185,86 L 178,85 L 175,85 L 169,85 L 167,82 L 163,76 L 163,61 Z" fill="#1e5444" stroke="#c59b4a" strokeWidth="0.5" strokeOpacity="0.5" />
+                  {/* Europe */}
+                  <path d="M 171,46 L 175,30 L 208,19 L 204,31 L 212,44 L 208,53 L 194,54 L 174,54 Z" fill="#1a4035" stroke="none" />
+                  {/* Arabian Peninsula */}
+                  <path d="M 212,60 L 228,60 L 236,65 L 238,68 L 232,78 L 225,77 L 224,68 L 216,60 Z" fill="#1a4035" stroke="none" />
+                  {/* Madagascar */}
+                  <path d="M 224,104 L 228,101 L 230,110 L 226,116 Z" fill="#1e5444" stroke="none" />
+                </svg>
+
+                {/* Animated market dots — positions: left%=(lon+180-140)/130*100, top%=(90-lat-30)/130*100 */}
+                {[
+                  { city: "Lagos",        left: 33.4, top: 41.2, primary: true  },
+                  { city: "Nairobi",      left: 59.1, top: 47.2, primary: true  },
+                  { city: "Cairo",        left: 54.8, top: 23.0, primary: true  },
+                  { city: "Johannesburg", left: 52.3, top: 66.3, primary: true  },
+                  { city: "Dubai",        left: 73.3, top: 26.8, primary: false },
+                  { city: "Accra",        left: 30.6, top: 41.9, primary: false },
+                  { city: "Addis Ababa",  left: 60.5, top: 39.2, primary: false },
+                  { city: "Kigali",       left: 53.9, top: 47.6, primary: false },
+                  { city: "Dar es Salaam",left: 61.0, top: 51.4, primary: false },
+                  { city: "London",       left: 30.7, top:  6.5, primary: false },
+                  { city: "Dakar",        left: 17.4, top: 34.8, primary: false },
+                  { city: "Casablanca",   left: 24.9, top: 20.3, primary: false },
+                ].map((m, i) => (
+                  <div
+                    key={m.city}
+                    className="absolute"
+                    style={{ left: `${m.left}%`, top: `${m.top}%`, transform: "translate(-50%,-50%)" }}
+                  >
+                    {m.primary ? (
+                      <div className="relative flex items-center justify-center">
+                        <span className="absolute inline-flex rounded-full bg-[#c59b4a] opacity-60 animate-ping"
+                          style={{ width: 14, height: 14, animationDuration: `${1.6 + i * 0.3}s` }} />
+                        <span className="relative inline-flex rounded-full bg-[#c59b4a]" style={{ width: 8, height: 8 }} />
+                      </div>
+                    ) : (
+                      <span className="inline-flex rounded-full bg-[#c59b4a]/70" style={{ width: 5, height: 5 }} />
+                    )}
+                  </div>
+                ))}
+
+                {/* Tampa HQ indicator (outside map crop, shown as corner label) */}
+                <div className="absolute top-4 left-4 right-4 flex items-center gap-1.5">
+                  <Globe className="h-3.5 w-3.5 text-[#c59b4a] shrink-0" />
+                  <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest">Global Presence</span>
+                </div>
+
+                {/* Bottom market count strip */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a1f1a] to-transparent pt-8 pb-4 px-4">
+                  <div className="flex flex-wrap gap-1">
+                    {["Nigeria","Kenya","Egypt","Ghana","Rwanda","Tanzania","Ethiopia","S. Africa","Senegal","Morocco"].map(c => (
+                      <span key={c} className="text-[9px] font-semibold text-white/60 bg-white/8 border border-white/10 px-1.5 py-0.5 rounded-md">{c}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl p-4 shadow-xl">
-                <div className="text-[#10231f] font-bold text-lg">10+</div>
-                <div className="text-[#10231f]/70 text-xs font-semibold">Years Active</div>
+
+              {/* Badge */}
+              <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl px-4 py-3 shadow-xl">
+                <div className="text-[#10231f] font-bold text-lg leading-none">12</div>
+                <div className="text-[#10231f]/70 text-xs font-semibold">Markets</div>
               </div>
             </motion.div>
             <motion.div {...fadeInView(0.15)}>
