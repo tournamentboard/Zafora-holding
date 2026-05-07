@@ -3,8 +3,8 @@ import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Loader2, Info, ChevronDown, ChevronRight,
-  Users, Target, Eye, Globe, ShieldCheck, TrendingUp,
-  Award, Handshake, MapPin, Plus, Trash2,
+  Users, Target, Eye, EyeOff, Globe, ShieldCheck, TrendingUp,
+  Award, Handshake, MapPin, Plus, Trash2, ChevronUp, Linkedin, Mail,
 } from "lucide-react";
 
 type Section = "hero" | "stats" | "identity" | "whoweare" | "mvp" | "values" | "team" | "timeline" | "cta";
@@ -71,11 +71,14 @@ const ABOUT_DEFAULTS = {
     { title: "Execution Focus", desc: "Advisory without delivery is incomplete. We track projects from concept to commissioning, ensuring commitments become reality on the ground." },
     { title: "Excellence in Practice", desc: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement." },
   ],
+  teamHeadline: "The team behind the work",
+  teamSubheadline: "Experienced operators who have led projects, not just advised on them.",
+  teamLayout: "4",
   team: [
-    { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "" },
-    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "" },
-    { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "" },
-    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "" },
+    { initials: "ZH", name: "Leadership", title: "Executive Team", department: "Leadership", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
+    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", department: "Advisory", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "", linkedin: "", email: "", visible: true },
+    { initials: "ZH", name: "Operations", title: "Operations Team", department: "Operations", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
+    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", department: "Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true },
   ],
   timeline: [
     { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
@@ -91,20 +94,27 @@ const ABOUT_DEFAULTS = {
   },
 };
 
-function Field({ label, value, onChange, type = "text", placeholder }: {
-  label: string; value: string; onChange: (v: string) => void; type?: "text" | "textarea"; placeholder?: string;
+function Field({ label, value, onChange, type = "text", placeholder, maxLength }: {
+  label: string; value: string; onChange: (v: string) => void; type?: "text" | "textarea"; placeholder?: string; maxLength?: number;
 }) {
   return (
     <div className="space-y-1.5">
       <label className="text-xs font-bold text-[#10231f] block">{label}</label>
       {type === "textarea" ? (
-        <textarea
-          rows={3}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white resize-y"
-        />
+        <div>
+          <textarea
+            rows={3}
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white resize-y"
+          />
+          {maxLength !== undefined && (
+            <p className={`text-[11px] text-right mt-0.5 ${value.length > maxLength ? "text-red-500 font-semibold" : "text-[#8a958f]"}`}>
+              {value.length} / {maxLength}
+            </p>
+          )}
+        </div>
       ) : (
         <input
           type="text"
@@ -173,7 +183,7 @@ export default function AboutEditor() {
   const setNested = (section: string, key: string, val: string) =>
     setForm((f: any) => ({ ...f, [section]: { ...f[section], [key]: val } }));
 
-  const setArrayItem = (section: string, idx: number, key: string, val: string) =>
+  const setArrayItem = (section: string, idx: number, key: string, val: any) =>
     setForm((f: any) => {
       const arr = [...(f[section] ?? [])];
       arr[idx] = { ...arr[idx], [key]: val };
@@ -185,6 +195,15 @@ export default function AboutEditor() {
 
   const removeArrayItem = (section: string, idx: number) =>
     setForm((f: any) => ({ ...f, [section]: (f[section] ?? []).filter((_: any, i: number) => i !== idx) }));
+
+  const moveArrayItem = (section: string, idx: number, dir: -1 | 1) =>
+    setForm((f: any) => {
+      const arr = [...(f[section] ?? [])];
+      const target = idx + dir;
+      if (target < 0 || target >= arr.length) return f;
+      [arr[idx], arr[target]] = [arr[target], arr[idx]];
+      return { ...f, [section]: arr };
+    });
 
   const handleSave = () => {
     updateMutation.mutate(
@@ -295,44 +314,145 @@ export default function AboutEditor() {
       </SectionBlock>
 
       {/* Team */}
-      <SectionBlock title="Leadership Team (4 cards)" icon={<Users size={16} />}>
-        <p className="text-xs text-[#8a958f]">Edit each team card. Initials is the large letter shown in the colored header.</p>
-        <div className="space-y-4">
-          {(f.team ?? []).map((member: any, i: number) => (
-            <div key={i} className="p-4 bg-[#f7f4ef] rounded-xl space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#173f35] bg-[#173f35]/10 px-2 py-0.5 rounded-full">Card {i + 1}</span>
-                {(f.team ?? []).length > 1 && (
-                  <button onClick={() => removeArrayItem("team", i)} className="text-red-400 hover:text-red-600 transition-colors">
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <Field label="Initials" value={member.initials ?? ""} onChange={v => setArrayItem("team", i, "initials", v)} placeholder="ZH" />
-                <Field label="Name" value={member.name ?? ""} onChange={v => setArrayItem("team", i, "name", v)} placeholder="Leadership" />
-                <Field label="Title" value={member.title ?? ""} onChange={v => setArrayItem("team", i, "title", v)} placeholder="Executive Team" />
-                <Field label="Location" value={member.location ?? ""} onChange={v => setArrayItem("team", i, "location", v)} placeholder="Tampa, FL, USA" />
-              </div>
-              <Field label="Bio" value={member.bio ?? ""} onChange={v => setArrayItem("team", i, "bio", v)} type="textarea" />
-              <div className="flex items-start gap-3">
-                <div className="flex-1">
-                  <Field label="Photo URL (optional)" value={member.photo ?? ""} onChange={v => setArrayItem("team", i, "photo", v)} placeholder="https://... (leave blank to show initials)" />
-                </div>
-                {member.photo && (
-                  <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 mt-6">
-                    <img src={member.photo} alt={member.name} className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
-                  </div>
-                )}
-              </div>
+      <SectionBlock title="Leadership Team" icon={<Users size={16} />}>
+        {/* Section-level settings */}
+        <div className="p-4 bg-[#f7f4ef] rounded-xl space-y-3">
+          <p className="text-xs font-bold text-[#10231f] uppercase tracking-wide">Section Settings</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Field label="Section Headline" value={f.teamHeadline ?? ""} onChange={v => setForm((p: any) => ({ ...p, teamHeadline: v }))} placeholder="The team behind the work" />
+            <Field label="Section Sub-headline" value={f.teamSubheadline ?? ""} onChange={v => setForm((p: any) => ({ ...p, teamSubheadline: v }))} placeholder="Experienced operators..." />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-[#10231f] block mb-1.5">Layout Style</label>
+            <div className="flex gap-2">
+              {[
+                { val: "2", label: "2 per row" },
+                { val: "3", label: "3 per row" },
+                { val: "4", label: "4 per row" },
+              ].map(opt => (
+                <button
+                  key={opt.val}
+                  onClick={() => setForm((p: any) => ({ ...p, teamLayout: opt.val }))}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold border transition-colors ${(f.teamLayout ?? "4") === opt.val ? "bg-[#173f35] text-white border-[#173f35]" : "bg-white text-[#65736f] border-[#e5ded3] hover:border-[#173f35]/40"}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
-          ))}
-          {(f.team ?? []).length < 8 && (
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {(f.team ?? []).map((member: any, i: number) => {
+            const isHidden = member.visible === false;
+            return (
+              <div key={i} className={`rounded-xl border transition-colors ${isHidden ? "border-[#e5ded3] bg-[#fafaf8] opacity-60" : "border-[#e5ded3] bg-[#f7f4ef]"} p-4 space-y-3`}>
+                {/* Card header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-[#173f35] bg-[#173f35]/10 px-2 py-0.5 rounded-full">
+                      Member {i + 1}
+                    </span>
+                    {isHidden && (
+                      <span className="text-[10px] font-semibold text-[#8a958f] bg-[#e5ded3] px-2 py-0.5 rounded-full">Hidden</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      title="Move up"
+                      onClick={() => moveArrayItem("team", i, -1)}
+                      disabled={i === 0}
+                      className="p-1.5 rounded-lg hover:bg-[#e5ded3] text-[#8a958f] disabled:opacity-30 transition-colors"
+                    >
+                      <ChevronUp size={13} />
+                    </button>
+                    <button
+                      title="Move down"
+                      onClick={() => moveArrayItem("team", i, 1)}
+                      disabled={i === (f.team ?? []).length - 1}
+                      className="p-1.5 rounded-lg hover:bg-[#e5ded3] text-[#8a958f] disabled:opacity-30 transition-colors"
+                    >
+                      <ChevronDown size={13} />
+                    </button>
+                    <button
+                      title={isHidden ? "Show on site" : "Hide from site"}
+                      onClick={() => setArrayItem("team", i, "visible", !member.visible)}
+                      className={`p-1.5 rounded-lg transition-colors ${isHidden ? "hover:bg-green-50 text-[#8a958f]" : "hover:bg-[#e5ded3] text-[#173f35]"}`}
+                    >
+                      {isHidden ? <EyeOff size={13} /> : <Eye size={13} />}
+                    </button>
+                    {(f.team ?? []).length > 1 && (
+                      <button onClick={() => removeArrayItem("team", i)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors">
+                        <Trash2 size={13} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Row 1: core identity */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <Field label="Initials" value={member.initials ?? ""} onChange={v => setArrayItem("team", i, "initials", v)} placeholder="ZH" />
+                  <Field label="Name" value={member.name ?? ""} onChange={v => setArrayItem("team", i, "name", v)} placeholder="John Smith" />
+                  <Field label="Title / Position" value={member.title ?? ""} onChange={v => setArrayItem("team", i, "title", v)} placeholder="Executive Team" />
+                  <Field label="Department / Role" value={member.department ?? ""} onChange={v => setArrayItem("team", i, "department", v)} placeholder="Leadership" />
+                </div>
+
+                {/* Location */}
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Location" value={member.location ?? ""} onChange={v => setArrayItem("team", i, "location", v)} placeholder="Tampa, FL, USA" />
+                </div>
+
+                {/* Bio with char counter */}
+                <Field label="Bio / Description" value={member.bio ?? ""} onChange={v => setArrayItem("team", i, "bio", v)} type="textarea" maxLength={280} />
+
+                {/* Photo */}
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <Field label="Photo URL (optional)" value={member.photo ?? ""} onChange={v => setArrayItem("team", i, "photo", v)} placeholder="https://... (leave blank to use initials)" />
+                  </div>
+                  {member.photo && (
+                    <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 mt-6">
+                      <img src={member.photo} alt={member.name} className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
+                    </div>
+                  )}
+                </div>
+
+                {/* LinkedIn + Email */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-[#10231f] flex items-center gap-1.5 block">
+                      <Linkedin size={11} className="text-[#0077b5]" /> LinkedIn URL (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={member.linkedin ?? ""}
+                      onChange={e => setArrayItem("team", i, "linkedin", e.target.value)}
+                      placeholder="https://linkedin.com/in/..."
+                      className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-[#10231f] flex items-center gap-1.5 block">
+                      <Mail size={11} className="text-[#173f35]" /> Email (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={member.email ?? ""}
+                      onChange={e => setArrayItem("team", i, "email", e.target.value)}
+                      placeholder="name@zaforaholding.com"
+                      className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {(f.team ?? []).length < 12 && (
             <button
-              onClick={() => addArrayItem("team", { initials: "ZH", name: "", title: "", bio: "", location: "" })}
+              onClick={() => addArrayItem("team", { initials: "ZH", name: "", title: "", department: "", bio: "", location: "", photo: "", linkedin: "", email: "", visible: true })}
               className="flex items-center gap-2 text-sm text-[#173f35] font-semibold hover:underline"
             >
-              <Plus size={14} /> Add Team Card
+              <Plus size={14} /> Add Team Member
             </button>
           )}
         </div>

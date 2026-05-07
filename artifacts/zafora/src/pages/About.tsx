@@ -5,7 +5,7 @@ import { useGetSiteSettings } from "@workspace/api-client-react";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
   Landmark, Zap, Droplets, Truck, Stethoscope, ArrowRight,
-  CheckCircle2, Target, Eye, Award, MapPin
+  CheckCircle2, Target, Eye, Award, MapPin, Linkedin, Mail
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 
@@ -47,11 +47,14 @@ const DEFAULTS = {
   sectors: DEFAULT_SECTORS,
   sectorHeadline: "Sectors we operate in",
   sectorSubheadline: "Our practice spans critical infrastructure development across global markets.",
+  teamHeadline: "The team behind the work",
+  teamSubheadline: "Experienced operators who have led projects, not just advised on them.",
+  teamLayout: "4",
   team: [
-    { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "" },
-    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "" },
-    { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "" },
-    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "" },
+    { initials: "ZH", name: "Leadership", title: "Executive Team", department: "Leadership", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
+    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", department: "Advisory", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "", linkedin: "", email: "", visible: true },
+    { initials: "ZH", name: "Operations", title: "Operations Team", department: "Operations", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
+    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", department: "Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true },
   ],
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
@@ -298,33 +301,62 @@ export default function About() {
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <Users className="h-3.5 w-3.5" /> Leadership
             </div>
-            <h2 className="text-4xl font-bold text-[#10231f] mb-4">The team behind the work</h2>
-            <p className="text-[#65736f] text-lg">Experienced operators who have led projects, not just advised on them.</p>
+            <h2 className="text-4xl font-bold text-[#10231f] mb-4">{d.teamHeadline ?? "The team behind the work"}</h2>
+            <p className="text-[#65736f] text-lg">{d.teamSubheadline ?? "Experienced operators who have led projects, not just advised on them."}</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {d.team.map((member, i) => (
-              <motion.div key={i} {...fade(i * 0.1)} className="bg-white rounded-2xl border border-[#e5ded3] overflow-hidden shadow-sm hover:shadow-md transition-all group">
-                {member.photo ? (
-                  <div className="h-32 overflow-hidden">
-                    <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
-                  </div>
-                ) : (
-                  <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-32 flex items-center justify-center`}>
-                    <span className="text-4xl font-bold text-white opacity-80">{member.initials}</span>
-                  </div>
-                )}
-                <div className="p-5">
-                  <h3 className="font-bold text-[#10231f] text-base mb-0.5">{member.name}</h3>
-                  <div className="text-xs font-semibold text-[#c59b4a] mb-3">{member.title}</div>
-                  <p className="text-[#65736f] text-xs leading-relaxed mb-3">{member.bio}</p>
-                  <div className="flex items-center gap-1.5 text-xs text-[#8a958f]">
-                    <MapPin className="h-3 w-3" /> {member.location}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {(() => {
+            const layout = d.teamLayout ?? "4";
+            const gridClass = layout === "2"
+              ? "grid-cols-1 sm:grid-cols-2"
+              : layout === "3"
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+            const visibleTeam = d.team.filter((m: any) => m.visible !== false);
+            return (
+              <div className={`grid ${gridClass} gap-5`}>
+                {visibleTeam.map((member: any, i: number) => (
+                  <motion.div key={i} {...fade(i * 0.1)} className="bg-white rounded-2xl border border-[#e5ded3] overflow-hidden shadow-sm hover:shadow-md transition-all group">
+                    {member.photo ? (
+                      <div className="h-36 overflow-hidden">
+                        <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+                      </div>
+                    ) : (
+                      <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-36 flex items-center justify-center`}>
+                        <span className="text-4xl font-bold text-white opacity-80">{member.initials}</span>
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <h3 className="font-bold text-[#10231f] text-base mb-0.5">{member.name}</h3>
+                      <div className="text-xs font-semibold text-[#c59b4a] mb-0.5">{member.title}</div>
+                      {member.department && member.department !== member.title && (
+                        <div className="text-[11px] text-[#8a958f] mb-3">{member.department}</div>
+                      )}
+                      {!member.department && <div className="mb-3" />}
+                      <p className="text-[#65736f] text-xs leading-relaxed mb-4">{member.bio}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 text-xs text-[#8a958f]">
+                          <MapPin className="h-3 w-3" /> {member.location}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {member.linkedin && (
+                            <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#8a958f] hover:text-[#0077b5] transition-colors" title="LinkedIn">
+                              <Linkedin className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                          {member.email && (
+                            <a href={`mailto:${member.email}`} className="text-[#8a958f] hover:text-[#173f35] transition-colors" title={member.email}>
+                              <Mail className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </section>
 
