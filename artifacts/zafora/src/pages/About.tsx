@@ -27,16 +27,26 @@ const VALUE_ICONS = [
 
 const TEAM_COLORS = ["bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]", "bg-[#10231f]"];
 
-const SECTORS = [
-  { icon: <Zap />, label: "Energy" },
-  { icon: <Droplets />, label: "Water" },
-  { icon: <Truck />, label: "Transport" },
-  { icon: <Stethoscope />, label: "Healthcare" },
-  { icon: <Building2 />, label: "Housing" },
-  { icon: <Landmark />, label: "Digital" },
+const SECTOR_ICON_MAP: Record<string, React.ReactNode> = {
+  Zap: <Zap />, Droplets: <Droplets />, Truck: <Truck />,
+  Stethoscope: <Stethoscope />, Building2: <Building2 />, Landmark: <Landmark />,
+  Globe: <Globe />, ShieldCheck: <ShieldCheck />, TrendingUp: <TrendingUp />,
+  Users: <Users />,
+};
+
+const DEFAULT_SECTORS = [
+  { icon: "Zap", label: "Energy" },
+  { icon: "Droplets", label: "Water" },
+  { icon: "Truck", label: "Transport" },
+  { icon: "Stethoscope", label: "Healthcare" },
+  { icon: "Building2", label: "Housing" },
+  { icon: "Landmark", label: "Digital" },
 ];
 
 const DEFAULTS = {
+  sectors: DEFAULT_SECTORS,
+  sectorHeadline: "Sectors we operate in",
+  sectorSubheadline: "Our practice spans critical infrastructure development across global markets.",
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
     subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
@@ -348,13 +358,15 @@ export default function About() {
       <section className="py-20" style={{ background: "#f7f4ef" }}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fade(0)} className="text-center max-w-xl mx-auto mb-12">
-            <h2 className="text-3xl font-bold text-[#10231f] mb-3">Sectors we operate in</h2>
-            <p className="text-[#65736f]">Our practice spans critical infrastructure development across global markets.</p>
+            <h2 className="text-3xl font-bold text-[#10231f] mb-3">{d.sectorHeadline}</h2>
+            <p className="text-[#65736f]">{d.sectorSubheadline}</p>
           </motion.div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-4 max-w-3xl mx-auto">
-            {SECTORS.map((s, i) => (
+            {(d.sectors ?? DEFAULT_SECTORS).map((s: any, i: number) => (
               <motion.div key={i} {...fade(i * 0.06)} className="bg-white rounded-2xl border border-[#e5ded3] p-5 flex flex-col items-center gap-3 hover:border-[#173f35]/40 hover:shadow-sm transition-all group">
-                <div className="text-[#173f35] group-hover:scale-110 transition-transform">{s.icon}</div>
+                <div className="text-[#173f35] group-hover:scale-110 transition-transform">
+                  {SECTOR_ICON_MAP[s.icon] ?? <Landmark />}
+                </div>
                 <span className="text-xs font-semibold text-[#65736f]">{s.label}</span>
               </motion.div>
             ))}

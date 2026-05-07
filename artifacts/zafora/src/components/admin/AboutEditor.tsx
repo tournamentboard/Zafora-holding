@@ -9,7 +9,22 @@ import {
 
 type Section = "hero" | "stats" | "identity" | "whoweare" | "mvp" | "values" | "team" | "timeline" | "cta";
 
+const AVAILABLE_ICONS = [
+  "Zap", "Droplets", "Truck", "Stethoscope", "Building2", "Landmark",
+  "Globe", "ShieldCheck", "TrendingUp", "Users",
+];
+
 const ABOUT_DEFAULTS = {
+  sectors: [
+    { icon: "Zap", label: "Energy" },
+    { icon: "Droplets", label: "Water" },
+    { icon: "Truck", label: "Transport" },
+    { icon: "Stethoscope", label: "Healthcare" },
+    { icon: "Building2", label: "Housing" },
+    { icon: "Landmark", label: "Digital" },
+  ],
+  sectorHeadline: "Sectors we operate in",
+  sectorSubheadline: "Our practice spans critical infrastructure development across global markets.",
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
     subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
@@ -342,6 +357,47 @@ export default function AboutEditor() {
             <Plus size={14} /> Add Milestone
           </button>
         </div>
+      </SectionBlock>
+
+      {/* Sectors */}
+      <SectionBlock title="Sectors We Operate In" icon={<Globe size={16} />}>
+        <p className="text-xs text-[#8a958f]">Edit the section heading, subheading, and each sector tile. You can add or remove tiles, and change the icon for each one.</p>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Section Headline" value={f.sectorHeadline ?? ""} onChange={v => setForm((prev: any) => ({ ...prev, sectorHeadline: v }))} placeholder="Sectors we operate in" />
+          <Field label="Section Subheadline" value={f.sectorSubheadline ?? ""} onChange={v => setForm((prev: any) => ({ ...prev, sectorSubheadline: v }))} placeholder="Our practice spans critical infrastructure..." />
+        </div>
+        <div className="space-y-3 mt-2">
+          {(f.sectors ?? []).map((s: any, i: number) => (
+            <div key={i} className="flex items-center gap-3 p-3 bg-[#f7f4ef] rounded-xl">
+              <div className="flex-1 grid grid-cols-[1fr_1.5fr] gap-3 items-end">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#10231f] block">Icon</label>
+                  <select
+                    value={s.icon ?? "Landmark"}
+                    onChange={e => setArrayItem("sectors", i, "icon", e.target.value)}
+                    className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
+                  >
+                    {AVAILABLE_ICONS.map(ic => (
+                      <option key={ic} value={ic}>{ic}</option>
+                    ))}
+                  </select>
+                </div>
+                <Field label="Label" value={s.label ?? ""} onChange={v => setArrayItem("sectors", i, "label", v)} placeholder="e.g. Energy" />
+              </div>
+              {(f.sectors ?? []).length > 1 && (
+                <button onClick={() => removeArrayItem("sectors", i)} className="text-red-400 hover:text-red-600 transition-colors mt-5 shrink-0">
+                  <Trash2 size={14} />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => addArrayItem("sectors", { icon: "Landmark", label: "" })}
+          className="flex items-center gap-2 text-sm text-[#173f35] font-semibold hover:underline mt-1"
+        >
+          <Plus size={14} /> Add Sector
+        </button>
       </SectionBlock>
 
       {/* CTA */}
