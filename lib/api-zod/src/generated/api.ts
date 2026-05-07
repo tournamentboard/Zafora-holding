@@ -607,3 +607,47 @@ export const UpdateSiteSettingsResponse = zod.object({
   value: zod.string(),
   updatedAt: zod.string(),
 });
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string().min(1).describe("Original file name."),
+  size: zod.number().min(1).describe("File size in bytes."),
+  contentType: zod
+    .string()
+    .min(1)
+    .describe("MIME type of the file (e.g. `image\/jpeg`)."),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url().describe("Presigned GCS URL for PUT upload."),
+  objectPath: zod
+    .string()
+    .describe("Normalized object path. Store this in your database."),
+  metadata: zod
+    .object({
+      name: zod.string().min(1).describe("Original file name."),
+      size: zod.number().min(1).describe("File size in bytes."),
+      contentType: zod
+        .string()
+        .min(1)
+        .describe("MIME type of the file (e.g. `image\/jpeg`)."),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Serve a public asset from PUBLIC_OBJECT_SEARCH_PATHS
+ */
+export const GetPublicObjectParams = zod.object({
+  filePath: zod.coerce.string(),
+});
+
+/**
+ * @summary Serve an object entity from PRIVATE_OBJECT_DIR
+ */
+export const GetStorageObjectParams = zod.object({
+  objectPath: zod.coerce.string(),
+});

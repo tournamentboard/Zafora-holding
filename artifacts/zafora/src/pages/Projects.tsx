@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListProjects } from "@workspace/api-client-react";
+import { useListProjects, useGetSiteSettings } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,12 +8,14 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import ExpressInterestModal from "./ExpressInterestModal";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { parseSeoSettings } from "@/hooks/use-seo-meta";
 
 const SECTORS = ["All", "Energy", "Water", "Transport", "Healthcare", "Digital"];
 const STATUSES = ["All", "Seeking Funding", "Investor Ready", "Partially Funded", "Funded"];
 
 export default function Projects() {
-  usePageTitle("Project Pipeline");
+  const { data: seoData } = useGetSiteSettings("seo_projects");
+  usePageTitle("Project Pipeline", parseSeoSettings(seoData));
   const [sector, setSector] = useState("All");
   const [status, setStatus] = useState("All");
   const [search, setSearch] = useState("");

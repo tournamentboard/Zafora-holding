@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { parseSeoSettings } from "@/hooks/use-seo-meta";
 import {
   ShieldCheck, TrendingUp, Anchor, Landmark, Briefcase, Globe,
   ArrowRight, CheckCircle2, Award,
@@ -67,7 +68,8 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Services() {
-  usePageTitle("Services");
+  const { data: seoData } = useGetSiteSettings("seo_services");
+  usePageTitle("Services", parseSeoSettings(seoData));
   const { data, isLoading } = useListServices();
   const { data: settingsData } = useGetSiteSettings("services_page");
   const { data: imagesData } = useGetSiteSettings("site_images");

@@ -1,11 +1,7 @@
-import { useEffect } from "react";
+import { useSeoMeta, type SeoSettings } from "./use-seo-meta";
 
-export function usePageTitle(title: string) {
-  useEffect(() => {
-    const base = "Zafora Holding";
-    document.title = title ? `${title} | ${base}` : base;
-    return () => {
-      document.title = base;
-    };
-  }, [title]);
+export function usePageTitle(title: string, seo?: SeoSettings) {
+  useSeoMeta(title, seo);
 }
+
+export { useSeoMeta } from "./use-seo-meta";

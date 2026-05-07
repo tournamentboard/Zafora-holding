@@ -11,8 +11,9 @@ A full-stack, mobile-friendly website for Zafora Holding — an African infrastr
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
+- Required env: `SESSION_SECRET` — secret for express-session (HTTP-only admin cookie auth)
 
-Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
+Admin login: `/admin` · Default password: `zafora2024` (server-side sessions via express-session; password stored in DB under `admin_password` key)
 
 ## Stack
 
@@ -23,6 +24,7 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec, single-mode for Zod)
 - Build: esbuild (CJS bundle)
+- Object storage: GCS via Replit App Storage (presigned URLs, env: `DEFAULT_OBJECT_STORAGE_BUCKET_ID`, `PUBLIC_OBJECT_SEARCH_PATHS`, `PRIVATE_OBJECT_DIR`)
 
 ## Where things live
 
@@ -33,14 +35,22 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - `lib/api-zod/src/generated/api.ts` — Generated Zod schemas for server
 - `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services, content_stats, methodology_steps, site_settings, testimonials, audit_logs)
 - `artifacts/zafora/src/components/admin/` — All admin panel components
-- `artifacts/zafora/src/hooks/use-page-title.ts` — Per-page document.title hook
+- `artifacts/zafora/src/hooks/use-seo-meta.ts` — SEO meta tag hook (title + description + og tags per page)
+- `artifacts/zafora/src/hooks/use-page-title.ts` — Re-exports `useSeoMeta` with backward-compatible signature
+- `artifacts/zafora/src/hooks/use-image-upload.ts` — Image upload hook (GCS presigned URL flow)
+- `artifacts/api-server/src/lib/objectStorage.ts` — GCS object storage client
+- `artifacts/api-server/src/lib/objectAcl.ts` — ACL policy framework
+- `artifacts/api-server/src/routes/adminAuth.ts` — Admin session auth (login/logout/check/change-password)
+- `artifacts/api-server/src/routes/storage.ts` — Image upload + serve endpoints
 - `artifacts/zafora/public/` — favicon.svg, opengraph.jpg, hero assets
 
 ## Architecture decisions
 
 - Orval codegen runs in "single" mode for Zod to avoid duplicate export conflicts; the codegen script patches index.ts after orval runs
 - Wouter v3 routing: outer Switch uses catch-all `<Route>` (no path) to wrap Layout; nested Switch handles page routes
-- Admin auth is MVP localStorage-only (password: zafora2024) — no real auth implemented yet
+- Admin auth: server-side sessions via `express-session` (SESSION_SECRET env). Password stored in `site_settings` table under key `admin_password` (default: `zafora2024`). Changed via Settings tab → API call to `POST /api/admin/auth/change-password`. Session cookie is HTTP-only, SameSite=lax, 7-day expiry.
+- SEO: each page calls `useGetSiteSettings("seo_<page>")` and passes parsed data to `usePageTitle(title, seoData)`. The hook injects title, description, og:title, og:description, og:image, og:site_name, twitter:* tags via direct DOM manipulation. Settings edited in Admin → Site Settings → SEO tab (6 pages: home, about, services, projects, government, submit).
+- Image uploads: two-step GCS presigned URL flow. Admin image fields have an "Upload" button → POST metadata to `/api/storage/uploads/request-url` → PUT file to GCS presigned URL → path stored in DB. Served via `/api/storage/objects/<path>`.
 - Project interest count is incremented atomically via SQL `+1` in the express interest handler
 - All API data served under `/api` prefix via shared proxy routing
 
@@ -54,7 +64,7 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - **Submit Request** — Trust sidebar + 3-step numbered form
 - **Admin Dashboard** — Grouped sidebar (Overview, Content, Pipeline, CRM, Admin):
   - **Dashboard** — Stats & recent activity
-  - **Site Settings** — Hero text/CTAs, About Us (story/mission/vision/contact), Footer, SEO per-page (4 tabs)
+  - **Site Settings** — Hero text/CTAs, About Us (story/mission/vision/contact), Footer, SEO per-page (6 pages), Images (with upload button)
   - **Site Stats** — Edit homepage numbers (value, suffix, label, icon, visibility)
   - **Services** — Full CRUD: name, icon, description, bullets, category, image, order
   - **Methodology** — Edit/add/delete/reorder delivery model steps
@@ -65,7 +75,7 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
   - **Documents** — Preview modal + edit + description
   - **Inquiries** — Full CRM with lead statuses and notes
   - **Activity Log** — Full audit trail of all admin actions (create/update/delete), filterable by category, clearable
-  - **Settings** — Email notifications (Resend), password change, CSV export
+  - **Settings** — Email notifications (Resend), password change (server-side), CSV export
 - **404 Page** — Branded with logo, navigation back to home/pipeline
 
 ## User preferences
@@ -83,8 +93,9 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - Wouter v3 nested Switch: use `<Route>` (no path) as catch-all in outer Switch, not `<Route path="/">`
 - CSS ticker animation lives in `index.css` as `@keyframes ticker` / `.ticker-track`
 - Project `sector` field stores comma-separated multi-sector values (e.g. "Energy,Transport"); Projects.tsx filters client-side
-- Admin password is stored in localStorage key `zafora_admin_password` (fallback: `zafora2024`); Settings tab lets you change it
+- Admin password: stored in DB (`site_settings` key `admin_password`, fallback `zafora2024`). `POST /api/admin/auth/change-password` requires `currentPassword` + `newPassword` body.
 - Document preview works for Google Drive, Dropbox, OneDrive, and direct PDF URLs — transforms to embeddable URL in DocumentsTable
+- ImagesEditor.tsx does NOT export `IMAGE_DEFAULTS` (removed export to fix Vite Fast Refresh); it's only used internally. SiteSettingsManager imports `ImagesEditor` directly.
 
 ## Pointers
 

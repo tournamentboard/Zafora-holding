@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { parseSeoSettings } from "@/hooks/use-seo-meta";
 import { useGetSiteSettings } from "@workspace/api-client-react";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
@@ -133,7 +134,8 @@ function deepMerge(base: any, override: any): any {
 }
 
 export default function About() {
-  usePageTitle("About Us");
+  const { data: seoData } = useGetSiteSettings("seo_about");
+  usePageTitle("About Us", parseSeoSettings(seoData));
   const { data: settingsData } = useGetSiteSettings("about");
 
   let d = DEFAULTS;

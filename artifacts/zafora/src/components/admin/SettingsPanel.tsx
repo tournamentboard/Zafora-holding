@@ -67,7 +67,6 @@ export default function SettingsPanel() {
   const [notifLoaded, setNotifLoaded] = useState(false);
   const [sendingTest, setSendingTest] = useState(false);
 
-  const STORED_PASSWORD = localStorage.getItem("zafora_admin_password") || "zafora2024";
 
   useEffect(() => {
     fetch("/api/email/status")
@@ -132,17 +131,26 @@ export default function SettingsPanel() {
     }
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPwError("");
     setPwSuccess(false);
-    if (currentPw !== STORED_PASSWORD) { setPwError("Current password is incorrect."); return; }
     if (newPw.length < 8) { setPwError("New password must be at least 8 characters."); return; }
     if (newPw !== confirmPw) { setPwError("New passwords do not match."); return; }
-    localStorage.setItem("zafora_admin_password", newPw);
-    setPwSuccess(true);
-    setCurrentPw(""); setNewPw(""); setConfirmPw("");
-    toast({ title: "Password updated successfully!" });
+    try {
+      const r = await fetch("/api/admin/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: currentPw, newPassword: newPw }),
+      });
+      const d = await r.json();
+      if (!r.ok) { setPwError(d.error || "Failed to change password."); return; }
+      setPwSuccess(true);
+      setCurrentPw(""); setNewPw(""); setConfirmPw("");
+      toast({ title: "Password updated successfully!" });
+    } catch {
+      setPwError("Failed to update password. Please try again.");
+    }
   };
 
   const handleExportLeads = () => {

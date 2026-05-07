@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { parseSeoSettings } from "@/hooks/use-seo-meta";
 import { useGetSiteSettings } from "@workspace/api-client-react";
 import {
   Shield, FileCheck, Scale, Users, Target, Activity,
@@ -91,7 +92,8 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Government() {
-  usePageTitle("Government Review Center");
+  const { data: seoData } = useGetSiteSettings("seo_government");
+  usePageTitle("Government Review Center", parseSeoSettings(seoData));
   const { data: settingsData } = useGetSiteSettings("government_page");
   const { data: imagesData } = useGetSiteSettings("site_images");
 

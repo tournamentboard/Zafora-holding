@@ -9,6 +9,8 @@ import contentRouter from "./content";
 import notificationsRouter from "./notifications";
 import testimonialsRouter from "./testimonials";
 import auditRouter from "./audit";
+import adminAuthRouter from "./adminAuth";
+import storageRouter from "./storage";
 
 const router: IRouter = Router();
 
@@ -22,5 +24,7 @@ router.use(contentRouter);
 router.use(notificationsRouter);
 router.use(testimonialsRouter);
 router.use(auditRouter);
+router.use(adminAuthRouter);
+router.use(storageRouter);
 
 export default router;

@@ -123,26 +123,36 @@ export default function Admin() {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    const auth = localStorage.getItem("zafora_admin_auth");
-    if (auth === "true") setIsAuthenticated(true);
+    fetch("/api/admin/auth/check")
+      .then(r => r.json())
+      .then(d => { if (d.authenticated) setIsAuthenticated(true); })
+      .catch(() => {});
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const storedPassword = localStorage.getItem("zafora_admin_password") || "zafora2024";
-    if (password === storedPassword) {
-      setIsAuthenticated(true);
-      localStorage.setItem("zafora_admin_auth", "true");
-      setError(false);
-    } else {
+    try {
+      const r = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (r.ok) {
+        setIsAuthenticated(true);
+        setError(false);
+      } else {
+        setError(true);
+        setPassword("");
+      }
+    } catch {
       setError(true);
       setPassword("");
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await fetch("/api/admin/auth/logout", { method: "POST" }).catch(() => {});
     setIsAuthenticated(false);
-    localStorage.removeItem("zafora_admin_auth");
   };
 
   const toggleGroup = (group: string) => setCollapsed(c => ({ ...c, [group]: !c[group] }));

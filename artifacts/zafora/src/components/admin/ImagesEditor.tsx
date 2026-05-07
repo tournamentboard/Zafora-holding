@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useImageUpload } from "@/hooks/use-image-upload";
 import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Info, ChevronDown, ChevronRight, Home, Settings2, Shield } from "lucide-react";
 
-export const IMAGE_DEFAULTS = {
+const IMAGE_DEFAULTS = {
   home: {
     heroPanel: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80",
     band1: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80",
@@ -47,19 +48,46 @@ function deepMerge(base: any, override: any): any {
 function ImageField({ label, hint, value, onChange }: {
   label: string; hint?: string; value: string; onChange: (v: string) => void;
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadFile, isUploading } = useImageUpload({
+    onSuccess: (result) => onChange(result.publicUrl),
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) await uploadFile(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
     <div className="space-y-1.5">
       <label className="text-xs font-bold text-[#10231f] block">{label}</label>
       {hint && <p className="text-[11px] text-[#8a958f]">{hint}</p>}
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-2 items-center">
         <input
           type="text"
           value={value}
           onChange={e => onChange(e.target.value)}
-          placeholder="https://..."
+          placeholder="https://... or upload below"
           className="flex-1 border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
         />
-        <div className="w-16 h-11 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 bg-[#f7f4ef] flex items-center justify-center">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl border border-[#173f35] text-[#173f35] hover:bg-[#173f35] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          title="Upload an image from your device"
+        >
+          {isUploading ? "Uploading..." : "Upload"}
+        </button>
+        <div className="w-14 h-10 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 bg-[#f7f4ef] flex items-center justify-center">
           {value ? (
             <img
               src={value}
@@ -68,7 +96,7 @@ function ImageField({ label, hint, value, onChange }: {
               onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }}
             />
           ) : (
-            <span className="text-[#c5bdb3] text-[10px] font-semibold text-center leading-tight px-1">No image</span>
+            <span className="text-[#c5bdb3] text-[10px] font-semibold text-center leading-tight px-1">No img</span>
           )}
         </div>
       </div>

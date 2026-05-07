@@ -15,6 +15,8 @@ const SEO_PAGES = [
   { key: "seo_about", label: "About Us Page" },
   { key: "seo_services", label: "Services Page" },
   { key: "seo_projects", label: "Projects Page" },
+  { key: "seo_government", label: "Government Review" },
+  { key: "seo_submit", label: "Submit a Request" },
 ];
 
 function FieldRow({ label, value, onChange, type = "text", placeholder, hint }: {

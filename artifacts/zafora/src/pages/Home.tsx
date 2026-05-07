@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { parseSeoSettings } from "@/hooks/use-seo-meta";
 import {
   ArrowRight, Briefcase, Landmark, ShieldCheck, ArrowUpRight, BarChart3,
   Building, Globe, Zap, Droplets, Truck, Stethoscope, CheckCircle2,
@@ -105,7 +106,8 @@ const HERO_DEFAULTS = {
 };
 
 export default function Home() {
-  usePageTitle("Home");
+  const { data: seoData } = useGetSiteSettings("seo_home");
+  usePageTitle("Home", parseSeoSettings(seoData));
   const { data: projectsData } = useListProjects({ limit: 3 });
   const { data: servicesData } = useListServices();
   const { data: contentStatsData } = useListContentStats();
