@@ -312,7 +312,9 @@ export default function About() {
               : layout === "3"
               ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
-            const visibleTeam = d.team.filter((m: any) => m.visible !== false);
+            const visibleTeam = [...d.team]
+              .filter((m: any) => m.status !== "draft" && m.visible !== false)
+              .sort((a: any, b: any) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
             return (
               <div className={`grid ${gridClass} gap-5`}>
                 {visibleTeam.map((member: any, i: number) => (
