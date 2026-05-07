@@ -6,7 +6,7 @@ import { useGetSiteSettings } from "@workspace/api-client-react";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
   Landmark, Zap, Droplets, Truck, Stethoscope, ArrowRight,
-  CheckCircle2, Target, Eye, Award, MapPin, Linkedin, Mail
+  CheckCircle2, Target, Eye, Award, MapPin, Linkedin, Mail, Calendar,
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 
@@ -24,6 +24,13 @@ const VALUE_ICONS = [
   <TrendingUp className="h-6 w-6" />,
   <Target className="h-6 w-6" />,
   <Award className="h-6 w-6" />,
+];
+
+const STAT_ICONS_ABOUT = [
+  <Calendar className="h-5 w-5" />,
+  <Globe className="h-5 w-5" />,
+  <Target className="h-5 w-5" />,
+  <Handshake className="h-5 w-5" />,
 ];
 
 const TEAM_COLORS = ["bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]", "bg-[#10231f]"];
@@ -155,9 +162,9 @@ export default function About() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="pt-24 pb-20 overflow-hidden" style={{ background: "linear-gradient(135deg, #f7f4ef 60%, #efe3cf 100%)" }}>
+      <section className="pt-16 pb-12 overflow-hidden" style={{ background: "linear-gradient(135deg, #f7f4ef 60%, #efe3cf 100%)" }}>
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
               <motion.div {...fade(0)} className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-3 py-1.5 rounded-full text-xs font-semibold text-[#173f35] mb-8">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#173f35]" />
@@ -182,9 +189,12 @@ export default function About() {
             {/* Stats panel */}
             <motion.div {...fade(0.25)} className="grid grid-cols-2 gap-4">
               {d.stats.map((s, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-[#e5ded3] p-6 shadow-sm text-center">
-                  <div className="text-4xl font-bold text-[#173f35] mb-2">{s.value}</div>
-                  <div className="text-sm text-[#65736f] font-medium">{s.label}</div>
+                <div key={i} className="bg-white rounded-2xl border border-[#e5ded3] p-5 shadow-sm text-center">
+                  <div className="w-10 h-10 rounded-xl bg-[#173f35]/8 text-[#173f35] flex items-center justify-center mx-auto mb-3">
+                    {STAT_ICONS_ABOUT[i % STAT_ICONS_ABOUT.length]}
+                  </div>
+                  <div className="text-3xl font-bold text-[#173f35] mb-1">{s.value}</div>
+                  <div className="text-xs text-[#65736f] font-medium">{s.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -193,9 +203,9 @@ export default function About() {
       </section>
 
       {/* Who We Are */}
-      <section className="py-24 bg-white">
+      <section className="py-14 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             {/* Left — Dark card */}
             <motion.div {...fade(0)} className="rounded-3xl bg-[#173f35] text-white p-10 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
@@ -250,9 +260,9 @@ export default function About() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-24" style={{ background: "#f7f4ef" }}>
+      <section className="py-14" style={{ background: "#f7f4ef" }}>
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-16">
+          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <Eye className="h-3.5 w-3.5" /> Purpose & Direction
             </div>
@@ -273,9 +283,9 @@ export default function About() {
       </section>
 
       {/* Core Values */}
-      <section className="py-24 bg-white">
+      <section className="py-14 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-16">
+          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <ShieldCheck className="h-3.5 w-3.5" /> Our Values
             </div>
@@ -298,9 +308,9 @@ export default function About() {
       </section>
 
       {/* Leadership Team */}
-      <section className="py-24" style={{ background: "#f7f4ef" }}>
+      <section className="py-14" style={{ background: "#f7f4ef" }}>
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-16">
+          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <Users className="h-3.5 w-3.5" /> Leadership
             </div>
@@ -370,9 +380,9 @@ export default function About() {
       </section>
 
       {/* Timeline / Milestones */}
-      <section className="py-24 bg-white">
+      <section className="py-14 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-16">
+          <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <TrendingUp className="h-3.5 w-3.5" /> Our Journey
             </div>
@@ -402,9 +412,9 @@ export default function About() {
       </section>
 
       {/* Sectors We Serve */}
-      <section className="py-20" style={{ background: "#f7f4ef" }}>
+      <section className="py-12" style={{ background: "#f7f4ef" }}>
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fade(0)} className="text-center max-w-xl mx-auto mb-12">
+          <motion.div {...fade(0)} className="text-center max-w-xl mx-auto mb-8">
             <h2 className="text-3xl font-bold text-[#10231f] mb-3">{d.sectorHeadline}</h2>
             <p className="text-[#65736f]">{d.sectorSubheadline}</p>
           </motion.div>
@@ -422,11 +432,11 @@ export default function About() {
       </section>
 
       {/* CTA Banner */}
-      <section className="py-24 bg-[#173f35]">
+      <section className="py-14 bg-[#173f35]">
         <div className="container mx-auto px-4 md:px-8 text-center">
           <motion.div {...fade(0)}>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-5">{d.cta.headline}</h2>
-            <p className="text-white/70 text-xl mb-10 max-w-xl mx-auto">{d.cta.subheadline}</p>
+            <p className="text-white/70 text-xl mb-7 max-w-xl mx-auto">{d.cta.subheadline}</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href={d.cta.btn1Link} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#c59b4a] text-white font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg">
                 {d.cta.btn1Text} <ArrowRight className="h-5 w-5" />

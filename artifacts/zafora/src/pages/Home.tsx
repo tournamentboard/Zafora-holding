@@ -153,7 +153,7 @@ export default function Home() {
     <div className="flex flex-col overflow-x-hidden">
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="pt-28 pb-20 relative overflow-hidden">
+      <section className="pt-20 pb-14 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-[#c59b4a]/8 rounded-full blur-3xl" />
@@ -165,7 +165,7 @@ export default function Home() {
 
             {/* Left */}
             <div>
-              <motion.div {...fadeUp(0)} className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-4 py-2 rounded-full text-xs font-bold text-[#173f35] mb-8 shadow-sm">
+              <motion.div {...fadeUp(0)} className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-4 py-2 rounded-full text-xs font-bold text-[#173f35] mb-5 shadow-sm">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#173f35] opacity-60"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#173f35]"></span>
@@ -173,15 +173,15 @@ export default function Home() {
                 {hero.badge}
               </motion.div>
 
-              <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-7">
+              <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-5">
                 {hero.headline}
               </motion.h1>
 
-              <motion.p {...fadeUp(0.2)} className="text-xl md:text-2xl text-[#65736f] mb-10 max-w-xl leading-relaxed">
+              <motion.p {...fadeUp(0.2)} className="text-xl md:text-2xl text-[#65736f] mb-7 max-w-xl leading-relaxed">
                 {hero.subheadline}
               </motion.p>
 
-              <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-3 mb-10">
+              <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-3 mb-7">
                 <Link href={hero.primaryBtnLink} className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                   {hero.primaryBtnText} <ArrowRight className="h-5 w-5" />
                 </Link>
@@ -193,7 +193,7 @@ export default function Home() {
                 </Link>
               </motion.div>
 
-              <motion.div {...fadeUp(0.4)} className="flex flex-wrap gap-2 mb-10">
+              <motion.div {...fadeUp(0.4)} className="flex flex-wrap gap-2 mb-7">
                 {[
                   { icon: <ShieldCheck className="h-3.5 w-3.5" />, label: hero.featureBadge1 },
                   { icon: <TrendingUp className="h-3.5 w-3.5" />, label: hero.featureBadge2 },
@@ -205,7 +205,7 @@ export default function Home() {
                 ))}
               </motion.div>
 
-              <motion.div {...fadeUp(0.5)} className="grid grid-cols-3 gap-6 pt-8 border-t border-[#e5ded3]">
+              <motion.div {...fadeUp(0.5)} className="grid grid-cols-3 gap-6 pt-5 border-t border-[#e5ded3]">
                 {siteStats.slice(0, 3).map((s, i) => (
                   <div key={i}>
                     <div className="text-2xl lg:text-3xl font-bold text-[#173f35] tracking-tight mb-1">{s.value}{s.suffix}</div>
@@ -291,7 +291,7 @@ export default function Home() {
       </div>
 
       {/* ── IMAGE BAND ───────────────────────────────────────────── */}
-      <section className="py-10">
+      <section className="py-7">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
@@ -327,9 +327,9 @@ export default function Home() {
       </section>
 
       {/* ── WHO WE SERVE ─────────────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-14">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="text-center mb-16">
+          <motion.div {...fadeInView()} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <Users className="h-3.5 w-3.5" /> Built for ecosystem leaders
             </div>
@@ -389,7 +389,7 @@ export default function Home() {
       </section>
 
       {/* ── BOLD STATS BAND ──────────────────────────────────────── */}
-      <section className="bg-[#173f35] py-16 relative overflow-hidden">
+      <section className="bg-[#173f35] py-12 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-10">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#c59b4a] rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
@@ -410,9 +410,9 @@ export default function Home() {
       </section>
 
       {/* ── SERVICES PREVIEW ─────────────────────────────────────── */}
-      <section className="py-24 bg-white border-y border-[#e5ded3]">
+      <section className="py-16 bg-white border-y border-[#e5ded3]">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
+          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                 <Briefcase className="h-3.5 w-3.5" /> Advisory & Services
@@ -451,15 +451,15 @@ export default function Home() {
       </section>
 
       {/* ── DELIVERY MODEL ───────────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-16">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="bg-[#173f35] rounded-[40px] p-10 md:p-16 relative overflow-hidden">
+          <div className="bg-[#173f35] rounded-[40px] p-10 md:p-14 relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
             </div>
             <div className="relative z-10">
-              <div className="flex flex-col md:flex-row justify-between items-start mb-14 gap-6">
+              <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
                 <div>
                   <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                     <Target className="h-3.5 w-3.5" /> Our Methodology
@@ -494,7 +494,7 @@ export default function Home() {
       </section>
 
       {/* ── QUOTE / TESTIMONIAL ──────────────────────────────────── */}
-      <section className="py-20 bg-white border-y border-[#e5ded3]">
+      <section className="py-14 bg-white border-y border-[#e5ded3]">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-center max-w-5xl mx-auto">
             <motion.div {...fadeInView()} className="relative">
@@ -530,9 +530,9 @@ export default function Home() {
       </section>
 
       {/* ── PROJECT PIPELINE PREVIEW ─────────────────────────────── */}
-      <section className="py-24 bg-[#f7f4ef]">
+      <section className="py-16 bg-[#f7f4ef]">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6">
             <div>
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                 <MapPin className="h-3.5 w-3.5" /> Live Pipeline
@@ -589,9 +589,9 @@ export default function Home() {
       </section>
 
       {/* ── ENGAGEMENT PATHS ─────────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-16">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="text-center mb-14">
+          <motion.div {...fadeInView()} className="text-center mb-10">
             <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">How would you like to engage?</h2>
             <p className="text-xl text-[#65736f]">Zafora works across the full infrastructure stakeholder ecosystem.</p>
           </motion.div>
@@ -647,9 +647,9 @@ export default function Home() {
       </section>
 
       {/* ── SECTORS GRID ─────────────────────────────────────────── */}
-      <section className="py-24 bg-white border-y border-[#e5ded3]">
+      <section className="py-16 bg-white border-y border-[#e5ded3]">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="text-center mb-14">
+          <motion.div {...fadeInView()} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
               <Globe className="h-3.5 w-3.5" /> Core Sectors
             </div>
@@ -678,9 +678,9 @@ export default function Home() {
       </section>
 
       {/* ── ABOUT TEASER ─────────────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-16">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <motion.div {...fadeInView()}>
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
                 <Building className="h-3.5 w-3.5" /> Who We Are
@@ -713,20 +713,20 @@ export default function Home() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────────────────── */}
-      <section className="py-24 bg-[#173f35] relative overflow-hidden">
+      <section className="py-16 bg-[#173f35] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#c59b4a]/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
         </div>
         <div className="container mx-auto px-4 md:px-8 text-center relative z-10">
           <motion.div {...fadeInView()}>
-            <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-4 py-2 rounded-full text-xs font-bold mb-8">
+            <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-4 py-2 rounded-full text-xs font-bold mb-6">
               <Handshake className="h-4 w-4" /> Ready to build?
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-5 max-w-3xl mx-auto">
               Your next infrastructure project starts here.
             </h2>
-            <p className="text-xl text-white/65 mb-12 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/65 mb-8 max-w-xl mx-auto leading-relaxed">
               Whether you represent a government, investment fund, or engineering firm — we want to hear about your ambitions.
             </p>
             <div className="flex flex-wrap justify-center gap-4">

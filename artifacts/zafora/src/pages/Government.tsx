@@ -201,11 +201,11 @@ export default function Government() {
       </section>
 
       {/* Main Content */}
-      <section className="py-20 bg-[#f7f4ef]">
+      <section className="py-14 bg-[#f7f4ef]">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-14">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10">
 
-            <div className="space-y-16">
+            <div className="space-y-10">
               {/* Capability statement */}
               <motion.div {...fadeInView()}>
                 <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
@@ -272,7 +272,7 @@ export default function Government() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* CTA Card */}
-              <motion.div {...fadeInView()} className="bg-[#173f35] rounded-[28px] p-8 sticky top-28 overflow-hidden relative">
+              <motion.div {...fadeInView()} className="bg-[#173f35] rounded-[28px] p-6 sticky top-28 overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-[#c59b4a]/15 rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
                 <div className="relative z-10">
                   <div className="w-12 h-12 bg-[#c59b4a] rounded-[14px] flex items-center justify-center mb-6 shadow-md">
@@ -325,11 +325,11 @@ export default function Government() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-20 bg-white border-t border-[#e5ded3]">
+      <section className="py-14 bg-white border-t border-[#e5ded3]">
         <div className="container mx-auto px-4 md:px-8 text-center max-w-3xl">
           <motion.div {...fadeInView()}>
             <h2 className="text-4xl font-bold text-[#10231f] mb-5">{s.cta.headline}</h2>
-            <p className="text-xl text-[#65736f] mb-10">{s.cta.subheadline}</p>
+            <p className="text-xl text-[#65736f] mb-7">{s.cta.subheadline}</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href={s.cta.btn1Link} className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-lg">
                 {s.cta.btn1Text} <ArrowRight className="h-5 w-5" />

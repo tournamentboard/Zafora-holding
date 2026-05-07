@@ -100,13 +100,13 @@ export default function Services() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="relative pt-28 pb-0 overflow-hidden bg-white">
+      <section className="relative pt-20 pb-0 overflow-hidden bg-white">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#173f35]/6 rounded-full blur-3xl" />
         </div>
         <div className="container mx-auto px-4 md:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center pb-16 border-b border-[#e5ded3]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center pb-12 border-b border-[#e5ded3]">
             <div>
               <motion.div {...fadeInView()} className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
                 <Briefcase className="h-3.5 w-3.5" /> {settings.hero.badge}
@@ -167,7 +167,7 @@ export default function Services() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-20 bg-[#f7f4ef]">
+      <section className="py-14 bg-[#f7f4ef]">
         <div className="container mx-auto px-4 md:px-8">
           {isLoading ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

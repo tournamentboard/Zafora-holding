@@ -3,7 +3,7 @@ import { useListProjects, useGetSiteSettings } from "@workspace/api-client-react
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, DollarSign, Users, AlertCircle } from "lucide-react";
+import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import ExpressInterestModal from "./ExpressInterestModal";
@@ -57,11 +57,14 @@ export default function Projects() {
   return (
     <div className="flex flex-col pb-24 bg-[#f7f4ef] min-h-screen">
       {/* Header */}
-      <section className="pt-24 pb-16">
+      <section className="pt-16 pb-10">
         <div className="container mx-auto px-4 md:px-8">
-          <h1 className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-6">Project Pipeline</h1>
+          <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+            <BarChart3 className="h-3.5 w-3.5" /> Infrastructure Pipeline
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-4">Project Pipeline</h1>
           <p className="text-xl text-[#65736f] max-w-2xl leading-relaxed">
-            Explore our curated portfolio of transformative infrastructure projects across Africa. 
+            Explore our curated portfolio of transformative infrastructure projects across Africa.
             All projects undergo rigorous Zafora due diligence.
           </p>
         </div>
@@ -153,7 +156,7 @@ export default function Projects() {
                   </div>
                   
                   <h3 className="text-xl font-bold text-[#10231f] mb-2 leading-snug">{project.name}</h3>
-                  <div className="text-sm font-medium text-[#65736f] mb-4">{project.country}</div>
+                  <div className="flex items-center gap-1.5 text-sm font-medium text-[#65736f] mb-4"><MapPin className="h-3.5 w-3.5 shrink-0" />{project.country}</div>
                   
                   <p className="text-sm text-[#65736f] mb-6 line-clamp-3 flex-1 leading-relaxed">
                     {project.description || "No description provided."}

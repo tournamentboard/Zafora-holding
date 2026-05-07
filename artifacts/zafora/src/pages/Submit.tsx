@@ -109,7 +109,7 @@ export default function Submit() {
     <div className="flex flex-col bg-[#f7f4ef]">
 
       {/* Hero header */}
-      <section className="relative bg-white border-b border-[#e5ded3] pt-28 pb-16 overflow-hidden">
+      <section className="relative bg-white border-b border-[#e5ded3] pt-20 pb-10 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#173f35]/6 rounded-full blur-3xl" />
@@ -131,7 +131,7 @@ export default function Submit() {
       </section>
 
       {/* Form + Sidebar */}
-      <section className="py-16">
+      <section className="py-12">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 items-start max-w-6xl mx-auto">
 
@@ -204,8 +204,8 @@ export default function Submit() {
             </div>
 
             {/* Right — form */}
-            <motion.div {...fadeInView(0.05)} className="bg-white border border-[#e5ded3] p-8 md:p-12 rounded-[36px] shadow-lg">
-              <form onSubmit={handleSubmit} className="space-y-10">
+            <motion.div {...fadeInView(0.05)} className="bg-white border border-[#e5ded3] p-6 md:p-10 rounded-[36px] shadow-lg">
+              <form onSubmit={handleSubmit} className="space-y-7">
 
                 {/* Contact Details */}
                 <div>
