@@ -413,7 +413,7 @@ export default function AboutEditor() {
                   </div>
                   {member.photo && (
                     <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 mt-6">
-                      <img src={member.photo} alt={member.name} className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
+                      <img src={member.photo} alt={member.name} className="w-full h-full object-cover object-top" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
                     </div>
                   )}
                 </div>

@@ -327,7 +327,7 @@ export default function About() {
                   <motion.div key={i} {...fade(i * 0.1)} className="bg-white rounded-2xl border border-[#e5ded3] overflow-hidden shadow-sm hover:shadow-md transition-all group">
                     {member.photo ? (
                       <div className="h-36 overflow-hidden">
-                        <img src={member.photo} alt={displayName} className="w-full h-full object-cover" />
+                        <img src={member.photo} alt={displayName} className="w-full h-full object-cover object-top" />
                       </div>
                     ) : (
                       <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-36 flex items-center justify-center`}>

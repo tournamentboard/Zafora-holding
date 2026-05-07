@@ -502,7 +502,7 @@ export default function Home() {
                 <img
                   src={featuredTestimonial?.photoUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"}
                   alt={featuredTestimonial?.clientName || "Leadership"}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl p-4 shadow-xl">
