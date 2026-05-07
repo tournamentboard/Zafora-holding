@@ -8,7 +8,7 @@ const DEFAULT_LINKS = [
   { id: "about", label: "About", href: "/about", visible: true, openNewTab: false, order: 0 },
   { id: "services", label: "Services", href: "/services", visible: true, openNewTab: false, order: 1 },
   { id: "pipeline", label: "Pipeline", href: "/projects", visible: true, openNewTab: false, order: 2 },
-  { id: "gov", label: "Government Review", href: "/government", visible: true, openNewTab: false, order: 3 },
+  { id: "gov", label: "Government Review", href: "/government-review", visible: true, openNewTab: false, order: 3 },
 ];
 
 export default function Navbar() {

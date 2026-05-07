@@ -17,7 +17,7 @@ const NAV_LINKS = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
   { href: "/projects", label: "Project Pipeline" },
-  { href: "/government", label: "Government Review" },
+  { href: "/government-review", label: "Government Review" },
   { href: "/submit", label: "Submit a Request" },
 ];
 
