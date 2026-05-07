@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Settings2, Globe, Layout, FileText, Info, Loader2, ExternalLink, BookOpen, Phone } from "lucide-react";
+import AboutEditor from "./AboutEditor";
 
 type Tab = "hero" | "footer" | "about" | "seo";
 
@@ -249,82 +250,6 @@ function SeoEditor() {
         >
           {updateMutation.isPending ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
           Save SEO Settings
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function AboutEditor() {
-  const qc = useQueryClient();
-  const { data, isLoading } = useGetSiteSettings("about");
-  const updateMutation = useUpdateSiteSettings();
-  const [form, setForm] = useState<any>({});
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    if (data?.value) {
-      try { setForm(JSON.parse(data.value)); } catch {}
-    }
-  }, [data?.value]);
-
-  const set = (key: string, val: string) => setForm((f: any) => ({ ...f, [key]: val }));
-
-  const handleSave = () => {
-    updateMutation.mutate(
-      { key: "about", data: { value: JSON.stringify(form) } },
-      {
-        onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ["/api/content/settings/about"] });
-          setSaved(true);
-          setTimeout(() => setSaved(false), 3000);
-        }
-      }
-    );
-  };
-
-  if (isLoading) return <div className="h-64 flex items-center justify-center"><Loader2 className="animate-spin h-6 w-6 text-[#173f35]" /></div>;
-
-  return (
-    <div className="space-y-5">
-      <div className="bg-[#efe3cf]/40 border border-[#e5ded3] rounded-xl p-4 text-sm text-[#65736f]">
-        <strong className="text-[#10231f]">About Us Page:</strong> Edit the company story, mission, vision, and contact details shown on the About page.
-      </div>
-
-      <div className="space-y-4">
-        <h4 className="text-sm font-bold text-[#10231f]">Company Identity</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FieldRow label="Company Name" value={form.companyName ?? ""} onChange={v => set("companyName", v)} placeholder="Zafora Holding" />
-          <FieldRow label="Founded" value={form.founded ?? ""} onChange={v => set("founded", v)} placeholder="January 2025" />
-          <FieldRow label="Headquarters" value={form.headquarters ?? ""} onChange={v => set("headquarters", v)} placeholder="Tampa, FL, USA" />
-        </div>
-        <FieldRow label="Story Headline" value={form.storyHeadline ?? ""} onChange={v => set("storyHeadline", v)} placeholder="Built to bridge the infrastructure gap." />
-        <FieldRow label="Company Story" value={form.story ?? ""} onChange={v => set("story", v)} type="textarea" placeholder="The full company story paragraph shown at the top of the About page..." />
-      </div>
-
-      <div className="border-t border-[#e5ded3] pt-5 space-y-4">
-        <h4 className="text-sm font-bold text-[#10231f]">Mission & Vision</h4>
-        <FieldRow label="Mission Statement" value={form.mission ?? ""} onChange={v => set("mission", v)} type="textarea" placeholder="Our mission..." />
-        <FieldRow label="Vision Statement" value={form.vision ?? ""} onChange={v => set("vision", v)} type="textarea" placeholder="Our vision..." />
-      </div>
-
-      <div className="border-t border-[#e5ded3] pt-5 space-y-4">
-        <h4 className="text-sm font-bold text-[#10231f]">Contact Details</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FieldRow label="Email Address" value={form.email ?? ""} onChange={v => set("email", v)} placeholder="Office@zaforaholding.com" />
-          <FieldRow label="Address" value={form.address ?? ""} onChange={v => set("address", v)} placeholder="3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607" />
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 justify-end">
-        {saved && <span className="flex items-center gap-1.5 text-green-600 text-sm font-semibold"><Check size={14} /> Saved successfully</span>}
-        <button
-          onClick={handleSave}
-          disabled={updateMutation.isPending}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#173f35] text-white text-sm font-bold hover:bg-[#245d4e] transition-colors disabled:opacity-60 shadow-md"
-        >
-          {updateMutation.isPending ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
-          Save About Settings
         </button>
       </div>
     </div>
