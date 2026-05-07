@@ -15,6 +15,13 @@ export default function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: navData } = useGetSiteSettings("navigation");
+  const { data: brandingData } = useGetSiteSettings("branding");
+  const motto = (() => {
+    try {
+      const parsed = brandingData?.value ? JSON.parse(brandingData.value) : null;
+      return parsed?.tagline || "Infrastructure. Capital. Delivery.";
+    } catch { return "Infrastructure. Capital. Delivery."; }
+  })();
 
   const links = (() => {
     try {
@@ -31,8 +38,11 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)", backdropFilter: "blur(16px)" }}>
       <div className="container mx-auto px-4 md:px-8 h-28 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <img src={logo} alt="Zafora Holding" className="h-24 w-auto object-contain" />
+        <Link href="/" className="flex flex-col items-start gap-0.5">
+          <img src={logo} alt="Zafora Holding" className="h-16 w-auto object-contain" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#c59b4a] leading-none pl-0.5">
+            {motto}
+          </span>
         </Link>
 
         {/* Desktop Nav */}

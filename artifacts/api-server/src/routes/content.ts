@@ -36,7 +36,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
   ],
   branding: {
     siteName: "Zafora Holding",
-    tagline: "Strategic Infrastructure Advisory & Development",
+    tagline: "Infrastructure. Capital. Delivery.",
     logoUrl: "",
     faviconUrl: "",
     primaryColor: "#173f35",

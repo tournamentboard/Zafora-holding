@@ -18,7 +18,7 @@ interface BrandingConfig {
 
 const DEFAULTS: BrandingConfig = {
   siteName: "Zafora Holding",
-  tagline: "Strategic Infrastructure Advisory & Development",
+  tagline: "Infrastructure. Capital. Delivery.",
   logoUrl: "",
   faviconUrl: "",
   primaryColor: "#173f35",
