@@ -31,7 +31,7 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - `lib/api-spec/openapi.yaml` — OpenAPI contract (source of truth)
 - `lib/api-client-react/src/generated/` — Generated React Query hooks
 - `lib/api-zod/src/generated/api.ts` — Generated Zod schemas for server
-- `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services, content_stats, methodology_steps, site_settings)
+- `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services, content_stats, methodology_steps, site_settings, testimonials)
 - `artifacts/zafora/src/components/admin/` — All admin panel components
 - `artifacts/zafora/src/hooks/use-page-title.ts` — Per-page document.title hook
 - `artifacts/zafora/public/` — favicon.svg, opengraph.jpg, hero assets
@@ -54,14 +54,16 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - **Submit Request** — Trust sidebar + 3-step numbered form
 - **Admin Dashboard** — Grouped sidebar (Overview, Content, Pipeline, CRM, Admin):
   - **Dashboard** — Stats & recent activity
-  - **Site Settings** — Hero text/CTAs, Footer contact info, SEO per-page (tabs)
+  - **Site Settings** — Hero text/CTAs, About Us (story/mission/vision/contact), Footer, SEO per-page (4 tabs)
   - **Site Stats** — Edit homepage numbers (value, suffix, label, icon, visibility)
   - **Services** — Full CRUD: name, icon, description, bullets, category, image, order
   - **Methodology** — Edit/add/delete/reorder delivery model steps
+  - **Testimonials** — Add/edit/delete/toggle client quotes with photo URL support
+  - **Navigation Menu** — Reorder, rename, show/hide, new-tab toggle for header nav links
   - **Projects** — Multi-sector CRUD with tag picker
   - **Documents** — Preview modal + edit + description
   - **Inquiries** — Full CRM with lead statuses and notes
-  - **Settings** — Password change + CSV export
+  - **Settings** — Email notifications (Resend), password change, CSV export
 - **404 Page** — Branded with logo, navigation back to home/pipeline
 
 ## User preferences

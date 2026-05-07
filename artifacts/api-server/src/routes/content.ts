@@ -28,6 +28,12 @@ const SETTING_DEFAULTS: Record<string, object> = {
     notifyOnInquiry: true,
     notifyOnInterest: true,
   },
+  navigation: [
+    { id: "about", label: "About", href: "/about", visible: true, openNewTab: false, order: 0 },
+    { id: "services", label: "Services", href: "/services", visible: true, openNewTab: false, order: 1 },
+    { id: "pipeline", label: "Pipeline", href: "/projects", visible: true, openNewTab: false, order: 2 },
+    { id: "gov", label: "Government Review", href: "/government-review", visible: true, openNewTab: false, order: 3 },
+  ],
   hero: {
     headline: "Structuring, funding, and delivering high-impact projects.",
     subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",

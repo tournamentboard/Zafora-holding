@@ -7,6 +7,7 @@ import statsRouter from "./stats";
 import servicesRouter from "./services";
 import contentRouter from "./content";
 import notificationsRouter from "./notifications";
+import testimonialsRouter from "./testimonials";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(statsRouter);
 router.use(servicesRouter);
 router.use(contentRouter);
 router.use(notificationsRouter);
+router.use(testimonialsRouter);
 
 export default router;

@@ -1,0 +1,318 @@
+Zafora Landing Page Admin Components
+1. Hero Section Manager
+
+Controls the top section of the website.
+
+Admin should edit:
+
+Main headline
+Subheadline
+Hero image or background image
+CTA button text
+CTA button link
+Secondary button text/link
+Trust badges or short stats
+Visibility toggle: show/hide section
+
+Example fields:
+
+Title
+Subtitle
+Button 1 Text
+Button 1 URL
+Hero Image Upload
+Background Overlay Color
+2. About Us Manager
+
+Controls company story and identity.
+
+Admin should edit:
+
+About title
+Company description
+Mission statement
+Vision statement
+Company story
+Founder/leadership info
+Office address
+Email
+Phone number
+Supporting image
+
+Important for Zafora:
+
+Founded in 2025
+U.S.-based company
+Address: 3030 N Rocky Point Drive West, Suite 150, Tampa, FL 33607
+Email: Office@zaforaholding.com
+3. Services / Solutions Manager
+
+Controls what Zafora offers.
+
+Admin should edit:
+
+Service title
+Service description
+Service icon
+Service image
+Service category
+Display order
+Active/inactive toggle
+
+Example services:
+
+Infrastructure Consulting
+Project Finance Advisory
+Government Contract Strategy
+Public-Private Partnership Support
+Strategic Development Consulting
+Investment Readiness
+4. Feature Cards Manager
+
+For homepage feature blocks.
+
+Admin should edit:
+
+Feature title
+Short description
+Icon/image
+Link
+Display order
+
+Example features:
+
+Infrastructure Strategy
+Capital Access
+Government Relations
+Project Development
+International Partnerships
+5. Image & Media Library
+
+A central place to manage all images.
+
+Admin should be able to:
+
+Upload images
+Replace images
+Delete unused images
+Add image alt text
+Organize images by section
+Preview image before publishing
+
+Needed for:
+
+Hero images
+About section images
+Service images
+Team images
+Logo files
+Background images
+Partner logos
+6. Logo & Brand Settings
+
+Admin should manage Zafora branding.
+
+Admin should edit:
+
+Primary logo
+Secondary logo
+Favicon
+Brand colors
+Button colors
+Font style
+Footer logo
+Social sharing image
+7. Navigation Menu Manager
+
+Controls website menu links.
+
+Admin should edit:
+
+Menu item name
+Link destination
+Display order
+Open in same/new tab
+Show/hide menu item
+
+Example nav:
+
+Home
+About
+Services
+Projects
+Contact
+8. Contact Section Manager
+
+Controls contact information and forms.
+
+Admin should edit:
+
+Contact headline
+Contact description
+Email
+Phone
+Address
+Map embed
+Contact form fields
+Success message
+Recipient email
+
+Form fields:
+
+Name
+Email
+Company
+Phone
+Message
+Service interest
+9. Testimonials / Partner Section Manager
+
+Admin should edit:
+
+Testimonial name
+Company
+Quote
+Photo/logo
+Display order
+Show/hide
+
+If no testimonials yet, this can be hidden until ready.
+
+10. Stats / Numbers Manager
+
+Controls homepage impact numbers.
+
+Admin should edit:
+
+Stat number
+Stat label
+Description
+Icon
+Display order
+
+Example:
+
+2025 — Founded
+U.S.-Based — Company Location
+Global — Infrastructure Vision
+Strategic — Consulting Focus
+11. Project / Case Study Manager
+
+For future Zafora projects.
+
+Admin should edit:
+
+Project title
+Project category
+Location
+Description
+Image
+Status
+Date
+Featured toggle
+
+Statuses:
+
+Planned
+In Progress
+Completed
+Under Review
+12. Footer Manager
+
+Admin should edit:
+
+Company description
+Footer logo
+Address
+Email
+Phone
+Social media links
+Quick links
+Copyright text
+Privacy policy link
+Terms link
+13. SEO Manager
+
+Admin should edit page search settings.
+
+Each page should have:
+
+SEO title
+Meta description
+Keywords
+Social share image
+Page URL slug
+Google indexing toggle
+14. Page Builder / Section Order Manager
+
+This is important.
+
+Admin should be able to:
+
+Reorder homepage sections
+Hide/show sections
+Duplicate sections
+Edit section spacing
+Preview before publishing
+
+Example order:
+
+Hero
+About
+Services
+Why Zafora
+Projects
+Contact
+Footer
+15. Publish & Draft System
+
+Admin should not update live site by accident.
+
+Needed features:
+
+Save as draft
+Preview changes
+Publish live
+Revert to previous version
+Last edited by
+Last edited date
+16. User Roles for Admin Panel
+
+Create permission levels.
+
+Recommended roles:
+
+Super Admin — full control
+Content Admin — edit text/images
+Media Manager — upload images only
+SEO Manager — edit SEO only
+Viewer — view only, no edits
+Best Admin Panel Modules to Create
+
+Create these main admin tabs:
+
+Dashboard
+Landing Page Sections
+Media Library
+Services
+Projects
+Brand Settings
+Navigation
+Contact Forms
+SEO Settings
+Users & Permissions
+Publish History
+Most Important Requirement
+
+Every landing page section should have:
+
+Edit text
+Upload/replace image
+Change button/link
+Show/hide toggle
+Reorder option
+Save draft
+Preview
+Publish
+
+That gives you full control over the Zafora website without needing a developer every time.

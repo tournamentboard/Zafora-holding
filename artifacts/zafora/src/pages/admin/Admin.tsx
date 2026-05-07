@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText,
   Eye, EyeOff, Settings, Settings2, BarChart2, Briefcase, Target,
-  ChevronDown, ChevronRight,
+  ChevronDown, ChevronRight, Quote, Navigation,
 } from "lucide-react";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsTable from "@/components/admin/ProjectsTable";
@@ -14,10 +14,13 @@ import ContentStatsManager from "@/components/admin/ContentStatsManager";
 import ServicesManager from "@/components/admin/ServicesManager";
 import MethodologyManager from "@/components/admin/MethodologyManager";
 import SiteSettingsManager from "@/components/admin/SiteSettingsManager";
+import TestimonialsManager from "@/components/admin/TestimonialsManager";
+import NavigationManager from "@/components/admin/NavigationManager";
 import logo from "@/assets/logo.png";
 
 type TabId = "dashboard" | "leads" | "projects" | "documents" | "settings"
-  | "site_settings" | "content_stats" | "services_mgr" | "methodology";
+  | "site_settings" | "content_stats" | "services_mgr" | "methodology"
+  | "testimonials" | "navigation";
 
 type NavItem = { id: TabId; label: string; icon: React.ElementType; desc: string };
 
@@ -31,10 +34,12 @@ const SIDEBAR_GROUPS: { group: string; items: NavItem[] }[] = [
   {
     group: "Content",
     items: [
-      { id: "site_settings", label: "Site Settings", icon: Settings2, desc: "Hero, footer & SEO" },
+      { id: "site_settings", label: "Site Settings", icon: Settings2, desc: "Hero, about, footer & SEO" },
       { id: "content_stats", label: "Site Stats", icon: BarChart2, desc: "Homepage numbers" },
       { id: "services_mgr", label: "Services", icon: Briefcase, desc: "Consulting service cards" },
       { id: "methodology", label: "Methodology", icon: Target, desc: "Delivery model steps" },
+      { id: "testimonials", label: "Testimonials", icon: Quote, desc: "Client quotes & partners" },
+      { id: "navigation", label: "Navigation Menu", icon: Navigation, desc: "Header nav links & order" },
     ],
   },
   {
@@ -290,6 +295,8 @@ export default function Admin() {
           {activeTab === "content_stats" && <ContentStatsManager />}
           {activeTab === "services_mgr" && <ServicesManager />}
           {activeTab === "methodology" && <MethodologyManager />}
+          {activeTab === "testimonials" && <TestimonialsManager />}
+          {activeTab === "navigation" && <NavigationManager />}
         </div>
       </main>
     </div>
