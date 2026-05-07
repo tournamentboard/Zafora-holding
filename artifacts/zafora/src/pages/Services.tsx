@@ -1,14 +1,40 @@
-import { useListServices } from "@workspace/api-client-react";
+import { useListServices, useGetSiteSettings } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePageTitle } from "@/hooks/use-page-title";
 import {
   ShieldCheck, TrendingUp, Anchor, Landmark, Briefcase, Globe,
-  ArrowRight, CheckCircle2, Zap, Droplets, Truck, Stethoscope,
-  Users, DollarSign, Target, Award, ChevronRight,
+  ArrowRight, CheckCircle2, Award,
+  Users, DollarSign, Target,
 } from "lucide-react";
+
+const DEFAULT_SETTINGS = {
+  hero: {
+    headline: "Advisory built for Africa's complexity.",
+    subheadline: "Comprehensive structuring, funding, and delivery solutions — tailored to the political, economic, and regulatory realities of African infrastructure.",
+    badge: "Six Specialized Practices",
+  },
+  stats: [
+    { value: "$2.4B+", label: "Value Structured" },
+    { value: "12+", label: "Countries" },
+    { value: "45+", label: "Professionals" },
+    { value: "100%", label: "Confidential" },
+  ],
+  cta: {
+    headline: "Start with a confidential consultation.",
+    subheadline: "Our advisors will assess your project and propose the most effective pathway forward.",
+    btnText: "Start Conversation",
+    btnLink: "/submit",
+  },
+};
+
+const STAT_ICONS = [
+  <DollarSign className="h-5 w-5" />,
+  <Globe className="h-5 w-5" />,
+  <Users className="h-5 w-5" />,
+  <ShieldCheck className="h-5 w-5" />,
+];
 
 const SERVICE_IMAGES = [
   "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80",
@@ -38,6 +64,21 @@ const fadeInView = (delay = 0) => ({
 export default function Services() {
   usePageTitle("Services");
   const { data, isLoading } = useListServices();
+  const { data: settingsData } = useGetSiteSettings("services_page");
+
+  const settings = (() => {
+    try {
+      const parsed = settingsData?.value ? JSON.parse(settingsData.value) : null;
+      if (parsed && typeof parsed === "object") {
+        return {
+          hero: { ...DEFAULT_SETTINGS.hero, ...(parsed.hero ?? {}) },
+          stats: Array.isArray(parsed.stats) && parsed.stats.length > 0 ? parsed.stats : DEFAULT_SETTINGS.stats,
+          cta: { ...DEFAULT_SETTINGS.cta, ...(parsed.cta ?? {}) },
+        };
+      }
+    } catch {}
+    return DEFAULT_SETTINGS;
+  })();
 
   return (
     <div className="flex flex-col">
@@ -52,13 +93,13 @@ export default function Services() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center pb-16 border-b border-[#e5ded3]">
             <div>
               <motion.div {...fadeInView()} className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
-                <Briefcase className="h-3.5 w-3.5" /> Six Specialized Practices
+                <Briefcase className="h-3.5 w-3.5" /> {settings.hero.badge}
               </motion.div>
               <motion.h1 {...fadeInView(0.1)} className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-6 leading-[1.06]">
-                Advisory built for Africa's complexity.
+                {settings.hero.headline}
               </motion.h1>
               <motion.p {...fadeInView(0.15)} className="text-xl text-[#65736f] leading-relaxed mb-8">
-                Comprehensive structuring, funding, and delivery solutions — tailored to the political, economic, and regulatory realities of African infrastructure.
+                {settings.hero.subheadline}
               </motion.p>
               <motion.div {...fadeInView(0.2)} className="flex flex-wrap gap-3">
                 {[
@@ -98,14 +139,9 @@ export default function Services() {
       <section className="bg-[#173f35] py-10">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { value: "$2.4B+", label: "Value Structured", icon: <DollarSign className="h-5 w-5" /> },
-              { value: "12+", label: "Countries", icon: <Globe className="h-5 w-5" /> },
-              { value: "45+", label: "Professionals", icon: <Users className="h-5 w-5" /> },
-              { value: "100%", label: "Confidential", icon: <ShieldCheck className="h-5 w-5" /> },
-            ].map((s, i) => (
+            {settings.stats.map((s: any, i: number) => (
               <div key={i} className="flex flex-col items-center gap-1.5">
-                <div className="text-[#c59b4a]">{s.icon}</div>
+                <div className="text-[#c59b4a]">{STAT_ICONS[i] ?? <Award className="h-5 w-5" />}</div>
                 <div className="text-3xl font-bold text-white">{s.value}</div>
                 <div className="text-xs font-semibold text-white/50 uppercase tracking-wider">{s.label}</div>
               </div>
@@ -133,7 +169,7 @@ export default function Services() {
                   {/* Service image */}
                   <div className="relative h-52 overflow-hidden">
                     <img
-                      src={SERVICE_IMAGES[index % SERVICE_IMAGES.length]}
+                      src={service.imageUrl || SERVICE_IMAGES[index % SERVICE_IMAGES.length]}
                       alt={service.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -186,11 +222,11 @@ export default function Services() {
               <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                 <TrendingUp className="h-3.5 w-3.5" /> Ready to accelerate?
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Start with a confidential consultation.</h2>
-              <p className="text-white/70 text-lg">Our advisors will assess your project and propose the most effective pathway forward.</p>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">{settings.cta.headline}</h2>
+              <p className="text-white/70 text-lg">{settings.cta.subheadline}</p>
             </div>
-            <Link href="/submit" className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg shrink-0 relative z-10">
-              Start Conversation <ArrowRight className="h-5 w-5" />
+            <Link href={settings.cta.btnLink || "/submit"} className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg shrink-0 relative z-10">
+              {settings.cta.btnText} <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>

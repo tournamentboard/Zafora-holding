@@ -2,7 +2,16 @@ import { ReactNode } from "react";
 import { Link } from "wouter";
 import Navbar from "./Navbar";
 import logo from "@/assets/logo.png";
-import { Mail, MapPin, ArrowUpRight, Linkedin, Twitter } from "lucide-react";
+import { useGetSiteSettings } from "@workspace/api-client-react";
+import { Mail, MapPin, ArrowUpRight } from "lucide-react";
+
+const DEFAULT_FOOTER = {
+  description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
+  email: "Office@zaforaholding.com",
+  address: "3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA",
+  phone: "",
+  copyright: String(new Date().getFullYear()),
+};
 
 const NAV_LINKS = [
   { href: "/about", label: "About Us" },
@@ -22,6 +31,21 @@ const SERVICE_LINKS = [
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const { data: footerData } = useGetSiteSettings("footer");
+
+  const footer = (() => {
+    try {
+      const parsed = footerData?.value ? JSON.parse(footerData.value) : null;
+      if (parsed && typeof parsed === "object") {
+        return { ...DEFAULT_FOOTER, ...parsed };
+      }
+    } catch {}
+    return DEFAULT_FOOTER;
+  })();
+
+  const copyrightYear = footer.copyright || new Date().getFullYear();
+  const addressLines = footer.address.split("\n");
+
   return (
     <div className="min-h-[100dvh] flex flex-col" style={{ background: "inherit" }}>
       <Navbar />
@@ -45,16 +69,24 @@ export default function Layout({ children }: { children: ReactNode }) {
                 style={{ filter: "brightness(0) invert(1)" }}
               />
               <p className="text-white/55 text-sm leading-relaxed mb-6">
-                U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.
+                {footer.description}
               </p>
               <div className="flex flex-col gap-2.5 text-sm text-white/55">
-                <a href="mailto:Office@zaforaholding.com" className="flex items-center gap-2 hover:text-[#c59b4a] transition-colors">
-                  <Mail className="h-4 w-4 shrink-0" /> Office@zaforaholding.com
-                </a>
-                <span className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>3030 N Rocky Point Dr W, Suite 150<br />Tampa, FL 33607, USA</span>
-                </span>
+                {footer.email && (
+                  <a href={`mailto:${footer.email}`} className="flex items-center gap-2 hover:text-[#c59b4a] transition-colors">
+                    <Mail className="h-4 w-4 shrink-0" /> {footer.email}
+                  </a>
+                )}
+                {footer.address && (
+                  <span className="flex items-start gap-2">
+                    <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
+                    <span>
+                      {addressLines.map((line, i) => (
+                        <span key={i}>{line}{i < addressLines.length - 1 && <br />}</span>
+                      ))}
+                    </span>
+                  </span>
+                )}
               </div>
             </div>
 
@@ -123,10 +155,10 @@ export default function Layout({ children }: { children: ReactNode }) {
           {/* Bottom bar */}
           <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-white/35">
-              © {new Date().getFullYear()} Zafora Holding. All rights reserved. Tampa, FL, USA.
+              &copy; {copyrightYear} Zafora Holding. All rights reserved. Tampa, FL, USA.
             </p>
             <div className="flex items-center gap-6 text-xs text-white/35">
-              <span>Government Consulting · Project Development · Global Partnerships</span>
+              <span>Government Consulting &middot; Project Development &middot; Global Partnerships</span>
               <Link href="/admin" className="hover:text-white/60 transition-colors">
                 Admin
               </Link>

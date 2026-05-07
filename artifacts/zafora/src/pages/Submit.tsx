@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { useCreateLead } from "@workspace/api-client-react";
+import { useCreateLead, useGetSiteSettings } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,26 @@ import {
   ShieldCheck, Clock, Users, Globe, CheckCircle2, ArrowRight,
   Lock, Star, TrendingUp, Briefcase, Landmark,
 } from "lucide-react";
+
+const DEFAULT_SETTINGS = {
+  hero: {
+    headline: "Submit Your Request",
+    subheadline: "Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, share your details below.",
+    badge: "Start a Conversation",
+  },
+  sidebar: {
+    whyTitle: "Why submit to Zafora?",
+    whyBullets: [
+      "Senior advisor review within 48 hours",
+      "No-obligation preliminary assessment",
+      "Direct DFI and investor connections",
+      "Full confidentiality guaranteed",
+      "Active in 12+ African countries",
+    ],
+    responseTime: "48-hour response",
+    responseDesc: "A senior advisor will review your submission and respond within two business days.",
+  },
+};
 
 const fadeInView = (delay = 0) => ({
   initial: { opacity: 0, y: 16 },
@@ -27,6 +47,26 @@ export default function Submit() {
   const createLead = useCreateLead();
   const [loading, setLoading] = useState(false);
   const [defaultType, setDefaultType] = useState("consultation");
+  const { data: settingsData } = useGetSiteSettings("submit_page");
+
+  const settings = (() => {
+    try {
+      const parsed = settingsData?.value ? JSON.parse(settingsData.value) : null;
+      if (parsed && typeof parsed === "object") {
+        return {
+          hero: { ...DEFAULT_SETTINGS.hero, ...(parsed.hero ?? {}) },
+          sidebar: {
+            ...DEFAULT_SETTINGS.sidebar,
+            ...(parsed.sidebar ?? {}),
+            whyBullets: Array.isArray(parsed.sidebar?.whyBullets) && parsed.sidebar.whyBullets.length > 0
+              ? parsed.sidebar.whyBullets
+              : DEFAULT_SETTINGS.sidebar.whyBullets,
+          },
+        };
+      }
+    } catch {}
+    return DEFAULT_SETTINGS;
+  })();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -75,15 +115,15 @@ export default function Submit() {
         <div className="container mx-auto px-4 md:px-8 relative z-10 text-center max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
-            <Briefcase className="h-3.5 w-3.5" /> Start a Conversation
+            <Briefcase className="h-3.5 w-3.5" /> {settings.hero.badge}
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
             className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-5 leading-[1.06]">
-            Submit Your Request
+            {settings.hero.headline}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl text-[#65736f] leading-relaxed">
-            Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, share your details below.
+            {settings.hero.subheadline}
           </motion.p>
         </div>
       </section>
@@ -100,15 +140,9 @@ export default function Submit() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#c59b4a]/15 rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
                 <div className="relative z-10">
                   <div className="text-[#c59b4a] mb-4"><Star className="h-6 w-6" /></div>
-                  <h3 className="font-bold text-white text-lg mb-3">Why submit to Zafora?</h3>
+                  <h3 className="font-bold text-white text-lg mb-3">{settings.sidebar.whyTitle}</h3>
                   <ul className="space-y-3">
-                    {[
-                      "Senior advisor review within 48 hours",
-                      "No-obligation preliminary assessment",
-                      "Direct DFI and investor connections",
-                      "Full confidentiality guaranteed",
-                      "Active in 12+ African countries",
-                    ].map((item, i) => (
+                    {settings.sidebar.whyBullets.map((item: string, i: number) => (
                       <li key={i} className="flex items-start gap-2.5 text-sm text-white/75">
                         <CheckCircle2 className="h-4 w-4 text-[#c59b4a] shrink-0 mt-0.5" /> {item}
                       </li>
@@ -161,8 +195,8 @@ export default function Submit() {
                   <Clock className="h-6 w-6" />
                 </div>
                 <div>
-                  <div className="font-bold text-[#10231f] text-sm">48-hour response</div>
-                  <div className="text-xs text-[#65736f]">A senior advisor will review your submission and respond within two business days.</div>
+                  <div className="font-bold text-[#10231f] text-sm">{settings.sidebar.responseTime}</div>
+                  <div className="text-xs text-[#65736f]">{settings.sidebar.responseDesc}</div>
                 </div>
               </motion.div>
             </div>

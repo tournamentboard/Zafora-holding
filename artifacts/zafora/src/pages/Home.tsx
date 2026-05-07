@@ -1,4 +1,5 @@
-import { useListProjects, useListServices, useListContentStats, useListMethodologySteps } from "@workspace/api-client-react";
+import { useListProjects, useListServices, useListContentStats, useListMethodologySteps, useGetSiteSettings } from "@workspace/api-client-react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -68,12 +69,49 @@ const FALLBACK_STEPS = [
   { id: -6, stepNumber: 6, title: "Operations & Handover", description: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts.", iconName: "Award", displayOrder: 5, visible: true },
 ];
 
+const HERO_DEFAULTS = {
+  badge: "Strategic Infrastructure & Consulting · Est. 2025",
+  headline: "Structuring, funding, and delivering high-impact projects.",
+  subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
+  primaryBtnText: "Partner With Us",
+  primaryBtnLink: "/submit",
+  secondaryBtnText: "View Pipeline",
+  secondaryBtnLink: "/projects",
+  thirdBtnText: "Our Services",
+  thirdBtnLink: "/services",
+  featureBadge1: "Government-ready documentation",
+  featureBadge2: "PPP & funding advisory",
+  featureBadge3: "Project lifecycle governance",
+  panelCaption: "For governments, funders, and delivery partners.",
+  panelStat: "1,240+",
+  panelStatLabel: "Global inquiries",
+};
+
 export default function Home() {
   usePageTitle("Home");
   const { data: projectsData } = useListProjects({ limit: 3 });
   const { data: servicesData } = useListServices();
   const { data: contentStatsData } = useListContentStats();
   const { data: methodologyData } = useListMethodologySteps();
+  const { data: heroData } = useGetSiteSettings("hero");
+  const { data: testimonialsData } = useQuery<{ testimonials: any[] }>({
+    queryKey: ["/api/testimonials"],
+    queryFn: async () => {
+      const res = await fetch("/api/testimonials");
+      if (!res.ok) throw new Error("Failed to fetch testimonials");
+      return res.json();
+    },
+  });
+
+  const hero = (() => {
+    try {
+      const parsed = heroData?.value ? JSON.parse(heroData.value) : null;
+      if (parsed && typeof parsed === "object") return { ...HERO_DEFAULTS, ...parsed };
+    } catch {}
+    return HERO_DEFAULTS;
+  })();
+
+  const featuredTestimonial = testimonialsData?.testimonials?.find((t: any) => t.visible !== false) ?? null;
 
   const siteStats = (contentStatsData?.stats?.filter(s => s.visible) ?? []).length > 0
     ? contentStatsData!.stats.filter(s => s.visible)
@@ -104,39 +142,34 @@ export default function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#173f35] opacity-60"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#173f35]"></span>
                 </span>
-                Strategic Infrastructure &amp; Consulting · Est. 2025
+                {hero.badge}
               </motion.div>
 
               <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-7">
-                Structuring,{" "}
-                <span className="relative">
-                  <span className="relative z-10">funding,</span>
-                  <span className="absolute bottom-1 left-0 right-0 h-3 bg-[#c59b4a]/25 -z-0 rounded" />
-                </span>{" "}
-                and delivering high-impact projects.
+                {hero.headline}
               </motion.h1>
 
               <motion.p {...fadeUp(0.2)} className="text-xl md:text-2xl text-[#65736f] mb-10 max-w-xl leading-relaxed">
-                Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.
+                {hero.subheadline}
               </motion.p>
 
               <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-3 mb-10">
-                <Link href="/submit" className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                  Partner With Us <ArrowRight className="h-5 w-5" />
+                <Link href={hero.primaryBtnLink} className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                  {hero.primaryBtnText} <ArrowRight className="h-5 w-5" />
                 </Link>
-                <Link href="/projects" className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-white border border-[#e5ded3] text-[#173f35] font-bold text-base hover:border-[#173f35] hover:shadow-md transition-all">
-                  View Pipeline
+                <Link href={hero.secondaryBtnLink} className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-white border border-[#e5ded3] text-[#173f35] font-bold text-base hover:border-[#173f35] hover:shadow-md transition-all">
+                  {hero.secondaryBtnText}
                 </Link>
-                <Link href="/services" className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-md">
-                  Our Services
+                <Link href={hero.thirdBtnLink} className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-md">
+                  {hero.thirdBtnText}
                 </Link>
               </motion.div>
 
               <motion.div {...fadeUp(0.4)} className="flex flex-wrap gap-2 mb-10">
                 {[
-                  { icon: <ShieldCheck className="h-3.5 w-3.5" />, label: "Government-ready documentation" },
-                  { icon: <TrendingUp className="h-3.5 w-3.5" />, label: "PPP & funding advisory" },
-                  { icon: <Target className="h-3.5 w-3.5" />, label: "Project lifecycle governance" },
+                  { icon: <ShieldCheck className="h-3.5 w-3.5" />, label: hero.featureBadge1 },
+                  { icon: <TrendingUp className="h-3.5 w-3.5" />, label: hero.featureBadge2 },
+                  { icon: <Target className="h-3.5 w-3.5" />, label: hero.featureBadge3 },
                 ].map((item, i) => (
                   <span key={i} className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#173f35] bg-[#173f35]/8 border border-[#173f35]/15 px-3 py-1.5 rounded-full">
                     {item.icon} {item.label}
@@ -174,7 +207,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/90 via-[#10231f]/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-5 z-10">
                   <div className="text-[#c59b4a] text-xs font-bold uppercase tracking-wider mb-1">Executive Advisory</div>
-                  <h3 className="text-white font-bold text-xl leading-tight">For governments, funders, and delivery partners.</h3>
+                  <h3 className="text-white font-bold text-xl leading-tight">{hero.panelCaption}</h3>
                 </div>
                 {/* Live indicator */}
                 <div className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5">
@@ -190,8 +223,8 @@ export default function Home() {
                 {/* Stats mini card */}
                 <div className="bg-white/10 backdrop-blur border border-white/15 rounded-[18px] p-5 flex flex-col justify-center">
                   <div className="text-white/60 text-xs font-semibold mb-2">Partner Interests</div>
-                  <div className="text-4xl font-bold text-white tracking-tight mb-1">1,240+</div>
-                  <div className="text-sm font-semibold text-[#c59b4a]">Global inquiries</div>
+                  <div className="text-4xl font-bold text-white tracking-tight mb-1">{hero.panelStat}</div>
+                  <div className="text-sm font-semibold text-[#c59b4a]">{hero.panelStatLabel}</div>
                 </div>
 
                 {/* Project mini-list */}
@@ -438,7 +471,11 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-center max-w-5xl mx-auto">
             <motion.div {...fadeInView()} className="relative">
               <div className="w-full aspect-square max-w-xs mx-auto lg:mx-0 rounded-[32px] overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=600&q=80" alt="Leadership" className="w-full h-full object-cover" />
+                <img
+                  src={featuredTestimonial?.photoUrl || "https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=600&q=80"}
+                  alt={featuredTestimonial?.clientName || "Leadership"}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl p-4 shadow-xl">
                 <div className="text-[#10231f] font-bold text-lg">10+</div>
@@ -448,13 +485,15 @@ export default function Home() {
             <motion.div {...fadeInView(0.15)}>
               <div className="text-6xl text-[#c59b4a] font-serif leading-none mb-4">"</div>
               <p className="text-2xl md:text-3xl font-bold text-[#10231f] leading-snug mb-6 tracking-tight">
-                We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets.
+                {featuredTestimonial?.quote || "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets."}
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">ZH</div>
+                <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">
+                  {featuredTestimonial?.clientName ? featuredTestimonial.clientName.slice(0, 2).toUpperCase() : "ZH"}
+                </div>
                 <div>
-                  <div className="font-bold text-[#10231f]">Zafora Holding</div>
-                  <div className="text-sm text-[#65736f]">Tampa, FL, USA · Est. 2025</div>
+                  <div className="font-bold text-[#10231f]">{featuredTestimonial?.clientName || "Zafora Holding"}</div>
+                  <div className="text-sm text-[#65736f]">{featuredTestimonial?.clientTitle || "Tampa, FL, USA · Est. 2025"}</div>
                 </div>
               </div>
             </motion.div>
