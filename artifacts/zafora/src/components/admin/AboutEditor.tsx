@@ -75,10 +75,10 @@ const ABOUT_DEFAULTS = {
   teamSubheadline: "Experienced operators who have led projects, not just advised on them.",
   teamLayout: "4",
   team: [
-    { initials: "ZH", name: "Leadership", title: "Executive Team", department: "Leadership", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
-    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", department: "Advisory", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "", linkedin: "", email: "", visible: true },
-    { initials: "ZH", name: "Operations", title: "Operations Team", department: "Operations", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
-    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", department: "Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true },
+    { firstName: "Zafora", lastName: "Leadership", title: "Executive Team", department: "Leadership", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 1, status: "published" },
+    { firstName: "Zafora", lastName: "Advisory", title: "Strategic Advisors", department: "Advisory", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "", linkedin: "", email: "", visible: true, sortOrder: 2, status: "published" },
+    { firstName: "Zafora", lastName: "Operations", title: "Operations Team", department: "Operations", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 3, status: "published" },
+    { firstName: "Zafora", lastName: "Partnerships", title: "Global Partnerships", department: "Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true, sortOrder: 4, status: "published" },
   ],
   timeline: [
     { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
@@ -391,8 +391,8 @@ export default function AboutEditor() {
 
                 {/* Row 1: core identity */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <Field label="Initials" value={member.initials ?? ""} onChange={v => setArrayItem("team", i, "initials", v)} placeholder="ZH" />
-                  <Field label="Name" value={member.name ?? ""} onChange={v => setArrayItem("team", i, "name", v)} placeholder="John Smith" />
+                  <Field label="First Name" value={member.firstName ?? ""} onChange={v => setArrayItem("team", i, "firstName", v)} placeholder="John" />
+                  <Field label="Last Name" value={member.lastName ?? ""} onChange={v => setArrayItem("team", i, "lastName", v)} placeholder="Smith" />
                   <Field label="Title / Position" value={member.title ?? ""} onChange={v => setArrayItem("team", i, "title", v)} placeholder="Executive Team" />
                   <Field label="Department / Role" value={member.department ?? ""} onChange={v => setArrayItem("team", i, "department", v)} placeholder="Leadership" />
                 </div>
@@ -449,7 +449,7 @@ export default function AboutEditor() {
           })}
           {(f.team ?? []).length < 12 && (
             <button
-              onClick={() => addArrayItem("team", { initials: "ZH", name: "", title: "", department: "", bio: "", location: "", photo: "", linkedin: "", email: "", visible: true })}
+              onClick={() => addArrayItem("team", { firstName: "", lastName: "", title: "", department: "", bio: "", location: "", photo: "", linkedin: "", email: "", visible: true, sortOrder: (f.team ?? []).length + 1, status: "published" })}
               className="flex items-center gap-2 text-sm text-[#173f35] font-semibold hover:underline"
             >
               <Plus size={14} /> Add Team Member

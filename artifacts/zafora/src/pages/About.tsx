@@ -51,10 +51,10 @@ const DEFAULTS = {
   teamSubheadline: "Experienced operators who have led projects, not just advised on them.",
   teamLayout: "4",
   team: [
-    { initials: "ZH", name: "Leadership", title: "Executive Team", department: "Leadership", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
-    { initials: "ZH", name: "Advisory", title: "Strategic Advisors", department: "Advisory", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "", linkedin: "", email: "", visible: true },
-    { initials: "ZH", name: "Operations", title: "Operations Team", department: "Operations", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true },
-    { initials: "ZH", name: "Partnerships", title: "Global Partnerships", department: "Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true },
+    { firstName: "Zafora", lastName: "Leadership", title: "Executive Team", department: "Leadership", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 1, status: "published" },
+    { firstName: "Zafora", lastName: "Advisory", title: "Strategic Advisors", department: "Advisory", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global", photo: "", linkedin: "", email: "", visible: true, sortOrder: 2, status: "published" },
+    { firstName: "Zafora", lastName: "Operations", title: "Operations Team", department: "Operations", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 3, status: "published" },
+    { firstName: "Zafora", lastName: "Partnerships", title: "Global Partnerships", department: "Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true, sortOrder: 4, status: "published" },
   ],
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
@@ -317,19 +317,22 @@ export default function About() {
               .sort((a: any, b: any) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
             return (
               <div className={`grid ${gridClass} gap-5`}>
-                {visibleTeam.map((member: any, i: number) => (
+                {visibleTeam.map((member: any, i: number) => {
+                  const displayName = member.name || `${member.firstName ?? ""} ${member.lastName ?? ""}`.trim() || member.initials || "";
+                  const autoInitials = member.initials || [member.firstName, member.lastName].filter(Boolean).map((s: string) => s[0]).join("").toUpperCase() || "ZH";
+                  return (
                   <motion.div key={i} {...fade(i * 0.1)} className="bg-white rounded-2xl border border-[#e5ded3] overflow-hidden shadow-sm hover:shadow-md transition-all group">
                     {member.photo ? (
                       <div className="h-36 overflow-hidden">
-                        <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+                        <img src={member.photo} alt={displayName} className="w-full h-full object-cover" />
                       </div>
                     ) : (
                       <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-36 flex items-center justify-center`}>
-                        <span className="text-4xl font-bold text-white opacity-80">{member.initials}</span>
+                        <span className="text-4xl font-bold text-white opacity-80">{autoInitials}</span>
                       </div>
                     )}
                     <div className="p-5">
-                      <h3 className="font-bold text-[#10231f] text-base mb-0.5">{member.name}</h3>
+                      <h3 className="font-bold text-[#10231f] text-base mb-0.5">{displayName}</h3>
                       <div className="text-xs font-semibold text-[#c59b4a] mb-0.5">{member.title}</div>
                       {member.department && member.department !== member.title && (
                         <div className="text-[11px] text-[#8a958f] mb-3">{member.department}</div>
@@ -355,7 +358,8 @@ export default function About() {
                       </div>
                     </div>
                   </motion.div>
-                ))}
+                );
+                })}
               </div>
             );
           })()}
