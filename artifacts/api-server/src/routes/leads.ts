@@ -3,6 +3,7 @@ import { db, leadsTable } from "@workspace/db";
 import { eq, desc, count, and, gte } from "drizzle-orm";
 import { CreateLeadBody, ListLeadsQueryParams, UpdateLeadBody } from "@workspace/api-zod";
 import { sendInquiryNotification } from "../email";
+import { logAction } from "./audit";
 
 const router = Router();
 
@@ -51,6 +52,7 @@ router.post("/leads", async (req, res) => {
   }).returning();
   res.status(201).json(lead);
   sendInquiryNotification(lead).catch(() => {});
+  logAction("create", "CRM", `New inquiry from ${data.fullName} (${data.organization})`, { leadId: lead.id, email: data.email }).catch(() => {});
 });
 
 router.get("/leads/:id", async (req, res) => {
@@ -77,6 +79,9 @@ router.patch("/leads/:id", async (req, res) => {
   const [lead] = await db.update(leadsTable).set(updates).where(eq(leadsTable.id, id)).returning();
   if (!lead) { res.status(404).json({ error: "Not found" }); return; }
   res.json(lead);
+  if (parsed.data.status) {
+    logAction("update", "CRM", `Inquiry #${id} status changed to "${parsed.data.status}"`, { leadId: id, status: parsed.data.status }).catch(() => {});
+  }
 });
 
 export default router;

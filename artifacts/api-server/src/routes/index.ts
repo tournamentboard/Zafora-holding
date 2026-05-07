@@ -8,6 +8,7 @@ import servicesRouter from "./services";
 import contentRouter from "./content";
 import notificationsRouter from "./notifications";
 import testimonialsRouter from "./testimonials";
+import auditRouter from "./audit";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(servicesRouter);
 router.use(contentRouter);
 router.use(notificationsRouter);
 router.use(testimonialsRouter);
+router.use(auditRouter);
 
 export default router;

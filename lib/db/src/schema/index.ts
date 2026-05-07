@@ -7,3 +7,4 @@ export * from "./content_stats";
 export * from "./methodology_steps";
 export * from "./site_settings";
 export * from "./testimonials";
+export * from "./audit_logs";

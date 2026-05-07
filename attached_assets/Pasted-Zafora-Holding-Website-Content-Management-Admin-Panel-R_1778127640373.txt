@@ -1,0 +1,365 @@
+Zafora Holding — Website Content Management Admin Panel Requirements
+Full Website Management System (CMS) Requirements
+1. Project Objective
+
+Build a centralized Admin Management System (CMS) for the Zafora Holding website that allows authorized administrators to fully manage, edit, update, organize, and publish all website content dynamically without requiring direct code changes.
+
+The system must allow administrators to manage:
+
+Text content
+Images and media
+Buttons and links
+Homepage sections
+Navigation menus
+Services and features
+Branding elements
+SEO settings
+Footer content
+Contact forms
+User permissions
+Page layouts and visibility
+
+The platform should be scalable, user-friendly, secure, mobile-responsive, and designed for future expansion.
+
+2. Core System Requirements
+2.1 Admin Dashboard
+
+The system shall include a centralized admin dashboard displaying:
+
+Dashboard Widgets
+Total pages
+Total media files
+Recent edits
+Draft pages
+Published pages
+Active users/admins
+Form submissions
+Website status
+SEO warnings
+Recent activity logs
+Dashboard Features
+Quick edit shortcuts
+Publish center
+Notifications
+Search functionality
+Role-based access
+3. Authentication & Security Requirements
+3.1 Login System
+
+The platform shall support:
+
+Secure login
+Email/password authentication
+Password reset
+Session management
+Remember me functionality
+Multi-factor authentication (future-ready)
+3.2 Role-Based Access Control (RBAC)
+Required Roles
+Role	Permissions
+Super Admin	Full platform access
+Content Admin	Edit content and pages
+Media Manager	Manage images/files
+SEO Manager	Manage SEO settings
+Viewer	Read-only access
+3.3 Security Requirements
+HTTPS enforcement
+CSRF protection
+Input validation
+XSS protection
+Audit logs
+Activity tracking
+Failed login monitoring
+Permission enforcement middleware
+4. Website Content Management Requirements
+4.1 Landing Page Manager
+
+Administrators shall be able to manage all homepage sections dynamically.
+
+Editable Components
+Hero Section
+Headline
+Subheadline
+CTA buttons
+Background image/video
+Hero image
+Overlay colors
+Section visibility
+About Section
+Title
+Description
+Mission
+Vision
+Company story
+Images
+Services Section
+Service cards
+Icons
+Images
+Descriptions
+Order sorting
+Active/inactive toggle
+Features Section
+Feature title
+Description
+Icons/images
+Call-to-actions
+Statistics Section
+Numbers
+Labels
+Descriptions
+Contact Section
+Contact information
+Forms
+Maps
+Office locations
+Footer Section
+Footer links
+Social media
+Copyright
+Legal pages
+Company details
+4.2 Dynamic Section Controls
+
+Every section shall support:
+
+Create
+Edit
+Delete
+Duplicate
+Reorder
+Show/hide
+Draft mode
+Publish mode
+5. Page Management Requirements
+5.1 Page Builder
+
+Administrators shall have the ability to:
+
+Create new pages
+Edit existing pages
+Duplicate pages
+Delete pages
+Change URLs/slugs
+Set page hierarchy
+Manage layouts
+5.2 Dynamic Page Sections
+
+Each page shall support modular sections:
+
+Text blocks
+Image sections
+Video sections
+Galleries
+Feature cards
+Accordions
+Testimonials
+Contact forms
+CTA sections
+6. Rich Text Editing Requirements
+6.1 WYSIWYG Editor
+
+The CMS shall include a rich text editor supporting:
+
+Bold/italic/underline
+Headings
+Lists
+Tables
+Hyperlinks
+Embedded media
+HTML support
+Alignment controls
+7. Media Management Requirements
+7.1 Media Library
+
+Administrators shall be able to:
+
+Upload media
+Replace media
+Delete media
+Organize media
+Search media
+Preview media
+7.2 Supported Media Types
+JPG
+PNG
+SVG
+WEBP
+MP4
+PDF
+7.3 Media Features
+Drag-and-drop upload
+Image compression
+Alt text editing
+Crop/resize tools
+File size validation
+CDN-ready structure
+8. Navigation Management Requirements
+
+Administrators shall be able to:
+
+Create menu items
+Edit menu items
+Reorder navigation
+Create dropdown menus
+Enable/disable links
+Assign page links
+9. Branding Management Requirements
+
+Administrators shall manage:
+
+Logos
+Favicons
+Brand colors
+Typography
+Button styles
+Theme settings
+10. SEO Management Requirements
+10.1 Global SEO Settings
+
+Administrators shall manage:
+
+Meta titles
+Meta descriptions
+Keywords
+Open Graph settings
+Social share images
+Canonical URLs
+10.2 Per-Page SEO Controls
+
+Each page shall support:
+
+SEO title
+SEO description
+URL slug
+Search engine indexing toggle
+11. Contact & Form Management Requirements
+11.1 Form Builder
+
+Administrators shall be able to:
+
+Create forms
+Edit forms
+Add/remove fields
+Set required fields
+Configure notifications
+11.2 Form Submission Management
+
+The system shall:
+
+Store submissions
+Export submissions
+Filter submissions
+Send email notifications
+12. Publish Workflow Requirements
+12.1 Draft & Publish System
+
+The CMS shall support:
+
+Save draft
+Preview changes
+Publish live
+Scheduled publishing
+Rollback versions
+12.2 Version History
+
+The system shall track:
+
+Who edited content
+Edit timestamps
+Previous versions
+Rollback capability
+13. Audit & Activity Tracking Requirements
+
+The system shall log:
+
+Content edits
+Login activity
+Media uploads
+Publishing actions
+User changes
+14. Search Functionality Requirements
+
+The admin panel shall support:
+
+Search pages
+Search media
+Search sections
+Search users
+Search submissions
+15. Notification System Requirements
+
+The platform shall support:
+
+Publish notifications
+Form submission alerts
+User activity alerts
+Error notifications
+16. Mobile Responsiveness Requirements
+
+The admin panel must be:
+
+Mobile responsive
+Tablet compatible
+Optimized for desktop
+Cross-browser compatible
+17. Performance Requirements
+
+The CMS shall:
+
+Load pages quickly
+Optimize media delivery
+Support caching
+Minimize unnecessary API requests
+18. Technical Requirements
+Recommended Stack
+Frontend
+React / Next.js
+Backend
+Node.js / Express
+Database
+PostgreSQL
+CMS Storage
+Supabase / AWS S3 / Cloudinary
+Authentication
+JWT / Supabase Auth
+19. Database Requirements
+
+Core database entities:
+
+Users
+Roles
+Permissions
+Pages
+Sections
+Media
+Navigation
+SEO
+Forms
+Form submissions
+Audit logs
+20. API Requirements
+
+The system shall support secure APIs for:
+
+Content management
+Media uploads
+Authentication
+SEO updates
+Navigation management
+Publishing workflows
+21. Future Scalability Requirements
+
+The platform should support future expansion for:
+
+Multi-language support
+Multi-site management
+Blog/news system
+Analytics dashboard
+CRM integrations
+AI-assisted content editing
+Workflow approvals
+Team collaboration
+22. Final Goal
+
+The final system should allow Zafora Holding to fully manage and operate its website internally through an easy-to-use admin panel without depending on developers for everyday content updates.

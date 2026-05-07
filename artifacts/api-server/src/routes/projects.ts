@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db, projectsTable, projectInterestsTable } from "@workspace/db";
 import { eq, desc, count, and, ilike, sql } from "drizzle-orm";
 import { sendInterestNotification } from "../email";
+import { logAction } from "./audit";
 import {
   CreateProjectBody,
   ListProjectsQueryParams,
@@ -57,6 +58,7 @@ router.post("/projects", async (req, res) => {
     interestCount: 0,
   }).returning();
   res.status(201).json(project);
+  logAction("create", "Pipeline", `Project created: "${data.name}" (${data.country})`, { projectId: project.id }).catch(() => {});
 });
 
 router.get("/projects/:id", async (req, res) => {
@@ -91,13 +93,16 @@ router.patch("/projects/:id", async (req, res) => {
   const [project] = await db.update(projectsTable).set(updates).where(eq(projectsTable.id, id)).returning();
   if (!project) { res.status(404).json({ error: "Not found" }); return; }
   res.json(project);
+  logAction("update", "Pipeline", `Project updated: "${project.name}"`, { projectId: id }).catch(() => {});
 });
 
 router.delete("/projects/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  const [project] = await db.select({ name: projectsTable.name }).from(projectsTable).where(eq(projectsTable.id, id));
   await db.delete(projectsTable).where(eq(projectsTable.id, id));
   res.status(204).send();
+  logAction("delete", "Pipeline", `Project deleted: "${project?.name ?? `#${id}`}"`, { projectId: id }).catch(() => {});
 });
 
 router.get("/projects/:id/interests", async (req, res) => {
@@ -138,6 +143,7 @@ router.post("/projects/:id/interests", async (req, res) => {
 
   const [project] = await db.select({ name: projectsTable.name }).from(projectsTable).where(eq(projectsTable.id, projectId));
   sendInterestNotification(interest, project?.name ?? `Project #${projectId}`).catch(() => {});
+  logAction("create", "CRM", `Interest expressed by ${data.fullName} in "${project?.name ?? `Project #${projectId}`}"`, { projectId, organizaton: data.organization }).catch(() => {});
 });
 
 export default router;

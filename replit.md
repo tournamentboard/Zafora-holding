@@ -31,7 +31,7 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
 - `lib/api-spec/openapi.yaml` — OpenAPI contract (source of truth)
 - `lib/api-client-react/src/generated/` — Generated React Query hooks
 - `lib/api-zod/src/generated/api.ts` — Generated Zod schemas for server
-- `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services, content_stats, methodology_steps, site_settings, testimonials)
+- `lib/db/src/schema/` — Drizzle ORM table definitions (leads, projects, project_interests, documents, services, content_stats, methodology_steps, site_settings, testimonials, audit_logs)
 - `artifacts/zafora/src/components/admin/` — All admin panel components
 - `artifacts/zafora/src/hooks/use-page-title.ts` — Per-page document.title hook
 - `artifacts/zafora/public/` — favicon.svg, opengraph.jpg, hero assets
@@ -60,9 +60,11 @@ Admin login: `/admin` · Password: `zafora2024` (localStorage-only, MVP)
   - **Methodology** — Edit/add/delete/reorder delivery model steps
   - **Testimonials** — Add/edit/delete/toggle client quotes with photo URL support
   - **Navigation Menu** — Reorder, rename, show/hide, new-tab toggle for header nav links
+  - **Branding** — Site name, logo URL, favicon, brand colors (primary/accent/bg/footer), typography font picker
   - **Projects** — Multi-sector CRUD with tag picker
   - **Documents** — Preview modal + edit + description
   - **Inquiries** — Full CRM with lead statuses and notes
+  - **Activity Log** — Full audit trail of all admin actions (create/update/delete), filterable by category, clearable
   - **Settings** — Email notifications (Resend), password change, CSV export
 - **404 Page** — Branded with logo, navigation back to home/pipeline
 

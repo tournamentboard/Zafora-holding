@@ -34,6 +34,18 @@ const SETTING_DEFAULTS: Record<string, object> = {
     { id: "pipeline", label: "Pipeline", href: "/projects", visible: true, openNewTab: false, order: 2 },
     { id: "gov", label: "Government Review", href: "/government-review", visible: true, openNewTab: false, order: 3 },
   ],
+  branding: {
+    siteName: "Zafora Holding",
+    tagline: "Strategic Infrastructure Advisory & Development",
+    logoUrl: "",
+    faviconUrl: "",
+    primaryColor: "#173f35",
+    accentColor: "#c59b4a",
+    bgColor: "#f7f4ef",
+    footerColor: "#10231f",
+    bodyFont: "Inter",
+    headingFont: "Inter",
+  },
   hero: {
     headline: "Structuring, funding, and delivering high-impact projects.",
     subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",

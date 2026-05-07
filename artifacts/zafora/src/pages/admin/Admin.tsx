@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText,
   Eye, EyeOff, Settings, Settings2, BarChart2, Briefcase, Target,
-  ChevronDown, ChevronRight, Quote, Navigation,
+  ChevronDown, ChevronRight, Quote, Navigation, Palette, Activity,
 } from "lucide-react";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsTable from "@/components/admin/ProjectsTable";
@@ -16,11 +16,13 @@ import MethodologyManager from "@/components/admin/MethodologyManager";
 import SiteSettingsManager from "@/components/admin/SiteSettingsManager";
 import TestimonialsManager from "@/components/admin/TestimonialsManager";
 import NavigationManager from "@/components/admin/NavigationManager";
+import BrandingManager from "@/components/admin/BrandingManager";
+import AuditLogViewer from "@/components/admin/AuditLogViewer";
 import logo from "@/assets/logo.png";
 
 type TabId = "dashboard" | "leads" | "projects" | "documents" | "settings"
   | "site_settings" | "content_stats" | "services_mgr" | "methodology"
-  | "testimonials" | "navigation";
+  | "testimonials" | "navigation" | "branding" | "audit_log";
 
 type NavItem = { id: TabId; label: string; icon: React.ElementType; desc: string };
 
@@ -40,6 +42,7 @@ const SIDEBAR_GROUPS: { group: string; items: NavItem[] }[] = [
       { id: "methodology", label: "Methodology", icon: Target, desc: "Delivery model steps" },
       { id: "testimonials", label: "Testimonials", icon: Quote, desc: "Client quotes & partners" },
       { id: "navigation", label: "Navigation Menu", icon: Navigation, desc: "Header nav links & order" },
+      { id: "branding", label: "Branding", icon: Palette, desc: "Colors, logo & typography" },
     ],
   },
   {
@@ -58,6 +61,7 @@ const SIDEBAR_GROUPS: { group: string; items: NavItem[] }[] = [
   {
     group: "Admin",
     items: [
+      { id: "audit_log", label: "Activity Log", icon: Activity, desc: "Track all admin actions" },
       { id: "settings", label: "Settings", icon: Settings, desc: "Password & data export" },
     ],
   },
@@ -286,7 +290,7 @@ export default function Admin() {
 
         {/* Content */}
         <div className="flex-1 overflow-auto p-4 md:p-6">
-          {activeTab === "dashboard" && <DashboardHome />}
+          {activeTab === "dashboard" && <DashboardHome onNavigate={(tab) => setActiveTab(tab as TabId)} />}
           {activeTab === "leads" && <LeadsTable />}
           {activeTab === "projects" && <ProjectsTable />}
           {activeTab === "documents" && <DocumentsTable />}
@@ -297,6 +301,8 @@ export default function Admin() {
           {activeTab === "methodology" && <MethodologyManager />}
           {activeTab === "testimonials" && <TestimonialsManager />}
           {activeTab === "navigation" && <NavigationManager />}
+          {activeTab === "branding" && <BrandingManager />}
+          {activeTab === "audit_log" && <AuditLogViewer />}
         </div>
       </main>
     </div>
