@@ -54,6 +54,47 @@ const SERVICE_ICONS: Record<number, React.ReactNode> = {
   5: <Award className="w-7 h-7" />,
 };
 
+const HOME_STAT_ICONS: React.ReactNode[] = [
+  <DollarSign className="h-6 w-6" />,
+  <Globe className="h-6 w-6" />,
+  <Users className="h-6 w-6" />,
+  <Briefcase className="h-6 w-6" />,
+];
+
+const METHODOLOGY_ICONS: Record<string, React.ReactNode> = {
+  Target:     <Target className="h-5 w-5" />,
+  ShieldCheck:<ShieldCheck className="h-5 w-5" />,
+  DollarSign: <DollarSign className="h-5 w-5" />,
+  Handshake:  <Handshake className="h-5 w-5" />,
+  TrendingUp: <TrendingUp className="h-5 w-5" />,
+  Award:      <Award className="h-5 w-5" />,
+  Globe:      <Globe className="h-5 w-5" />,
+  Users:      <Users className="h-5 w-5" />,
+  BarChart3:  <BarChart3 className="h-5 w-5" />,
+  Briefcase:  <Briefcase className="h-5 w-5" />,
+  Building:   <Building className="h-5 w-5" />,
+};
+
+const STEP_ACCENT_COLORS = [
+  "bg-[#c59b4a]/20 border-[#c59b4a]/40 text-[#c59b4a]",
+  "bg-[#7ab3d4]/20 border-[#7ab3d4]/30 text-[#7ab3d4]",
+  "bg-[#6fbf8e]/20 border-[#6fbf8e]/30 text-[#6fbf8e]",
+  "bg-[#c59b4a]/20 border-[#c59b4a]/40 text-[#c59b4a]",
+  "bg-white/12 border-white/20 text-white/75",
+  "bg-[#c59b4a]/20 border-[#c59b4a]/40 text-[#c59b4a]",
+];
+
+const getSectorStyle = (sector: string) => {
+  const s = sector.split(",")[0].trim().toLowerCase();
+  if (s === "energy") return "bg-amber-50 text-amber-700 border-amber-200";
+  if (s === "water") return "bg-sky-50 text-sky-700 border-sky-200";
+  if (s === "transport") return "bg-violet-50 text-violet-700 border-violet-200";
+  if (s === "healthcare") return "bg-rose-50 text-rose-700 border-rose-200";
+  if (s === "digital") return "bg-teal-50 text-teal-700 border-teal-200";
+  if (s === "agriculture") return "bg-green-50 text-green-700 border-green-200";
+  return "bg-[#efe3cf] text-[#173f35] border-[#173f35]/20";
+};
+
 const FALLBACK_STATS = [
   { id: -1, label: "Project Value Advised", value: "$2.4B", suffix: "+", displayOrder: 0, visible: true },
   { id: -2, label: "African Countries Active", value: "12", suffix: "+", displayOrder: 1, visible: true },
@@ -398,8 +439,8 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {siteStats.map((s, i) => (
               <motion.div key={s.id} {...fadeInView(i * 0.08)} className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-[#c59b4a] mb-2">
-                  <BarChart3 className="h-6 w-6" />
+                <div className="w-12 h-12 rounded-xl bg-[#c59b4a]/20 border border-[#c59b4a]/30 flex items-center justify-center text-[#c59b4a] mb-2">
+                  {HOME_STAT_ICONS[i % HOME_STAT_ICONS.length]}
                 </div>
                 <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">{s.value}{s.suffix}</div>
                 <div className="text-sm font-semibold text-white/60 uppercase tracking-widest">{s.label}</div>
@@ -476,8 +517,8 @@ export default function Home() {
                 {methodologySteps.map((step, i) => (
                   <motion.div key={step.id} {...fadeInView(i * 0.07)} className="group flex gap-5">
                     <div className="flex flex-col items-center gap-2 shrink-0">
-                      <div className="w-10 h-10 rounded-xl bg-[#c59b4a]/20 border border-[#c59b4a]/30 flex items-center justify-center text-[#c59b4a]">
-                        <Target className="h-5 w-5" />
+                      <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${STEP_ACCENT_COLORS[i % STEP_ACCENT_COLORS.length]}`}>
+                        {METHODOLOGY_ICONS[step.iconName] ?? <Target className="h-5 w-5" />}
                       </div>
                       <div className="text-xs font-bold text-[#c59b4a]/60">{String(step.stepNumber).padStart(2, "0")}</div>
                     </div>
@@ -618,7 +659,7 @@ export default function Home() {
               {projectsData?.projects?.slice(0, 3).map((project, i) => (
                 <motion.div key={project.id} {...fadeInView(i * 0.08)} className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[22px] p-6 flex flex-col hover:border-[#173f35]/30 hover:shadow-md transition-all">
                   <div className="flex justify-between items-start mb-4">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#8a958f] border border-[#e5ded3] bg-white px-2 py-1 rounded-lg">
+                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getSectorStyle(project.sector)}`}>
                       {project.sector}
                     </span>
                     <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getStatusColor(project.fundingStatus)}`}>
@@ -660,6 +701,9 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fadeInView()} className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+              <Handshake className="h-3.5 w-3.5" /> Your Engagement Path
+            </div>
             <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">How would you like to engage?</h2>
             <p className="text-xl text-[#65736f]">Zafora works across the full infrastructure stakeholder ecosystem.</p>
           </motion.div>

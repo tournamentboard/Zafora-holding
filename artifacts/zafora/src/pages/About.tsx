@@ -27,10 +27,10 @@ const VALUE_ICONS = [
 ];
 
 const STAT_ICONS_ABOUT = [
-  <Calendar className="h-5 w-5" />,
-  <Globe className="h-5 w-5" />,
-  <Target className="h-5 w-5" />,
-  <Handshake className="h-5 w-5" />,
+  { icon: <Calendar className="h-5 w-5" />, bg: "bg-[#173f35]", text: "text-[#c59b4a]" },
+  { icon: <Globe className="h-5 w-5" />, bg: "bg-[#c59b4a]", text: "text-[#10231f]" },
+  { icon: <Target className="h-5 w-5" />, bg: "bg-[#385c7a]", text: "text-white" },
+  { icon: <Handshake className="h-5 w-5" />, bg: "bg-[#10231f]", text: "text-[#c59b4a]" },
 ];
 
 const TEAM_COLORS = ["bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]", "bg-[#10231f]"];
@@ -188,15 +188,17 @@ export default function About() {
 
             {/* Stats panel */}
             <motion.div {...fade(0.25)} className="grid grid-cols-2 gap-4">
-              {d.stats.map((s, i) => (
+              {d.stats.map((s, i) => {
+                const si = STAT_ICONS_ABOUT[i % STAT_ICONS_ABOUT.length];
+                return (
                 <div key={i} className="bg-white rounded-2xl border border-[#e5ded3] p-5 shadow-sm text-center">
-                  <div className="w-10 h-10 rounded-xl bg-[#173f35]/8 text-[#173f35] flex items-center justify-center mx-auto mb-3">
-                    {STAT_ICONS_ABOUT[i % STAT_ICONS_ABOUT.length]}
+                  <div className={`w-11 h-11 rounded-xl ${si.bg} ${si.text} flex items-center justify-center mx-auto mb-3 shadow-sm`}>
+                    {si.icon}
                   </div>
                   <div className="text-3xl font-bold text-[#173f35] mb-1">{s.value}</div>
                   <div className="text-xs text-[#65736f] font-medium">{s.label}</div>
                 </div>
-              ))}
+              );})}
             </motion.div>
           </div>
         </div>

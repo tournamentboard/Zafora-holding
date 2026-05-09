@@ -67,12 +67,12 @@ const STAT_ICONS = [
 ];
 
 const criteria = [
-  { title: "Legal Entity", desc: "Rigorous compliance checks and local incorporation readiness.", icon: <Shield className="h-6 w-6" />, color: "text-blue-600 bg-blue-50" },
-  { title: "Track Record", desc: "Demonstrated track record of executing similar scale infrastructure.", icon: <Activity className="h-6 w-6" />, color: "text-purple-600 bg-purple-50" },
-  { title: "Financial Strategy", desc: "Robust capital models securing long-term viability.", icon: <Target className="h-6 w-6" />, color: "text-green-600 bg-green-50" },
-  { title: "Risk Controls", desc: "Comprehensive ESG, currency, and political risk mitigation.", icon: <Scale className="h-6 w-6" />, color: "text-orange-600 bg-orange-50" },
-  { title: "Local Impact", desc: "Commitment to local content, job creation, and skills transfer.", icon: <Users className="h-6 w-6" />, color: "text-[#173f35] bg-[#f7f4ef]" },
-  { title: "Execution Model", desc: "Clear delivery pathways, supply chains, and O&M planning.", icon: <FileCheck className="h-6 w-6" />, color: "text-[#c59b4a] bg-[#efe3cf]" },
+  { title: "Legal Entity", desc: "Rigorous compliance checks and local incorporation readiness.", icon: <Shield className="h-6 w-6" />, color: "text-[#385c7a] bg-[#e6eef4] border border-[#385c7a]/15" },
+  { title: "Track Record", desc: "Demonstrated track record of executing similar scale infrastructure.", icon: <Activity className="h-6 w-6" />, color: "text-[#c59b4a] bg-[#f6ead2] border border-[#c59b4a]/20" },
+  { title: "Financial Strategy", desc: "Robust capital models securing long-term viability.", icon: <Target className="h-6 w-6" />, color: "text-[#173f35] bg-[#ddeee8] border border-[#173f35]/15" },
+  { title: "Risk Controls", desc: "Comprehensive ESG, currency, and political risk mitigation.", icon: <Scale className="h-6 w-6" />, color: "text-[#b85c4b] bg-[#f7dfd9] border border-[#b85c4b]/15" },
+  { title: "Local Impact", desc: "Commitment to local content, job creation, and skills transfer.", icon: <Users className="h-6 w-6" />, color: "text-[#173f35] bg-[#f7f4ef] border border-[#173f35]/15" },
+  { title: "Execution Model", desc: "Clear delivery pathways, supply chains, and O&M planning.", icon: <FileCheck className="h-6 w-6" />, color: "text-[#c59b4a] bg-[#efe3cf] border border-[#c59b4a]/20" },
 ];
 
 const capabilities = [

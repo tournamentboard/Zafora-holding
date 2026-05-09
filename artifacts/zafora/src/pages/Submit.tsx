@@ -178,13 +178,13 @@ export default function Submit() {
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#8a958f] mb-4">Who This Is For</h4>
                 <div className="space-y-3">
                   {[
-                    { icon: <Landmark className="h-4 w-4" />, label: "Government ministries & agencies" },
-                    { icon: <TrendingUp className="h-4 w-4" />, label: "Investors & development finance" },
-                    { icon: <Briefcase className="h-4 w-4" />, label: "Project developers & sponsors" },
-                    { icon: <Users className="h-4 w-4" />, label: "EPC contractors & operators" },
+                    { icon: <Landmark className="h-4 w-4" />, label: "Government ministries & agencies", bg: "bg-[#173f35]", text: "text-[#c59b4a]" },
+                    { icon: <TrendingUp className="h-4 w-4" />, label: "Investors & development finance", bg: "bg-[#c59b4a]", text: "text-[#10231f]" },
+                    { icon: <Briefcase className="h-4 w-4" />, label: "Project developers & sponsors", bg: "bg-[#385c7a]", text: "text-white" },
+                    { icon: <Users className="h-4 w-4" />, label: "EPC contractors & operators", bg: "bg-[#245d4e]", text: "text-white" },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-2.5 text-sm font-medium text-[#65736f]">
-                      <div className="w-7 h-7 rounded-lg bg-white border border-[#e5ded3] text-[#173f35] flex items-center justify-center">{item.icon}</div>
+                      <div className={`w-8 h-8 rounded-xl ${item.bg} ${item.text} flex items-center justify-center shrink-0 shadow-sm`}>{item.icon}</div>
                       {item.label}
                     </div>
                   ))}

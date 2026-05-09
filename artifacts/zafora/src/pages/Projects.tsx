@@ -3,7 +3,7 @@ import { useListProjects, useGetSiteSettings } from "@workspace/api-client-react
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3 } from "lucide-react";
+import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import ExpressInterestModal from "./ExpressInterestModal";
@@ -12,6 +12,27 @@ import { parseSeoSettings } from "@/hooks/use-seo-meta";
 
 const SECTORS = ["All", "Energy", "Water", "Transport", "Healthcare", "Digital"];
 const STATUSES = ["All", "Seeking Funding", "Investor Ready", "Partially Funded", "Funded"];
+
+const SECTOR_ICONS: Record<string, React.ReactNode> = {
+  Energy:     <Zap className="h-3.5 w-3.5" />,
+  Water:      <Droplets className="h-3.5 w-3.5" />,
+  Transport:  <Truck className="h-3.5 w-3.5" />,
+  Healthcare: <Stethoscope className="h-3.5 w-3.5" />,
+  Digital:    <Wifi className="h-3.5 w-3.5" />,
+  Agriculture:<Leaf className="h-3.5 w-3.5" />,
+  All:        <BarChart3 className="h-3.5 w-3.5" />,
+};
+
+const getSectorStyle = (sector: string) => {
+  const s = sector.split(",")[0].trim().toLowerCase();
+  if (s === "energy") return "bg-amber-50 text-amber-700 border-amber-200";
+  if (s === "water") return "bg-sky-50 text-sky-700 border-sky-200";
+  if (s === "transport") return "bg-violet-50 text-violet-700 border-violet-200";
+  if (s === "healthcare") return "bg-rose-50 text-rose-700 border-rose-200";
+  if (s === "digital") return "bg-teal-50 text-teal-700 border-teal-200";
+  if (s === "agriculture") return "bg-green-50 text-green-700 border-green-200";
+  return "bg-[#efe3cf] text-[#173f35] border-[#173f35]/20";
+};
 
 export default function Projects() {
   const { data: seoData } = useGetSiteSettings("seo_projects");
@@ -80,14 +101,14 @@ export default function Projects() {
                 <button
                   key={s}
                   onClick={() => setSector(s)}
-                  className={`px-4 py-2 text-sm rounded-full border transition-colors font-semibold ${
+                  className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm rounded-full border transition-all font-semibold ${
                     sector === s 
-                      ? "bg-[#173f35] text-white border-[#173f35]" 
+                      ? "bg-[#173f35] text-white border-[#173f35] shadow-md" 
                       : "bg-white text-[#65736f] border-[#e5ded3] hover:border-[#173f35]/50 hover:text-[#10231f]"
                   }`}
                   data-testid={`filter-sector-${s}`}
                 >
-                  {s}
+                  {SECTOR_ICONS[s]} {s}
                 </button>
               ))}
             </div>
@@ -147,8 +168,8 @@ export default function Projects() {
                   data-testid={`card-project-${project.id}`}
                 >
                   <div className="flex justify-between items-start mb-5">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#8a958f] border border-[#e5ded3] px-2 py-1 rounded-md">
-                      {project.sector}
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border ${getSectorStyle(project.sector)}`}>
+                      {SECTOR_ICONS[project.sector.split(",")[0].trim()] ?? null} {project.sector}
                     </span>
                     <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border ${getStatusColor(project.fundingStatus)}`}>
                       {formatStatus(project.fundingStatus)}
