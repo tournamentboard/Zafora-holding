@@ -112,20 +112,20 @@ const FALLBACK_STEPS = [
 ];
 
 const HOME_IMAGE_DEFAULTS = {
-  heroPanel: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80",
-  band1: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
-  band2: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
-  band3: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80",
-  pillar1: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=600&q=80",
-  pillar2: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80",
-  pillar3: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80",
-  engage1: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80",
-  engage2: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80",
-  engage3: "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=600&q=80",
-  collage1: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&q=80",
-  collage2: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80",
-  collage3: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=400&q=80",
-  collage4: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=80",
+  heroPanel: "https://images.pexels.com/photos/3776969/pexels-photo-3776969.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  band1: "https://images.pexels.com/photos/8761726/pexels-photo-8761726.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+  band2: "https://images.pexels.com/photos/8124369/pexels-photo-8124369.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+  band3: "https://images.pexels.com/photos/7698815/pexels-photo-7698815.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+  pillar1: "https://images.pexels.com/photos/8487797/pexels-photo-8487797.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  pillar2: "https://images.pexels.com/photos/8550496/pexels-photo-8550496.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  pillar3: "https://images.pexels.com/photos/3894383/pexels-photo-3894383.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  engage1: "https://images.pexels.com/photos/8761656/pexels-photo-8761656.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  engage2: "https://images.pexels.com/photos/30688596/pexels-photo-30688596/free-photo-of-business-meeting-in-lagos-office-setting.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  engage3: "https://images.pexels.com/photos/3680959/pexels-photo-3680959.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  collage1: "https://images.pexels.com/photos/8487795/pexels-photo-8487795.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  collage2: "https://images.pexels.com/photos/1181415/pexels-photo-1181415.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  collage3: "https://images.pexels.com/photos/5298215/pexels-photo-5298215.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  collage4: "https://images.pexels.com/photos/9301297/pexels-photo-9301297.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
 };
 
 const HERO_DEFAULTS = {

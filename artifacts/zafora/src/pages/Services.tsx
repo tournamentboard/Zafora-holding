@@ -38,17 +38,17 @@ const STAT_ICONS = [
 ];
 
 const SERVICE_IMAGE_DEFAULTS = {
-  mosaicLeft: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=600&q=80",
-  mosaicRight: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=600&q=80",
+  mosaicLeft: "https://images.pexels.com/photos/8960946/pexels-photo-8960946.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  mosaicRight: "https://images.pexels.com/photos/8123842/pexels-photo-8123842.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
 };
 
 const SERVICE_IMAGES = [
-  "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=900&q=80",
+  "https://images.pexels.com/photos/8761656/pexels-photo-8761656.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  "https://images.pexels.com/photos/30688596/pexels-photo-30688596/free-photo-of-business-meeting-in-lagos-office-setting.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  "https://images.pexels.com/photos/5298215/pexels-photo-5298215.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  "https://images.pexels.com/photos/9301297/pexels-photo-9301297.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  "https://images.pexels.com/photos/3776969/pexels-photo-3776969.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  "https://images.pexels.com/photos/33597033/pexels-photo-33597033/free-photo-of-workers-building-at-a-construction-site-in-kaduna.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
 ];
 
 const iconMap: Record<string, React.ReactNode> = {
