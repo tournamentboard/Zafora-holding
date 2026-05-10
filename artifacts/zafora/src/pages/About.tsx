@@ -162,25 +162,29 @@ export default function About() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="pt-16 pb-12 overflow-hidden" style={{ background: "linear-gradient(135deg, #f7f4ef 60%, #efe3cf 100%)" }}>
-        <div className="container mx-auto px-4 md:px-8">
+      <section className="bg-[#173f35] pt-20 pb-14 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
-              <motion.div {...fade(0)} className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-3 py-1.5 rounded-full text-xs font-semibold text-[#173f35] mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#173f35]" />
+              <motion.div {...fade(0)} className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-semibold mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#c59b4a]" />
                 {d.hero.badge}
               </motion.div>
-              <motion.h1 {...fade(0.1)} className="text-5xl md:text-6xl font-bold tracking-tight text-[#10231f] leading-[1.08] mb-6">
+              <motion.h1 {...fade(0.1)} className="text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08] mb-6">
                 {d.hero.headline}
               </motion.h1>
-              <motion.p {...fade(0.2)} className="text-xl text-[#65736f] leading-relaxed mb-10 max-w-xl">
+              <motion.p {...fade(0.2)} className="text-xl text-white/70 leading-relaxed mb-10 max-w-xl">
                 {d.hero.subheadline}
               </motion.p>
               <motion.div {...fade(0.3)} className="flex flex-wrap gap-4">
-                <Link href={d.hero.btn1Link} className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#173f35] text-white font-semibold hover:bg-[#245d4e] transition-all shadow-md">
+                <Link href={d.hero.btn1Link} className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#c59b4a] text-[#10231f] font-semibold hover:bg-[#b5893a] transition-all shadow-md">
                   {d.hero.btn1Text} <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href={d.hero.btn2Link} className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#173f35] text-[#173f35] font-semibold hover:bg-[#173f35]/5 transition-all">
+                <Link href={d.hero.btn2Link} className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/30 text-white font-semibold hover:bg-white/10 transition-all">
                   {d.hero.btn2Text}
                 </Link>
               </motion.div>
@@ -191,12 +195,12 @@ export default function About() {
               {d.stats.map((s, i) => {
                 const si = STAT_ICONS_ABOUT[i % STAT_ICONS_ABOUT.length];
                 return (
-                <div key={i} className="bg-white rounded-2xl border border-[#e5ded3] p-5 shadow-sm text-center">
+                <div key={i} className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-5 text-center">
                   <div className={`w-11 h-11 rounded-xl ${si.bg} ${si.text} flex items-center justify-center mx-auto mb-3 shadow-sm`}>
                     {si.icon}
                   </div>
-                  <div className="text-3xl font-bold text-[#173f35] mb-1">{s.value}</div>
-                  <div className="text-xs text-[#65736f] font-medium">{s.label}</div>
+                  <div className="text-3xl font-bold text-white mb-1">{s.value}</div>
+                  <div className="text-xs text-white/60 font-medium">{s.label}</div>
                 </div>
               );})}
             </motion.div>
@@ -338,12 +342,16 @@ export default function About() {
                   return (
                   <motion.div key={i} {...fade(i * 0.1)} className="bg-white rounded-2xl border border-[#e5ded3] overflow-hidden shadow-sm hover:shadow-md transition-all group">
                     {member.photo ? (
-                      <div className="h-36 overflow-hidden">
+                      <div className="h-48 overflow-hidden">
                         <img src={member.photo} alt={displayName} className="w-full h-full object-cover object-top" />
                       </div>
                     ) : (
-                      <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-36 flex items-center justify-center`}>
-                        <span className="text-4xl font-bold text-white opacity-80">{autoInitials}</span>
+                      <div className={`${TEAM_COLORS[i % TEAM_COLORS.length]} h-48 flex items-center justify-center relative overflow-hidden`}>
+                        <div className="absolute inset-0 opacity-10">
+                          <div className="absolute -top-4 -right-4 w-24 h-24 bg-white rounded-full" />
+                          <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white rounded-full" />
+                        </div>
+                        <span className="text-5xl font-bold text-white opacity-90 relative z-10">{autoInitials}</span>
                       </div>
                     )}
                     <div className="p-5">
@@ -440,7 +448,7 @@ export default function About() {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-5">{d.cta.headline}</h2>
             <p className="text-white/70 text-xl mb-7 max-w-xl mx-auto">{d.cta.subheadline}</p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href={d.cta.btn1Link} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#c59b4a] text-white font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg">
+              <Link href={d.cta.btn1Link} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg">
                 {d.cta.btn1Text} <ArrowRight className="h-5 w-5" />
               </Link>
               <Link href={d.cta.btn2Link} className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-white/30 text-white font-bold text-base hover:bg-white/10 transition-all">

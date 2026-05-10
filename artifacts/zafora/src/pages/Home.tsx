@@ -229,9 +229,6 @@ export default function Home() {
                 <Link href={hero.secondaryBtnLink} className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-white border border-[#e5ded3] text-[#173f35] font-bold text-base hover:border-[#173f35] hover:shadow-md transition-all">
                   {hero.secondaryBtnText}
                 </Link>
-                <Link href={hero.thirdBtnLink} className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-md">
-                  {hero.thirdBtnText}
-                </Link>
               </motion.div>
 
               <motion.div {...fadeUp(0.4)} className="flex flex-wrap gap-2 mb-7">
@@ -352,8 +349,8 @@ export default function Home() {
                 tag: "Delivery excellence",
               },
             ].map((item, i) => (
-              <motion.div key={i} {...fadeInView(i * 0.1)} className="relative h-72 rounded-[28px] overflow-hidden group cursor-pointer">
-                <img src={item.img} alt={item.label} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108" />
+              <motion.div key={i} {...fadeInView(i * 0.1)} className="relative h-80 rounded-[28px] overflow-hidden group cursor-pointer">
+                <img src={item.img} alt={item.label} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/85 via-[#10231f]/20 to-transparent" />
                 <div className="absolute top-4 left-4">
                   <span className="bg-[#c59b4a] text-[#10231f] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">{item.tag}</span>
@@ -518,7 +515,7 @@ export default function Home() {
                   <motion.div key={step.id} {...fadeInView(i * 0.07)} className="group flex gap-5">
                     <div className="flex flex-col items-center gap-2 shrink-0">
                       <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${STEP_ACCENT_COLORS[i % STEP_ACCENT_COLORS.length]}`}>
-                        {METHODOLOGY_ICONS[step.iconName] ?? <Target className="h-5 w-5" />}
+                        {(step.iconName ? METHODOLOGY_ICONS[step.iconName] : null) ?? <Target className="h-5 w-5" />}
                       </div>
                       <div className="text-xs font-bold text-[#c59b4a]/60">{String(step.stepNumber).padStart(2, "0")}</div>
                     </div>

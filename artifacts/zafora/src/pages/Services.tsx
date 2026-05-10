@@ -100,7 +100,7 @@ export default function Services() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="relative pt-20 pb-0 overflow-hidden bg-white">
+      <section className="relative pt-20 pb-0 overflow-hidden bg-[#f7f4ef]">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#173f35]/6 rounded-full blur-3xl" />
@@ -108,7 +108,7 @@ export default function Services() {
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center pb-12 border-b border-[#e5ded3]">
             <div>
-              <motion.div {...fadeInView()} className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
+              <motion.div {...fadeInView()} className="inline-flex items-center gap-2 bg-white border border-[#e5ded3] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
                 <Briefcase className="h-3.5 w-3.5" /> {settings.hero.badge}
               </motion.div>
               <motion.h1 {...fadeInView(0.1)} className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-6 leading-[1.06]">
@@ -124,7 +124,7 @@ export default function Services() {
                   { icon: <Target className="h-4 w-4" />, label: "End-to-end" },
                   { icon: <Users className="h-4 w-4" />, label: "45+ experts" },
                 ].map((item, i) => (
-                  <span key={i} className="inline-flex items-center gap-2 text-sm font-semibold text-[#173f35] bg-[#f7f4ef] border border-[#e5ded3] px-4 py-2 rounded-full">
+                  <span key={i} className="inline-flex items-center gap-2 text-sm font-semibold text-[#173f35] bg-white border border-[#e5ded3] px-4 py-2 rounded-full">
                     {item.icon} {item.label}
                   </span>
                 ))}
@@ -183,7 +183,7 @@ export default function Services() {
                   data-testid={`card-service-${service.id}`}
                 >
                   {/* Service image */}
-                  <div className="relative h-52 overflow-hidden">
+                  <div className="relative h-60 overflow-hidden">
                     <img
                       src={service.imageUrl || SERVICE_IMAGES[index % SERVICE_IMAGES.length]}
                       alt={service.name}
@@ -230,18 +230,21 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-white border-t border-[#e5ded3]">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="bg-gradient-to-r from-[#173f35] to-[#245d4e] text-white rounded-[36px] p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl relative overflow-hidden">
-            <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-            <div className="relative z-10 max-w-xl">
+      <section className="py-16 bg-[#173f35] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                 <TrendingUp className="h-3.5 w-3.5" /> Ready to accelerate?
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">{settings.cta.headline}</h2>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-3">{settings.cta.headline}</h2>
               <p className="text-white/70 text-lg">{settings.cta.subheadline}</p>
             </div>
-            <Link href={settings.cta.btnLink || "/submit"} className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg shrink-0 relative z-10">
+            <Link href={settings.cta.btnLink || "/submit"} className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-lg shrink-0">
               {settings.cta.btnText} <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

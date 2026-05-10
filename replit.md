@@ -82,9 +82,13 @@ Admin login: `/admin` · Default password: `zafora2024` (server-side sessions vi
 
 - Mobile-first, responsive design
 - Light cream (#f7f4ef) background + deep forest green (#173f35) primary + gold (#c59b4a) accent palette
-- Dark footer (#10231f) — 4-column: brand, navigation, services, engage CTA
+- Dark footer (#10231f) — 4-column: brand, navigation, services, engage CTA + thin gold top border (border-t-2 border-[#c59b4a]/25)
 - No emojis anywhere in the UI
-- Bigger logo (h-16 in navbar, h-24 navbar height)
+- Bigger logo (h-16 in navbar, h-20 navbar height)
+- All page heroes are dark green (bg-[#173f35]): About, Projects, Submit all use dark green section with white text + gold kicker badge (bg-white/10 text-[#c59b4a]). Government uses a full-bleed photo hero. Services uses cream (bg-[#f7f4ef]) with mosaic images.
+- All page-bottom CTA sections are dark green: About, Services, Government all use bg-[#173f35] full-bleed with gold primary button (bg-[#c59b4a] text-[#10231f]) and white outline secondary
+- CTA button pattern: primary on dark bg = bg-[#c59b4a] text-[#10231f]; secondary on dark bg = border border-white/30 text-white hover:bg-white/10
+- Leadership cards: h-48 photo area (was h-36); color-block avatars have decorative circle accents; service card images h-60 (was h-52)
 
 ## Gotchas
 

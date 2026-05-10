@@ -325,16 +325,20 @@ export default function Government() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-14 bg-white border-t border-[#e5ded3]">
-        <div className="container mx-auto px-4 md:px-8 text-center max-w-3xl">
+      <section className="py-16 bg-[#173f35] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 text-center max-w-3xl relative z-10">
           <motion.div {...fadeInView()}>
-            <h2 className="text-4xl font-bold text-[#10231f] mb-5">{s.cta.headline}</h2>
-            <p className="text-xl text-[#65736f] mb-7">{s.cta.subheadline}</p>
+            <h2 className="text-4xl font-bold text-white mb-5">{s.cta.headline}</h2>
+            <p className="text-xl text-white/70 mb-7">{s.cta.subheadline}</p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href={s.cta.btn1Link} className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-lg">
+              <Link href={s.cta.btn1Link} className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold hover:bg-[#b5893a] transition-all shadow-lg">
                 {s.cta.btn1Text} <ArrowRight className="h-5 w-5" />
               </Link>
-              <Link href={s.cta.btn2Link} className="inline-flex items-center gap-2 h-14 px-8 rounded-full border border-[#e5ded3] text-[#65736f] font-semibold hover:border-[#173f35] hover:text-[#173f35] transition-all">
+              <Link href={s.cta.btn2Link} className="inline-flex items-center gap-2 h-14 px-8 rounded-full border border-white/30 text-white font-semibold hover:bg-white/10 transition-all">
                 {s.cta.btn2Text}
               </Link>
             </div>

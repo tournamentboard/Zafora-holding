@@ -54,7 +54,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </main>
 
       {/* Full-width footer */}
-      <footer className="bg-[#10231f] text-white pt-16 pb-8 mt-auto">
+      <footer className="bg-[#10231f] text-white pt-16 pb-8 mt-auto border-t-2 border-[#c59b4a]/25">
         <div className="container mx-auto px-4 md:px-8">
 
           {/* Top grid */}

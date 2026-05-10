@@ -78,20 +78,24 @@ export default function Projects() {
   return (
     <div className="flex flex-col pb-24 bg-[#f7f4ef] min-h-screen">
       {/* Header */}
-      <section className="pt-16 pb-10">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
+      <section className="bg-[#173f35] pt-20 pb-14 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
             <BarChart3 className="h-3.5 w-3.5" /> Infrastructure Pipeline
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-4">Project Pipeline</h1>
-          <p className="text-xl text-[#65736f] max-w-2xl leading-relaxed">
+          <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tight mb-4">Project Pipeline</h1>
+          <p className="text-xl text-white/65 max-w-2xl leading-relaxed">
             Explore our curated portfolio of transformative infrastructure projects across Africa.
             All projects undergo rigorous Zafora due diligence.
           </p>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 md:px-8 pb-20">
+      <section className="container mx-auto px-4 md:px-8 pt-8 pb-20">
         <div className="bg-white rounded-[36px] p-6 md:p-10 border border-[#e5ded3] shadow-sm">
           
           {/* Filters */}

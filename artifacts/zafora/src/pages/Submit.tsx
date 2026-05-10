@@ -109,22 +109,22 @@ export default function Submit() {
     <div className="flex flex-col bg-[#f7f4ef]">
 
       {/* Hero header */}
-      <section className="relative bg-white border-b border-[#e5ded3] pt-20 pb-10 overflow-hidden">
+      <section className="relative bg-[#173f35] pt-20 pb-16 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#173f35]/6 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
         </div>
         <div className="container mx-auto px-4 md:px-8 relative z-10 text-center max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
+            className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-7">
             <Briefcase className="h-3.5 w-3.5" /> {settings.hero.badge}
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-6xl font-bold text-[#10231f] tracking-tight mb-5 leading-[1.06]">
+            className="text-5xl md:text-6xl font-bold text-white tracking-tight mb-5 leading-[1.06]">
             {settings.hero.headline}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-[#65736f] leading-relaxed">
+            className="text-xl text-white/70 leading-relaxed">
             {settings.hero.subheadline}
           </motion.p>
         </div>
