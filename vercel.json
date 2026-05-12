@@ -1,6 +1,10 @@
 {
-  "buildCommand": "cd artifacts/zafora && npm run build",
+  "buildCommand": "cd artifacts/zafora && npm install && npm run build",
   "outputDirectory": "artifacts/zafora/dist/public",
-  "installCommand": "npm install",
-  "framework": null
+  "installCommand": "echo 'install handled by buildCommand'",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!assets|favicon|opengraph).*)", "destination": "/index.html" }
+  ]
 }
