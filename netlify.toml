@@ -1,9 +1,9 @@
 [build]
-  base      = "artifacts/zafora"
-  command   = "npm install && npm run build"
-  publish   = "dist/public"
+base = "artifacts/zafora"
+command = "pnpm install && pnpm run build"
+publish = "dist/public"
 
 [[redirects]]
-  from   = "/*"
-  to     = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
