@@ -41,7 +41,7 @@ const DEFAULT_SETTINGS = {
     subheadline: "Begin with a confidential briefing. Our senior advisors will assess your project and propose the most bankable structure.",
     btn1Text: "Start a Confidential Briefing",
     btn1Link: "/submit?type=government",
-    btn2Text: "View Active Projects",
+    btn2Text: "View Pipeline",
     btn2Link: "/projects",
   },
   sidebar: {

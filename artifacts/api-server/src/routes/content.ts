@@ -60,8 +60,8 @@ const SETTING_DEFAULTS: Record<string, object> = {
     featureBadge2: "PPP & funding advisory",
     featureBadge3: "Project lifecycle governance",
     panelCaption: "For governments, funders, and delivery partners.",
-    panelStat: "Active",
-    panelStatLabel: "Pipeline in Motion",
+    panelStat: "Open",
+    panelStatLabel: "Accepting Mandates",
   },
   services_page: {
     hero: {
@@ -108,7 +108,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
       subheadline: "Begin with a confidential briefing. Our senior advisors will assess your project and propose the most bankable structure.",
       btn1Text: "Start a Confidential Briefing",
       btn1Link: "/submit?type=government",
-      btn2Text: "View Active Projects",
+      btn2Text: "View Pipeline",
       btn2Link: "/projects",
     },
     sidebar: {
