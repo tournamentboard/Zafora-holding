@@ -36,7 +36,7 @@ export default function Navbar() {
   })();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)", backdropFilter: "blur(16px)" }}>
+    <nav className="relative w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)" }}>
       <div className="container mx-auto px-4 md:px-8 h-40 flex items-center justify-between">
         <Link href="/" className="flex flex-col items-start" style={{ gap: "5px" }}>
           {/* crop top 75% of image only — hides the baked-in tiny tagline at bottom */}
