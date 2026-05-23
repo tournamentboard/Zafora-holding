@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import ExpressInterestModal from "../ExpressInterestModal";
+import ExpressInterestModal from "@/src/modules/public/modals/ExpressInterestModal";
 
 const SECTORS = ["All", "Energy", "Water", "Transport", "Healthcare", "Digital"];
 const STATUSES = ["All", "Seeking Funding", "Investor Ready", "Partially Funded", "Funded"];

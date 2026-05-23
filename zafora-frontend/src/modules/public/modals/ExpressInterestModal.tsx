@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useExpressInterest } from "@/src/lib/api-client-react";
 import { useToast } from "@/src/hooks/use-toast";
@@ -7,7 +9,7 @@ import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 
-export default function ExpressInterestModal({ projectId, onClose }: { projectId: number, onClose: () => void }) {
+export default function ExpressInterestModal({ projectId, onClose }: { projectId: number; onClose: () => void }) {
   const { toast } = useToast();
   const expressInterest = useExpressInterest();
   const [loading, setLoading] = useState(false);
@@ -15,7 +17,7 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const formData = new FormData(e.currentTarget);
     const data = {
       projectId,
@@ -39,7 +41,7 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
       toast({
         title: "Error",
         description: "Failed to submit. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -55,7 +57,7 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
             Provide your details to request more information or express investment intent.
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-3 mt-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
@@ -67,7 +69,7 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
               <Input id="organization" name="organization" required placeholder="Acme Capital" className="bg-[#f7f4ef] border-[#e5ded3] h-9 text-sm rounded-lg focus-visible:ring-[#173f35]" />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-[#10231f] font-semibold text-xs">Email</Label>
@@ -81,10 +83,10 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
 
           <div className="space-y-1.5">
             <Label htmlFor="roleType" className="text-[#10231f] font-semibold text-xs">Your Role</Label>
-            <select 
-              id="roleType" 
-              name="roleType" 
-              required 
+            <select
+              id="roleType"
+              name="roleType"
+              required
               className="flex h-9 w-full rounded-lg border border-[#e5ded3] bg-[#f7f4ef] px-3 py-1.5 text-sm text-[#10231f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#173f35]"
             >
               <option value="investor">Investor / Financier</option>
@@ -98,10 +100,10 @@ export default function ExpressInterestModal({ projectId, onClose }: { projectId
 
           <div className="space-y-1.5">
             <Label htmlFor="message" className="text-[#10231f] font-semibold text-xs">Message (optional)</Label>
-            <Textarea 
-              id="message" 
-              name="message" 
-              placeholder="Any specific questions or areas of interest?" 
+            <Textarea
+              id="message"
+              name="message"
+              placeholder="Any specific questions or areas of interest?"
               className="bg-[#f7f4ef] border-[#e5ded3] min-h-[72px] text-sm rounded-lg p-2.5 focus-visible:ring-[#173f35]"
             />
           </div>

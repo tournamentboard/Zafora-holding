@@ -1,65 +1,20 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useListDocuments, useCreateDocument, useDeleteDocument, useUpdateDocument } from "@/src/lib/api-client-react";
 import { useToast } from "@/src/hooks/use-toast";
+import PreviewModal from "@/src/modules/admin/modals/PreviewModal";
+import {
+  DOC_TYPES,
+  VISIBILITY_OPTIONS,
+  getDocType,
+  getVisibility,
+  getPreviewUrl,
+} from "@/src/modules/admin/documents/constants";
 import {
   Plus, Trash2, X, FileText, Lock, Globe, Users, Building2,
   Eye, Pencil, ExternalLink, Download, ChevronDown, FileCheck,
   BookOpen, Info
 } from "lucide-react";
 import { format } from "date-fns";
-
-const DOC_TYPES = [
-  { value: "capability_statement", label: "Capability Statement", icon: <FileCheck className="h-4 w-4" /> },
-  { value: "case_study", label: "Case Study", icon: <BookOpen className="h-4 w-4" /> },
-  { value: "compliance", label: "Compliance Document", icon: <Lock className="h-4 w-4" /> },
-  { value: "teaser", label: "Project Teaser", icon: <FileText className="h-4 w-4" /> },
-  { value: "proposal", label: "Proposal", icon: <FileText className="h-4 w-4" /> },
-  { value: "report", label: "Report / Analysis", icon: <Info className="h-4 w-4" /> },
-  { value: "other", label: "Other", icon: <FileText className="h-4 w-4" /> },
-];
-
-const VISIBILITY_OPTIONS = [
-  { value: "public", label: "Everyone can see it", icon: <Globe className="h-4 w-4" />, color: "bg-green-100 text-green-700" },
-  { value: "government_only", label: "Government only", icon: <Building2 className="h-4 w-4" />, color: "bg-blue-100 text-blue-700" },
-  { value: "investor_only", label: "Investors only", icon: <Users className="h-4 w-4" />, color: "bg-purple-100 text-purple-700" },
-  { value: "admin_only", label: "Only you (admin)", icon: <Lock className="h-4 w-4" />, color: "bg-gray-100 text-gray-600" },
-];
-
-function getDocType(value: string) {
-  return DOC_TYPES.find(d => d.value === value) || { label: value, icon: <FileText className="h-4 w-4" /> };
-}
-
-function getVisibility(value: string) {
-  return VISIBILITY_OPTIONS.find(v => v.value === value) || { label: value, icon: <Globe className="h-4 w-4" />, color: "bg-gray-100 text-gray-600" };
-}
-
-// Transform various file URLs into embeddable preview URLs
-function getPreviewUrl(fileUrl: string): string | null {
-  if (!fileUrl) return null;
-  try {
-    const url = new URL(fileUrl);
-    // Google Drive: /file/d/FILE_ID/view → /file/d/FILE_ID/preview
-    if (url.hostname.includes("drive.google.com")) {
-      return fileUrl.replace(/\/view(\?.*)?$/, "/preview").replace(/\/edit(\?.*)?$/, "/preview");
-    }
-    // Dropbox: ?dl=0 or ?dl=1 → raw=1
-    if (url.hostname.includes("dropbox.com")) {
-      url.searchParams.set("raw", "1");
-      return url.toString().replace("www.dropbox.com", "dl.dropboxusercontent.com");
-    }
-    // OneDrive share link
-    if (url.hostname.includes("1drv.ms") || url.hostname.includes("onedrive.live.com")) {
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
-    }
-    // Direct PDF
-    if (fileUrl.toLowerCase().endsWith(".pdf") || url.searchParams.has("export=download")) {
-      return fileUrl;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
 
 // ── Document Form ──────────────────────────────────────────────────
 function DocumentForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
