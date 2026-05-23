@@ -1,19 +1,19 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/src/components/ui/toaster";
+import { TooltipProvider } from "@/src/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
-import Layout from "./components/layout/Layout";
-import ScrollToTop from "./components/ScrollToTop";
-import { ENVS_VARIABLES } from "./lib/ENVS";
+import Layout from "../components/layout/Layout";
+import ScrollToTop from "../components/ScrollToTop";
+import { ENVS_VARIABLES } from "../lib/ENVS";
 
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Services from "./pages/Services";
-import Projects from "./pages/Projects";
-import Government from "./pages/Government";
-import Submit from "./pages/Submit";
-import Admin from "./pages/admin/Admin";
+import Home from "./Home";
+import About from "./About";
+import Services from "./services/page";
+import Projects from "./Projects";
+import Government from "./government/page";
+import Submit from "./submit/page";
+import Admin from "./admin/page";
 
 const queryClient = new QueryClient();
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useListLeads, useUpdateLead } from "@workspace/api-client-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/src/hooks/use-toast";
 import { X, Mail, Phone, Building2, MapPin, MessageSquare, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 

@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { usePageTitle } from "@/hooks/use-page-title";
-import { parseSeoSettings } from "@/hooks/use-seo-meta";
+import { usePageTitle } from "@/src/hooks/use-page-title";
+import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
 import { useGetSiteSettings } from "@workspace/api-client-react";
 import {
   Shield, FileCheck, Scale, Users, Target, Activity,

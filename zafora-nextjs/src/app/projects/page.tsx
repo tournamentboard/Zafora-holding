@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useListProjects, useGetSiteSettings } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/src/components/ui/button";
+import { Skeleton } from "@/src/components/ui/skeleton";
 import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/src/components/ui/input";
 import { motion } from "framer-motion";
 import ExpressInterestModal from "./ExpressInterestModal";
-import { usePageTitle } from "@/hooks/use-page-title";
-import { parseSeoSettings } from "@/hooks/use-seo-meta";
+import { usePageTitle } from "@/src/hooks/use-page-title";
+import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
 
 const SECTORS = ["All", "Energy", "Water", "Transport", "Healthcare", "Digital"];
 const STATUSES = ["All", "Seeking Funding", "Investor Ready", "Partially Funded", "Funded"];

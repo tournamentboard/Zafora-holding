@@ -5,20 +5,20 @@ import {
   Eye, EyeOff, Settings, Settings2, BarChart2, Briefcase, Target,
   ChevronDown, ChevronRight, Quote, Navigation, Palette, Activity, Users,
 } from "lucide-react";
-import LeadsTable from "@/components/admin/LeadsTable";
-import ProjectsTable from "@/components/admin/ProjectsTable";
-import DashboardHome from "@/components/admin/DashboardHome";
-import DocumentsTable from "@/components/admin/DocumentsTable";
-import SettingsPanel from "@/components/admin/SettingsPanel";
-import ContentStatsManager from "@/components/admin/ContentStatsManager";
-import ServicesManager from "@/components/admin/ServicesManager";
-import MethodologyManager from "@/components/admin/MethodologyManager";
-import SiteSettingsManager from "@/components/admin/SiteSettingsManager";
-import TestimonialsManager from "@/components/admin/TestimonialsManager";
-import NavigationManager from "@/components/admin/NavigationManager";
-import BrandingManager from "@/components/admin/BrandingManager";
-import AuditLogViewer from "@/components/admin/AuditLogViewer";
-import TeamManager from "@/components/admin/TeamManager";
+import LeadsTable from "@/src/components/admin/LeadsTable";
+import ProjectsTable from "@/src/components/admin/ProjectsTable";
+import DashboardHome from "@/src/components/admin/DashboardHome";
+import DocumentsTable from "@/src/components/admin/DocumentsTable";
+import SettingsPanel from "@/src/components/admin/SettingsPanel";
+import ContentStatsManager from "@/src/components/admin/ContentStatsManager";
+import ServicesManager from "@/src/components/admin/ServicesManager";
+import MethodologyManager from "@/src/components/admin/MethodologyManager";
+import SiteSettingsManager from "@/src/components/admin/SiteSettingsManager";
+import TestimonialsManager from "@/src/components/admin/TestimonialsManager";
+import NavigationManager from "@/src/components/admin/NavigationManager";
+import BrandingManager from "@/src/components/admin/BrandingManager";
+import AuditLogViewer from "@/src/components/admin/AuditLogViewer";
+import TeamManager from "@/src/components/admin/TeamManager";
 import logo from "@/assets/logo.png";
 
 type TabId = "dashboard" | "leads" | "projects" | "documents" | "settings"

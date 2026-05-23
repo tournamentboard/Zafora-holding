@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/src/hooks/use-toast";
 import {
   Plus, Trash2, Check, GripVertical, Eye, EyeOff,
   Navigation, Loader2, ExternalLink, X, ChevronUp, ChevronDown

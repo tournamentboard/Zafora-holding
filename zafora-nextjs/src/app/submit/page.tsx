@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useCreateLead, useGetSiteSettings } from "@workspace/api-client-react";
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/src/hooks/use-toast";
+import { Button } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
+import { Label } from "@/src/components/ui/label";
+import { Textarea } from "@/src/components/ui/textarea";
 import { motion } from "framer-motion";
-import { usePageTitle } from "@/hooks/use-page-title";
-import { parseSeoSettings } from "@/hooks/use-seo-meta";
+import { usePageTitle } from "@/src/hooks/use-page-title";
+import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
 import {
   ShieldCheck, Clock, Users, Globe, CheckCircle2, ArrowRight,
   Lock, Star, TrendingUp, Briefcase, Landmark,
