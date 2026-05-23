@@ -67,8 +67,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               <img
                 src={logo}
                 alt="Zafora Holding"
-                className="h-14 w-auto object-contain mb-5"
-                style={{ filter: "brightness(0) invert(1)" }}
+                className="h-20 w-auto object-contain mb-5"
+                style={{ filter: "brightness(0) invert(1)", imageRendering: "auto" }}
               />
               <p className="text-white/55 text-sm leading-relaxed mb-6">
                 {footer.description}

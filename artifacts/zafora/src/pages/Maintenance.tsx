@@ -12,7 +12,7 @@ export default function Maintenance({ headline, message, estimatedTime, contactE
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-lg text-center">
-        <img src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-10 opacity-80" />
+        <img src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-10 opacity-80" style={{ imageRendering: "auto" }} />
 
         <div className="inline-flex items-center gap-2 bg-[#173f35]/10 text-[#173f35] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-8">
           <Clock size={11} /> Scheduled Maintenance
