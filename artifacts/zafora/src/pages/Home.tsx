@@ -96,10 +96,10 @@ const getSectorStyle = (sector: string) => {
 };
 
 const FALLBACK_STATS = [
-  { id: -1, label: "Project Value Advised", value: "$2.4B", suffix: "+", displayOrder: 0, visible: true },
-  { id: -2, label: "African Countries Active", value: "12", suffix: "+", displayOrder: 1, visible: true },
-  { id: -3, label: "Client Retention Rate", value: "95", suffix: "%", displayOrder: 2, visible: true },
-  { id: -4, label: "Infrastructure Sectors", value: "6", suffix: "", displayOrder: 3, visible: true },
+  { id: -1, label: "Regional Coverage", value: "Pan-African", suffix: "", displayOrder: 0, visible: true },
+  { id: -2, label: "Project Lifecycle", value: "End-to-End", suffix: "", displayOrder: 1, visible: true },
+  { id: -3, label: "Infrastructure Sectors", value: "6", suffix: "", displayOrder: 2, visible: true },
+  { id: -4, label: "Core Service Pillars", value: "3", suffix: "", displayOrder: 3, visible: true },
 ];
 
 const FALLBACK_STEPS = [
@@ -142,8 +142,8 @@ const HERO_DEFAULTS = {
   featureBadge2: "PPP & funding advisory",
   featureBadge3: "Project lifecycle governance",
   panelCaption: "For governments, funders, and delivery partners.",
-  panelStat: "1,240+",
-  panelStatLabel: "Global inquiries",
+  panelStat: "Active",
+  panelStatLabel: "Pipeline in Motion",
 };
 
 export default function Home() {
@@ -288,7 +288,7 @@ export default function Home() {
               <div className="grid grid-cols-[1fr_1.8fr] gap-4 relative z-10">
                 {/* Stats mini card */}
                 <div className="bg-white/10 backdrop-blur border border-white/15 rounded-[18px] p-5 flex flex-col justify-center">
-                  <div className="text-white/60 text-xs font-semibold mb-2">Partner Interests</div>
+                  <div className="text-white/60 text-xs font-semibold mb-2">Pipeline Status</div>
                   <div className="text-4xl font-bold text-white tracking-tight mb-1">{hero.panelStat}</div>
                   <div className="text-sm font-semibold text-[#c59b4a]">{hero.panelStatLabel}</div>
                 </div>

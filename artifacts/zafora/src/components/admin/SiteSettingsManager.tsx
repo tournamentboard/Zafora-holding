@@ -130,7 +130,7 @@ function HeroEditor() {
           <FieldRow label="Feature Badge 2" value={form.featureBadge2 ?? ""} onChange={v => set("featureBadge2", v)} placeholder="PPP & funding advisory" />
           <FieldRow label="Feature Badge 3" value={form.featureBadge3 ?? ""} onChange={v => set("featureBadge3", v)} placeholder="Project lifecycle governance" />
           <FieldRow label="Panel Caption" value={form.panelCaption ?? ""} onChange={v => set("panelCaption", v)} placeholder="For governments, funders, and delivery partners." />
-          <FieldRow label="Panel Stat Number" value={form.panelStat ?? ""} onChange={v => set("panelStat", v)} placeholder="1,240+" />
+          <FieldRow label="Panel Stat Number" value={form.panelStat ?? ""} onChange={v => set("panelStat", v)} placeholder="Active" />
           <FieldRow label="Panel Stat Label" value={form.panelStatLabel ?? ""} onChange={v => set("panelStatLabel", v)} placeholder="Global inquiries" />
         </div>
       </div>

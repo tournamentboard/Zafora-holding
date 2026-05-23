@@ -7,10 +7,10 @@ const router = Router();
 // ── Default seed data ──────────────────────────────────────────────
 
 const DEFAULT_STATS = [
-  { label: "Project Value Advised", value: "$2.4B", suffix: "+", description: "Total value of infrastructure projects advised", iconName: "DollarSign", displayOrder: 0, visible: true },
-  { label: "African Countries Active", value: "12", suffix: "+", description: "Countries across the continent where Zafora operates", iconName: "Globe", displayOrder: 1, visible: true },
-  { label: "Client Retention Rate", value: "95", suffix: "%", description: "Percentage of clients who continue working with us", iconName: "Award", displayOrder: 2, visible: true },
-  { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Specialized sectors we cover end-to-end", iconName: "Briefcase", displayOrder: 3, visible: true },
+  { label: "Regional Coverage", value: "Pan-African", suffix: "", description: "Infrastructure advisory spanning multiple African markets", iconName: "Globe", displayOrder: 0, visible: true },
+  { label: "Project Lifecycle", value: "End-to-End", suffix: "", description: "From concept and structuring through to delivery and operations", iconName: "TrendingUp", displayOrder: 1, visible: true },
+  { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Specialized sectors we cover end-to-end", iconName: "Briefcase", displayOrder: 2, visible: true },
+  { label: "Core Service Pillars", value: "3", suffix: "", description: "Advisory · Capital · Delivery", iconName: "Award", displayOrder: 3, visible: true },
 ];
 
 const DEFAULT_STEPS = [
@@ -60,8 +60,8 @@ const SETTING_DEFAULTS: Record<string, object> = {
     featureBadge2: "PPP & funding advisory",
     featureBadge3: "Project lifecycle governance",
     panelCaption: "For governments, funders, and delivery partners.",
-    panelStat: "1,240+",
-    panelStatLabel: "Global inquiries",
+    panelStat: "Active",
+    panelStatLabel: "Pipeline in Motion",
   },
   services_page: {
     hero: {
@@ -70,9 +70,9 @@ const SETTING_DEFAULTS: Record<string, object> = {
       badge: "Six Specialized Practices",
     },
     stats: [
-      { value: "$2.4B+", label: "Value Structured" },
-      { value: "12+", label: "Countries" },
-      { value: "45+", label: "Professionals" },
+      { value: "6", label: "Infrastructure Sectors" },
+      { value: "Pan-African", label: "Regional Reach" },
+      { value: "End-to-End", label: "Project Lifecycle" },
       { value: "100%", label: "Confidential" },
     ],
     cta: {
@@ -93,10 +93,10 @@ const SETTING_DEFAULTS: Record<string, object> = {
       btn2Link: "/submit",
     },
     stats: [
-      { value: "12+", label: "Countries Served" },
-      { value: "$2.4B+", label: "Projects Structured" },
+      { value: "Pan-African", label: "Regional Coverage" },
+      { value: "End-to-End", label: "Project Delivery" },
       { value: "100%", label: "DFI-Compatible" },
-      { value: "10+", label: "Years Experience" },
+      { value: "6", label: "Infrastructure Sectors" },
     ],
     capability: {
       headline: "The critical bridge between state ambition and global capital.",
@@ -138,7 +138,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
         "No-obligation preliminary assessment",
         "Direct DFI and investor connections",
         "Full confidentiality guaranteed",
-        "Active in 12+ African countries",
+        "Pan-African infrastructure focus",
       ],
       responseTime: "48-hour response",
       responseDesc: "A senior advisor will review your submission and respond within two business days.",

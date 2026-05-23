@@ -26,10 +26,10 @@ const DEFAULT_SETTINGS = {
     btn2Link: "/submit",
   },
   stats: [
-    { value: "12+", label: "Countries Served" },
-    { value: "$2.4B+", label: "Projects Structured" },
+    { value: "Pan-African", label: "Regional Coverage" },
+    { value: "End-to-End", label: "Project Delivery" },
     { value: "100%", label: "DFI-Compatible" },
-    { value: "10+", label: "Years Experience" },
+    { value: "6", label: "Infrastructure Sectors" },
   ],
   capability: {
     headline: "The critical bridge between state ambition and global capital.",
