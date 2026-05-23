@@ -1,1 +1,7 @@
-/** Admin projects module — feature UI added in F9 */
+export {
+  useAdminProjects,
+  useCreateProject,
+  useUpdateProject,
+  useDeleteProject,
+  adminProjectKeys,
+} from "./services/projects.service";

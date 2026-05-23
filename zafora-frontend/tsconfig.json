@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/src/*": ["./src/*"],
-      "react-hook-form": ["./node_modules/react-hook-form/dist/index.d.ts"]
+      "@/src/*": ["./src/*"]
     }
   },
   "include": [
@@ -31,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/lib/api-spec", "src/lib/db", "src/lib/api-zod", "src/lib/object-storage-web"]
 }

@@ -1,23 +1,40 @@
 "use client";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-
-import ScrollToTop from "../components/ScrollToTop";
+import { Toaster } from "sonner";
+import ScrollToTop from "@/src/components/ScrollToTop";
 import { TooltipProvider } from "@/src/components/ui/tooltip";
-import { Toaster } from "@/src/components/ui/toaster";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    },
+  },
+});
 
-function TanstackQueryProvider({ children }: { children: React.ReactNode }) {
+export default function TanstackQueryProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ScrollToTop />
         {children}
-        <Toaster />
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          toastOptions={{
+            classNames: {
+              toast: "rounded-xl border-[#e5ded3] shadow-lg",
+            },
+          }}
+        />
       </TooltipProvider>
     </QueryClientProvider>
   );
 }
-
-export default TanstackQueryProvider;
