@@ -571,13 +571,25 @@ export default function Admin() {
             </div>
             <p className="text-[10px] text-[#8a958f] hidden md:block leading-tight">{activeTabInfo?.desc}</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-colors"
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden md:inline text-sm font-medium">Sign Out</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-[#173f35] bg-[#173f35]/8 hover:bg-[#efe3cf] transition-colors"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              <span className="hidden sm:inline">View Website</span>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden md:inline text-sm font-medium">Sign Out</span>
+            </button>
+          </div>
         </header>
 
         {/* Mobile tab bar */}

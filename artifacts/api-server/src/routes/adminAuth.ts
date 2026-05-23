@@ -73,8 +73,8 @@ router.post("/admin/auth/setup", async (req, res) => {
     res.status(400).json({ error: "Password is required." });
     return;
   }
-  if (newPassword.length < 8) {
-    res.status(400).json({ error: "Password must be at least 8 characters." });
+  if (newPassword.length < 4) {
+    res.status(400).json({ error: "Password must be at least 4 characters." });
     return;
   }
   if (newPassword !== confirmPassword) {
@@ -151,8 +151,8 @@ router.post("/admin/auth/change-password", async (req, res) => {
     return;
   }
 
-  if (newPassword.length < 8) {
-    res.status(400).json({ error: "New password must be at least 8 characters." });
+  if (newPassword.length < 4) {
+    res.status(400).json({ error: "New password must be at least 4 characters." });
     return;
   }
   if (confirmPassword && newPassword !== confirmPassword) {
@@ -185,8 +185,8 @@ router.post("/admin/auth/reset-password", async (req, res) => {
     res.status(400).json({ error: "New password is required." });
     return;
   }
-  if (newPassword.length < 8) {
-    res.status(400).json({ error: "Password must be at least 8 characters." });
+  if (newPassword.length < 4) {
+    res.status(400).json({ error: "Password must be at least 4 characters." });
     return;
   }
   if (newPassword !== confirmPassword) {
