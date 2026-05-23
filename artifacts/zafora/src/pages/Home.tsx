@@ -794,12 +794,12 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
                 <Building className="h-3.5 w-3.5" /> Who We Are
               </div>
-              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A global infrastructure and strategic solutions company.</h2>
+              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A U.S.-based advisory firm purpose-built for African infrastructure.</h2>
               <p className="text-lg text-[#65736f] leading-relaxed mb-6">
-                Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built to bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions.
+                Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was established to close the gap between government infrastructure ambition and the capital, structure, and execution required to bring projects to life.
               </p>
               <p className="text-lg text-[#65736f] leading-relaxed mb-8">
-                We support public and private sector initiatives across Africa, the Americas, the Caribbean, and emerging markets worldwide — connecting innovation with scalable development opportunities.
+                We operate at the intersection of public policy and private capital — structuring projects that attract DFI and institutional funding, meet international compliance standards, and deliver measurable impact across Africa, the Americas, and the Caribbean.
               </p>
               <Link href="/about" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md">
                 Our Full Story <ArrowRight className="h-4 w-4" />
