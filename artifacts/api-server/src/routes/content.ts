@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, contentStatsTable, methodologyStepsTable, siteSettingsTable } from "@workspace/db";
+import { db, contentStatsTable, methodologyStepsTable, siteSettingsTable, faqsTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
 
 const router = Router();
@@ -178,6 +178,40 @@ const SETTING_DEFAULTS: Record<string, object> = {
     keywords: "infrastructure projects, Africa pipeline, investment opportunities, project finance",
     ogTitle: "Zafora Holding Project Pipeline",
     ogDescription: "Curated infrastructure projects across Africa.",
+  },
+  announcement_bar: {
+    enabled: false,
+    message: "Welcome to Zafora Holding",
+    link: "",
+    linkText: "Learn more",
+    dismissible: true,
+    bgColor: "#173f35",
+    textColor: "#ffffff",
+  },
+  maintenance_mode: {
+    enabled: false,
+    headline: "We'll be back soon.",
+    message: "We're performing scheduled maintenance. Please check back shortly.",
+    showContactEmail: true,
+    estimatedTime: "",
+  },
+  legal_privacy: {
+    title: "Privacy Policy",
+    lastUpdated: "January 2025",
+    content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
+  },
+  legal_terms: {
+    title: "Terms of Service",
+    lastUpdated: "January 2025",
+    content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+  },
+  section_visibility: {
+    home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
+    about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
+    services: { hero: true, stats: true, cards: true, cta: true },
+    projects: { hero: true, filter: true, grid: true },
+    government: { hero: true, stats: true, capability: true, framework: true, cta: true },
+    submit: { hero: true, form: true, sidebar: true },
   },
   about: {
     hero: {
@@ -370,6 +404,49 @@ router.patch("/content/settings/:key", async (req, res) => {
     const [updated] = await db.update(siteSettingsTable).set({ value }).where(eq(siteSettingsTable.key, key)).returning();
     res.json(updated);
   }
+});
+
+// ── FAQs ───────────────────────────────────────────────────────────
+
+router.get("/content/faqs", async (_req, res) => {
+  const faqs = await db.select().from(faqsTable).orderBy(asc(faqsTable.displayOrder));
+  res.json({ faqs });
+});
+
+router.post("/content/faqs", async (req, res) => {
+  const body = req.body as any;
+  const [faq] = await db.insert(faqsTable).values({
+    question: body.question,
+    answer: body.answer,
+    category: body.category ?? "general",
+    page: body.page ?? "general",
+    displayOrder: body.displayOrder ?? 0,
+    visible: body.visible ?? true,
+  }).returning();
+  res.status(201).json(faq);
+});
+
+router.patch("/content/faqs/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  const body = req.body as any;
+  const [faq] = await db.update(faqsTable).set({
+    ...(body.question !== undefined && { question: body.question }),
+    ...(body.answer !== undefined && { answer: body.answer }),
+    ...(body.category !== undefined && { category: body.category }),
+    ...(body.page !== undefined && { page: body.page }),
+    ...(body.displayOrder !== undefined && { displayOrder: body.displayOrder }),
+    ...(body.visible !== undefined && { visible: body.visible }),
+  }).where(eq(faqsTable.id, id)).returning();
+  if (!faq) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(faq);
+});
+
+router.delete("/content/faqs/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  await db.delete(faqsTable).where(eq(faqsTable.id, id));
+  res.status(204).send();
 });
 
 export default router;

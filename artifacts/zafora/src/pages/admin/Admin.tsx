@@ -4,6 +4,7 @@ import {
   Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText,
   Eye, EyeOff, Settings, Settings2, BarChart2, Briefcase, Target,
   ChevronDown, ChevronRight, Quote, Navigation, Palette, Activity, Users,
+  Megaphone, ShieldAlert, Scale, HelpCircle, Layout,
 } from "lucide-react";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsTable from "@/components/admin/ProjectsTable";
@@ -19,11 +20,18 @@ import NavigationManager from "@/components/admin/NavigationManager";
 import BrandingManager from "@/components/admin/BrandingManager";
 import AuditLogViewer from "@/components/admin/AuditLogViewer";
 import TeamManager from "@/components/admin/TeamManager";
+import AnnouncementManager from "@/components/admin/AnnouncementManager";
+import MaintenanceManager from "@/components/admin/MaintenanceManager";
+import LegalPagesEditor from "@/components/admin/LegalPagesEditor";
+import FaqManager from "@/components/admin/FaqManager";
+import SectionVisibilityManager from "@/components/admin/SectionVisibilityManager";
 import logo from "@/assets/logo.png";
 
-type TabId = "dashboard" | "leads" | "projects" | "documents" | "settings"
+type TabId =
+  | "dashboard" | "leads" | "projects" | "documents" | "settings"
   | "site_settings" | "content_stats" | "services_mgr" | "methodology"
-  | "testimonials" | "navigation" | "branding" | "audit_log" | "team";
+  | "testimonials" | "navigation" | "branding" | "audit_log" | "team"
+  | "announcement" | "maintenance" | "legal" | "faq" | "section_visibility";
 
 type NavItem = { id: TabId; label: string; icon: React.ElementType; desc: string };
 
@@ -43,8 +51,18 @@ const SIDEBAR_GROUPS: { group: string; items: NavItem[] }[] = [
       { id: "methodology", label: "Methodology", icon: Target, desc: "Delivery model steps" },
       { id: "team", label: "Leadership Team", icon: Users, desc: "Team member profiles & order" },
       { id: "testimonials", label: "Testimonials", icon: Quote, desc: "Client quotes & partners" },
+      { id: "faq", label: "FAQs", icon: HelpCircle, desc: "Frequently asked questions" },
       { id: "navigation", label: "Navigation Menu", icon: Navigation, desc: "Header nav links & order" },
       { id: "branding", label: "Branding", icon: Palette, desc: "Colors, logo & typography" },
+      { id: "legal", label: "Legal Pages", icon: Scale, desc: "Privacy Policy & Terms" },
+    ],
+  },
+  {
+    group: "Site Control",
+    items: [
+      { id: "announcement", label: "Announcement Bar", icon: Megaphone, desc: "Sitewide banner message" },
+      { id: "section_visibility", label: "Section Visibility", icon: Layout, desc: "Show/hide page sections" },
+      { id: "maintenance", label: "Maintenance Mode", icon: ShieldAlert, desc: "Lock site for maintenance" },
     ],
   },
   {
@@ -316,6 +334,11 @@ export default function Admin() {
           {activeTab === "branding" && <BrandingManager />}
           {activeTab === "team" && <TeamManager />}
           {activeTab === "audit_log" && <AuditLogViewer />}
+          {activeTab === "announcement" && <AnnouncementManager />}
+          {activeTab === "maintenance" && <MaintenanceManager />}
+          {activeTab === "legal" && <LegalPagesEditor />}
+          {activeTab === "faq" && <FaqManager />}
+          {activeTab === "section_visibility" && <SectionVisibilityManager />}
         </div>
       </main>
     </div>

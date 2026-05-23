@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Link } from "wouter";
 import Navbar from "./Navbar";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import logo from "@/assets/logo.png";
 import { useGetSiteSettings } from "@workspace/api-client-react";
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
@@ -48,6 +49,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex flex-col" style={{ background: "inherit" }}>
+      <AnnouncementBar />
       <Navbar />
       <main className="flex-1 w-full">
         {children}
@@ -158,7 +160,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               &copy; {copyrightYear} Zafora Holding. All rights reserved. Tampa, FL, USA.
             </p>
             <div className="flex items-center gap-6 text-xs text-white/35">
-              <span>Government Consulting &middot; Project Development &middot; Global Partnerships</span>
+              <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-white/60 transition-colors">Terms of Service</Link>
               <Link href="/admin" className="hover:text-white/60 transition-colors">
                 Admin
               </Link>
