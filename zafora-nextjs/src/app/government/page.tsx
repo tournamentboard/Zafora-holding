@@ -1,8 +1,9 @@
-import { Link } from "wouter";
+"use client"
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import { useGetSiteSettings } from "@workspace/api-client-react";
+import { useGetSiteSettings } from "@/src/lib/api-client-react";
 import {
   Shield, FileCheck, Scale, Users, Target, Activity,
   ArrowRight, CheckCircle2, Globe, TrendingUp, Lock,

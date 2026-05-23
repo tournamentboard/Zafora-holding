@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Info, ChevronDown, ChevronRight, Home, Settings2, Shield } from "lucide-react";
 

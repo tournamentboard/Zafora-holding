@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListDocuments, useCreateDocument, useDeleteDocument, useUpdateDocument } from "@workspace/api-client-react";
+import { useListDocuments, useCreateDocument, useDeleteDocument, useUpdateDocument } from "@/src/lib/api-client-react";
 import { useToast } from "@/src/hooks/use-toast";
 import {
   Plus, Trash2, X, FileText, Lock, Globe, Users, Building2,

@@ -1,9 +1,12 @@
+"use client";
+import Link from "next/link";
 import { ReactNode } from "react";
-import { Link } from "wouter";
-import Navbar from "./Navbar";
-import logo from "@/assets/logo.png";
-import { useGetSiteSettings } from "@workspace/api-client-react";
+
+import Navbar from "../common/Navbar";
+import logo from "@/src/assets/logo.png";
+import { useGetSiteSettings } from "@/src/lib/api-client-react";
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 const DEFAULT_FOOTER = {
   description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
@@ -30,7 +33,7 @@ const SERVICE_LINKS = [
   "Procurement",
 ];
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function GlobalLayout({ children }: { children: ReactNode }) {
   const { data: footerData } = useGetSiteSettings("footer");
 
   const footer = (() => {
@@ -62,7 +65,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
             {/* Brand column */}
             <div className="lg:col-span-1">
-              <img
+              <Image
                 src={logo}
                 alt="Zafora Holding"
                 className="h-14 w-auto object-contain mb-5"

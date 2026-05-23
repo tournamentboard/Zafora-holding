@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useExpressInterest } from "@workspace/api-client-react";
+import { useExpressInterest } from "@/src/lib/api-client-react";
 import { useToast } from "@/src/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";

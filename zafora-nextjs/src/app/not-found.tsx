@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Home, Compass } from "lucide-react";
-// import logo from "@/assets/logo.png";
-import logo from "../assets/logo.png";
+
+import logo from "@/src/assets/logo.png";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function NotFound() {
   return (
@@ -14,7 +15,7 @@ export default function NotFound() {
         className="max-w-xl w-full"
       >
         <Link href="/" className="inline-block mb-10">
-          <img src={logo} alt="Zafora Holding" className="h-14 w-auto mx-auto" />
+          <Image src={logo} alt="Zafora Holding" className="h-14 w-auto mx-auto" />
         </Link>
 
         <div className="bg-white border border-[#e5ded3] rounded-[36px] p-12 shadow-xl">

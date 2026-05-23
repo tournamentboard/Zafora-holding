@@ -1,5 +1,6 @@
-import { useListServices, useGetSiteSettings } from "@workspace/api-client-react";
-import { Link } from "wouter";
+"use client"
+import { useListServices, useGetSiteSettings } from "@/src/lib/api-client-react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { usePageTitle } from "@/src/hooks/use-page-title";

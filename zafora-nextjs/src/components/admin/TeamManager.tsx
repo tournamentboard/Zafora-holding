@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  ArrowLeft, Plus, Loader2, Check, Trash2, Linkedin, Mail,
+  ArrowLeft, Plus, Loader2, Check, Trash2, Mail,
   MapPin, ChevronRight, Users, Eye, EyeOff, FileText,
 } from "lucide-react";
+import { FaLinkedinIn } from "react-icons/fa6";
 
 const TEAM_COLORS = [
   "bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]",
@@ -257,7 +258,7 @@ export default function TeamManager() {
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-[#10231f] flex items-center gap-1.5">
-                    <Linkedin size={13} className="text-[#0077b5]" /> LinkedIn URL (optional)
+                    <FaLinkedinIn size={13} className="text-[#0077b5]" /> LinkedIn URL (optional)
                   </label>
                   <input
                     type="text"

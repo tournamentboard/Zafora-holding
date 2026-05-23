@@ -1,14 +1,15 @@
+"use client"
 import { useState } from "react";
-import { useListProjects, useGetSiteSettings } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { useListProjects, useGetSiteSettings } from "@/src/lib/api-client-react";
 import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf } from "lucide-react";
 import { Input } from "@/src/components/ui/input";
 import { motion } from "framer-motion";
-import ExpressInterestModal from "./ExpressInterestModal";
+
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
+import ExpressInterestModal from "../ExpressInterestModal";
 
 const SECTORS = ["All", "Energy", "Water", "Transport", "Healthcare", "Digital"];
 const STATUSES = ["All", "Seeking Funding", "Investor Ready", "Partially Funded", "Funded"];

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListServices, useCreateService, useUpdateService, useDeleteService } from "@workspace/api-client-react";
+import { useListServices, useCreateService, useUpdateService, useDeleteService } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2, Check, X, Eye, EyeOff, Briefcase, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 

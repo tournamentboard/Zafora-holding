@@ -1,14 +1,18 @@
+"use client"
 import { motion } from "framer-motion";
-import { Link } from "wouter";
+import Link from "next/link";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import { useGetSiteSettings } from "@workspace/api-client-react";
+import { useGetSiteSettings } from "@/src/lib/api-client-react";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
   Landmark, Zap, Droplets, Truck, Stethoscope, ArrowRight,
-  CheckCircle2, Target, Eye, Award, MapPin, Linkedin, Mail, Calendar,
+  CheckCircle2, Target, Eye, Award, MapPin, Mail, Calendar,
 } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { FaLinkedinIn } from "react-icons/fa6";
+
+import logo from "@/src/assets/logo.png";
+import Image from "next/image";
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
@@ -215,7 +219,7 @@ export default function About() {
             {/* Left — Dark card */}
             <motion.div {...fade(0)} className="rounded-3xl bg-[#173f35] text-white p-10 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
-              <img src={logo} alt="Zafora Holding" className="h-14 w-auto mb-8 opacity-90" style={{ filter: "brightness(0) invert(1)" }} />
+              <Image src={logo} alt="Zafora Holding" className="h-14 w-auto mb-8 opacity-90" style={{ filter: "brightness(0) invert(1)" }} />
               <blockquote className="text-2xl font-semibold leading-snug mb-6 relative z-10">
                 "{d.identity.quote}"
               </blockquote>
@@ -369,7 +373,7 @@ export default function About() {
                         <div className="flex items-center gap-2">
                           {member.linkedin && (
                             <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#8a958f] hover:text-[#0077b5] transition-colors" title="LinkedIn">
-                              <Linkedin className="h-3.5 w-3.5" />
+                              <FaLinkedinIn className="h-3.5 w-3.5" />
                             </a>
                           )}
                           {member.email && (

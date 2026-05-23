@@ -1,8 +1,11 @@
-import { Link, useLocation } from "wouter";
+"use client";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useGetSiteSettings } from "@workspace/api-client-react";
-import logo from "@/assets/logo.png";
+import { useGetSiteSettings } from "@/src/lib/api-client-react";
+import logo from "@/src/assets/logo.png";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const DEFAULT_LINKS = [
   { id: "about", label: "About", href: "/about", visible: true, openNewTab: false, order: 0 },
@@ -12,7 +15,7 @@ const DEFAULT_LINKS = [
 ];
 
 export default function Navbar() {
-  const [location] = useLocation();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: navData } = useGetSiteSettings("navigation");
   const { data: brandingData } = useGetSiteSettings("branding");
@@ -39,7 +42,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)", backdropFilter: "blur(16px)" }}>
       <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <img src={logo} alt="Zafora Holding" className="h-16 w-auto object-contain" />
+          <Image src={logo} alt="Zafora Holding" className="h-16 w-auto object-contain" />
         </Link>
 
         {/* Desktop Nav */}
@@ -52,7 +55,7 @@ export default function Navbar() {
                 target={link.openNewTab ? "_blank" : undefined}
                 rel={link.openNewTab ? "noopener noreferrer" : undefined}
                 className={`text-sm font-medium transition-colors hover:text-[#173f35] ${
-                  location === link.href ? "text-[#173f35] font-semibold" : "text-[#65736f]"
+                  pathname === link.href ? "text-[#173f35] font-semibold" : "text-[#65736f]"
                 }`}
               >
                 {link.label}
@@ -88,7 +91,7 @@ export default function Navbar() {
               rel={link.openNewTab ? "noopener noreferrer" : undefined}
               onClick={() => setIsMobileMenuOpen(false)}
               className={`text-base font-medium p-3 rounded-xl transition-colors ${
-                location === link.href
+                pathname === link.href
                   ? "text-[#173f35] bg-[#efe3cf] font-semibold"
                   : "text-[#65736f] hover:text-[#173f35] hover:bg-[#efe3cf]"
               }`}

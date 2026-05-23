@@ -1,6 +1,7 @@
+"use client";
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { useCreateLead, useGetSiteSettings } from "@workspace/api-client-react";
+
+import { useCreateLead, useGetSiteSettings } from "@/src/lib/api-client-react";
 import { useToast } from "@/src/hooks/use-toast";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -13,6 +14,8 @@ import {
   ShieldCheck, Clock, Users, Globe, CheckCircle2, ArrowRight,
   Lock, Star, TrendingUp, Briefcase, Landmark,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 const DEFAULT_SETTINGS = {
   hero: {
@@ -44,7 +47,7 @@ const fadeInView = (delay = 0) => ({
 export default function Submit() {
   const { data: seoData } = useGetSiteSettings("seo_submit");
   usePageTitle("Submit a Request", parseSeoSettings(seoData));
-  const [, setLocation] = useLocation();
+const router = useRouter()
   const { toast } = useToast();
   const createLead = useCreateLead();
   const [loading, setLoading] = useState(false);
@@ -97,7 +100,7 @@ export default function Submit() {
         }
       });
       toast({ title: "Request Submitted", description: "Your inquiry has been submitted. Our advisory team will contact you within 48 hours." });
-      setLocation("/");
+      router.push("/");
     } catch {
       toast({ title: "Submission Failed", description: "Please try again or contact us directly.", variant: "destructive" });
     } finally {

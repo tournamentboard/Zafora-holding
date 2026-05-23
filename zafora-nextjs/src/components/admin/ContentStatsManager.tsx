@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListContentStats, useCreateContentStat, useUpdateContentStat, useDeleteContentStat } from "@workspace/api-client-react";
+import { useListContentStats, useCreateContentStat, useUpdateContentStat, useDeleteContentStat } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2, Check, X, Eye, EyeOff, GripVertical, BarChart2 } from "lucide-react";
 

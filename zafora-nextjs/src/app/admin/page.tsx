@@ -1,5 +1,6 @@
+"use client"
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import Link from "next/link";
 import {
   Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText,
   Eye, EyeOff, Settings, Settings2, BarChart2, Briefcase, Target,
@@ -19,7 +20,8 @@ import NavigationManager from "@/src/components/admin/NavigationManager";
 import BrandingManager from "@/src/components/admin/BrandingManager";
 import AuditLogViewer from "@/src/components/admin/AuditLogViewer";
 import TeamManager from "@/src/components/admin/TeamManager";
-import logo from "@/assets/logo.png";
+import logo from "@/src/assets/logo.png";
+import Image from "next/image";
 
 type TabId = "dashboard" | "leads" | "projects" | "documents" | "settings"
   | "site_settings" | "content_stats" | "services_mgr" | "methodology"
@@ -162,7 +164,7 @@ export default function Admin() {
       <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
-            <img src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
+            <Image src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
             <h1 className="text-2xl font-bold text-[#10231f] mb-1">Admin Sign In</h1>
             <p className="text-[#65736f] text-sm">Enter your password to manage the website</p>
           </div>
@@ -222,7 +224,7 @@ export default function Admin() {
       {/* ── Sidebar ──────────────────────────────────────────────── */}
       <aside className="w-64 bg-white border-r border-[#e5ded3] hidden md:flex flex-col shadow-sm">
         <div className="h-16 flex items-center px-5 border-b border-[#e5ded3] shrink-0">
-          <img src={logo} alt="Zafora Holding" className="h-9 w-auto object-contain" />
+          <Image src={logo} alt="Zafora Holding" className="h-9 w-auto object-contain" />
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-3">

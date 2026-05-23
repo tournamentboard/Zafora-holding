@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Loader2, Info, ChevronDown, ChevronRight,
   Users, Target, Eye, EyeOff, Globe, ShieldCheck, TrendingUp,
-  Award, Handshake, MapPin, Plus, Trash2, ChevronUp, Linkedin, Mail,
+  Award, Handshake, MapPin, Plus, Trash2, ChevronUp, Mail,
 } from "lucide-react";
+import { FaLinkedinIn } from "react-icons/fa6";
 
 type Section = "hero" | "stats" | "identity" | "whoweare" | "mvp" | "values" | "team" | "timeline" | "cta";
 
@@ -422,7 +423,7 @@ export default function AboutEditor() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-[#10231f] flex items-center gap-1.5 block">
-                      <Linkedin size={11} className="text-[#0077b5]" /> LinkedIn URL (optional)
+                      <FaLinkedinIn size={11} className="text-[#0077b5]" /> LinkedIn URL (optional)
                     </label>
                     <input
                       type="text"

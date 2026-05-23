@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Palette, Info, AlertCircle, ExternalLink } from "lucide-react";
 

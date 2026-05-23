@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListProjects, useCreateProject, useDeleteProject, useUpdateProject, useListProjectInterests } from "@workspace/api-client-react";
+import { useListProjects, useCreateProject, useDeleteProject, useUpdateProject, useListProjectInterests } from "@/src/lib/api-client-react";
 import { useToast } from "@/src/hooks/use-toast";
 import { Plus, Pencil, Trash2, X, Users, MapPin, DollarSign, Eye, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";

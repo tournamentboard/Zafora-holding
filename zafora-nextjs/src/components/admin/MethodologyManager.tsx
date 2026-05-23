@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListMethodologySteps, useCreateMethodologyStep, useUpdateMethodologyStep, useDeleteMethodologyStep } from "@workspace/api-client-react";
+import { useListMethodologySteps, useCreateMethodologyStep, useUpdateMethodologyStep, useDeleteMethodologyStep } from "@/src/lib/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2, Check, X, Eye, EyeOff, Target, GripVertical } from "lucide-react";
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useGetStats, useGetProjectStats } from "@workspace/api-client-react";
+import { useGetStats, useGetProjectStats } from "@/src/lib/api-client-react";
 import {
   Users, FolderOpen, FileText, TrendingUp, Clock, AlertCircle,
   CheckCircle2, Lightbulb, RefreshCw, Bell, ArrowRight, BarChart2,
