@@ -612,8 +612,8 @@ export default function Home() {
 
               {/* Badge */}
               <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl px-4 py-3 shadow-xl">
-                <div className="text-[#10231f] font-bold text-lg leading-none">12</div>
-                <div className="text-[#10231f]/70 text-xs font-semibold">Markets</div>
+                <div className="text-[#10231f] font-bold text-sm leading-none">Pan-African</div>
+                <div className="text-[#10231f]/70 text-xs font-semibold mt-0.5">Coverage</div>
               </div>
             </motion.div>
             <motion.div {...fadeInView(0.15)}>
