@@ -1,0 +1,164 @@
+---
+description: Zafora frontend — App Router modular architecture (public vs admin)
+globs: zafora-frontend/**
+alwaysApply: false
+---
+
+
+# Zafora Frontend Architecture
+
+Live urls: https://zafora-holdings-web.replit.app/
+Stack: **Next.js 16 App Router** + **React 19** + Express API (`NEXT_PUBLIC_API_URL`) + **Tailwind CSS 4** + shadcn/Radix + **Zod** + **Server Actions**.
+
+## Target directory layout
+
+```
+zafora-frontend/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx              # Root layout (fonts, providers)
+│   │   ├── globals.css
+│   │   ├── (public)/               # Route group — user-facing site
+│   │   │   ├── layout.tsx          # Navbar + Footer shell
+│   │   │   ├── page.tsx            # Home
+│   │   │   ├── about/page.tsx
+│   │   │   ├── services/page.tsx
+│   │   │   ├── projects/page.tsx
+│   │   │   ├── government/page.tsx
+│   │   │   └── submit/page.tsx
+│   │   ├── (admin)/                # Route group — authenticated CMS
+│   │   │   ├── layout.tsx          # requireAdmin + sidebar shell
+│   │   │   ├── login/page.tsx
+│   │   │   ├── admin/page.tsx      # Dashboard
+│   │   │   ├── admin/leads/page.tsx
+│   │   │   ├── admin/projects/page.tsx
+│   │   │   ├── admin/documents/page.tsx
+│   │   │   ├── admin/content/      # site-settings, branding, team, …
+│   │   │   ├── admin/audit/page.tsx
+│   │   │   └── admin/settings/page.tsx
+│   │   └── api/                    # Route Handlers (BFF only)
+│   │       ├── health/route.ts
+│   │       └── storage/presign/route.ts
+│   ├── modules/
+│   │   ├── public/                 # User-facing feature modules
+│   │   │   ├── home/
+│   │   │   ├── about/
+│   │   │   ├── services/
+│   │   │   ├── projects/
+│   │   │   ├── government/
+│   │   │   ├── submit/
+│   │   │   └── shared/
+│   │   ├── admin/                  # Admin feature modules
+│   │   │   ├── dashboard/
+│   │   │   ├── leads/
+│   │   │   ├── projects/
+│   │   │   ├── documents/
+│   │   │   ├── content/
+│   │   │   ├── audit/
+│   │   │   ├── settings/
+│   │   │   └── shared/             # AdminSidebar, AdminHeader
+│   │   └── shared/                 # Cross-audience (ExpressInterestModal, …)
+│   ├── components/
+│   │   ├── ui/                     # shadcn primitives — no business logic
+│   │   ├── layout/
+│   │   └── common/                 # Navbar, Footer
+│   ├── lib/
+│   │   ├── actions/                # Server Actions ("use server")
+│   │   │   ├── public.ts           # submitLead, expressInterest
+│   │   │   └── admin.ts            # CRUD + revalidatePath
+│   │   ├── api-helpers/            # Server-side fetch to Express
+│   │   │   ├── client.ts
+│   │   │   └── parse-error.ts
+│   │   ├── url-helpers/
+│   │   │   ├── routes.ts           # ROUTES.ADMIN.LEADS
+│   │   │   └── api-endpoints.ts    # API.LEADS.LIST
+│   │   ├── constants/
+│   │   ├── enums/
+│   │   ├── types/
+│   │   ├── validators/             # Hand-written Zod (no codegen)
+│   │   ├── auth.ts                 # verifySession, requireAdmin
+│   │   └── utils.ts
+│   ├── hooks/                      # Client-only UI hooks
+│   └── providers/
+├── middleware.ts                   # Protect /admin/* except /admin/login
+└── .env.example
+```
+
+## Module folder pattern
+
+```
+modules/admin/leads/
+├── index.ts
+├── components/           # LeadsTable, EditLeadModal
+├── hooks/                # Client UI state only (filters, modal open)
+├── services/             # Server-callable fetch fns (used by RSC + actions)
+├── types/
+└── constants.ts
+```
+
+## App Router patterns (use these)
+
+| Concern | Pattern |
+|---------|---------|
+| Public data | **Server Components** — async page, fetch in component or module `services/` |
+| SEO | **`generateMetadata()`** per `page.tsx` — never client DOM meta hacks |
+| Forms (public) | **Server Actions** in `lib/actions/public.ts` + Zod validation |
+| Admin CRUD | **Server Actions** in `lib/actions/admin.ts` + `requireAdmin()` + `revalidatePath()` |
+| Auth guard | **`middleware.ts`** + admin `layout.tsx` calls `requireAdmin()` |
+| Client interactivity | `"use client"` islands — forms, modals, uploads, animations |
+| Loading / error | `loading.tsx`, `error.tsx` per route segment |
+| BFF / presign | `app/api/**/route.ts` Route Handlers only when needed |
+| Images | `next/image` — never raw `<img>` for static assets |
+| Links | `next/link` — never `<a href>` for internal navigation |
+| Toasts | `sonner` — not legacy toast DOM manipulation |
+
+## Separation rules
+
+| Layer | Location | Rule |
+|-------|----------|------|
+| Routes | `src/app/` | Thin — compose module components; no heavy logic inline |
+| Public UI | `modules/public/` | Never import from `modules/admin/` |
+| Admin UI | `modules/admin/` | Never import from `modules/public/` |
+| Server Actions | `lib/actions/` | All mutations; validate with `lib/validators/` |
+| API calls | `lib/api-helpers/` + module `services/` | Use `lib/url-helpers/api-endpoints.ts` |
+| URLs | `lib/url-helpers/` | Never hardcode paths in components |
+| shadcn | `components/ui/` | Presentational only |
+
+## Forbidden — legacy & Replit (never add or copy)
+
+**Old Next.js (Pages Router):**
+- `pages/`, `_app.tsx`, `_document.tsx`
+- `getServerSideProps`, `getStaticProps`, `getInitialProps`
+- `next/head` for SEO
+- `pages/api/*` (use `app/api/**/route.ts` instead)
+
+**Old React / Replit SPA:**
+- Code from `artifacts/zafora/` (Vite + react-router)
+- `@replit/*` packages or Replit vite plugins
+- `react-router-dom`, `BrowserRouter`, `<Routes>`
+- Client-only SPA data loading for public pages when RSC fits
+- `useSeoMeta` / `document.title` / manual `<meta>` injection in `useEffect`
+- Orval/OpenAPI codegen: `api-spec`, `api-client-react`, `api-zod`, `useList*`, `useCreate*` hooks
+- Replit object storage / GCS sidecar paths (`127.0.0.1:1106`, `object-storage-web`)
+- Duplicate `workplace/` or `lib/db` packages inside frontend
+- `@tanstack/react-query` on **new** public pages (migrate existing usage to RSC + Server Actions)
+- Class components, `defaultProps`, legacy lifecycle methods
+
+**When touching legacy files:** refactor toward App Router + module structure; do not extend old patterns.
+
+## Naming & imports
+
+- Components: `PascalCase.tsx`
+- Server Actions file: `lib/actions/*.ts` with `"use server"` at top
+- Services: `*.service.ts` or `list-leads.ts`
+- Use `@/src/...` path alias
+- Barrel exports via module `index.ts`
+
+## Do not
+
+- Create `pages/` directory
+- Put business logic in `app/**/page.tsx` — delegate to modules
+- Mix admin and public code in one component
+- Hardcode API or route paths
+- Import from `@/src/lib/api-client-react` in new code
+- Copy-paste from Replit artifacts without full App Router rewrite
