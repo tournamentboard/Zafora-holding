@@ -47,7 +47,8 @@ zafora-frontend/
 │   │   │   ├── projects/
 │   │   │   ├── government/
 │   │   │   ├── submit/
-│   │   │   └── shared/
+│   │   │   ├── shared/
+│   │   │   └── modals/             # Public-facing modals (ExpressInterestModal, …)
 │   │   ├── admin/                  # Admin feature modules
 │   │   │   ├── dashboard/
 │   │   │   ├── leads/
@@ -56,8 +57,9 @@ zafora-frontend/
 │   │   │   ├── content/
 │   │   │   ├── audit/
 │   │   │   ├── settings/
-│   │   │   └── shared/             # AdminSidebar, AdminHeader
-│   │   └── shared/                 # Cross-audience (ExpressInterestModal, …)
+│   │   │   ├── shared/             # AdminSidebar, AdminHeader
+│   │   │   └── modals/             # Admin modals (InterestsModal, PreviewModal, …)
+│   │   └── shared/                 # Cross-audience utilities (health check, …)
 │   ├── components/
 │   │   ├── ui/                     # shadcn primitives — no business logic
 │   │   ├── layout/
@@ -89,12 +91,25 @@ zafora-frontend/
 ```
 modules/admin/leads/
 ├── index.ts
-├── components/           # LeadsTable, EditLeadModal
+├── components/           # LeadsTable, lead row actions
+├── modals/               # Feature-only modals (optional — shared admin modals go in modules/admin/modals/)
 ├── hooks/                # Client UI state only (filters, modal open)
 ├── services/             # Server-callable fetch fns (used by RSC + actions)
 ├── types/
 └── constants.ts
 ```
+
+## Modals
+
+| Audience | Location | Rule |
+|----------|----------|------|
+| Public / user site | `modules/public/modals/` | `"use client"` — forms, dialogs, interest capture |
+| Admin CMS | `modules/admin/modals/` | `"use client"` — CRUD previews, detail panels, confirmations |
+| Feature-specific | `modules/{public\|admin}/<feature>/modals/` | OK when modal is used by one feature only |
+
+- Never place modal components in `src/app/` — routes stay thin.
+- Public modals must not import from admin modules; admin modals must not import from public modules.
+- Barrel-export via `modals/index.ts` per audience folder.
 
 ## App Router patterns (use these)
 
@@ -119,6 +134,8 @@ modules/admin/leads/
 | Routes | `src/app/` | Thin — compose module components; no heavy logic inline |
 | Public UI | `modules/public/` | Never import from `modules/admin/` |
 | Admin UI | `modules/admin/` | Never import from `modules/public/` |
+| Public modals | `modules/public/modals/` | User-facing dialogs only |
+| Admin modals | `modules/admin/modals/` | CMS dialogs only — never in `app/` or inline in tables |
 | Server Actions | `lib/actions/` | All mutations; validate with `lib/validators/` |
 | API calls | `lib/api-helpers/` + module `services/` | Use `lib/url-helpers/api-endpoints.ts` |
 | URLs | `lib/url-helpers/` | Never hardcode paths in components |
@@ -158,7 +175,9 @@ modules/admin/leads/
 
 - Create `pages/` directory
 - Put business logic in `app/**/page.tsx` — delegate to modules
+- Put modal components in `app/` — use `modules/public/modals/` or `modules/admin/modals/`
 - Mix admin and public code in one component
 - Hardcode API or route paths
 - Import from `@/src/lib/api-client-react` in new code
 - Copy-paste from Replit artifacts without full App Router rewrite
+-never remove any existing library like i used motion so not to remove the motion.dev or any other ones which will cause conflicts laters

@@ -247,30 +247,6 @@ This plan strictly follows the project Cursor Rules:
 
 ---
 
-### Phase F15 — Realtime / WebSocket (Frontend)
-
-| Field | Detail |
-|-------|--------|
-| **Objective** | Live admin updates when backend WS available |
-| **Implement** | `lib/realtime/client.ts`; `use-realtime-channel.ts`; dashboard live stats; polling fallback |
-| **Dependencies** | F8, F9; Backend B11 |
-| **Best practices** | WS admin-only; public stays RSC-first |
-| **Avoid** | WS in Server Components; no reconnect |
-| **Outcome** | Real-time admin experience |
-
----
-
-### Phase F16 — Frontend Testing Strategy
-
-| Field | Detail |
-|-------|--------|
-| **Objective** | Regression safety and onboarding confidence |
-| **Implement** | Vitest (validators, url-helpers, auth); Testing Library (forms); Playwright E2E (submit, login, CRUD); contract tests vs backend validators |
-| **Dependencies** | F6, F9, F13 |
-| **Best practices** | Mock Express at api-helpers boundary |
-| **Outcome** | Safe modular refactors |
-
----
 
 ## 2. Frontend Recommended Build Order
 
