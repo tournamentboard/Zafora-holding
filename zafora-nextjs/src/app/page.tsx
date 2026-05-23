@@ -1,22 +1,72 @@
-import { useListProjects, useListServices, useListContentStats, useListMethodologySteps, useGetSiteSettings } from "@workspace/api-client-react";
+"use client";
+import {
+  useListProjects,
+  useListServices,
+  useListContentStats,
+  useListMethodologySteps,
+  useGetSiteSettings,
+} from "@/src/lib/api-client-react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
+
 import { Button } from "@/src/components/ui/button";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
 import {
-  ArrowRight, Briefcase, Landmark, ShieldCheck, ArrowUpRight, BarChart3,
-  Building, Globe, Zap, Droplets, Truck, Stethoscope, CheckCircle2,
-  TrendingUp, Award, Users, Target, Handshake, MapPin, DollarSign,
-  Wifi, Leaf, Home as HomeIcon, GraduationCap, ChevronRight,
+  ArrowRight,
+  Briefcase,
+  Landmark,
+  ShieldCheck,
+  ArrowUpRight,
+  BarChart3,
+  Building,
+  Globe,
+  Zap,
+  Droplets,
+  Truck,
+  Stethoscope,
+  CheckCircle2,
+  TrendingUp,
+  Award,
+  Users,
+  Target,
+  Handshake,
+  MapPin,
+  DollarSign,
+  Wifi,
+  Leaf,
+  Home as HomeIcon,
+  GraduationCap,
+  ChevronRight,
 } from "lucide-react";
+import { use } from "react";
+import Link from "next/link";
 
 const TICKER_ITEMS = [
-  "Rwanda", "Nigeria", "Kenya", "Ghana", "Egypt", "Tanzania", "Ethiopia", "Senegal",
-  "Côte d'Ivoire", "Uganda", "Mozambique", "Morocco", "Angola", "Cameroon",
-  "Energy", "Water", "Transport", "Healthcare", "Digital", "Agriculture",
-  "PPP Advisory", "Project Finance", "ESG Compliance", "DFI Funding",
+  "Rwanda",
+  "Nigeria",
+  "Kenya",
+  "Ghana",
+  "Egypt",
+  "Tanzania",
+  "Ethiopia",
+  "Senegal",
+  "Côte d'Ivoire",
+  "Uganda",
+  "Mozambique",
+  "Morocco",
+  "Angola",
+  "Cameroon",
+  "Energy",
+  "Water",
+  "Transport",
+  "Healthcare",
+  "Digital",
+  "Agriculture",
+  "PPP Advisory",
+  "Project Finance",
+  "ESG Compliance",
+  "DFI Funding",
 ];
 
 const fadeUp = (delay = 0) => ({
@@ -34,16 +84,24 @@ const fadeInView = (delay = 0) => ({
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
-    case "funded": return "bg-[#e5f5e9] text-[#173f35] border-[#173f35]/20";
-    case "investor_ready": return "bg-[#e6eef4] text-[#385c7a] border-[#385c7a]/20";
-    case "partially_funded": return "bg-[#f6ead2] text-[#c59b4a] border-[#c59b4a]/20";
-    case "seeking_funding": return "bg-[#f7dfd9] text-[#b85c4b] border-[#b85c4b]/20";
-    default: return "bg-gray-100 text-gray-700 border-gray-200";
+    case "funded":
+      return "bg-[#e5f5e9] text-[#173f35] border-[#173f35]/20";
+    case "investor_ready":
+      return "bg-[#e6eef4] text-[#385c7a] border-[#385c7a]/20";
+    case "partially_funded":
+      return "bg-[#f6ead2] text-[#c59b4a] border-[#c59b4a]/20";
+    case "seeking_funding":
+      return "bg-[#f7dfd9] text-[#b85c4b] border-[#b85c4b]/20";
+    default:
+      return "bg-gray-100 text-gray-700 border-gray-200";
   }
 };
 
 const formatStatus = (status: string) =>
-  status.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  status
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 
 const SERVICE_ICONS: Record<number, React.ReactNode> = {
   0: <Landmark className="w-7 h-7" />,
@@ -62,17 +120,17 @@ const HOME_STAT_ICONS: React.ReactNode[] = [
 ];
 
 const METHODOLOGY_ICONS: Record<string, React.ReactNode> = {
-  Target:     <Target className="h-5 w-5" />,
-  ShieldCheck:<ShieldCheck className="h-5 w-5" />,
+  Target: <Target className="h-5 w-5" />,
+  ShieldCheck: <ShieldCheck className="h-5 w-5" />,
   DollarSign: <DollarSign className="h-5 w-5" />,
-  Handshake:  <Handshake className="h-5 w-5" />,
+  Handshake: <Handshake className="h-5 w-5" />,
   TrendingUp: <TrendingUp className="h-5 w-5" />,
-  Award:      <Award className="h-5 w-5" />,
-  Globe:      <Globe className="h-5 w-5" />,
-  Users:      <Users className="h-5 w-5" />,
-  BarChart3:  <BarChart3 className="h-5 w-5" />,
-  Briefcase:  <Briefcase className="h-5 w-5" />,
-  Building:   <Building className="h-5 w-5" />,
+  Award: <Award className="h-5 w-5" />,
+  Globe: <Globe className="h-5 w-5" />,
+  Users: <Users className="h-5 w-5" />,
+  BarChart3: <BarChart3 className="h-5 w-5" />,
+  Briefcase: <Briefcase className="h-5 w-5" />,
+  Building: <Building className="h-5 w-5" />,
 };
 
 const STEP_ACCENT_COLORS = [
@@ -88,7 +146,8 @@ const getSectorStyle = (sector: string) => {
   const s = sector.split(",")[0].trim().toLowerCase();
   if (s === "energy") return "bg-amber-50 text-amber-700 border-amber-200";
   if (s === "water") return "bg-sky-50 text-sky-700 border-sky-200";
-  if (s === "transport") return "bg-violet-50 text-violet-700 border-violet-200";
+  if (s === "transport")
+    return "bg-violet-50 text-violet-700 border-violet-200";
   if (s === "healthcare") return "bg-rose-50 text-rose-700 border-rose-200";
   if (s === "digital") return "bg-teal-50 text-teal-700 border-teal-200";
   if (s === "agriculture") return "bg-green-50 text-green-700 border-green-200";
@@ -96,42 +155,139 @@ const getSectorStyle = (sector: string) => {
 };
 
 const FALLBACK_STATS = [
-  { id: -1, label: "Project Value Advised", value: "$2.4B", suffix: "+", displayOrder: 0, visible: true },
-  { id: -2, label: "African Countries Active", value: "12", suffix: "+", displayOrder: 1, visible: true },
-  { id: -3, label: "Client Retention Rate", value: "95", suffix: "%", displayOrder: 2, visible: true },
-  { id: -4, label: "Infrastructure Sectors", value: "6", suffix: "", displayOrder: 3, visible: true },
+  {
+    id: -1,
+    label: "Project Value Advised",
+    value: "$2.4B",
+    suffix: "+",
+    displayOrder: 0,
+    visible: true,
+  },
+  {
+    id: -2,
+    label: "African Countries Active",
+    value: "12",
+    suffix: "+",
+    displayOrder: 1,
+    visible: true,
+  },
+  {
+    id: -3,
+    label: "Client Retention Rate",
+    value: "95",
+    suffix: "%",
+    displayOrder: 2,
+    visible: true,
+  },
+  {
+    id: -4,
+    label: "Infrastructure Sectors",
+    value: "6",
+    suffix: "",
+    displayOrder: 3,
+    visible: true,
+  },
 ];
 
 const FALLBACK_STEPS = [
-  { id: -1, stepNumber: 1, title: "Origination & Screening", description: "Identifying viable national projects and conducting preliminary technical and economic viability assessments.", iconName: "Target", displayOrder: 0, visible: true },
-  { id: -2, stepNumber: 2, title: "Feasibility & Structuring", description: "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks.", iconName: "ShieldCheck", displayOrder: 1, visible: true },
-  { id: -3, stepNumber: 3, title: "Capital Raising", description: "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity.", iconName: "DollarSign", displayOrder: 2, visible: true },
-  { id: -4, stepNumber: 4, title: "Procurement", description: "Transparent, competitive tendering to select world-class EPC contractors and technology partners.", iconName: "Handshake", displayOrder: 3, visible: true },
-  { id: -5, stepNumber: 5, title: "Execution Oversight", description: "Stringent project management, milestone tracking, and quality assurance during construction.", iconName: "TrendingUp", displayOrder: 4, visible: true },
-  { id: -6, stepNumber: 6, title: "Operations & Handover", description: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts.", iconName: "Award", displayOrder: 5, visible: true },
+  {
+    id: -1,
+    stepNumber: 1,
+    title: "Origination & Screening",
+    description:
+      "Identifying viable national projects and conducting preliminary technical and economic viability assessments.",
+    iconName: "Target",
+    displayOrder: 0,
+    visible: true,
+  },
+  {
+    id: -2,
+    stepNumber: 2,
+    title: "Feasibility & Structuring",
+    description:
+      "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks.",
+    iconName: "ShieldCheck",
+    displayOrder: 1,
+    visible: true,
+  },
+  {
+    id: -3,
+    stepNumber: 3,
+    title: "Capital Raising",
+    description:
+      "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity.",
+    iconName: "DollarSign",
+    displayOrder: 2,
+    visible: true,
+  },
+  {
+    id: -4,
+    stepNumber: 4,
+    title: "Procurement",
+    description:
+      "Transparent, competitive tendering to select world-class EPC contractors and technology partners.",
+    iconName: "Handshake",
+    displayOrder: 3,
+    visible: true,
+  },
+  {
+    id: -5,
+    stepNumber: 5,
+    title: "Execution Oversight",
+    description:
+      "Stringent project management, milestone tracking, and quality assurance during construction.",
+    iconName: "TrendingUp",
+    displayOrder: 4,
+    visible: true,
+  },
+  {
+    id: -6,
+    stepNumber: 6,
+    title: "Operations & Handover",
+    description:
+      "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts.",
+    iconName: "Award",
+    displayOrder: 5,
+    visible: true,
+  },
 ];
 
 const HOME_IMAGE_DEFAULTS = {
-  heroPanel: "https://images.pexels.com/photos/3776969/pexels-photo-3776969.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
-  band1: "https://images.pexels.com/photos/8761726/pexels-photo-8761726.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
-  band2: "https://images.pexels.com/photos/8124369/pexels-photo-8124369.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
-  band3: "https://images.pexels.com/photos/7698815/pexels-photo-7698815.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
-  pillar1: "https://images.pexels.com/photos/8487797/pexels-photo-8487797.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
-  pillar2: "https://images.pexels.com/photos/8550496/pexels-photo-8550496.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
-  pillar3: "https://images.pexels.com/photos/3894383/pexels-photo-3894383.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
-  engage1: "https://images.pexels.com/photos/8761656/pexels-photo-8761656.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
-  engage2: "https://images.pexels.com/photos/30688596/pexels-photo-30688596/free-photo-of-business-meeting-in-lagos-office-setting.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
-  engage3: "https://images.pexels.com/photos/3680959/pexels-photo-3680959.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
-  collage1: "https://images.pexels.com/photos/8487795/pexels-photo-8487795.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
-  collage2: "https://images.pexels.com/photos/1181415/pexels-photo-1181415.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
-  collage3: "https://images.pexels.com/photos/5298215/pexels-photo-5298215.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
-  collage4: "https://images.pexels.com/photos/9301297/pexels-photo-9301297.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  heroPanel:
+    "https://images.pexels.com/photos/3776969/pexels-photo-3776969.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+  band1:
+    "https://images.pexels.com/photos/8761726/pexels-photo-8761726.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+  band2:
+    "https://images.pexels.com/photos/8124369/pexels-photo-8124369.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+  band3:
+    "https://images.pexels.com/photos/7698815/pexels-photo-7698815.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+  pillar1:
+    "https://images.pexels.com/photos/8487797/pexels-photo-8487797.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  pillar2:
+    "https://images.pexels.com/photos/8550496/pexels-photo-8550496.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  pillar3:
+    "https://images.pexels.com/photos/3894383/pexels-photo-3894383.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  engage1:
+    "https://images.pexels.com/photos/8761656/pexels-photo-8761656.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  engage2:
+    "https://images.pexels.com/photos/30688596/pexels-photo-30688596/free-photo-of-business-meeting-in-lagos-office-setting.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  engage3:
+    "https://images.pexels.com/photos/3680959/pexels-photo-3680959.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+  collage1:
+    "https://images.pexels.com/photos/8487795/pexels-photo-8487795.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  collage2:
+    "https://images.pexels.com/photos/1181415/pexels-photo-1181415.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  collage3:
+    "https://images.pexels.com/photos/5298215/pexels-photo-5298215.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+  collage4:
+    "https://images.pexels.com/photos/9301297/pexels-photo-9301297.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
 };
 
 const HERO_DEFAULTS = {
   badge: "Strategic Infrastructure & Consulting · Est. 2025",
   headline: "Structuring, funding, and delivering high-impact projects.",
-  subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
+  subheadline:
+    "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
   primaryBtnText: "Partner With Us",
   primaryBtnLink: "/submit",
   secondaryBtnText: "View Pipeline",
@@ -167,7 +323,8 @@ export default function Home() {
   const hero = (() => {
     try {
       const parsed = heroData?.value ? JSON.parse(heroData.value) : null;
-      if (parsed && typeof parsed === "object") return { ...HERO_DEFAULTS, ...parsed };
+      if (parsed && typeof parsed === "object")
+        return { ...HERO_DEFAULTS, ...parsed };
     } catch {}
     return HERO_DEFAULTS;
   })();
@@ -180,19 +337,22 @@ export default function Home() {
     return HOME_IMAGE_DEFAULTS;
   })();
 
-  const featuredTestimonial = testimonialsData?.testimonials?.find((t: any) => t.visible !== false) ?? null;
+  const featuredTestimonial =
+    testimonialsData?.testimonials?.find((t: any) => t.visible !== false) ??
+    null;
 
-  const siteStats = (contentStatsData?.stats?.filter(s => s.visible) ?? []).length > 0
-    ? contentStatsData!.stats.filter(s => s.visible)
-    : FALLBACK_STATS;
+  const siteStats =
+    (contentStatsData?.stats?.filter((s) => s.visible) ?? []).length > 0
+      ? contentStatsData!.stats.filter((s) => s.visible)
+      : FALLBACK_STATS;
 
-  const methodologySteps = (methodologyData?.steps?.filter(s => s.visible) ?? []).length > 0
-    ? methodologyData!.steps.filter(s => s.visible)
-    : FALLBACK_STEPS;
+  const methodologySteps =
+    (methodologyData?.steps?.filter((s) => s.visible) ?? []).length > 0
+      ? methodologyData!.steps.filter((s) => s.visible)
+      : FALLBACK_STEPS;
 
   return (
     <div className="flex flex-col overflow-x-hidden">
-
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="pt-20 pb-14 relative overflow-hidden">
         {/* Background decoration */}
@@ -203,10 +363,12 @@ export default function Home() {
 
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
-
             {/* Left */}
             <div>
-              <motion.div {...fadeUp(0)} className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-4 py-2 rounded-full text-xs font-bold text-[#173f35] mb-5 shadow-sm">
+              <motion.div
+                {...fadeUp(0)}
+                className="inline-flex items-center gap-2 border border-[#173f35]/20 bg-white px-4 py-2 rounded-full text-xs font-bold text-[#173f35] mb-5 shadow-sm"
+              >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#173f35] opacity-60"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#173f35]"></span>
@@ -214,40 +376,78 @@ export default function Home() {
                 {hero.badge}
               </motion.div>
 
-              <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-5">
+              <motion.h1
+                {...fadeUp(0.1)}
+                className="text-5xl md:text-6xl lg:text-[78px] font-bold tracking-[-0.04em] text-[#10231f] leading-[1.04] mb-5"
+              >
                 {hero.headline}
               </motion.h1>
 
-              <motion.p {...fadeUp(0.2)} className="text-xl md:text-2xl text-[#65736f] mb-7 max-w-xl leading-relaxed">
+              <motion.p
+                {...fadeUp(0.2)}
+                className="text-xl md:text-2xl text-[#65736f] mb-7 max-w-xl leading-relaxed"
+              >
                 {hero.subheadline}
               </motion.p>
 
-              <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-3 mb-7">
-                <Link href={hero.primaryBtnLink} className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+              <motion.div
+                {...fadeUp(0.3)}
+                className="flex flex-wrap gap-3 mb-7"
+              >
+                <Link
+                  href={hero.primaryBtnLink}
+                  className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                >
                   {hero.primaryBtnText} <ArrowRight className="h-5 w-5" />
                 </Link>
-                <Link href={hero.secondaryBtnLink} className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-white border border-[#e5ded3] text-[#173f35] font-bold text-base hover:border-[#173f35] hover:shadow-md transition-all">
+                <Link
+                  href={hero.secondaryBtnLink}
+                  className="inline-flex items-center gap-2 h-14 px-7 rounded-full bg-white border border-[#e5ded3] text-[#173f35] font-bold text-base hover:border-[#173f35] hover:shadow-md transition-all"
+                >
                   {hero.secondaryBtnText}
                 </Link>
               </motion.div>
 
-              <motion.div {...fadeUp(0.4)} className="flex flex-wrap gap-2 mb-7">
+              <motion.div
+                {...fadeUp(0.4)}
+                className="flex flex-wrap gap-2 mb-7"
+              >
                 {[
-                  { icon: <ShieldCheck className="h-3.5 w-3.5" />, label: hero.featureBadge1 },
-                  { icon: <TrendingUp className="h-3.5 w-3.5" />, label: hero.featureBadge2 },
-                  { icon: <Target className="h-3.5 w-3.5" />, label: hero.featureBadge3 },
+                  {
+                    icon: <ShieldCheck className="h-3.5 w-3.5" />,
+                    label: hero.featureBadge1,
+                  },
+                  {
+                    icon: <TrendingUp className="h-3.5 w-3.5" />,
+                    label: hero.featureBadge2,
+                  },
+                  {
+                    icon: <Target className="h-3.5 w-3.5" />,
+                    label: hero.featureBadge3,
+                  },
                 ].map((item, i) => (
-                  <span key={i} className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#173f35] bg-[#173f35]/8 border border-[#173f35]/15 px-3 py-1.5 rounded-full">
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#173f35] bg-[#173f35]/8 border border-[#173f35]/15 px-3 py-1.5 rounded-full"
+                  >
                     {item.icon} {item.label}
                   </span>
                 ))}
               </motion.div>
 
-              <motion.div {...fadeUp(0.5)} className="grid grid-cols-3 gap-6 pt-5 border-t border-[#e5ded3]">
+              <motion.div
+                {...fadeUp(0.5)}
+                className="grid grid-cols-3 gap-6 pt-5 border-t border-[#e5ded3]"
+              >
                 {siteStats.slice(0, 3).map((s, i) => (
                   <div key={i}>
-                    <div className="text-2xl lg:text-3xl font-bold text-[#173f35] tracking-tight mb-1">{s.value}{s.suffix}</div>
-                    <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest leading-tight">{s.label}</div>
+                    <div className="text-2xl lg:text-3xl font-bold text-[#173f35] tracking-tight mb-1">
+                      {s.value}
+                      {s.suffix}
+                    </div>
+                    <div className="text-xs font-semibold text-[#8a958f] uppercase tracking-widest leading-tight">
+                      {s.label}
+                    </div>
                   </div>
                 ))}
               </motion.div>
@@ -272,8 +472,12 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/90 via-[#10231f]/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-5 z-10">
-                  <div className="text-[#c59b4a] text-xs font-bold uppercase tracking-wider mb-1">Executive Advisory</div>
-                  <h3 className="text-white font-bold text-xl leading-tight">{hero.panelCaption}</h3>
+                  <div className="text-[#c59b4a] text-xs font-bold uppercase tracking-wider mb-1">
+                    Executive Advisory
+                  </div>
+                  <h3 className="text-white font-bold text-xl leading-tight">
+                    {hero.panelCaption}
+                  </h3>
                 </div>
                 {/* Live indicator */}
                 <div className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5">
@@ -281,26 +485,44 @@ export default function Home() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
                   </span>
-                  <span className="text-white text-[10px] font-semibold">Active Pipeline</span>
+                  <span className="text-white text-[10px] font-semibold">
+                    Active Pipeline
+                  </span>
                 </div>
               </div>
 
               <div className="grid grid-cols-[1fr_1.8fr] gap-4 relative z-10">
                 {/* Stats mini card */}
                 <div className="bg-white/10 backdrop-blur border border-white/15 rounded-[18px] p-5 flex flex-col justify-center">
-                  <div className="text-white/60 text-xs font-semibold mb-2">Partner Interests</div>
-                  <div className="text-4xl font-bold text-white tracking-tight mb-1">{hero.panelStat}</div>
-                  <div className="text-sm font-semibold text-[#c59b4a]">{hero.panelStatLabel}</div>
+                  <div className="text-white/60 text-xs font-semibold mb-2">
+                    Partner Interests
+                  </div>
+                  <div className="text-4xl font-bold text-white tracking-tight mb-1">
+                    {hero.panelStat}
+                  </div>
+                  <div className="text-sm font-semibold text-[#c59b4a]">
+                    {hero.panelStatLabel}
+                  </div>
                 </div>
 
                 {/* Project mini-list */}
                 <div className="bg-white/5 border border-white/8 rounded-[18px] p-4 flex flex-col gap-2.5">
-                  <div className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">Live Projects</div>
+                  <div className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">
+                    Live Projects
+                  </div>
                   {projectsData?.projects?.slice(0, 3).map((p) => (
-                    <Link key={p.id} href="/projects" className="group bg-white/6 hover:bg-white/12 border border-white/8 rounded-xl p-2.5 transition-all flex items-center justify-between gap-2">
+                    <Link
+                      key={p.id}
+                      href="/projects"
+                      className="group bg-white/6 hover:bg-white/12 border border-white/8 rounded-xl p-2.5 transition-all flex items-center justify-between gap-2"
+                    >
                       <div className="truncate">
-                        <div className="text-sm font-bold text-white truncate">{p.name}</div>
-                        <div className="text-[10px] text-white/50 truncate">{p.sector} · {p.country}</div>
+                        <div className="text-sm font-bold text-white truncate">
+                          {p.name}
+                        </div>
+                        <div className="text-[10px] text-white/50 truncate">
+                          {p.sector} · {p.country}
+                        </div>
                       </div>
                       <span className="text-[9px] uppercase tracking-wide font-bold px-2 py-1 rounded-lg bg-[#c59b4a]/20 text-[#c59b4a] whitespace-nowrap shrink-0">
                         {formatStatus(p.fundingStatus)}
@@ -319,7 +541,10 @@ export default function Home() {
         <div className="flex whitespace-nowrap">
           <div className="ticker-track flex items-center gap-0 shrink-0">
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-              <span key={i} className="inline-flex items-center text-white/70 text-sm font-semibold px-6">
+              <span
+                key={i}
+                className="inline-flex items-center text-white/70 text-sm font-semibold px-6"
+              >
                 {item}
                 <span className="ml-6 text-[#c59b4a] font-bold">·</span>
               </span>
@@ -349,11 +574,21 @@ export default function Home() {
                 tag: "Delivery excellence",
               },
             ].map((item, i) => (
-              <motion.div key={i} {...fadeInView(i * 0.1)} className="relative h-80 rounded-[28px] overflow-hidden group cursor-pointer">
-                <img src={item.img} alt={item.label} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <motion.div
+                key={i}
+                {...fadeInView(i * 0.1)}
+                className="relative h-80 rounded-[28px] overflow-hidden group cursor-pointer"
+              >
+                <img
+                  src={item.img}
+                  alt={item.label}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#10231f]/85 via-[#10231f]/20 to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <span className="bg-[#c59b4a] text-[#10231f] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">{item.tag}</span>
+                  <span className="bg-[#c59b4a] text-[#10231f] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                    {item.tag}
+                  </span>
                 </div>
                 <div className="absolute bottom-0 left-0 p-6">
                   <h3 className="text-white font-bold text-xl">{item.label}</h3>
@@ -371,8 +606,13 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
               <Users className="h-3.5 w-3.5" /> Built for ecosystem leaders
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">Three pillars. One platform.</h2>
-            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">Zafora connects the critical actors that make infrastructure happen at scale.</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">
+              Three pillars. One platform.
+            </h2>
+            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">
+              Zafora connects the critical actors that make infrastructure
+              happen at scale.
+            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -382,7 +622,11 @@ export default function Home() {
                 desc: "Originate projects, structure concessions, and access global capital without overburdening sovereign debt.",
                 icon: <Landmark className="w-8 h-8" />,
                 img: imgs.pillar1,
-                bullets: ["Policy-to-project structuring", "Sovereign balance sheet protection", "Multilateral DFI liaison"],
+                bullets: [
+                  "Policy-to-project structuring",
+                  "Sovereign balance sheet protection",
+                  "Multilateral DFI liaison",
+                ],
                 color: "from-[#173f35] to-[#245d4e]",
               },
               {
@@ -390,7 +634,11 @@ export default function Home() {
                 desc: "Access a curated pipeline of derisked, ESG-compliant infrastructure assets with clear yield parameters.",
                 icon: <BarChart3 className="w-8 h-8" />,
                 img: imgs.pillar2,
-                bullets: ["Pre-screened bankable assets", "ESG & compliance verified", "Risk-adjusted return models"],
+                bullets: [
+                  "Pre-screened bankable assets",
+                  "ESG & compliance verified",
+                  "Risk-adjusted return models",
+                ],
                 color: "from-[#c59b4a] to-[#b5893a]",
               },
               {
@@ -398,24 +646,48 @@ export default function Home() {
                 desc: "Discover bankable projects ready for execution, and partner with reputable global sponsors.",
                 icon: <Building className="w-8 h-8" />,
                 img: imgs.pillar3,
-                bullets: ["Pre-qualified project pipeline", "Procurement facilitation", "Consortium formation support"],
+                bullets: [
+                  "Pre-qualified project pipeline",
+                  "Procurement facilitation",
+                  "Consortium formation support",
+                ],
                 color: "from-[#10231f] to-[#1a3530]",
               },
             ].map((card, i) => (
-              <motion.div key={i} {...fadeInView(i * 0.1)} className="bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm hover:shadow-xl transition-all group">
-                <div className={`relative h-48 bg-gradient-to-br ${card.color} overflow-hidden`}>
-                  <img src={card.img} alt={card.title} className="w-full h-full object-cover mix-blend-overlay opacity-50 group-hover:scale-105 transition-transform duration-700" />
+              <motion.div
+                key={i}
+                {...fadeInView(i * 0.1)}
+                className="bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm hover:shadow-xl transition-all group"
+              >
+                <div
+                  className={`relative h-48 bg-gradient-to-br ${card.color} overflow-hidden`}
+                >
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    className="w-full h-full object-cover mix-blend-overlay opacity-50 group-hover:scale-105 transition-transform duration-700"
+                  />
                   <div className="absolute inset-0 flex flex-col justify-end p-6">
-                    <div className="bg-white/15 backdrop-blur-sm rounded-xl p-2.5 w-fit mb-3 text-white">{card.icon}</div>
-                    <h3 className="text-2xl font-bold text-white">{card.title}</h3>
+                    <div className="bg-white/15 backdrop-blur-sm rounded-xl p-2.5 w-fit mb-3 text-white">
+                      {card.icon}
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">
+                      {card.title}
+                    </h3>
                   </div>
                 </div>
                 <div className="p-7">
-                  <p className="text-[#65736f] leading-relaxed mb-5">{card.desc}</p>
+                  <p className="text-[#65736f] leading-relaxed mb-5">
+                    {card.desc}
+                  </p>
                   <ul className="space-y-2.5">
                     {card.bullets.map((b, j) => (
-                      <li key={j} className="flex items-center gap-2.5 text-sm text-[#10231f] font-medium">
-                        <CheckCircle2 className="h-4 w-4 text-[#c59b4a] shrink-0" /> {b}
+                      <li
+                        key={j}
+                        className="flex items-center gap-2.5 text-sm text-[#10231f] font-medium"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-[#c59b4a] shrink-0" />{" "}
+                        {b}
                       </li>
                     ))}
                   </ul>
@@ -435,12 +707,21 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {siteStats.map((s, i) => (
-              <motion.div key={s.id} {...fadeInView(i * 0.08)} className="flex flex-col items-center gap-2">
+              <motion.div
+                key={s.id}
+                {...fadeInView(i * 0.08)}
+                className="flex flex-col items-center gap-2"
+              >
                 <div className="w-12 h-12 rounded-xl bg-[#c59b4a]/20 border border-[#c59b4a]/30 flex items-center justify-center text-[#c59b4a] mb-2">
                   {HOME_STAT_ICONS[i % HOME_STAT_ICONS.length]}
                 </div>
-                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">{s.value}{s.suffix}</div>
-                <div className="text-sm font-semibold text-white/60 uppercase tracking-widest">{s.label}</div>
+                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                  {s.value}
+                  {s.suffix}
+                </div>
+                <div className="text-sm font-semibold text-white/60 uppercase tracking-widest">
+                  {s.label}
+                </div>
               </motion.div>
             ))}
           </div>
@@ -450,36 +731,62 @@ export default function Home() {
       {/* ── SERVICES PREVIEW ─────────────────────────────────────── */}
       <section className="py-16 bg-white border-y border-[#e5ded3]">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+          <motion.div
+            {...fadeInView()}
+            className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6"
+          >
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                 <Briefcase className="h-3.5 w-3.5" /> Advisory & Services
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">End-to-end structuring, funding, and delivery.</h2>
-              <p className="text-lg text-[#65736f]">Six specialized practices covering every phase of infrastructure development.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">
+                End-to-end structuring, funding, and delivery.
+              </h2>
+              <p className="text-lg text-[#65736f]">
+                Six specialized practices covering every phase of infrastructure
+                development.
+              </p>
             </div>
-            <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#173f35] text-[#173f35] font-semibold hover:bg-[#173f35] hover:text-white transition-all whitespace-nowrap">
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#173f35] text-[#173f35] font-semibold hover:bg-[#173f35] hover:text-white transition-all whitespace-nowrap"
+            >
               All Services <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {servicesData?.services?.slice(0, 3).map((service, i) => (
-              <motion.div key={service.id} {...fadeInView(i * 0.1)} className="group bg-[#f7f4ef] border border-[#e5ded3] p-8 rounded-[24px] hover:border-[#173f35]/30 hover:shadow-lg transition-all relative overflow-hidden">
+              <motion.div
+                key={service.id}
+                {...fadeInView(i * 0.1)}
+                className="group bg-[#f7f4ef] border border-[#e5ded3] p-8 rounded-[24px] hover:border-[#173f35]/30 hover:shadow-lg transition-all relative overflow-hidden"
+              >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#173f35]/4 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="w-14 h-14 bg-[#173f35] text-[#c59b4a] rounded-[16px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-md">
                   {SERVICE_ICONS[i]}
                 </div>
-                <h3 className="text-xl font-bold text-[#10231f] mb-3">{service.name}</h3>
-                <p className="text-[#65736f] mb-6 line-clamp-3">{service.description}</p>
+                <h3 className="text-xl font-bold text-[#10231f] mb-3">
+                  {service.name}
+                </h3>
+                <p className="text-[#65736f] mb-6 line-clamp-3">
+                  {service.description}
+                </p>
                 <ul className="space-y-2.5 mb-7">
                   {service.bullets?.slice(0, 3).map((bullet, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-sm text-[#10231f] font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-[#c59b4a] shrink-0 mt-0.5" /> {bullet}
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2.5 text-sm text-[#10231f] font-medium"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-[#c59b4a] shrink-0 mt-0.5" />{" "}
+                      {bullet}
                     </li>
                   ))}
                 </ul>
-                <Link href={`/submit?service=${encodeURIComponent(service.name)}`} className="inline-flex items-center gap-1.5 text-[#173f35] font-bold text-sm hover:gap-3 transition-all">
+                <Link
+                  href={`/submit?service=${encodeURIComponent(service.name)}`}
+                  className="inline-flex items-center gap-1.5 text-[#173f35] font-bold text-sm hover:gap-3 transition-all"
+                >
                   Engage Practice <ChevronRight className="h-4 w-4" />
                 </Link>
               </motion.div>
@@ -502,26 +809,48 @@ export default function Home() {
                   <div className="inline-flex items-center gap-2 bg-white/10 text-[#c59b4a] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                     <Target className="h-3.5 w-3.5" /> Our Methodology
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">The Delivery Model</h2>
-                  <p className="text-xl text-white/60 max-w-xl">Our proprietary methodology derisks projects at every stage — from concept to commissioning.</p>
+                  <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">
+                    The Delivery Model
+                  </h2>
+                  <p className="text-xl text-white/60 max-w-xl">
+                    Our proprietary methodology derisks projects at every stage
+                    — from concept to commissioning.
+                  </p>
                 </div>
-                <Link href="/submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#c59b4a] text-[#10231f] font-bold hover:bg-[#b5893a] transition-all shrink-0 shadow-lg">
+                <Link
+                  href="/submit"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#c59b4a] text-[#10231f] font-bold hover:bg-[#b5893a] transition-all shrink-0 shadow-lg"
+                >
                   Start a Project <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {methodologySteps.map((step, i) => (
-                  <motion.div key={step.id} {...fadeInView(i * 0.07)} className="group flex gap-5">
+                  <motion.div
+                    key={step.id}
+                    {...fadeInView(i * 0.07)}
+                    className="group flex gap-5"
+                  >
                     <div className="flex flex-col items-center gap-2 shrink-0">
-                      <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${STEP_ACCENT_COLORS[i % STEP_ACCENT_COLORS.length]}`}>
-                        {(step.iconName ? METHODOLOGY_ICONS[step.iconName] : null) ?? <Target className="h-5 w-5" />}
+                      <div
+                        className={`w-10 h-10 rounded-xl border flex items-center justify-center ${STEP_ACCENT_COLORS[i % STEP_ACCENT_COLORS.length]}`}
+                      >
+                        {(step.iconName
+                          ? METHODOLOGY_ICONS[step.iconName]
+                          : null) ?? <Target className="h-5 w-5" />}
                       </div>
-                      <div className="text-xs font-bold text-[#c59b4a]/60">{String(step.stepNumber).padStart(2, "0")}</div>
+                      <div className="text-xs font-bold text-[#c59b4a]/60">
+                        {String(step.stepNumber).padStart(2, "0")}
+                      </div>
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
-                      <p className="text-white/55 text-sm leading-relaxed">{step.description}</p>
+                      <h4 className="text-lg font-bold text-white mb-2">
+                        {step.title}
+                      </h4>
+                      <p className="text-white/55 text-sm leading-relaxed">
+                        {step.description}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
@@ -546,50 +875,117 @@ export default function Home() {
                   aria-hidden="true"
                 >
                   {/* Grid lines */}
-                  {[45,90,135,180,225,270].map(x => (
-                    <line key={x} x1={x} y1="0" x2={x} y2="180" stroke="white" strokeWidth="0.3" strokeOpacity="0.12" />
+                  {[45, 90, 135, 180, 225, 270].map((x) => (
+                    <line
+                      key={x}
+                      x1={x}
+                      y1="0"
+                      x2={x}
+                      y2="180"
+                      stroke="white"
+                      strokeWidth="0.3"
+                      strokeOpacity="0.12"
+                    />
                   ))}
-                  {[30,60,90,120,150].map(y => (
-                    <line key={y} x1="0" y1={y} x2="360" y2={y} stroke="white" strokeWidth="0.3" strokeOpacity="0.12" />
+                  {[30, 60, 90, 120, 150].map((y) => (
+                    <line
+                      key={y}
+                      x1="0"
+                      y1={y}
+                      x2="360"
+                      y2={y}
+                      stroke="white"
+                      strokeWidth="0.3"
+                      strokeOpacity="0.12"
+                    />
                   ))}
                   {/* Africa */}
-                  <path d="M 174,54 L 189,53 L 205,57 L 212,60 L 223,78 L 230,79 L 221,91 L 220,101 L 215,112 L 198,125 L 191,119 L 192,108 L 189,95 L 185,86 L 178,85 L 175,85 L 169,85 L 167,82 L 163,76 L 163,61 Z" fill="#1e5444" stroke="#c59b4a" strokeWidth="0.5" strokeOpacity="0.5" />
+                  <path
+                    d="M 174,54 L 189,53 L 205,57 L 212,60 L 223,78 L 230,79 L 221,91 L 220,101 L 215,112 L 198,125 L 191,119 L 192,108 L 189,95 L 185,86 L 178,85 L 175,85 L 169,85 L 167,82 L 163,76 L 163,61 Z"
+                    fill="#1e5444"
+                    stroke="#c59b4a"
+                    strokeWidth="0.5"
+                    strokeOpacity="0.5"
+                  />
                   {/* Europe */}
-                  <path d="M 171,46 L 175,30 L 208,19 L 204,31 L 212,44 L 208,53 L 194,54 L 174,54 Z" fill="#1a4035" stroke="none" />
+                  <path
+                    d="M 171,46 L 175,30 L 208,19 L 204,31 L 212,44 L 208,53 L 194,54 L 174,54 Z"
+                    fill="#1a4035"
+                    stroke="none"
+                  />
                   {/* Arabian Peninsula */}
-                  <path d="M 212,60 L 228,60 L 236,65 L 238,68 L 232,78 L 225,77 L 224,68 L 216,60 Z" fill="#1a4035" stroke="none" />
+                  <path
+                    d="M 212,60 L 228,60 L 236,65 L 238,68 L 232,78 L 225,77 L 224,68 L 216,60 Z"
+                    fill="#1a4035"
+                    stroke="none"
+                  />
                   {/* Madagascar */}
-                  <path d="M 224,104 L 228,101 L 230,110 L 226,116 Z" fill="#1e5444" stroke="none" />
+                  <path
+                    d="M 224,104 L 228,101 L 230,110 L 226,116 Z"
+                    fill="#1e5444"
+                    stroke="none"
+                  />
                 </svg>
 
                 {/* Animated market dots — positions: left%=(lon+180-140)/130*100, top%=(90-lat-30)/130*100 */}
                 {[
-                  { city: "Lagos",        left: 33.4, top: 41.2, primary: true  },
-                  { city: "Nairobi",      left: 59.1, top: 47.2, primary: true  },
-                  { city: "Cairo",        left: 54.8, top: 23.0, primary: true  },
-                  { city: "Johannesburg", left: 52.3, top: 66.3, primary: true  },
-                  { city: "Dubai",        left: 73.3, top: 26.8, primary: false },
-                  { city: "Accra",        left: 30.6, top: 41.9, primary: false },
-                  { city: "Addis Ababa",  left: 60.5, top: 39.2, primary: false },
-                  { city: "Kigali",       left: 53.9, top: 47.6, primary: false },
-                  { city: "Dar es Salaam",left: 61.0, top: 51.4, primary: false },
-                  { city: "London",       left: 30.7, top:  6.5, primary: false },
-                  { city: "Dakar",        left: 17.4, top: 34.8, primary: false },
-                  { city: "Casablanca",   left: 24.9, top: 20.3, primary: false },
+                  { city: "Lagos", left: 33.4, top: 41.2, primary: true },
+                  { city: "Nairobi", left: 59.1, top: 47.2, primary: true },
+                  { city: "Cairo", left: 54.8, top: 23.0, primary: true },
+                  {
+                    city: "Johannesburg",
+                    left: 52.3,
+                    top: 66.3,
+                    primary: true,
+                  },
+                  { city: "Dubai", left: 73.3, top: 26.8, primary: false },
+                  { city: "Accra", left: 30.6, top: 41.9, primary: false },
+                  {
+                    city: "Addis Ababa",
+                    left: 60.5,
+                    top: 39.2,
+                    primary: false,
+                  },
+                  { city: "Kigali", left: 53.9, top: 47.6, primary: false },
+                  {
+                    city: "Dar es Salaam",
+                    left: 61.0,
+                    top: 51.4,
+                    primary: false,
+                  },
+                  { city: "London", left: 30.7, top: 6.5, primary: false },
+                  { city: "Dakar", left: 17.4, top: 34.8, primary: false },
+                  { city: "Casablanca", left: 24.9, top: 20.3, primary: false },
                 ].map((m, i) => (
                   <div
                     key={m.city}
                     className="absolute"
-                    style={{ left: `${m.left}%`, top: `${m.top}%`, transform: "translate(-50%,-50%)" }}
+                    style={{
+                      left: `${m.left}%`,
+                      top: `${m.top}%`,
+                      transform: "translate(-50%,-50%)",
+                    }}
                   >
                     {m.primary ? (
                       <div className="relative flex items-center justify-center">
-                        <span className="absolute inline-flex rounded-full bg-[#c59b4a] opacity-60 animate-ping"
-                          style={{ width: 14, height: 14, animationDuration: `${1.6 + i * 0.3}s` }} />
-                        <span className="relative inline-flex rounded-full bg-[#c59b4a]" style={{ width: 8, height: 8 }} />
+                        <span
+                          className="absolute inline-flex rounded-full bg-[#c59b4a] opacity-60 animate-ping"
+                          style={{
+                            width: 14,
+                            height: 14,
+                            animationDuration: `${1.6 + i * 0.3}s`,
+                          }}
+                        />
+                        <span
+                          className="relative inline-flex rounded-full bg-[#c59b4a]"
+                          style={{ width: 8, height: 8 }}
+                        />
                       </div>
                     ) : (
-                      <span className="inline-flex rounded-full bg-[#c59b4a]/70" style={{ width: 5, height: 5 }} />
+                      <span
+                        className="inline-flex rounded-full bg-[#c59b4a]/70"
+                        style={{ width: 5, height: 5 }}
+                      />
                     )}
                   </div>
                 ))}
@@ -597,14 +993,32 @@ export default function Home() {
                 {/* Tampa HQ indicator (outside map crop, shown as corner label) */}
                 <div className="absolute top-4 left-4 right-4 flex items-center gap-1.5">
                   <Globe className="h-3.5 w-3.5 text-[#c59b4a] shrink-0" />
-                  <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest">Global Presence</span>
+                  <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest">
+                    Global Presence
+                  </span>
                 </div>
 
                 {/* Bottom market count strip */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a1f1a] to-transparent pt-8 pb-4 px-4">
                   <div className="flex flex-wrap gap-1">
-                    {["Nigeria","Kenya","Egypt","Ghana","Rwanda","Tanzania","Ethiopia","S. Africa","Senegal","Morocco"].map(c => (
-                      <span key={c} className="text-[9px] font-semibold text-white/60 bg-white/8 border border-white/10 px-1.5 py-0.5 rounded-md">{c}</span>
+                    {[
+                      "Nigeria",
+                      "Kenya",
+                      "Egypt",
+                      "Ghana",
+                      "Rwanda",
+                      "Tanzania",
+                      "Ethiopia",
+                      "S. Africa",
+                      "Senegal",
+                      "Morocco",
+                    ].map((c) => (
+                      <span
+                        key={c}
+                        className="text-[9px] font-semibold text-white/60 bg-white/8 border border-white/10 px-1.5 py-0.5 rounded-md"
+                      >
+                        {c}
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -612,22 +1026,36 @@ export default function Home() {
 
               {/* Badge */}
               <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl px-4 py-3 shadow-xl">
-                <div className="text-[#10231f] font-bold text-lg leading-none">12</div>
-                <div className="text-[#10231f]/70 text-xs font-semibold">Markets</div>
+                <div className="text-[#10231f] font-bold text-lg leading-none">
+                  12
+                </div>
+                <div className="text-[#10231f]/70 text-xs font-semibold">
+                  Markets
+                </div>
               </div>
             </motion.div>
             <motion.div {...fadeInView(0.15)}>
-              <div className="text-6xl text-[#c59b4a] font-serif leading-none mb-4">"</div>
+              <div className="text-6xl text-[#c59b4a] font-serif leading-none mb-4">
+                "
+              </div>
               <p className="text-2xl md:text-3xl font-bold text-[#10231f] leading-snug mb-6 tracking-tight">
-                {featuredTestimonial?.quote || "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets."}
+                {featuredTestimonial?.quote ||
+                  "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets."}
               </p>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">
-                  {featuredTestimonial?.clientName ? featuredTestimonial.clientName.slice(0, 2).toUpperCase() : "ZH"}
+                  {featuredTestimonial?.clientName
+                    ? featuredTestimonial.clientName.slice(0, 2).toUpperCase()
+                    : "ZH"}
                 </div>
                 <div>
-                  <div className="font-bold text-[#10231f]">{featuredTestimonial?.clientName || "Zafora Holding"}</div>
-                  <div className="text-sm text-[#65736f]">{featuredTestimonial?.clientTitle || "Tampa, FL, USA · Est. 2025"}</div>
+                  <div className="font-bold text-[#10231f]">
+                    {featuredTestimonial?.clientName || "Zafora Holding"}
+                  </div>
+                  <div className="text-sm text-[#65736f]">
+                    {featuredTestimonial?.clientTitle ||
+                      "Tampa, FL, USA · Est. 2025"}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -638,15 +1066,25 @@ export default function Home() {
       {/* ── PROJECT PIPELINE PREVIEW ─────────────────────────────── */}
       <section className="py-16 bg-[#f7f4ef]">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6">
+          <motion.div
+            {...fadeInView()}
+            className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6"
+          >
             <div>
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
                 <MapPin className="h-3.5 w-3.5" /> Live Pipeline
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">Project Pipeline</h2>
-              <p className="text-lg text-[#65736f]">High-impact infrastructure assets currently seeking partners.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">
+                Project Pipeline
+              </h2>
+              <p className="text-lg text-[#65736f]">
+                High-impact infrastructure assets currently seeking partners.
+              </p>
             </div>
-            <Link href="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#e5ded3] text-[#10231f] font-semibold hover:border-[#173f35] hover:shadow-md transition-all whitespace-nowrap">
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#e5ded3] text-[#10231f] font-semibold hover:border-[#173f35] hover:shadow-md transition-all whitespace-nowrap"
+            >
               View Entire Portfolio <ChevronRight className="h-4 w-4" />
             </Link>
           </motion.div>
@@ -654,36 +1092,57 @@ export default function Home() {
           <div className="bg-white rounded-[36px] p-8 border border-[#e5ded3] shadow-sm">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {projectsData?.projects?.slice(0, 3).map((project, i) => (
-                <motion.div key={project.id} {...fadeInView(i * 0.08)} className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[22px] p-6 flex flex-col hover:border-[#173f35]/30 hover:shadow-md transition-all">
+                <motion.div
+                  key={project.id}
+                  {...fadeInView(i * 0.08)}
+                  className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[22px] p-6 flex flex-col hover:border-[#173f35]/30 hover:shadow-md transition-all"
+                >
                   <div className="flex justify-between items-start mb-4">
-                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getSectorStyle(project.sector)}`}>
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getSectorStyle(project.sector)}`}
+                    >
                       {project.sector}
                     </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getStatusColor(project.fundingStatus)}`}>
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getStatusColor(project.fundingStatus)}`}
+                    >
                       {formatStatus(project.fundingStatus)}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#10231f] mb-1.5 leading-snug">{project.name}</h3>
+                  <h3 className="text-xl font-bold text-[#10231f] mb-1.5 leading-snug">
+                    {project.name}
+                  </h3>
                   <div className="flex items-center gap-1.5 text-sm text-[#65736f] mb-5">
                     <MapPin className="h-3.5 w-3.5" /> {project.country}
                   </div>
                   <div className="bg-white rounded-xl p-4 mb-5 grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Est. Value</div>
+                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">
+                        Est. Value
+                      </div>
                       <div className="font-bold text-[#10231f] flex items-center gap-1">
-                        <DollarSign className="h-3.5 w-3.5 text-[#173f35]" /> {project.estimatedValue || "TBD"}
+                        <DollarSign className="h-3.5 w-3.5 text-[#173f35]" />{" "}
+                        {project.estimatedValue || "TBD"}
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Zafora Role</div>
-                      <div className="font-bold text-[#10231f] truncate">{project.zaforaRole}</div>
+                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">
+                        Zafora Role
+                      </div>
+                      <div className="font-bold text-[#10231f] truncate">
+                        {project.zaforaRole}
+                      </div>
                     </div>
                   </div>
                   <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#e5ded3]">
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-[#8a958f]">
-                      <Users className="h-3.5 w-3.5" /> {project.interestCount} interested
+                      <Users className="h-3.5 w-3.5" /> {project.interestCount}{" "}
+                      interested
                     </div>
-                    <Link href="/projects" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f35] hover:underline">
+                    <Link
+                      href="/projects"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f35] hover:underline"
+                    >
                       Express Interest <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </div>
@@ -701,8 +1160,12 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
               <Handshake className="h-3.5 w-3.5" /> Your Engagement Path
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">How would you like to engage?</h2>
-            <p className="text-xl text-[#65736f]">Zafora works across the full infrastructure stakeholder ecosystem.</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">
+              How would you like to engage?
+            </h2>
+            <p className="text-xl text-[#65736f]">
+              Zafora works across the full infrastructure stakeholder ecosystem.
+            </p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -734,18 +1197,33 @@ export default function Home() {
                 btnClass: "bg-white border border-[#e5ded3] text-[#10231f]",
               },
             ].map((card, i) => (
-              <motion.div key={i} {...fadeInView(i * 0.1)} className="group bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm hover:shadow-xl transition-all flex flex-col">
+              <motion.div
+                key={i}
+                {...fadeInView(i * 0.1)}
+                className="group bg-white rounded-[30px] overflow-hidden border border-[#e5ded3] shadow-sm hover:shadow-xl transition-all flex flex-col"
+              >
                 <div className="relative h-48 overflow-hidden">
-                  <img src={card.img} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute top-4 left-4">
-                    <span className="bg-white/90 backdrop-blur text-[#173f35] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">{card.tag}</span>
+                    <span className="bg-white/90 backdrop-blur text-[#173f35] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                      {card.tag}
+                    </span>
                   </div>
                 </div>
                 <div className="p-7 flex flex-col flex-1">
-                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">{card.title}</h3>
+                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">
+                    {card.title}
+                  </h3>
                   <p className="text-[#65736f] mb-7 flex-1">{card.desc}</p>
-                  <Link href={card.href} className={`w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-full font-bold text-sm ${card.btnClass} hover:opacity-90 transition-all shadow-sm`}>
+                  <Link
+                    href={card.href}
+                    className={`w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-full font-bold text-sm ${card.btnClass} hover:opacity-90 transition-all shadow-sm`}
+                  >
                     {card.cta} <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -762,23 +1240,68 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
               <Globe className="h-3.5 w-3.5" /> Core Sectors
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">We operate across six critical sectors</h2>
-            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">Every sector that drives African economic growth and human development.</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-4">
+              We operate across six critical sectors
+            </h2>
+            <p className="text-xl text-[#65736f] max-w-2xl mx-auto">
+              Every sector that drives African economic growth and human
+              development.
+            </p>
           </motion.div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { icon: <Zap className="w-7 h-7" />, label: "Energy", sub: "Power grids, solar, gas", color: "bg-yellow-50 text-yellow-600 border-yellow-200" },
-              { icon: <Droplets className="w-7 h-7" />, label: "Water", sub: "Treatment, sanitation", color: "bg-blue-50 text-blue-600 border-blue-200" },
-              { icon: <Truck className="w-7 h-7" />, label: "Transport", sub: "Roads, rail, ports", color: "bg-purple-50 text-purple-600 border-purple-200" },
-              { icon: <Stethoscope className="w-7 h-7" />, label: "Healthcare", sub: "Hospitals, clinics", color: "bg-red-50 text-red-500 border-red-200" },
-              { icon: <Wifi className="w-7 h-7" />, label: "Digital", sub: "Broadband, smart city", color: "bg-teal-50 text-teal-600 border-teal-200" },
-              { icon: <Leaf className="w-7 h-7" />, label: "Agriculture", sub: "Irrigation, storage", color: "bg-green-50 text-green-600 border-green-200" },
+              {
+                icon: <Zap className="w-7 h-7" />,
+                label: "Energy",
+                sub: "Power grids, solar, gas",
+                color: "bg-yellow-50 text-yellow-600 border-yellow-200",
+              },
+              {
+                icon: <Droplets className="w-7 h-7" />,
+                label: "Water",
+                sub: "Treatment, sanitation",
+                color: "bg-blue-50 text-blue-600 border-blue-200",
+              },
+              {
+                icon: <Truck className="w-7 h-7" />,
+                label: "Transport",
+                sub: "Roads, rail, ports",
+                color: "bg-purple-50 text-purple-600 border-purple-200",
+              },
+              {
+                icon: <Stethoscope className="w-7 h-7" />,
+                label: "Healthcare",
+                sub: "Hospitals, clinics",
+                color: "bg-red-50 text-red-500 border-red-200",
+              },
+              {
+                icon: <Wifi className="w-7 h-7" />,
+                label: "Digital",
+                sub: "Broadband, smart city",
+                color: "bg-teal-50 text-teal-600 border-teal-200",
+              },
+              {
+                icon: <Leaf className="w-7 h-7" />,
+                label: "Agriculture",
+                sub: "Irrigation, storage",
+                color: "bg-green-50 text-green-600 border-green-200",
+              },
             ].map((s, i) => (
-              <motion.div key={i} {...fadeInView(i * 0.07)} className={`group flex flex-col items-center gap-3 p-6 rounded-[24px] border ${s.color} hover:scale-105 transition-all cursor-default shadow-sm`}>
-                <div className="group-hover:scale-110 transition-transform">{s.icon}</div>
+              <motion.div
+                key={i}
+                {...fadeInView(i * 0.07)}
+                className={`group flex flex-col items-center gap-3 p-6 rounded-[24px] border ${s.color} hover:scale-105 transition-all cursor-default shadow-sm`}
+              >
+                <div className="group-hover:scale-110 transition-transform">
+                  {s.icon}
+                </div>
                 <div className="text-center">
-                  <div className="font-bold text-[#10231f] text-sm">{s.label}</div>
-                  <div className="text-[10px] text-[#8a958f] mt-0.5">{s.sub}</div>
+                  <div className="font-bold text-[#10231f] text-sm">
+                    {s.label}
+                  </div>
+                  <div className="text-[10px] text-[#8a958f] mt-0.5">
+                    {s.sub}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -794,26 +1317,46 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
                 <Building className="h-3.5 w-3.5" /> Who We Are
               </div>
-              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A global infrastructure and strategic solutions company.</h2>
+              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">
+                A global infrastructure and strategic solutions company.
+              </h2>
               <p className="text-lg text-[#65736f] leading-relaxed mb-6">
-                Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built to bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions.
+                Founded in January 2025 and headquartered in Tampa, Florida,
+                Zafora Holding was built to bridge global opportunities through
+                infrastructure intelligence, strategic partnerships, and
+                technology-driven solutions.
               </p>
               <p className="text-lg text-[#65736f] leading-relaxed mb-8">
-                We support public and private sector initiatives across Africa, the Americas, the Caribbean, and emerging markets worldwide — connecting innovation with scalable development opportunities.
+                We support public and private sector initiatives across Africa,
+                the Americas, the Caribbean, and emerging markets worldwide —
+                connecting innovation with scalable development opportunities.
               </p>
-              <Link href="/about" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md">
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md"
+              >
                 Our Full Story <ArrowRight className="h-4 w-4" />
               </Link>
             </motion.div>
-            <motion.div {...fadeInView(0.15)} className="grid grid-cols-2 gap-4">
+            <motion.div
+              {...fadeInView(0.15)}
+              className="grid grid-cols-2 gap-4"
+            >
               {[
                 { img: imgs.collage1, className: "h-64 rounded-[24px]" },
                 { img: imgs.collage2, className: "h-48 rounded-[24px] mt-8" },
                 { img: imgs.collage3, className: "h-48 rounded-[24px] -mt-4" },
                 { img: imgs.collage4, className: "h-64 rounded-[24px]" },
               ].map((img, i) => (
-                <div key={i} className={`overflow-hidden shadow-lg ${img.className}`}>
-                  <img src={img.img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                <div
+                  key={i}
+                  className={`overflow-hidden shadow-lg ${img.className}`}
+                >
+                  <img
+                    src={img.img}
+                    alt=""
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  />
                 </div>
               ))}
             </motion.div>
@@ -836,20 +1379,26 @@ export default function Home() {
               Your next infrastructure project starts here.
             </h2>
             <p className="text-xl text-white/65 mb-8 max-w-xl mx-auto leading-relaxed">
-              Whether you represent a government, investment fund, or engineering firm — we want to hear about your ambitions.
+              Whether you represent a government, investment fund, or
+              engineering firm — we want to hear about your ambitions.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/submit" className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-xl hover:-translate-y-0.5">
+              <Link
+                href="/submit"
+                className="inline-flex items-center gap-2 h-14 px-10 rounded-full bg-[#c59b4a] text-[#10231f] font-bold text-base hover:bg-[#b5893a] transition-all shadow-xl hover:-translate-y-0.5"
+              >
                 Start a Conversation <ArrowRight className="h-5 w-5" />
               </Link>
-              <Link href="/projects" className="inline-flex items-center gap-2 h-14 px-10 rounded-full border border-white/25 text-white font-bold text-base hover:bg-white/10 transition-all">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 h-14 px-10 rounded-full border border-white/25 text-white font-bold text-base hover:bg-white/10 transition-all"
+              >
                 Explore Pipeline
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
-
     </div>
   );
 }

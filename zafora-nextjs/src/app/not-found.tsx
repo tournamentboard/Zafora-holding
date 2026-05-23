@@ -1,7 +1,8 @@
-import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowRight, Home, Compass } from "lucide-react";
-import logo from "@/assets/logo.png";
+// import logo from "@/assets/logo.png";
+import logo from "../assets/logo.png";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
