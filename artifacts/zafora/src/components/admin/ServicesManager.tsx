@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useListServices, useCreateService, useUpdateService, useDeleteService } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2, Check, X, Eye, EyeOff, Briefcase, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { PhotoUploadField } from "./PhotoUploadField";
 
 type Service = {
   id: number; name: string; icon: string; description: string;
@@ -136,8 +137,7 @@ function ServiceCard({ service, onSave, onDelete }: { service: Service; onSave: 
               <textarea className="w-full border border-[#e5ded3] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35] resize-none" rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-[#10231f] mb-1 uppercase tracking-wide">Image URL</label>
-              <input className="w-full border border-[#e5ded3] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]" value={form.imageUrl ?? ""} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value || null }))} placeholder="https://..." />
+              <PhotoUploadField label="Image" value={form.imageUrl ?? ""} onChange={v => setForm(f => ({ ...f, imageUrl: v || null }))} />
             </div>
             <div className="md:col-span-2">
               <BulletEditor bullets={form.bullets} onChange={bullets => setForm(f => ({ ...f, bullets }))} />
@@ -250,8 +250,7 @@ export default function ServicesManager() {
               <textarea className="w-full border border-[#e5ded3] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35] resize-none" rows={3} value={newForm.description} onChange={e => setNewForm(f => ({ ...f, description: e.target.value }))} placeholder="What does this service do?" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-[#10231f] mb-1 uppercase tracking-wide">Image URL</label>
-              <input className="w-full border border-[#e5ded3] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]" value={newForm.imageUrl} onChange={e => setNewForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="https://..." />
+              <PhotoUploadField label="Image" value={newForm.imageUrl ?? ""} onChange={v => setNewForm(f => ({ ...f, imageUrl: v }))} />
             </div>
             <div className="md:col-span-2">
               <BulletEditor bullets={newForm.bullets} onChange={bullets => setNewForm(f => ({ ...f, bullets }))} />

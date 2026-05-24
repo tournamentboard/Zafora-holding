@@ -4,6 +4,7 @@ import {
   Plus, Trash2, Check, X, ChevronDown, ChevronUp,
   Quote, Eye, EyeOff, Loader2, User, GripVertical
 } from "lucide-react";
+import { PhotoUploadField } from "./PhotoUploadField";
 
 type Testimonial = {
   id: number;
@@ -168,7 +169,7 @@ export default function TestimonialsManager() {
             <Field label="Name" value={newForm.name} onChange={v => setNewForm(f => ({ ...f, name: v }))} placeholder="John Smith" />
             <Field label="Company" value={newForm.company} onChange={v => setNewForm(f => ({ ...f, company: v }))} placeholder="Acme Capital Partners" />
             <Field label="Role / Title" value={newForm.role || ""} onChange={v => setNewForm(f => ({ ...f, role: v }))} placeholder="Managing Director" />
-            <Field label="Photo URL (optional)" value={newForm.photoUrl || ""} onChange={v => setNewForm(f => ({ ...f, photoUrl: v }))} placeholder="https://..." />
+            <PhotoUploadField label="Photo (optional)" value={newForm.photoUrl || ""} onChange={v => setNewForm(f => ({ ...f, photoUrl: v }))} previewShape="circle" />
           </div>
           <Field label="Quote" value={newForm.quote} onChange={v => setNewForm(f => ({ ...f, quote: v }))} type="textarea"
             placeholder="What they said about working with Zafora..." />
@@ -237,8 +238,8 @@ export default function TestimonialsManager() {
                       onChange={v => updateLocal(item.id, "company", v)} />
                     <Field label="Role / Title" value={item.role || ""}
                       onChange={v => updateLocal(item.id, "role", v)} placeholder="Managing Director" />
-                    <Field label="Photo URL (optional)" value={item.photoUrl || ""}
-                      onChange={v => updateLocal(item.id, "photoUrl", v)} placeholder="https://..." />
+                    <PhotoUploadField label="Photo (optional)" value={item.photoUrl || ""}
+                      onChange={v => updateLocal(item.id, "photoUrl", v)} previewShape="circle" />
                   </div>
                   <Field label="Quote" value={item.quote}
                     onChange={v => updateLocal(item.id, "quote", v)} type="textarea" />

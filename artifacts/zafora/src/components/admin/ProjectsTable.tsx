@@ -3,6 +3,7 @@ import { useListProjects, useCreateProject, useDeleteProject, useUpdateProject, 
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, X, Users, MapPin, DollarSign, Eye, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
+import { PhotoUploadField } from "./PhotoUploadField";
 
 const SECTORS = ["Energy", "Water", "Transport", "Healthcare", "Agriculture", "Housing", "Digital", "Education", "Logistics", "Telecom"];
 const FUNDING_STATUSES = [
@@ -79,6 +80,7 @@ function SectorPicker({ value, onChange }: { value: string; onChange: (v: string
 function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
   const defaultSectors = defaultValues?.sector || "";
   const [sectors, setSectors] = useState(defaultSectors);
+  const [imageUrl, setImageUrl] = useState(defaultValues?.imageUrl || "");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -152,9 +154,13 @@ function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: any) {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Project Image URL <span className="text-xs font-normal text-[#8a958f]">(optional)</span></label>
-        <input name="imageUrl" defaultValue={defaultValues?.imageUrl} placeholder="https://... (paste an image URL for the project card)"
-          className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
+        <PhotoUploadField
+          label="Project Image (optional)"
+          value={imageUrl}
+          onChange={setImageUrl}
+          placeholder="Paste URL or upload a file"
+        />
+        <input type="hidden" name="imageUrl" value={imageUrl} />
       </div>
 
       <div className="flex gap-3 pt-1">

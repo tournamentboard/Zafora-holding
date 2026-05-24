@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useGetSiteSettings, useUpdateSiteSettings } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft, Plus, Loader2, Check, Trash2, Linkedin, Mail,
-  MapPin, ChevronRight, Users, Eye, EyeOff, FileText, Upload, X,
+  MapPin, ChevronRight, Users, Eye, EyeOff, FileText,
 } from "lucide-react";
-import { useImageUpload } from "../../hooks/use-image-upload";
+import { PhotoUploadField } from "./PhotoUploadField";
 
 const TEAM_COLORS = [
   "bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]",
@@ -30,56 +30,6 @@ const MEMBER_TEMPLATE = {
   cardStyle: "default",
   notes: "",
 };
-
-function PhotoUploadField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const fileRef = useRef<HTMLInputElement>(null);
-  const { uploadFile, isUploading, error } = useImageUpload({
-    onSuccess: (result) => onChange(result.publicUrl),
-  });
-
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    await uploadFile(file);
-    e.target.value = "";
-  };
-
-  return (
-    <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-[#10231f] block">Photo</label>
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={value ?? ""}
-          onChange={e => onChange(e.target.value)}
-          placeholder="Paste URL or upload a file"
-          className="flex-1 border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white min-w-0"
-        />
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          disabled={isUploading}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#e5ded3] text-sm font-semibold text-[#173f35] bg-white hover:bg-[#f0ebe3] transition-colors disabled:opacity-50 shrink-0"
-        >
-          {isUploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
-          {isUploading ? "Uploading…" : "Upload"}
-        </button>
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-      </div>
-      {error && (
-        <p className="text-red-500 text-xs flex items-center gap-1"><X size={12} />{error}</p>
-      )}
-      {value && (
-        <img
-          src={value}
-          alt=""
-          className="h-16 w-16 rounded-xl object-cover border border-[#e5ded3] mt-1"
-          onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }}
-        />
-      )}
-    </div>
-  );
-}
 
 function deepMerge(base: any, override: any): any {
   if (!override || typeof override !== "object") return base;
