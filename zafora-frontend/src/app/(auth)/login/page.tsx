@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
@@ -10,8 +10,9 @@ import { loginAdmin } from "@/src/modules/admin/auth";
 import { ROUTES } from "@/src/lib/url-helpers";
 import logo from "@/src/assets/logo.png";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [values, setValues] = useState<LoginFormValues>({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +36,10 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await loginAdmin(parsed.data);
-      router.push(ROUTES.ADMIN.ROOT);
-      router.refresh();
+      const from = searchParams.get("from");
+      const redirectTo =
+        from && from.startsWith("/admin") ? from : ROUTES.ADMIN.ROOT;
+      router.replace(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid credentials");
     } finally {
@@ -150,5 +153,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

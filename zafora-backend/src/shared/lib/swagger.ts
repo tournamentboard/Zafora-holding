@@ -6,7 +6,7 @@ const spec: OpenAPIV3.Document = {
     title: "Zafora Backend API",
     version: "1.0.0",
     description:
-      "REST API for Zafora Holding — infrastructure advisory platform.\n\n**Auth:** Session cookie (`connect.sid`). Call `POST /api/auth/login` first, then send `credentials: include` on subsequent requests.\n\nProtected routes are marked 🔒.",
+      "REST API for Zafora Holding — infrastructure advisory platform.\n\n**Auth:** JWT cookies (`access_token` 15 min + `refresh_token` 7 days). Call `POST /api/auth/login` first; cookies are set automatically. Use `POST /api/auth/refresh` to rotate tokens. Protected routes are marked 🔒.",
     contact: { email: "Office@zaforaholding.com" },
   },
   servers: [
@@ -388,13 +388,13 @@ const spec: OpenAPIV3.Document = {
       },
     },
 
-    // Cookie-based session security
+    // JWT cookie-based security
     securitySchemes: {
       cookieAuth: {
         type: "apiKey",
         in: "cookie",
-        name: "connect.sid",
-        description: "Session cookie — obtained via POST /api/auth/login. Enable 'credentials: include' in your client.",
+        name: "access_token",
+        description: "Short-lived JWT access token (15 min) — set automatically by POST /api/auth/login. Send credentials with every request.",
       },
     },
   },
@@ -418,11 +418,11 @@ const spec: OpenAPIV3.Document = {
       post: {
         tags: ["Auth"],
         summary: "Login",
-        description: "Validates email + password (bcrypt). Sets a session cookie on success.",
+        description: "Validates email + password (bcrypt). Sets `access_token` (15 min) and `refresh_token` (7 days) httpOnly cookies.",
         operationId: "login",
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/LoginBody" } } } },
         responses: {
-          "200": { description: "Authenticated", content: { "application/json": { schema: { $ref: "#/components/schemas/LoginResponse" } } } },
+          "200": { description: "Authenticated — cookies set", content: { "application/json": { schema: { $ref: "#/components/schemas/LoginResponse" } } } },
           "400": { description: "Invalid request body", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "401": { description: "Invalid credentials", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
@@ -431,12 +431,24 @@ const spec: OpenAPIV3.Document = {
     "/api/auth/verify": {
       get: {
         tags: ["Auth"],
-        summary: "Verify session",
-        description: "Returns current session state — safe to call on page load.",
+        summary: "Verify access token 🔒",
+        description: "Validates the `access_token` cookie. Returns current user if valid.",
         operationId: "verifySession",
         security: [{ cookieAuth: [] }],
         responses: {
-          "200": { description: "Session state", content: { "application/json": { schema: { $ref: "#/components/schemas/VerifyResponse" } } } },
+          "200": { description: "Token state", content: { "application/json": { schema: { $ref: "#/components/schemas/VerifyResponse" } } } },
+        },
+      },
+    },
+    "/api/auth/refresh": {
+      post: {
+        tags: ["Auth"],
+        summary: "Refresh tokens",
+        description: "Rotates the `refresh_token` cookie and issues a new `access_token`. Old refresh token is invalidated.",
+        operationId: "refreshTokens",
+        responses: {
+          "200": { description: "New tokens issued", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "401": { description: "Missing, invalid, or revoked refresh token", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
     },
@@ -444,11 +456,11 @@ const spec: OpenAPIV3.Document = {
       post: {
         tags: ["Auth"],
         summary: "Logout",
-        description: "Destroys the session cookie.",
+        description: "Invalidates the refresh token in DB and clears both auth cookies.",
         operationId: "logout",
         security: [{ cookieAuth: [] }],
         responses: {
-          "200": { description: "Logged out", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "200": { description: "Logged out — cookies cleared", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
         },
       },
     },

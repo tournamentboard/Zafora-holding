@@ -8,6 +8,7 @@ export const API = {
     LOGIN: `${API_PREFIX}/auth/login`,
     LOGOUT: `${API_PREFIX}/auth/logout`,
     VERIFY: `${API_PREFIX}/auth/verify`,
+    REFRESH: `${API_PREFIX}/auth/refresh`,
     CHANGE_PASSWORD: `${API_PREFIX}/auth/change-password`,
   },
   LEADS: {

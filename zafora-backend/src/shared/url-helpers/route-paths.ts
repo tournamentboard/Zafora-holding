@@ -5,6 +5,7 @@ export const ROUTE_PATHS = {
     LOGIN: "/auth/login",
     LOGOUT: "/auth/logout",
     VERIFY: "/auth/verify",
+    REFRESH: "/auth/refresh",
     CHANGE_PASSWORD: "/auth/change-password",
   },
 

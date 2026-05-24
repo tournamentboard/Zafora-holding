@@ -1,8 +1,6 @@
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { db, usersTable } from "@/db/index.js";
-import { AuditAction } from "@/shared/enums/index.js";
-import type { AuthSession, VerifyResult } from "./auth.types.js";
+import { db, usersTable, sessionsTable } from "@/db/index.js";
 
 const SALT_ROUNDS = 12;
 
@@ -26,42 +24,6 @@ export async function validateCredentials(
   if (!match) return null;
 
   return { userId: user.id, email: user.email, role: user.role };
-}
-
-export function getSessionUser(session: Record<string, unknown>): AuthSession | null {
-  if (
-    typeof session["userId"] === "number" &&
-    typeof session["email"] === "string" &&
-    typeof session["role"] === "string"
-  ) {
-    return {
-      userId: session["userId"],
-      email: session["email"],
-      role: session["role"],
-    };
-  }
-  return null;
-}
-
-export function setSessionUser(session: Record<string, unknown>, user: AuthSession): void {
-  session["userId"] = user.userId;
-  session["email"] = user.email;
-  session["role"] = user.role;
-}
-
-export function clearSession(session: Record<string, unknown>): void {
-  delete session["userId"];
-  delete session["email"];
-  delete session["role"];
-}
-
-export function verifySession(session: Record<string, unknown>): VerifyResult {
-  const user = getSessionUser(session);
-  if (!user) return { authenticated: false };
-  return {
-    authenticated: true,
-    user: { id: user.userId, email: user.email, role: user.role },
-  };
 }
 
 export async function changePassword(
@@ -92,4 +54,31 @@ export async function createUser(email: string, password: string, role = "admin"
     .values({ email: email.toLowerCase().trim(), passwordHash, role })
     .returning({ id: usersTable.id });
   return user!.id;
+}
+
+// ─── Refresh token DB operations ────────────────────────────────────────────
+
+export async function storeRefreshToken(
+  tokenId: string,
+  userId: number,
+  expiresAt: Date,
+): Promise<void> {
+  await db.insert(sessionsTable).values({ sessionId: tokenId, userId, expiresAt });
+}
+
+export async function findRefreshToken(tokenId: string) {
+  const [session] = await db
+    .select()
+    .from(sessionsTable)
+    .where(eq(sessionsTable.sessionId, tokenId))
+    .limit(1);
+  return session ?? null;
+}
+
+export async function deleteRefreshToken(tokenId: string): Promise<void> {
+  await db.delete(sessionsTable).where(eq(sessionsTable.sessionId, tokenId));
+}
+
+export async function deleteAllUserTokens(userId: number): Promise<void> {
+  await db.delete(sessionsTable).where(eq(sessionsTable.userId, userId));
 }
