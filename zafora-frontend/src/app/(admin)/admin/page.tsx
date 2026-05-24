@@ -127,7 +127,7 @@ export default function Admin() {
         credentials: "include",
       });
     } catch {
-      // ignore
+      // ignore updated
     }
     window.location.href = "/login";
   };
