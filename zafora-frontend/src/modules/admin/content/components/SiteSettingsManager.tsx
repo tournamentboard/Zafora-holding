@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Settings2, Globe, Layout, FileText, Info, Loader2, ExternalLink,
@@ -541,3 +543,4 @@ export default function SiteSettingsManager() {
     </div>
   );
 }
+

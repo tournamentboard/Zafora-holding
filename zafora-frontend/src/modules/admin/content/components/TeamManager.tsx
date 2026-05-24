@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft, Plus, Loader2, Check, Trash2, Mail,
@@ -512,3 +514,4 @@ export default function TeamManager() {
     </div>
   );
 }
+

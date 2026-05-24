@@ -1,7 +1,11 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useToast } from "@/src/hooks/use-toast";
+import { toast } from "sonner";
+import { apiAxios } from "@/src/lib/api-helpers";
+import { API } from "@/src/lib/url-helpers";
 import {
-  Plus, Trash2, Check, GripVertical, Eye, EyeOff,
+  Plus, Trash2, Check, Eye, EyeOff,
   Navigation, Loader2, ExternalLink, X, ChevronUp, ChevronDown
 } from "lucide-react";
 
@@ -24,7 +28,6 @@ const DEFAULT_NAV: NavItem[] = [
 const newId = () => Math.random().toString(36).slice(2, 9);
 
 export default function NavigationManager() {
-  const { toast } = useToast();
   const [items, setItems] = useState<NavItem[]>(DEFAULT_NAV);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,11 +35,11 @@ export default function NavigationManager() {
   const [newItem, setNewItem] = useState<Omit<NavItem, "id" | "order">>({ label: "", href: "", visible: true, openNewTab: false });
 
   useEffect(() => {
-    fetch("/api/content/settings/navigation")
-      .then(r => r.json())
-      .then(d => {
+    apiAxios
+      .get<{ key: string; value: string }>(API.CONTENT.SETTINGS("navigation"))
+      .then((r) => {
         try {
-          const val = JSON.parse(d.value);
+          const val = JSON.parse(r.data.value);
           if (Array.isArray(val) && val.length > 0) setItems(val);
         } catch {}
       })
@@ -47,14 +50,10 @@ export default function NavigationManager() {
   const save = async (nav: NavItem[]) => {
     setSaving(true);
     try {
-      await fetch("/api/content/settings/navigation", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value: JSON.stringify(nav) }),
-      });
-      toast({ title: "Navigation saved." });
+      await apiAxios.patch(API.CONTENT.SETTINGS("navigation"), { value: JSON.stringify(nav) });
+      toast.success("Navigation saved.");
     } catch {
-      toast({ title: "Failed to save.", variant: "destructive" });
+      toast.error("Failed to save.");
     } finally {
       setSaving(false);
     }
@@ -71,32 +70,35 @@ export default function NavigationManager() {
   };
 
   const toggleVisible = (id: string) =>
-    setItems(items => items.map(i => i.id === id ? { ...i, visible: !i.visible } : i));
+    setItems((items) => items.map((i) => (i.id === id ? { ...i, visible: !i.visible } : i)));
 
   const toggleNewTab = (id: string) =>
-    setItems(items => items.map(i => i.id === id ? { ...i, openNewTab: !i.openNewTab } : i));
+    setItems((items) => items.map((i) => (i.id === id ? { ...i, openNewTab: !i.openNewTab } : i)));
 
-  const updateField = (id: string, field: keyof NavItem, val: any) =>
-    setItems(items => items.map(i => i.id === id ? { ...i, [field]: val } : i));
+  const updateField = (id: string, field: keyof NavItem, val: NavItem[keyof NavItem]) =>
+    setItems((items) => items.map((i) => (i.id === id ? { ...i, [field]: val } : i)));
 
-  const deleteItem = (id: string) => setItems(items => items.filter(i => i.id !== id));
+  const deleteItem = (id: string) => setItems((items) => items.filter((i) => i.id !== id));
 
   const handleAdd = () => {
     if (!newItem.label || !newItem.href) {
-      toast({ title: "Label and link are required.", variant: "destructive" });
+      toast.error("Label and link are required.");
       return;
     }
     const item: NavItem = { ...newItem, id: newId(), order: items.length };
-    setItems(prev => [...prev, item]);
+    setItems((prev) => [...prev, item]);
     setNewItem({ label: "", href: "", visible: true, openNewTab: false });
     setAddingNew(false);
   };
 
-  if (loading) return (
-    <div className="space-y-3">
-      {[1, 2, 3, 4].map(i => <div key={i} className="h-16 bg-[#f7f4ef] rounded-2xl animate-pulse" />)}
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="space-y-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-16 bg-[#f7f4ef] rounded-2xl animate-pulse" />
+        ))}
+      </div>
+    );
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -106,7 +108,7 @@ export default function NavigationManager() {
             <Navigation className="h-5 w-5 text-[#173f35]" /> Navigation Menu
           </h2>
           <p className="text-sm text-[#65736f] mt-0.5">
-            Control what links appear in the website header. Reorder, rename, or hide any item.
+            Control what links appear in the website header.
           </p>
         </div>
         <button
@@ -117,58 +119,84 @@ export default function NavigationManager() {
         </button>
       </div>
 
-      <div className="bg-[#efe3cf]/40 border border-[#e5ded3] rounded-xl p-4 text-sm text-[#65736f]">
-        <strong className="text-[#10231f]">Note:</strong> The "Request Consultation" button in the top-right corner is separate — it links to <code className="bg-white rounded px-1 py-0.5 text-xs border border-[#e5ded3]">/submit</code> and is always visible. Changes here only affect the main navigation links.
-      </div>
-
-      {/* Add new item */}
       {addingNew && (
         <div className="bg-white border-2 border-[#c59b4a] rounded-2xl p-5 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-[#10231f] text-sm">New Navigation Link</h3>
-            <button onClick={() => setAddingNew(false)} className="text-[#8a958f] hover:text-red-500"><X size={16} /></button>
+            <button onClick={() => setAddingNew(false)} className="text-[#8a958f] hover:text-red-500">
+              <X size={16} />
+            </button>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-[#10231f] mb-1 uppercase tracking-wide">Link Label</label>
-              <input type="text" value={newItem.label} onChange={e => setNewItem(f => ({ ...f, label: e.target.value }))}
-                placeholder="e.g. Contact" className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]" />
+              <input
+                type="text"
+                value={newItem.label}
+                onChange={(e) => setNewItem((f) => ({ ...f, label: e.target.value }))}
+                placeholder="e.g. Contact"
+                className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]"
+              />
             </div>
             <div>
               <label className="block text-xs font-bold text-[#10231f] mb-1 uppercase tracking-wide">URL / Path</label>
-              <input type="text" value={newItem.href} onChange={e => setNewItem(f => ({ ...f, href: e.target.value }))}
-                placeholder="/contact or https://..." className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]" />
+              <input
+                type="text"
+                value={newItem.href}
+                onChange={(e) => setNewItem((f) => ({ ...f, href: e.target.value }))}
+                placeholder="/contact or https://..."
+                className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]"
+              />
             </div>
           </div>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 text-sm text-[#65736f] cursor-pointer">
-              <input type="checkbox" checked={newItem.openNewTab} onChange={e => setNewItem(f => ({ ...f, openNewTab: e.target.checked }))}
-                className="rounded" />
+              <input
+                type="checkbox"
+                checked={newItem.openNewTab}
+                onChange={(e) => setNewItem((f) => ({ ...f, openNewTab: e.target.checked }))}
+                className="rounded"
+              />
               Open in new tab
             </label>
           </div>
           <div className="flex gap-3 justify-end">
-            <button onClick={() => setAddingNew(false)} className="px-4 py-2 rounded-xl border border-[#e5ded3] text-[#65736f] text-sm font-semibold hover:bg-[#f7f4ef]">Cancel</button>
-            <button onClick={handleAdd} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#c59b4a] text-white text-sm font-bold hover:bg-[#a8833e] transition-colors">
+            <button
+              onClick={() => setAddingNew(false)}
+              className="px-4 py-2 rounded-xl border border-[#e5ded3] text-[#65736f] text-sm font-semibold hover:bg-[#f7f4ef]"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAdd}
+              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#c59b4a] text-white text-sm font-bold hover:bg-[#a8833e] transition-colors"
+            >
               <Check size={14} /> Add Link
             </button>
           </div>
         </div>
       )}
 
-      {/* Nav items list */}
       <div className="space-y-2">
         {items.map((item, index) => (
-          <div key={item.id}
-            className={`bg-white border rounded-2xl shadow-sm transition-all ${!item.visible ? "opacity-60" : "border-[#e5ded3]"}`}>
+          <div
+            key={item.id}
+            className={`bg-white border rounded-2xl shadow-sm transition-all ${!item.visible ? "opacity-60" : "border-[#e5ded3]"}`}
+          >
             <div className="flex items-center gap-3 p-4">
               <div className="flex flex-col gap-0.5 shrink-0">
-                <button onClick={() => moveItem(index, "up")} disabled={index === 0}
-                  className="p-0.5 text-[#c5c0b8] hover:text-[#173f35] disabled:opacity-30 transition-colors">
+                <button
+                  onClick={() => moveItem(index, "up")}
+                  disabled={index === 0}
+                  className="p-0.5 text-[#c5c0b8] hover:text-[#173f35] disabled:opacity-30 transition-colors"
+                >
                   <ChevronUp size={14} />
                 </button>
-                <button onClick={() => moveItem(index, "down")} disabled={index === items.length - 1}
-                  className="p-0.5 text-[#c5c0b8] hover:text-[#173f35] disabled:opacity-30 transition-colors">
+                <button
+                  onClick={() => moveItem(index, "down")}
+                  disabled={index === items.length - 1}
+                  className="p-0.5 text-[#c5c0b8] hover:text-[#173f35] disabled:opacity-30 transition-colors"
+                >
                   <ChevronDown size={14} />
                 </button>
               </div>
@@ -179,19 +207,16 @@ export default function NavigationManager() {
                 <input
                   type="text"
                   value={item.label}
-                  onChange={e => updateField(item.id, "label", e.target.value)}
+                  onChange={(e) => updateField(item.id, "label", e.target.value)}
                   className="font-semibold text-sm text-[#10231f] border-none bg-transparent focus:outline-none focus:bg-[#f7f4ef] rounded px-1 py-0.5 w-full max-w-[140px]"
                 />
-                <div className="flex items-center gap-1.5">
-                  <input
-                    type="text"
-                    value={item.href}
-                    onChange={e => updateField(item.id, "href", e.target.value)}
-                    className="text-xs text-[#65736f] border-none bg-transparent focus:outline-none focus:bg-[#f7f4ef] rounded px-1 py-0.5 w-full max-w-[200px]"
-                  />
-                </div>
+                <input
+                  type="text"
+                  value={item.href}
+                  onChange={(e) => updateField(item.id, "href", e.target.value)}
+                  className="text-xs text-[#65736f] border-none bg-transparent focus:outline-none focus:bg-[#f7f4ef] rounded px-1 py-0.5 w-full max-w-[200px]"
+                />
               </div>
-
               <div className="flex items-center gap-1 shrink-0">
                 {item.openNewTab && (
                   <span className="text-[10px] font-medium text-[#8a958f] flex items-center gap-1 bg-[#f7f4ef] px-2 py-1 rounded-full">
@@ -199,18 +224,28 @@ export default function NavigationManager() {
                   </span>
                 )}
                 {!item.visible && (
-                  <span className="text-[10px] font-bold bg-[#f7f4ef] text-[#8a958f] px-2 py-1 rounded-full uppercase tracking-wide">Hidden</span>
+                  <span className="text-[10px] font-bold bg-[#f7f4ef] text-[#8a958f] px-2 py-1 rounded-full uppercase tracking-wide">
+                    Hidden
+                  </span>
                 )}
-                <button onClick={() => toggleVisible(item.id)} title={item.visible ? "Hide" : "Show"}
-                  className="p-1.5 rounded-lg hover:bg-[#f7f4ef] text-[#8a958f] hover:text-[#173f35] transition-colors">
+                <button
+                  onClick={() => toggleVisible(item.id)}
+                  title={item.visible ? "Hide" : "Show"}
+                  className="p-1.5 rounded-lg hover:bg-[#f7f4ef] text-[#8a958f] hover:text-[#173f35] transition-colors"
+                >
                   {item.visible ? <Eye size={15} /> : <EyeOff size={15} />}
                 </button>
-                <button onClick={() => toggleNewTab(item.id)} title="Toggle new tab"
-                  className="p-1.5 rounded-lg hover:bg-[#f7f4ef] text-[#8a958f] hover:text-[#173f35] transition-colors">
+                <button
+                  onClick={() => toggleNewTab(item.id)}
+                  title="Toggle new tab"
+                  className="p-1.5 rounded-lg hover:bg-[#f7f4ef] text-[#8a958f] hover:text-[#173f35] transition-colors"
+                >
                   <ExternalLink size={15} />
                 </button>
-                <button onClick={() => deleteItem(item.id)}
-                  className="p-1.5 rounded-lg hover:bg-red-50 text-[#8a958f] hover:text-red-500 transition-colors">
+                <button
+                  onClick={() => deleteItem(item.id)}
+                  className="p-1.5 rounded-lg hover:bg-red-50 text-[#8a958f] hover:text-red-500 transition-colors"
+                >
                   <Trash2 size={15} />
                 </button>
               </div>

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "@/src/lib/api-client-react";
+import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Loader2, Info, ChevronDown, ChevronRight,
@@ -558,3 +560,4 @@ export default function AboutEditor() {
     </div>
   );
 }
+

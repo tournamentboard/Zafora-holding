@@ -19,3 +19,5 @@ export {
   useDeleteTestimonial,
   contentKeys,
 } from "./services/content.service";
+
+export { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "./services/site-settings.service";
