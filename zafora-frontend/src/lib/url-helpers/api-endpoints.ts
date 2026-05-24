@@ -4,6 +4,12 @@ export const API = {
   HEALTH: {
     CHECK: `${API_PREFIX}/healthz`,
   },
+  AUTH: {
+    LOGIN: `${API_PREFIX}/auth/login`,
+    LOGOUT: `${API_PREFIX}/auth/logout`,
+    VERIFY: `${API_PREFIX}/auth/verify`,
+    CHANGE_PASSWORD: `${API_PREFIX}/auth/change-password`,
+  },
   LEADS: {
     LIST: `${API_PREFIX}/leads`,
     BY_ID: (id: number | string) => `${API_PREFIX}/leads/${id}`,

@@ -27,17 +27,35 @@ function buildApiUrl(
   return url.toString();
 }
 
-export async function apiClient<T>(
-  options: ApiClientOptions,
-): Promise<T> {
+/**
+ * SSR-safe fetch client for Server Components and Server Actions.
+ * Automatically forwards the session cookie from the incoming request.
+ */
+export async function apiClient<T>(options: ApiClientOptions): Promise<T> {
   const { path, body, searchParams, headers, ...init } = options;
   const url = buildApiUrl(path, searchParams);
+
+  // Forward the session cookie in server-side requests
+  let cookieHeader: string | undefined;
+  if (typeof window === "undefined") {
+    try {
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      const sessionCookie = cookieStore.get("connect.sid");
+      if (sessionCookie) {
+        cookieHeader = `${sessionCookie.name}=${sessionCookie.value}`;
+      }
+    } catch {
+      // Not in a request context (e.g. during build) — skip
+    }
+  }
 
   const response = await fetch(url, {
     ...init,
     headers: {
       Accept: "application/json",
       ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
       ...headers,
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,
