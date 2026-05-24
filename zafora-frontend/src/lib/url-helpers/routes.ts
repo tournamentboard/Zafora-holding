@@ -9,6 +9,7 @@ export const ROUTES = {
   LOGIN: "/login",
   ADMIN: {
     ROOT: "/admin",
+    LOGIN: "/login",
     LEADS: "/admin/leads",
     PROJECTS: "/admin/projects",
     DOCUMENTS: "/admin/documents",

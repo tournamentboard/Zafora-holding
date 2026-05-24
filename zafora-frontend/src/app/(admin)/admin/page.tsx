@@ -1,9 +1,9 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
-  Lock, LogOut, LayoutDashboard, Inbox, FolderOpen, FileText,
-  Eye, EyeOff, Settings, Settings2, BarChart2, Briefcase, Target,
+  LogOut, LayoutDashboard, Inbox, FolderOpen, FileText,
+  Settings, Settings2, BarChart2, Briefcase, Target,
   ChevronDown, ChevronRight, Quote, Navigation, Palette, Activity, Users,
 } from "lucide-react";
 import LeadsTable from "@/src/components/admin/LeadsTable";
@@ -117,104 +117,23 @@ function SidebarGroup({ group, items, activeTab, onSelect, collapsed, onToggle }
 }
 
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("dashboard");
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    fetch("/api/admin/auth/check")
-      .then(r => r.json())
-      .then(d => { if (d.authenticated) setIsAuthenticated(true); })
-      .catch(() => {});
-  }, []);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const r = await fetch("/api/admin/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-      if (r.ok) {
-        setIsAuthenticated(true);
-        setError(false);
-      } else {
-        setError(true);
-        setPassword("");
-      }
-    } catch {
-      setError(true);
-      setPassword("");
-    }
-  };
-
   const handleLogout = async () => {
-    await fetch("/api/admin/auth/logout", { method: "POST" }).catch(() => {});
-    setIsAuthenticated(false);
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // ignore
+    }
+    window.location.href = "/login";
   };
 
-  const toggleGroup = (group: string) => setCollapsed(c => ({ ...c, [group]: !c[group] }));
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
-        <div className="w-full max-w-sm">
-          <div className="text-center mb-8">
-            <Image src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
-            <h1 className="text-2xl font-bold text-[#10231f] mb-1">Admin Sign In</h1>
-            <p className="text-[#65736f] text-sm">Enter your password to manage the website</p>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-[#e5ded3] shadow-lg p-8">
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div>
-                <label className="block text-sm font-semibold text-[#10231f] mb-2">Password</label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value); setError(false); }}
-                    className={`w-full border rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] ${error ? "border-red-400 bg-red-50" : "border-[#e5ded3] bg-[#f7f4ef]"}`}
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a958f] hover:text-[#10231f]"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {error && (
-                  <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
-                    <Lock size={14} /> Wrong password. Please try again.
-                  </p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 rounded-xl bg-[#173f35] text-white font-bold text-base hover:bg-[#245d4e] transition-colors"
-              >
-                Sign In
-              </button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <Link href="/" className="text-sm text-[#65736f] hover:text-[#173f35] transition-colors">
-                Back to website
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const toggleGroup = (group: string) =>
+    setCollapsed((c) => ({ ...c, [group]: !c[group] }));
 
   const activeTabInfo = ALL_TABS.find(t => t.id === activeTab)!;
   const activeGroup = SIDEBAR_GROUPS.find(g => g.items.some(i => i.id === activeTab))?.group ?? "";
