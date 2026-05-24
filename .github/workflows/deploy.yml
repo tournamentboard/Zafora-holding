@@ -38,13 +38,7 @@ jobs:
             "https://api.vercel.com/v9/projects/${{ secrets.VERCEL_PROJECT_ID }}?teamId=${{ secrets.VERCEL_ORG_ID }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{
-              "framework": "nextjs",
-              "rootDirectory": "zafora-frontend",
-              "buildCommand": null,
-              "outputDirectory": null,
-              "installCommand": null
-            }'
+            -d '{"framework":"nextjs","rootDirectory":null,"buildCommand":null,"outputDirectory":null,"installCommand":null}'
 
       - name: Write Vercel project config
         working-directory: zafora-frontend
@@ -115,13 +109,7 @@ jobs:
             "https://api.vercel.com/v9/projects/${{ secrets.VERCEL_PROJECT_ID }}?teamId=${{ secrets.VERCEL_ORG_ID }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{
-              "framework": "nextjs",
-              "rootDirectory": "zafora-frontend",
-              "buildCommand": null,
-              "outputDirectory": null,
-              "installCommand": null
-            }'
+            -d '{"framework":"nextjs","rootDirectory":null,"buildCommand":null,"outputDirectory":null,"installCommand":null}'
 
       - name: Write Vercel project config
         working-directory: zafora-frontend
