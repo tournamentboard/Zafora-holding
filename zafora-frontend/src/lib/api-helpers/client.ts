@@ -35,16 +35,18 @@ export async function apiClient<T>(options: ApiClientOptions): Promise<T> {
   const { path, body, searchParams, headers, ...init } = options;
   const url = buildApiUrl(path, searchParams);
 
-  // Forward the session cookie in server-side requests
+  // Forward JWT cookies in server-side requests
   let cookieHeader: string | undefined;
   if (typeof window === "undefined") {
     try {
       const { cookies } = await import("next/headers");
       const cookieStore = await cookies();
-      const sessionCookie = cookieStore.get("connect.sid");
-      if (sessionCookie) {
-        cookieHeader = `${sessionCookie.name}=${sessionCookie.value}`;
-      }
+      const cookieParts: string[] = [];
+      const accessToken = cookieStore.get("access_token");
+      const refreshToken = cookieStore.get("refresh_token");
+      if (accessToken) cookieParts.push(`${accessToken.name}=${accessToken.value}`);
+      if (refreshToken) cookieParts.push(`${refreshToken.name}=${refreshToken.value}`);
+      if (cookieParts.length) cookieHeader = cookieParts.join("; ");
     } catch {
       // Not in a request context (e.g. during build) — skip
     }

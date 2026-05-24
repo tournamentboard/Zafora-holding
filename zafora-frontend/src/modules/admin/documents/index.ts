@@ -1,4 +1,3 @@
-/** Admin documents module — feature UI added in F9 */
 export {
   DOC_TYPES,
   VISIBILITY_OPTIONS,
@@ -6,3 +5,11 @@ export {
   getVisibility,
   getPreviewUrl,
 } from "./constants";
+
+export {
+  useDocuments,
+  useCreateDocument,
+  useUpdateDocument,
+  useDeleteDocument,
+  documentKeys,
+} from "./services/documents.service";

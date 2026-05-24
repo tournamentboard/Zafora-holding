@@ -122,14 +122,11 @@ export default function Admin() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     } catch {
-      // ignore updated
+      // ignore
     }
-    window.location.href = "/login";
+    window.location.replace("/login");
   };
 
   const toggleGroup = (group: string) =>

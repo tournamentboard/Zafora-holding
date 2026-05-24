@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiAxios } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
-import type { Project } from "@/src/lib/api-client-react/generated/api.schemas";
+import type { Project } from "@/src/lib/types";
 import type { CreateProjectInput, UpdateProjectInput } from "@/src/lib/validators";
 
-type ListProjectsParams = { sector?: string; status?: string; search?: string; limit?: number };
+type ListProjectsParams = { sector?: string; status?: string; search?: string; limit?: number; page?: number };
 type ListProjectsResponse = { projects: Project[]; total: number };
 
 async function fetchProjects(params?: ListProjectsParams): Promise<ListProjectsResponse> {

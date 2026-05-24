@@ -23,14 +23,20 @@ export interface VerifyResult {
 export async function verifySession(): Promise<VerifyResult> {
   try {
     const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("connect.sid");
+    const accessToken = cookieStore.get("access_token");
 
-    if (!sessionCookie) return { authenticated: false };
+    if (!accessToken) return { authenticated: false };
+
+    const cookieParts = [
+      `${accessToken.name}=${accessToken.value}`,
+    ];
+    const refreshToken = cookieStore.get("refresh_token");
+    if (refreshToken) cookieParts.push(`${refreshToken.name}=${refreshToken.value}`);
 
     const res = await fetch(`${ENV.API_URL}${API.AUTH.VERIFY}`, {
       method: "GET",
       headers: {
-        Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
+        Cookie: cookieParts.join("; "),
         Accept: "application/json",
       },
       cache: "no-store",
