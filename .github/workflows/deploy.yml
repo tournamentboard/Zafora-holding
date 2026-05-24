@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - dev
+      - development
     paths:
       - "zafora-frontend/**"
 
@@ -17,7 +17,7 @@ jobs:
   deploy-development:
     name: Deploy to Development (Vercel Preview)
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/development'
     environment:
       name: development
       url: ${{ steps.deploy.outputs.preview_url }}
