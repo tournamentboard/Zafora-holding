@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isEmailConfigured, sendTestEmail } from "../email.js";
+import { isEmailConfigured, sendTestEmail } from "@/shared/lib/email.js";
 
 const router = Router();
 

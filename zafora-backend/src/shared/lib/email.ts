@@ -1,9 +1,9 @@
 import { Resend } from "resend";
-import { db, siteSettingsTable } from "@/workplace/db/src/index.js";
+import { db, siteSettingsTable } from "@/db/index.js";
 import { eq } from "drizzle-orm";
 
-const API_KEY = process.env.RESEND_API_KEY;
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Zafora Holding <onboarding@resend.dev>";
+const API_KEY = process.env["RESEND_API_KEY"];
+const FROM_EMAIL = process.env["RESEND_FROM_EMAIL"] || "Zafora Holding <onboarding@resend.dev>";
 
 export function isEmailConfigured(): boolean {
   return !!API_KEY;
@@ -13,11 +13,11 @@ async function getAdminEmail(): Promise<{ email: string; notifyOnInquiry: boolea
   try {
     const [row] = await db.select().from(siteSettingsTable).where(eq(siteSettingsTable.key, "notifications")).limit(1);
     if (!row) return null;
-    const parsed = JSON.parse(row.value);
+    const parsed = JSON.parse(row.value) as Record<string, unknown>;
     return {
-      email: parsed.adminEmail || "",
-      notifyOnInquiry: parsed.notifyOnInquiry !== false,
-      notifyOnInterest: parsed.notifyOnInterest !== false,
+      email: (parsed["adminEmail"] as string) || "",
+      notifyOnInquiry: parsed["notifyOnInquiry"] !== false,
+      notifyOnInterest: parsed["notifyOnInterest"] !== false,
     };
   } catch {
     return null;
@@ -67,7 +67,7 @@ export async function sendInquiryNotification(lead: {
 
   const resend = new Resend(API_KEY);
   const body = `
-    <p style="margin:0 0 20px;color:#65736f;font-size:14px;">A new inquiry has been submitted through your website. Review and respond within 48 hours to maximize conversion.</p>
+    <p style="margin:0 0 20px;color:#65736f;font-size:14px;">A new inquiry has been submitted through your website.</p>
     <div style="background:#f7f4ef;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
       <table width="100%" cellpadding="0" cellspacing="0">
         ${row("Name", lead.fullName)}
@@ -98,17 +98,20 @@ export async function sendInquiryNotification(lead: {
   });
 }
 
-export async function sendInterestNotification(interest: {
-  fullName: string; organization: string; email: string; phone?: string | null;
-  roleType: string; message?: string | null;
-}, projectName: string) {
+export async function sendInterestNotification(
+  interest: {
+    fullName: string; organization: string; email: string; phone?: string | null;
+    roleType: string; message?: string | null;
+  },
+  projectName: string,
+) {
   if (!API_KEY) return;
   const config = await getAdminEmail();
   if (!config?.email || !config.notifyOnInterest) return;
 
   const resend = new Resend(API_KEY);
   const body = `
-    <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Someone has expressed interest in one of your pipeline projects. Follow up promptly to convert this lead.</p>
+    <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Someone has expressed interest in one of your pipeline projects.</p>
     <div style="background:#f7f4ef;border-radius:12px;padding:16px 24px;margin-bottom:20px;">
       <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a958f;">Project</p>
       <p style="margin:0;font-size:16px;font-weight:700;color:#173f35;">${projectName}</p>
@@ -143,14 +146,7 @@ export async function sendTestEmail(toEmail: string): Promise<{ ok: boolean; err
   try {
     const resend = new Resend(API_KEY);
     const body = `
-      <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Your email notifications are working correctly. You will receive alerts like this one whenever someone submits a new inquiry or expresses interest in a project.</p>
-      <div style="background:#f0f7f5;border-left:4px solid #c59b4a;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:24px;">
-        <p style="margin:0;font-size:14px;color:#10231f;font-weight:600;">Notification types enabled:</p>
-        <ul style="margin:8px 0 0;padding-left:20px;font-size:14px;color:#65736f;line-height:1.8;">
-          <li>New contact form submissions (Submit Request page)</li>
-          <li>New project interest expressions (Pipeline page)</li>
-        </ul>
-      </div>
+      <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Your email notifications are working correctly.</p>
       <div style="text-align:center;">
         <a href="https://zaforaholding.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">Open Admin Panel</a>
       </div>`;
@@ -161,7 +157,8 @@ export async function sendTestEmail(toEmail: string): Promise<{ ok: boolean; err
       html: emailWrapper("Email Notifications Active", body),
     });
     return { ok: true };
-  } catch (e: any) {
-    return { ok: false, error: e?.message || "Unknown error" };
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Unknown error";
+    return { ok: false, error: message };
   }
 }

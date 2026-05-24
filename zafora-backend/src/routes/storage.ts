@@ -75,9 +75,8 @@ router.get(
       response.headers.forEach((value, key) => res.setHeader(key, value));
 
       if (response.body) {
-        const nodeStream = Readable.fromWeb(
-          response.body as ReadableStream<Uint8Array>,
-        );
+        // @ts-ignore — legacy Replit GCS; will be replaced in B6 (AWS S3)
+        const nodeStream = Readable.fromWeb(response.body);
         nodeStream.pipe(res);
       } else {
         res.end();
@@ -125,9 +124,8 @@ router.get("/storage/objects/*path", async (req: Request, res: Response) => {
     response.headers.forEach((value, key) => res.setHeader(key, value));
 
     if (response.body) {
-      const nodeStream = Readable.fromWeb(
-        response.body as ReadableStream<Uint8Array>,
-      );
+      // @ts-ignore — legacy Replit GCS; will be replaced in B6 (AWS S3)
+      const nodeStream = Readable.fromWeb(response.body);
       nodeStream.pipe(res);
     } else {
       res.end();

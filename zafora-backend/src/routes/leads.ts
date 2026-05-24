@@ -6,7 +6,7 @@ import { eq, desc, count, and, gte } from "drizzle-orm";
 import { db, leadsTable } from "@/workplace/db/src/index.js";
 import { logAction } from "./audit.js";
 import { CreateLeadBody, ListLeadsQueryParams, UpdateLeadBody } from "@/workplace/api-zod/src/index.js";
-import { sendInquiryNotification } from "@/email.js";
+import { sendInquiryNotification } from "@/shared/lib/email.js";
 
 const router = Router();
 

@@ -90,21 +90,6 @@ This plan strictly follows the project Cursor Rules:
 
 ---
 
-### Phase F5 — Public Feature Modules (Server Components)
-
-| Field | Detail |
-|-------|--------|
-| **Objective** | User-facing site on RSC + `generateMetadata()` |
-| **Implement** | Modules: home, about, services, projects, government, submit; async Server Component pages; `generateMetadata()`; remove `useSeoMeta`; migrate off React Query |
-| **Folder responsibilities** | `modules/public/*` — feature UI + read services; `app/(public)/*/page.tsx` — thin composition |
-| **Dependencies** | F2, F3, F4 |
-| **Best practices** | `"use client"` only for modals, carousels, animations |
-| **Avoid** | Entire homepage as client component; importing admin modules |
-| **Scalability** | Each page is an isolated module |
-| **Build order** | projects → home → about/services → government → submit |
-| **Outcome** | Public site SSR/SEO-correct |
-
----
 
 ### Phase F6 — Public Forms & Server Actions
 

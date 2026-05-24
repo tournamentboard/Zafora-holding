@@ -12,7 +12,7 @@ import {
 import { db, projectInterestsTable, projectsTable } from "@/workplace/db/src/index.js";
 import { logAction } from "./audit.js";
 import { ListProjectInterestsParams } from "@/workplace/api-zod/src/index.js";
-import { sendInterestNotification } from "@/email.js";
+import { sendInterestNotification } from "@/shared/lib/email.js";
 
 const router = Router();
 

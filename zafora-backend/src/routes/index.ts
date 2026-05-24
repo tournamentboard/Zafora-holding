@@ -9,12 +9,13 @@ import contentRouter from "./content.js";
 import notificationsRouter from "./notifications.js";
 import testimonialsRouter from "./testimonials.js";
 import auditRouter from "./audit.js";
-import adminAuthRouter from "./adminAuth.js";
 import storageRouter from "./storage.js";
+import { authRouter } from "@/modules/auth/index.js";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(authRouter);
 router.use(leadsRouter);
 router.use(projectsRouter);
 router.use(documentsRouter);
@@ -24,7 +25,6 @@ router.use(contentRouter);
 router.use(notificationsRouter);
 router.use(testimonialsRouter);
 router.use(auditRouter);
-router.use(adminAuthRouter);
 router.use(storageRouter);
 
 export default router;
