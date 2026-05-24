@@ -29,28 +29,34 @@ jobs:
           cache: "npm"
           cache-dependency-path: zafora-frontend/package-lock.json
 
-      - name: Install dependencies
-        working-directory: zafora-frontend
-        run: npm ci
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
 
-      - name: Build Next.js app
+      - name: Link Vercel project (write project.json from secrets)
+        working-directory: zafora-frontend
+        run: |
+          mkdir -p .vercel
+          echo '{
+            "projectId": "${{ secrets.VERCEL_PROJECT_ID }}",
+            "orgId": "${{ secrets.VERCEL_ORG_ID }}"
+          }' > .vercel/project.json
+
+      - name: Pull Vercel environment (preview)
+        working-directory: zafora-frontend
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
         working-directory: zafora-frontend
         env:
           NEXT_PUBLIC_BASE_URL: ${{ secrets.DEV_NEXT_PUBLIC_BASE_URL }}
           NEXT_PUBLIC_API_URL: ${{ secrets.DEV_NEXT_PUBLIC_API_URL }}
-        run: npm run build
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Deploy to Vercel (Preview)
+      - name: Deploy prebuilt to Vercel (Preview)
         id: deploy
         working-directory: zafora-frontend
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          DEPLOY_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes 2>&1 | tail -1)
+          DEPLOY_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
           echo "preview_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
           echo "Deployed to: $DEPLOY_URL"
 
@@ -87,28 +93,34 @@ jobs:
           cache: "npm"
           cache-dependency-path: zafora-frontend/package-lock.json
 
-      - name: Install dependencies
-        working-directory: zafora-frontend
-        run: npm ci
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
 
-      - name: Build Next.js app
+      - name: Link Vercel project (write project.json from secrets)
+        working-directory: zafora-frontend
+        run: |
+          mkdir -p .vercel
+          echo '{
+            "projectId": "${{ secrets.VERCEL_PROJECT_ID }}",
+            "orgId": "${{ secrets.VERCEL_ORG_ID }}"
+          }' > .vercel/project.json
+
+      - name: Pull Vercel environment (production)
+        working-directory: zafora-frontend
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
         working-directory: zafora-frontend
         env:
           NEXT_PUBLIC_BASE_URL: ${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}
           NEXT_PUBLIC_API_URL: ${{ secrets.PROD_NEXT_PUBLIC_API_URL }}
-        run: npm run build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Deploy to Vercel (Production)
+      - name: Deploy prebuilt to Vercel (Production)
         id: deploy
         working-directory: zafora-frontend
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          DEPLOY_URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes 2>&1 | tail -1)
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
           echo "production_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
           echo "Deployed to: $DEPLOY_URL"
 
