@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Layout from "./components/layout/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import { ENVS_VARIABLES } from "./lib/ENVS";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -42,7 +43,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+        <WouterRouter base={ENVS_VARIABLES.BASE_URL.replace(/\/$/, "")}>
           <ScrollToTop />
           <Router />
         </WouterRouter>

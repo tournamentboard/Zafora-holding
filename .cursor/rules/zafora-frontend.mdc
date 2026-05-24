@@ -1,0 +1,235 @@
+---
+description: Zafora frontend — App Router modular architecture (public vs admin)
+globs: zafora-frontend/**
+alwaysApply: false
+---
+
+
+# Zafora Frontend Architecture
+
+Live urls: https://zafora-holdings-web.replit.app/
+Stack: **Next.js 16 App Router** + **React 19** + Express API (`NEXT_PUBLIC_API_URL`) + **Tailwind CSS 4** + shadcn/Radix + **Zod** + **Server Actions** + **Axios** + **TanStack Query** + **Zustand**.
+
+## Target directory layout
+
+```
+zafora-frontend/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx              # Root layout (fonts, providers)
+│   │   ├── globals.css
+│   │   ├── (public)/               # Route group — user-facing site
+│   │   │   ├── layout.tsx          # Navbar + Footer shell
+│   │   │   ├── page.tsx            # Home
+│   │   │   ├── about/page.tsx
+│   │   │   ├── services/page.tsx
+│   │   │   ├── projects/page.tsx
+│   │   │   ├── government/page.tsx
+│   │   │   └── submit/page.tsx
+│   │   ├── (admin)/                # Route group — authenticated CMS
+│   │   │   ├── layout.tsx          # requireAdmin + sidebar shell
+│   │   │   ├── login/page.tsx
+│   │   │   ├── admin/page.tsx      # Dashboard
+│   │   │   ├── admin/leads/page.tsx
+│   │   │   ├── admin/projects/page.tsx
+│   │   │   ├── admin/documents/page.tsx
+│   │   │   ├── admin/content/      # site-settings, branding, team, …
+│   │   │   ├── admin/audit/page.tsx
+│   │   │   └── admin/settings/page.tsx
+│   │   └── api/                    # Route Handlers (BFF only)
+│   │       ├── health/route.ts
+│   │       └── storage/presign/route.ts
+│   ├── modules/
+│   │   ├── public/                 # User-facing feature modules
+│   │   │   ├── home/
+│   │   │   ├── about/
+│   │   │   ├── services/
+│   │   │   ├── projects/
+│   │   │   ├── government/
+│   │   │   ├── submit/
+│   │   │   ├── shared/
+│   │   │   └── modals/             # Public-facing modals (ExpressInterestModal, …)
+│   │   ├── admin/                  # Admin feature modules
+│   │   │   ├── dashboard/
+│   │   │   ├── leads/
+│   │   │   ├── projects/
+│   │   │   ├── documents/
+│   │   │   ├── content/
+│   │   │   ├── audit/
+│   │   │   ├── settings/
+│   │   │   ├── shared/             # AdminSidebar, AdminHeader
+│   │   │   └── modals/             # Admin modals (InterestsModal, PreviewModal, …)
+│   │   └── shared/                 # Cross-audience utilities (health check, …)
+│   ├── components/
+│   │   ├── ui/                     # shadcn primitives — no business logic
+│   │   ├── layout/
+│   │   └── common/                 # Navbar, Footer
+│   ├── lib/
+│   │   ├── actions/                # Server Actions ("use server")
+│   │   │   ├── public.ts           # submitLead, expressInterest
+│   │   │   └── admin.ts            # CRUD + revalidatePath
+│   │   ├── api-helpers/            # HTTP transport layer
+│   │   │   ├── axios-instance.ts   # Configured Axios (baseURL, interceptors, credentials)
+│   │   │   ├── client.ts           # fetch-based client (RSC / Server Actions only)
+│   │   │   └── parse-error.ts
+│   │   ├── store/                  # Zustand UI-state stores
+│   │   │   ├── modal.store.ts
+│   │   │   └── admin-filters.store.ts
+│   │   ├── url-helpers/
+│   │   │   ├── routes.ts           # ROUTES.ADMIN.LEADS
+│   │   │   └── api-endpoints.ts    # API.LEADS.LIST
+│   │   ├── constants/
+│   │   │   ├── env.ts
+│   │   │   ├── site.ts
+│   │   │   └── branding.ts         # BRAND color tokens
+│   │   ├── enums/
+│   │   ├── types/
+│   │   ├── validators/             # Hand-written Zod (no codegen)
+│   │   │   ├── lead.ts
+│   │   │   ├── project.ts
+│   │   │   └── interest.ts
+│   │   ├── auth.ts                 # verifySession, requireAdmin
+│   │   └── utils.ts
+│   ├── hooks/                      # Client-only UI hooks
+│   └── providers/                  # TanstackQueryProvider (QueryClient + Sonner)
+├── middleware.ts                   # Protect /admin/* except /admin/login
+└── .env.example
+```
+
+## Module folder pattern
+
+```
+modules/admin/leads/
+├── index.ts
+├── components/           # LeadsTable, lead row actions
+├── modals/               # Feature-only modals (optional — shared admin modals go in modules/admin/modals/)
+├── hooks/                # Client UI state only (filters, modal open)
+├── services/
+│   └── leads.service.ts  # Axios + TanStack Query hooks (useLeads, useUpdateLead, …)
+├── types/
+└── constants.ts
+```
+
+## API layer (F4 pattern)
+
+Use **Axios** via `apiAxios` (from `lib/api-helpers/axios-instance.ts`) in all client-side module services.  
+Use the fetch-based `apiClient` (from `lib/api-helpers/client.ts`) **only** in Server Components or Server Actions.
+
+| Tool | Location | Rule |
+|------|----------|------|
+| `apiAxios` | `modules/*/services/*.service.ts` | Client hooks (TanStack Query) |
+| `apiClient` | `lib/actions/`, RSC services | Server-only; never in `"use client"` files |
+| TanStack Query | `modules/*/services/*.service.ts` | `useQuery` / `useMutation` for all client data fetching |
+| Zustand | `lib/store/*.store.ts` | UI state only — never server data; never `fetch` inside stores |
+| Zod validators | `lib/validators/*.ts` | Shared between Server Actions and client-side form validation |
+
+### Service file convention
+
+```ts
+// modules/public/projects/services/projects.service.ts
+import { useQuery } from "@tanstack/react-query";
+import { apiAxios } from "@/src/lib/api-helpers";
+import { API } from "@/src/lib/url-helpers";
+
+export const projectKeys = {
+  all: ["projects"] as const,
+  list: (params?) => [...projectKeys.all, "list", params] as const,
+};
+
+export function useProjects(params?) {
+  return useQuery({
+    queryKey: projectKeys.list(params),
+    queryFn: () => apiAxios.get(API.PROJECTS.LIST, { params }).then(r => r.data),
+  });
+}
+```
+
+## Modals
+
+| Audience | Location | Rule |
+|----------|----------|------|
+| Public / user site | `modules/public/modals/` | `"use client"` — forms, dialogs, interest capture |
+| Admin CMS | `modules/admin/modals/` | `"use client"` — CRUD previews, detail panels, confirmations |
+| Feature-specific | `modules/{public\|admin}/<feature>/modals/` | OK when modal is used by one feature only |
+
+- Never place modal components in `src/app/` — routes stay thin.
+- Public modals must not import from admin modules; admin modals must not import from public modules.
+- Barrel-export via `modals/index.ts` per audience folder.
+
+## App Router patterns (use these)
+
+| Concern | Pattern |
+|---------|---------|
+| Public data | **Server Components** — async page, fetch in component or module `services/` |
+| SEO | **`generateMetadata()`** per `page.tsx` — never client DOM meta hacks |
+| Forms (public) | **Server Actions** in `lib/actions/public.ts` + Zod validation |
+| Admin CRUD | **Server Actions** in `lib/actions/admin.ts` + `requireAdmin()` + `revalidatePath()` |
+| Auth guard | **`middleware.ts`** + admin `layout.tsx` calls `requireAdmin()` |
+| Client interactivity | `"use client"` islands — forms, modals, uploads, animations |
+| Client data fetching | `useQuery` / `useMutation` via `apiAxios` in module `services/` |
+| Client UI state | Zustand stores in `lib/store/` — filters, modal open/close |
+| Loading / error | `loading.tsx`, `error.tsx` per route segment |
+| BFF / presign | `app/api/**/route.ts` Route Handlers only when needed |
+| Images | `next/image` — never raw `<img>` for static assets |
+| Links | `next/link` — never `<a href>` for internal navigation |
+| Toasts | `sonner` (`toast.success` / `toast.error`) — never legacy Toaster DOM |
+
+## Separation rules
+
+| Layer | Location | Rule |
+|-------|----------|------|
+| Routes | `src/app/` | Thin — compose module components; no heavy logic inline |
+| Public UI | `modules/public/` | Never import from `modules/admin/` |
+| Admin UI | `modules/admin/` | Never import from `modules/public/` |
+| Public modals | `modules/public/modals/` | User-facing dialogs only |
+| Admin modals | `modules/admin/modals/` | CMS dialogs only — never in `app/` or inline in tables |
+| Server Actions | `lib/actions/` | All mutations; validate with `lib/validators/` |
+| API calls | `lib/api-helpers/` + module `services/` | Use `lib/url-helpers/api-endpoints.ts` |
+| URLs | `lib/url-helpers/` | Never hardcode paths in components |
+| shadcn | `components/ui/` | Presentational only |
+
+## Forbidden — legacy & Replit (never add or copy)
+
+**Old Next.js (Pages Router):**
+- `pages/`, `_app.tsx`, `_document.tsx`
+- `getServerSideProps`, `getStaticProps`, `getInitialProps`
+- `next/head` for SEO
+- `pages/api/*` (use `app/api/**/route.ts` instead)
+
+**Old React / Replit SPA:**
+- Code from `artifacts/zafora/` (Vite + react-router)
+- `@replit/*` packages or Replit vite plugins
+- `react-router-dom`, `BrowserRouter`, `<Routes>`
+- Client-only SPA data loading for public pages when RSC fits
+- `useSeoMeta` / `document.title` / manual `<meta>` injection in `useEffect`
+- Orval/OpenAPI codegen: `api-spec`, `api-client-react`, `api-zod`, `useList*`, `useCreate*` hooks — **do not import in new code**
+- Replit object storage / GCS sidecar paths (`127.0.0.1:1106`, `object-storage-web`)
+- Duplicate `workplace/` or `lib/db` packages inside frontend
+- `@tanstack/react-query` on **new** public pages (use RSC + Server Actions instead)
+- Class components, `defaultProps`, legacy lifecycle methods
+- `apiClient` (fetch-based) inside `"use client"` files — use `apiAxios` instead
+- Raw `fetch()` calls inside client components — always go through `apiAxios`
+- Zustand stores that call `fetch`/`axios` directly — put fetching in TanStack Query, Zustand = UI state only
+
+**When touching legacy files:** refactor toward App Router + module structure; do not extend old patterns.
+
+## Naming & imports
+
+- Components: `PascalCase.tsx`
+- Server Actions file: `lib/actions/*.ts` with `"use server"` at top
+- Services: `*.service.ts` or `list-leads.ts`
+- Use `@/src/...` path alias
+- Barrel exports via module `index.ts`
+
+## Do not
+
+- Create `pages/` directory
+- Put business logic in `app/**/page.tsx` — delegate to modules
+- Put modal components in `app/` — use `modules/public/modals/` or `modules/admin/modals/`
+- Mix admin and public code in one component
+- Hardcode API or route paths
+- Import from `@/src/lib/api-client-react` in new code
+- Use `apiClient` (fetch) inside `"use client"` files — use `apiAxios` instead
+- Put server data (API responses) in Zustand — TanStack Query owns all server state
+- Copy-paste from Replit artifacts without full App Router rewrite
+- Remove existing libraries (framer-motion, sonner, etc.) — add only, never remove without confirming

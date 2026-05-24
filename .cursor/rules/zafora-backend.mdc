@@ -1,0 +1,141 @@
+---
+description: Zafora backend — modular Express API architecture (feature modules)
+globs: zafora-backend/**
+alwaysApply: false
+---
+
+# Zafora Backend Architecture
+
+Stack: **Express 5** (Railway) + **Drizzle ORM** (Neon PostgreSQL) + **AWS S3** + **Resend** + bcrypt sessions.
+
+## Target directory layout
+
+```
+zafora-backend/
+├── src/
+│   ├── index.ts                    # HTTP server bootstrap
+│   ├── app.ts                      # Express app: middleware, CORS, mount routes
+│   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.validator.ts
+│   │   │   ├── auth.types.ts
+│   │   │   └── index.ts
+│   │   ├── leads/
+│   │   ├── projects/
+│   │   ├── documents/
+│   │   ├── services/
+│   │   ├── content/
+│   │   ├── testimonials/
+│   │   ├── audit/
+│   │   ├── stats/
+│   │   ├── notifications/
+│   │   └── storage/
+│   ├── shared/
+│   │   ├── middleware/
+│   │   │   ├── require-auth.ts
+│   │   │   └── error-handler.ts
+│   │   ├── lib/
+│   │   │   ├── logger.ts
+│   │   │   ├── object-storage.ts   # AWS S3 presigned URLs
+│   │   │   └── email.ts
+│   │   ├── api-helpers/
+│   │   │   ├── send-json.ts
+│   │   │   └── parse-id-param.ts
+│   │   ├── url-helpers/
+│   │   │   └── route-paths.ts      # Central route path constants
+│   │   ├── constants/
+│   │   ├── enums/
+│   │   ├── types/
+│   │   └── utils/
+│   ├── db/
+│   │   ├── index.ts                # Drizzle client export
+│   │   ├── schema/
+│   │   │   ├── index.ts
+│   │   │   ├── users.ts
+│   │   │   ├── sessions.ts
+│   │   │   ├── leads.ts
+│   │   │   └── …
+│   │   ├── drizzle.config.ts
+│   │   └── migrations/
+│   └── routes/
+│       └── index.ts                # Mount module routers under /api
+├── scripts/
+│   └── migrate-passwords.ts
+└── .env.example
+```
+
+## Module folder pattern (repeat per domain)
+
+```
+modules/leads/
+├── index.ts              # export { default as leadsRouter } from './leads.routes'
+├── leads.routes.ts       # Thin HTTP: parse req → call service → res.json
+├── leads.service.ts      # Business logic + DB access
+├── leads.validator.ts    # Zod schemas for body/query/params
+├── leads.types.ts        # LeadDTO, ListLeadsQuery, …
+└── leads.constants.ts    # Module-local defaults (optional)
+```
+
+## Layer responsibilities
+
+| Layer | File | Responsibility |
+|-------|------|----------------|
+| Routes | `*.routes.ts` | HTTP only: validate input, call service, map status codes |
+| Service | `*.service.ts` | Business rules, Drizzle queries, side effects (email, audit) |
+| Validator | `*.validator.ts` | Zod — no DB, no req/res |
+| Types | `*.types.ts` | Module DTOs; infer from Zod where possible |
+| Middleware | `shared/middleware/` | Auth, global error handler — reusable |
+| DB schema | `db/schema/` | Tables only — no HTTP logic |
+
+## Route conventions
+
+- All routes mounted under `/api` via `src/routes/index.ts`
+- Path constants in `shared/url-helpers/route-paths.ts` — no magic strings in modules
+- **Public:** `POST /api/leads`, `GET /api/projects`, `GET /api/content/*`
+- **Protected (`requireAuth`):** all admin CRUD (GET/PATCH/DELETE on leads, projects, documents, services, content admin, audit)
+- Auth module: `POST /api/auth/login`, `GET /api/auth/verify`, `POST /api/auth/logout`, `POST /api/auth/change-password`
+
+## Shared lib rules
+
+| Folder | Purpose |
+|--------|---------|
+| `shared/api-helpers/` | Response helpers, pagination, ID parsing |
+| `shared/url-helpers/` | Route path constants |
+| `shared/constants/` | Session TTL, default limits, app name |
+| `shared/enums/` | LeadStatus, AuditAction, UserRole |
+| `shared/types/` | Express augmentation, ApiError, PaginatedResult |
+| `shared/lib/` | Cross-cutting infra (logger, S3, email) |
+
+Promote code to `shared/` only when **2+ modules** need it.
+
+## Security (required)
+
+- bcrypt for passwords — never plaintext in `site_settings`
+- DB-backed `sessions` table — not in-memory session flags
+- httpOnly cookie `sessionId`; validate in `requireAuth` on every protected route
+- CORS: explicit frontend origin(s), `credentials: true`
+- Validate all inputs with module validators before service calls
+
+## Migration from current layout
+
+- Move `src/routes/*.ts` logic → `src/modules/*/` (routes stay thin)
+- Consolidate `src/workplace/db/` → `src/db/` — delete workplace duplicates
+- Replace `src/lib/objectStorage.ts` Replit GCS → `shared/lib/object-storage.ts` (AWS S3)
+- Remove `src/workplace/api-spec`, `api-client-react`, `api-zod` after validators live in modules
+
+## Naming conventions
+
+- Files: `kebab-case` or `domain.layer.ts` — `leads.service.ts`, `require-auth.ts`
+- Services: exported functions — `createLead`, `listLeads`, `updateLead`
+- Validators: `CreateLeadBody`, `ListLeadsQuery` (Zod exports)
+- Routers: default export Express `Router` from `*.routes.ts`
+
+## Do not
+
+- Put DB queries or business logic directly in route handlers
+- Import across modules' internals — use module `index.ts` or shared layer
+- Reference Replit sidecar (`127.0.0.1:1106`) or `@google-cloud/storage`
+- Leave admin endpoints unprotected
+- Add new code under `src/workplace/`
