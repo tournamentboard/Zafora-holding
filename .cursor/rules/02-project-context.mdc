@@ -1,0 +1,46 @@
+---
+description: Full Zafora stack, deployment, and DB context
+alwaysApply: true
+---
+
+# Project Context
+
+## Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 16 App Router, React 19, Tailwind CSS 4, shadcn/Radix |
+| State | TanStack Query (server state) · Zustand (UI state only) |
+| Forms | Zod validators · Server Actions |
+| HTTP | Axios (`apiAxios`) client-side · fetch (`apiClient`) server-side |
+| Notifications | `sonner` — `toast.success()` / `toast.error()` |
+| Animation | framer-motion (installed — never remove) |
+| Backend | Express 5, Drizzle ORM, Neon PostgreSQL |
+| Auth | JWT httpOnly cookies — `access_token` (15min) + `refresh_token` (7d) |
+| Email | Resend (`RESEND_API_KEY`) |
+| Storage | AWS S3 presigned URLs (B6 — pending) |
+| Deploy | Frontend → Vercel · Backend → Railway |
+
+## Environment Variables
+
+### Frontend (`zafora-frontend/.env.local`)
+- `NEXT_PUBLIC_API_URL` — Express backend base URL
+- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`
+
+### Backend (`zafora-backend/.env`)
+- `DATABASE_URL` — Neon PostgreSQL connection string
+- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`
+- `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
+- `ALLOWED_ORIGINS` — CORS whitelist
+- `ADMIN_EMAIL=admin@zaforaholding.com`
+
+## Database Tables (Neon `zafora`)
+
+`leads` · `projects` · `project_interests` · `documents` · `services`  
+`content_stats` · `methodology_steps` · `site_settings` · `testimonials`  
+`audit_logs` · `users` · `sessions`
+
+## Seeded Data
+
+8 projects · 6 services · 5 testimonials · 6 content stats · 6 methodology steps  
+6 documents · 8 leads (mixed statuses) · 6 site settings keys

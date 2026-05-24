@@ -1,0 +1,68 @@
+---
+description: TypeScript standards — types, Zod, path aliases, no-any policy
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# TypeScript Rules
+
+## Domain Types — Single Source of Truth
+
+All shared domain types live in `zafora-frontend/src/lib/types/domain.ts`:
+
+```ts
+Lead · Project · ProjectInterest · Document · CatalogService
+Testimonial · ContentStat · MethodologyStep · SiteSetting
+AuditLog · DashboardStats · ProjectStats
+```
+
+Import them as: `import type { Lead, Project } from "@/src/lib/types";`
+
+Do NOT redefine these inline in components.
+
+## No `any`
+
+```ts
+// ❌ BAD
+const data: any = res.data;
+
+// ✅ GOOD
+const data: Lead[] = res.data.leads;
+// or if truly unknown:
+const data: unknown = res.data;
+const leads = data as { leads: Lead[] };
+```
+
+## Zod Validators
+
+- Live in `zafora-frontend/src/lib/validators/` — hand-written, no Orval/codegen
+- Infer types: `type CreateLeadInput = z.infer<typeof CreateLeadBody>`
+- Backend: `zafora-backend/src/modules/*/[module].validator.ts`
+- Use `zod/v4` in backend (`import { z } from "zod/v4"`)
+
+## Path Alias
+
+```ts
+// ✅ Always
+import { apiAxios } from "@/src/lib/api-helpers";
+import { ROUTES } from "@/src/lib/url-helpers";
+
+// ❌ Never relative for cross-module imports
+import { apiAxios } from "../../../../../../lib/api-helpers";
+```
+
+## Backend Type Pattern
+
+```ts
+// Infer from Drizzle schema — never duplicate
+export type Lead = typeof leadsTable.$inferSelect;
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+```
+
+## Module-Local Types
+
+Keep params/response types inline in the service file unless 2+ modules need them:
+```ts
+// leads.service.ts — local, not exported to lib/types
+type ListLeadsParams = { status?: string; page?: number; limit?: number };
+```

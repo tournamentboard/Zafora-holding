@@ -1,0 +1,85 @@
+---
+description: API layer rules — apiAxios vs apiClient, TanStack Query patterns, endpoint constants
+globs: zafora-frontend/src/modules/**/*.ts,zafora-frontend/src/lib/actions/**/*.ts
+alwaysApply: false
+---
+
+# API Architecture
+
+## Transport Layer Decision
+
+| Where | Use | Import |
+|-------|-----|--------|
+| `"use client"` components & hooks | `apiAxios` | `@/src/lib/api-helpers` |
+| Server Actions (`"use server"`) | `apiClient` | `@/src/lib/api-helpers` |
+| Server Components (RSC) | `apiClient` | `@/src/lib/api-helpers` |
+
+**Never** use `apiAxios` inside Server Actions — it sends cookies that aren't available server-side.  
+**Never** use raw `fetch()` in client components — always `apiAxios`.
+
+## API Endpoint Constants
+
+All endpoints defined in `lib/url-helpers/api-endpoints.ts`:
+
+```ts
+API.AUTH.LOGIN / LOGOUT / VERIFY / REFRESH / CHANGE_PASSWORD
+API.LEADS.LIST / BY_ID(id)
+API.PROJECTS.LIST / BY_ID(id) / INTERESTS(id)
+API.DOCUMENTS.LIST / BY_ID(id)
+API.SERVICES.LIST / BY_ID(id)
+API.CONTENT.STATS / STATS_BY_ID(id) / METHODOLOGY / METHODOLOGY_BY_ID(id) / SETTINGS(key)
+API.TESTIMONIALS.LIST / BY_ID(id)
+API.STATS.ROOT / PROJECTS
+API.AUDIT.LIST
+API.NOTIFICATIONS.STATUS / TEST
+API.STORAGE.REQUEST_UPLOAD_URL
+```
+
+Never hardcode `/api/...` strings — always `API.*`.
+
+## TanStack Query Pattern (module services)
+
+```ts
+// modules/admin/leads/services/leads.service.ts
+export const leadsKeys = {
+  all: ["leads"] as const,
+  list: (params?) => [...leadsKeys.all, "list", params] as const,
+};
+
+export function useLeads(params?: ListLeadsParams) {
+  return useQuery({
+    queryKey: leadsKeys.list(params),
+    queryFn: () => apiAxios.get(API.LEADS.LIST, { params }).then(r => r.data),
+  });
+}
+
+export function useUpdateLead() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }) => apiAxios.patch(API.LEADS.BY_ID(id), data).then(r => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: leadsKeys.all }),
+  });
+}
+```
+
+## Backend Route Pattern
+
+```ts
+// modules/leads/leads.routes.ts — thin HTTP layer only
+router.get(ROUTE_PATHS.LEADS.LIST, requireAuth, async (req, res) => {
+  const parsed = ListLeadsQuery.safeParse(req.query);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid query" }); return; }
+  const result = await listLeads(parsed.data);  // service call only
+  res.json(result);
+});
+```
+
+## Zustand — UI State Only
+
+```ts
+// ✅ Correct — UI state
+const { isModalOpen, setModalOpen } = useModalStore();
+
+// ❌ Wrong — API data in Zustand
+const { leads, setLeads } = useLeadsStore(); // Never — use TanStack Query
+```

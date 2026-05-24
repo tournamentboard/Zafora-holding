@@ -1,0 +1,78 @@
+---
+description: Exact file locations for every module — stop scanning, use this map
+alwaysApply: true
+---
+
+# Codebase Awareness
+
+## Frontend Module Map
+
+```
+src/app/
+  (public)/          → public user-facing routes
+  (admin)/
+    layout.tsx        → requireAdmin() guard
+    admin/page.tsx    → DashboardPage
+    admin/leads/      admin/projects/  admin/documents/
+    admin/content/    admin/audit/     admin/settings/
+  api/auth/          → JWT route handlers (login, logout, refresh)
+
+src/modules/admin/
+  dashboard/   → DashboardPage, stats.service.ts, useDashboardStats, useProjectStats
+  leads/       → LeadsTable, leads.service.ts, useLeads, useUpdateLead
+  projects/    → ProjectsTable, projects.service.ts, useAdminProjects, useCreateProject, useUpdateProject, useDeleteProject
+  documents/   → DocumentsTable, documents.service.ts, useDocuments, useCreateDocument, useUpdateDocument, useDeleteDocument
+  content/     → ContentPage, SiteSettingsManager, BrandingManager, NavigationManager,
+                  TeamManager, ServicesManager, TestimonialsManager, ContentStatsManager,
+                  MethodologyManager, AboutEditor, ImagesEditor
+                  content.service.ts (stats/methodology/testimonials/services)
+                  site-settings.service.ts (useGetSiteSettings, useUpdateSiteSettings)
+  audit/       → AuditLogViewer, audit.service.ts, useAuditLogs, useClearAuditLogs
+  settings/    → SettingsPanel
+  auth/        → auth.service.ts, auth.validator.ts
+  shared/      → AdminSidebar, AdminHeader, StatusBadge, TableToolbar
+                  useDebouncedSearch, useTableFilters
+  modals/      → InterestsModal, PreviewModal
+
+src/modules/public/
+  home/        → home.service.ts
+  projects/    → projects.service.ts, interest.service.ts
+  modals/      → ExpressInterestModal
+  shared/      → shared public UI
+
+src/lib/
+  actions/admin.ts   → all admin Server Actions + requireAdmin()
+  actions/public.ts  → submitLead, expressInterest
+  api-helpers/       → axios-instance.ts (apiAxios), client.ts (apiClient), parse-error.ts
+  url-helpers/       → routes.ts (ROUTES.*), api-endpoints.ts (API.*)
+  constants/         → branding.ts (BRAND.*), site.ts, env.ts
+  types/domain.ts    → Lead, Project, Document, CatalogService, Testimonial,
+                        ContentStat, MethodologyStep, SiteSetting, AuditLog,
+                        DashboardStats, ProjectStats
+  validators/        → lead.ts, project.ts, document.ts, service.ts, interest.ts, content.ts
+  auth.ts            → verifySession(), requireAdmin()
+  store/             → modal.store.ts, admin-filters.store.ts
+```
+
+## Backend Module Map
+
+```
+src/modules/
+  auth/         → login, verify, logout, refresh, change-password + requireAuth middleware
+  leads/        → public POST /leads · protected GET/PATCH /leads/:id
+  projects/     → public GET · protected POST/PATCH/DELETE + interests
+  documents/    → all protected (GET/POST/PATCH/DELETE)
+  services/     → public GET · protected POST/PATCH/DELETE
+  content/      → public GET stats/methodology/settings · protected mutations
+  testimonials/ → public GET · protected POST/PATCH/DELETE
+  stats/        → protected /stats + /stats/projects
+  audit/        → protected GET/DELETE /audit
+  notifications/→ protected /notifications/status + /notifications/test
+
+src/db/schema/  → one file per table, all exported from index.ts
+src/shared/
+  middleware/require-auth.ts   → JWT validation
+  url-helpers/route-paths.ts   → ROUTE_PATHS.*
+  api-helpers/                 → parseIdParam, sendJson
+  lib/email.ts                 → sendInquiryNotification (Resend)
+```

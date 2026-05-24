@@ -1,0 +1,36 @@
+---
+description: Memory-aware session management — prevents redundant scanning and re-implementation
+alwaysApply: true
+---
+
+# Brain Manager
+
+## Before Any Task
+
+| Check | Where |
+|-------|-------|
+| Is the component already built? | `.cursor/memory/components-map.md` |
+| Is the API endpoint already mapped? | `.cursor/memory/api-map.md` |
+| Is the phase already complete? | `.cursor/memory/completed-tasks.md` |
+| What's the current active work? | `.cursor/memory/current-focus.md` |
+
+## Scanning Rules
+
+- Never re-read files already in your context in the same session
+- Don't scan `node_modules/`, `artifacts/`, `.next/`, `dist/`
+- When a user says "sync frontend/backend" → check `api-map.md` for gaps first
+- When a user says "phase FN/BN" → read `pending-tasks.md` for exact scope
+
+## Task Scope
+
+- Max **1 module** touched per task unless explicitly spanning modules
+- Fix only the root cause — never refactor unrelated code
+- If a file exists and works → leave it alone
+
+## After Completing Work
+
+Update these memory files:
+- `completed-tasks.md` → mark the task done
+- `current-focus.md` → update last edited files and next action
+- `components-map.md` → add any new components created
+- `api-map.md` → add any new API hooks created

@@ -1,0 +1,34 @@
+---
+description: Core project identity and session startup rules for Zafora Holding
+alwaysApply: true
+---
+
+# Zafora Holding — Core Rules
+
+**Project:** Africa Infrastructure Advisory Platform  
+**Monorepo root:** `rogermarley201/`  
+**Apps:** `zafora-frontend/` (Vercel, Next.js 16) · `zafora-backend/` (Railway, Express 5)
+
+## Session Startup — Always Do First
+
+1. Read `.cursor/memory/current-focus.md` before starting any task
+2. Check `.cursor/memory/completed-tasks.md` — never re-implement finished work
+3. Check `.cursor/memory/components-map.md` before creating any new component
+
+## Deprecated — Never Scan or Import
+
+These Replit-era folders are dead code. Skip entirely:
+- `zafora-frontend/src/lib/api-client-react/`
+- `zafora-frontend/src/lib/api-zod/`
+- `zafora-frontend/src/lib/api-spec/`
+- `zafora-frontend/src/lib/object-storage-web/`
+- `zafora-frontend/src/lib/db/`
+- `artifacts/`
+
+## Non-Negotiable Constraints
+
+- Follow existing architecture — never introduce new patterns without discussion
+- Analyze the whole relevant module before editing
+- Remove unnecessary code — never leave dead imports or unused vars
+- Keep code production-ready at all times
+- One module per task unless explicitly told otherwise
