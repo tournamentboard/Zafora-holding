@@ -472,8 +472,9 @@ const spec: OpenAPIV3.Document = {
     "/api/leads": {
       get: {
         tags: ["Leads"],
-        summary: "List leads",
+        summary: "List leads 🔒",
         operationId: "listLeads",
+        security: [{ cookieAuth: [] }],
         parameters: [
           { name: "status", in: "query", schema: { type: "string", enum: ["new", "contacted", "in_progress", "qualified", "disqualified", "closed"] } },
           { name: "requestType", in: "query", schema: { type: "string" } },
@@ -486,6 +487,7 @@ const spec: OpenAPIV3.Document = {
             content: { "application/json": { schema: { type: "object", properties: { leads: { type: "array", items: { $ref: "#/components/schemas/Lead" } }, total: { type: "integer" } } } } },
           },
           "400": { description: "Invalid query params", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
       post: {
@@ -503,12 +505,14 @@ const spec: OpenAPIV3.Document = {
     "/api/leads/{id}": {
       get: {
         tags: ["Leads"],
-        summary: "Get lead by ID",
+        summary: "Get lead by ID 🔒",
         operationId: "getLead",
+        security: [{ cookieAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
           "200": { description: "Lead", content: { "application/json": { schema: { $ref: "#/components/schemas/Lead" } } } },
           "400": { description: "Invalid id", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "404": { description: "Not found", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
@@ -620,13 +624,17 @@ const spec: OpenAPIV3.Document = {
     "/api/documents": {
       get: {
         tags: ["Documents"],
-        summary: "List documents",
+        summary: "List documents 🔒",
         operationId: "listDocuments",
+        security: [{ cookieAuth: [] }],
         parameters: [
           { name: "visibility", in: "query", schema: { type: "string", enum: ["public", "private"] } },
+          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
+          { name: "limit", in: "query", schema: { type: "integer", default: 20 } },
         ],
         responses: {
           "200": { description: "Document list", content: { "application/json": { schema: { type: "object", properties: { documents: { type: "array", items: { $ref: "#/components/schemas/Document" } }, total: { type: "integer" } } } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
       post: {
@@ -938,17 +946,19 @@ const spec: OpenAPIV3.Document = {
     },
 
     // ── Notifications ────────────────────────────────────────────────
-    "/api/email/status": {
+    "/api/notifications/status": {
       get: {
         tags: ["Notifications"],
-        summary: "Check email configuration",
+        summary: "Check email configuration 🔒",
         operationId: "emailStatus",
+        security: [{ cookieAuth: [] }],
         responses: {
           "200": { description: "Email status", content: { "application/json": { schema: { type: "object", properties: { configured: { type: "boolean" } } } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
     },
-    "/api/email/test": {
+    "/api/notifications/test": {
       post: {
         tags: ["Notifications"],
         summary: "Send test email 🔒",
@@ -969,6 +979,7 @@ const spec: OpenAPIV3.Document = {
         responses: {
           "200": { description: "Email sent", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
           "400": { description: "Missing email", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "500": { description: "Email send failed", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" }, error: { type: "string" } } } } } },
         },
       },

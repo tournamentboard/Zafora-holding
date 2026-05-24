@@ -30,7 +30,7 @@ export const ROUTE_PATHS = {
   },
 
   CONTENT: {
-    SETTINGS: "/content/settings",
+    SETTINGS: "/content/settings/:key",
     STATS: "/content/stats",
     METHODOLOGY: "/content/methodology",
   },
@@ -49,6 +49,7 @@ export const ROUTE_PATHS = {
   },
 
   NOTIFICATIONS: {
+    STATUS: "/notifications/status",
     SEND_TEST: "/notifications/test",
   },
 

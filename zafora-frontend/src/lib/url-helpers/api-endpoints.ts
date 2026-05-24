@@ -39,6 +39,17 @@ export const API = {
       `${API_PREFIX}/content/methodology/${id}`,
     SETTINGS: (key: string) => `${API_PREFIX}/content/settings/${key}`,
   },
+  TESTIMONIALS: {
+    LIST: `${API_PREFIX}/testimonials`,
+    BY_ID: (id: number | string) => `${API_PREFIX}/testimonials/${id}`,
+  },
+  AUDIT: {
+    LIST: `${API_PREFIX}/audit`,
+  },
+  NOTIFICATIONS: {
+    STATUS: `${API_PREFIX}/notifications/status`,
+    TEST: `${API_PREFIX}/notifications/test`,
+  },
   STORAGE: {
     REQUEST_UPLOAD_URL: `${API_PREFIX}/storage/uploads/request-url`,
     PUBLIC_OBJECT: (filePath: string) =>

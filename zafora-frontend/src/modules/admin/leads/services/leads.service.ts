@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiAxios } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
-import type { Lead } from "@/src/lib/api-client-react/generated/api.schemas";
+import type { Lead } from "@/src/lib/types";
 import type { UpdateLeadInput } from "@/src/lib/validators";
 
 type ListLeadsParams = { status?: string; requestType?: string; page?: number; limit?: number };

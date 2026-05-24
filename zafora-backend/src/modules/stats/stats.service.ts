@@ -1,10 +1,7 @@
-import { Router } from "express";
-import { db, leadsTable, projectsTable, projectInterestsTable, documentsTable } from "@/workplace/db/src/index.js";
-import { count, sql, desc, gte } from "drizzle-orm";
+import { count, desc, gte, sql } from "drizzle-orm";
+import { db, leadsTable, projectsTable, projectInterestsTable, documentsTable } from "@/db/index.js";
 
-const router = Router();
-
-router.get("/stats", async (req, res) => {
+export async function getDashboardStats() {
   const now = new Date();
   const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
@@ -30,7 +27,7 @@ router.get("/stats", async (req, res) => {
     db.select().from(leadsTable).orderBy(desc(leadsTable.createdAt)).limit(5),
   ]);
 
-  res.json({
+  return {
     totalLeads: totalLeadsResult[0]?.count ?? 0,
     totalProjects: totalProjectsResult[0]?.count ?? 0,
     totalInterests: totalInterestsResult[0]?.count ?? 0,
@@ -39,10 +36,10 @@ router.get("/stats", async (req, res) => {
     activeProjects: activeProjectsResult[0]?.count ?? 0,
     leadsByStatus: leadsByStatusResult,
     recentLeads,
-  });
-});
+  };
+}
 
-router.get("/stats/projects", async (req, res) => {
+export async function getProjectStats() {
   const [bySector, byStatus] = await Promise.all([
     db.select({ sector: projectsTable.sector, count: count(), totalValue: sql<string>`'N/A'` })
       .from(projectsTable)
@@ -52,7 +49,5 @@ router.get("/stats/projects", async (req, res) => {
       .groupBy(projectsTable.fundingStatus),
   ]);
 
-  res.json({ bySector, byStatus });
-});
-
-export default router;
+  return { bySector, byStatus };
+}
