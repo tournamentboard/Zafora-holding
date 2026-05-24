@@ -103,7 +103,7 @@ const spec: OpenAPIV3.Document = {
           budgetFundingNeed: { type: "string", nullable: true },
           projectTimeline: { type: "string", nullable: true },
           roleType: { type: "string", nullable: true },
-          status: { type: "string", enum: ["new", "contacted", "in_progress", "qualified", "disqualified", "closed"], default: "new" },
+          status: { type: "string", enum: ["new", "reviewed", "contacted", "qualified", "proposal_sent", "in_progress", "closed", "rejected"], default: "new" },
           notes: { type: "string", nullable: true },
           followUpDate: { type: "string", nullable: true },
           createdAt: { type: "string", format: "date-time" },
@@ -130,7 +130,7 @@ const spec: OpenAPIV3.Document = {
       UpdateLeadBody: {
         type: "object",
         properties: {
-          status: { type: "string", enum: ["new", "contacted", "in_progress", "qualified", "disqualified", "closed"] },
+          status: { type: "string", enum: ["new", "reviewed", "contacted", "qualified", "proposal_sent", "in_progress", "closed", "rejected"] },
           notes: { type: "string", nullable: true },
           followUpDate: { type: "string", nullable: true },
         },
