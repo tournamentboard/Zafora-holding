@@ -1,0 +1,68 @@
+---
+description: Zafora brand tokens and UI design system — exact colors, spacing, component patterns
+globs: zafora-frontend/**/*.tsx
+alwaysApply: false
+---
+
+# Design System
+
+## Brand Color Tokens (`lib/constants/branding.ts`)
+
+```ts
+BRAND.PRIMARY       = "#173f35"   // dark forest green — buttons, active nav, headings
+BRAND.PRIMARY_DARK  = "#10231f"   // page headings, strong text
+BRAND.PRIMARY_LIGHT = "#245d4e"   // hover state for primary buttons
+BRAND.ACCENT        = "#c59b4a"   // gold — secondary CTAs, highlights, badges
+BRAND.ACCENT_DARK   = "#b5893a"   // hover state for accent buttons
+BRAND.BG            = "#f7f4ef"   // page background — warm off-white
+BRAND.BG_WARM       = "#efe3cf"   // card hover backgrounds, callout blocks
+BRAND.BORDER        = "#e5ded3"   // all borders and dividers
+BRAND.TEXT_MUTED    = "#65736f"   // secondary text, descriptions
+BRAND.TEXT_FAINT    = "#8a958f"   // placeholder, metadata, disabled
+```
+
+## Component Recipes
+
+### Cards
+```tsx
+<div className="bg-white border border-[#e5ded3] rounded-2xl shadow-sm p-5">
+```
+
+### Primary Button
+```tsx
+<button className="bg-[#173f35] text-white hover:bg-[#245d4e] px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-md">
+```
+
+### Accent Button
+```tsx
+<button className="bg-[#c59b4a] text-white hover:bg-[#b5893a] px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors">
+```
+
+### Ghost / Border Button
+```tsx
+<button className="border border-[#e5ded3] text-[#65736f] hover:bg-[#f7f4ef] hover:text-[#173f35] px-4 py-2.5 rounded-xl text-sm transition-colors">
+```
+
+### Input
+```tsx
+<input className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35] placeholder:text-[#8a958f]">
+```
+
+### Page Title
+```tsx
+<h1 className="text-2xl font-bold text-[#10231f]">
+<p className="text-[#65736f] text-sm mt-1">
+```
+
+### Loading Skeleton
+```tsx
+<div className="h-24 bg-[#f7f4ef] rounded-2xl animate-pulse">
+```
+
+## Rules
+
+- ❌ Never use default Tailwind colors (`blue-500`, `green-600`, `gray-400`) for Zafora UI
+- ❌ No `dark:` variants — project has no dark mode
+- ✅ Always use `transition-colors` on interactive elements
+- ✅ Page background is always `bg-[#f7f4ef]` (admin layout sets this)
+- ✅ Admin content area: `space-y-6 max-w-5xl` for wide tables, `max-w-2xl` for forms

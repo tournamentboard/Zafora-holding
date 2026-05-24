@@ -1,0 +1,76 @@
+---
+description: Clean code rules — no raw fetch, no legacy imports, no magic strings, audit logging
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# Clean Code Rules
+
+## Forbidden Patterns
+
+```ts
+// ❌ Raw fetch in client components
+const res = await fetch("/api/leads");
+
+// ✅ Always apiAxios
+const res = await apiAxios.get(API.LEADS.LIST);
+```
+
+```ts
+// ❌ Legacy import
+import { useListLeads } from "@/src/lib/api-client-react";
+
+// ✅ Module service hook
+import { useLeads } from "@/src/modules/admin/leads";
+```
+
+```ts
+// ❌ Hardcoded route
+router.push("/admin/leads");
+
+// ✅ Route constant
+router.push(ROUTES.ADMIN.LEADS);
+```
+
+```ts
+// ❌ Legacy toast
+const { toast } = useToast();
+toast({ title: "Saved" });
+
+// ✅ Sonner
+import { toast } from "sonner";
+toast.success("Saved");
+toast.error("Failed to save.");
+```
+
+## Backend Service Rules
+
+```ts
+// ❌ Logic in route handler
+router.post("/leads", async (req, res) => {
+  const lead = await db.insert(leadsTable).values(req.body); // Never
+});
+
+// ✅ Service call only in routes
+router.post(ROUTE_PATHS.LEADS.LIST, async (req, res) => {
+  const parsed = CreateLeadBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid body" }); return; }
+  const lead = await createLead(parsed.data);
+  res.status(201).json(lead);
+});
+```
+
+## Audit Logging (Backend — Required on All Mutations)
+
+```ts
+// In service layer — every create/update/delete must log
+logAction("create", "CRM", `New inquiry from ${data.fullName}`, { leadId: lead.id }).catch(() => {});
+logAction("update", "Projects", `Project #${id} updated`, { id }).catch(() => {});
+logAction("delete", "Documents", `Document #${id} deleted`, { id }).catch(() => {});
+```
+
+## No Dead Code
+
+- Remove unused imports immediately
+- Never leave TODO comments without a linked task
+- Never leave `console.log` in production code — use `logger.info()` (backend)

@@ -1,0 +1,64 @@
+---
+description: Security rules — JWT, bcrypt, CORS, auth guards, input validation
+globs: zafora-backend/**/*.ts,zafora-frontend/src/middleware.ts,zafora-frontend/src/lib/auth.ts
+alwaysApply: false
+---
+
+# Security Rules
+
+## Authentication
+
+- JWT `access_token` (15 min) + `refresh_token` (7 days) — both httpOnly cookies
+- Cookie flags: `httpOnly: true`, `sameSite: "lax"`, `secure: true` (production)
+- `requireAuth` middleware validates `access_token` on every protected backend route
+- Frontend `middleware.ts` blocks `/admin/*` (except `/login`) without valid cookie
+- Frontend `(admin)/layout.tsx` calls `requireAdmin()` — double guard
+
+## Password Security
+
+```ts
+// ✅ Always bcrypt
+import bcrypt from "bcryptjs";
+const hash = await bcrypt.hash(password, 12);
+const match = await bcrypt.compare(plain, hash);
+
+// ❌ Never
+user.password === inputPassword // plaintext compare — never
+```
+
+Passwords are stored in `users` table only — never in `site_settings`.
+
+## Input Validation
+
+```ts
+// ✅ Always validate before service call
+const parsed = CreateLeadBody.safeParse(req.body);
+if (!parsed.success) { res.status(400).json({ error: "Invalid body" }); return; }
+const lead = await createLead(parsed.data);
+
+// ✅ Always parse ID params
+const id = parseIdParam(req, res); // returns null and sends 400 if NaN
+if (id === null) return;
+```
+
+## CORS
+
+- `ALLOWED_ORIGINS` env var — never wildcard `*`
+- `credentials: true` — required for cookie-based auth
+- Frontend origin must be in `ALLOWED_ORIGINS` on backend
+
+## Admin Endpoints — All Must Have requireAuth
+
+```ts
+// ✅ Protected
+router.get(ROUTE_PATHS.LEADS.LIST, requireAuth, async (req, res) => { ... });
+
+// ❌ Unprotected admin route — never
+router.get(ROUTE_PATHS.LEADS.LIST, async (req, res) => { ... });
+```
+
+## Frontend Secrets
+
+- Never use `NEXT_PUBLIC_` prefix for secrets — only truly public config values
+- JWT secrets stay server-side only (`JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`)
+- Admin credentials (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) — backend `.env` only

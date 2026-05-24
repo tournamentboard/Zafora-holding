@@ -1,0 +1,70 @@
+---
+description: Next.js 16 App Router patterns — RSC, Server Actions, routing, auth guard
+globs: zafora-frontend/src/app/**/*.tsx,zafora-frontend/src/modules/**/*.tsx
+alwaysApply: false
+---
+
+# Next.js App Router Rules
+
+## Page Files — Always Thin (≤ 15 lines)
+
+```tsx
+// ✅ CORRECT — page.tsx
+import LeadsTable from "@/src/modules/admin/leads/components/LeadsTable";
+export const metadata = { title: "Inquiries — Zafora Admin" };
+export default function LeadsPage() { return <LeadsTable />; }
+
+// ❌ WRONG — business logic in page
+export default function LeadsPage() {
+  const [data, setData] = useState([]); // Never
+  useEffect(() => fetch(...), []); // Never
+}
+```
+
+## Server vs Client Components
+
+| Data pattern | Use |
+|-------------|-----|
+| Public page data | Server Component — `async` function, `await apiClient()` |
+| Admin interactive data | `"use client"` + `useQuery` via `apiAxios` |
+| Form submission | Server Action in `lib/actions/public.ts` or `lib/actions/admin.ts` |
+| Modal / drawer | `"use client"` island |
+
+## "use client" Rules
+
+- Only add to components that need: `useState`, `useEffect`, `useQuery`, event handlers
+- Never add to full `page.tsx` — use client islands inside server pages
+- Never fetch with `apiAxios` in a Server Component — use `apiClient` instead
+
+## Auth Guard Pattern
+
+```
+middleware.ts          → blocks /admin/* (except /login) if no access_token cookie
+(admin)/layout.tsx     → calls requireAdmin() — throws redirect if invalid
+lib/actions/admin.ts   → every Server Action calls requireAdmin() first
+```
+
+## Route Constants — Always Use
+
+```ts
+import { ROUTES } from "@/src/lib/url-helpers";
+// ROUTES.ADMIN.LEADS, ROUTES.ADMIN.PROJECTS, ROUTES.LOGIN, etc.
+// Never: router.push("/admin/leads") — always: router.push(ROUTES.ADMIN.LEADS)
+```
+
+## Metadata
+
+```tsx
+// Per page — never document.title or next/head
+export const metadata = { title: "Projects — Zafora Admin" };
+// Dynamic:
+export async function generateMetadata({ params }) { ... }
+```
+
+## Forbidden Patterns
+
+- ❌ `pages/` directory, `getServerSideProps`, `getStaticProps`
+- ❌ `next/head` for SEO
+- ❌ `<a href="/admin/leads">` — use `<Link href={ROUTES.ADMIN.LEADS}>`
+- ❌ `<img src="...">` — use `<Image>` from `next/image`
+- ❌ Raw `fetch()` in client components — use `apiAxios`

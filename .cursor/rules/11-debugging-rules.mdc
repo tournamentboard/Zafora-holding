@@ -1,0 +1,73 @@
+---
+description: Error handling, debugging patterns, and toast standards
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# Debugging Rules
+
+## Frontend Error Handling
+
+```ts
+// ✅ Always parse API errors with the shared helper
+import { parseApiError } from "@/src/lib/api-helpers";
+
+try {
+  await updateLead({ id, data });
+  toast.success("Status updated!");
+} catch (err) {
+  toast.error(parseApiError(err));
+}
+```
+
+```ts
+// ✅ TanStack mutation error handling
+const { mutateAsync } = useUpdateLead();
+return useMutation({
+  mutationFn: ...,
+  onSuccess: () => toast.success("Saved"),
+  onError: (err) => toast.error(parseApiError(err)),
+});
+```
+
+## Backend Error Handling
+
+```ts
+// ✅ Throw in service, catch in error-handler middleware
+// service:
+if (!lead) throw new Error("Lead not found");
+
+// route — just check and return 404 for known not-found cases:
+const lead = await getLeadById(id);
+if (!lead) { res.status(404).json({ error: "Not found" }); return; }
+```
+
+## Auth Errors (401)
+
+The `apiAxios` interceptor in `lib/api-helpers/axios-instance.ts` automatically:
+1. Catches 401 responses
+2. Attempts `POST /api/auth/refresh`
+3. Retries the original request with new token
+4. If refresh fails → redirects to `ROUTES.LOGIN`
+
+Do NOT manually handle 401 in individual components.
+
+## Loading States
+
+```tsx
+// ✅ Always show loading skeleton
+if (isLoading) return (
+  <div className="space-y-3 animate-pulse">
+    {[1,2,3].map(i => <div key={i} className="h-20 bg-[#f7f4ef] rounded-2xl" />)}
+  </div>
+);
+```
+
+## Common Mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| `toast({ title: "..." })` | `toast.success("...")` |
+| `catch (e) {}` | Always log or show toast |
+| 401 in admin but no redirect | Check `apiAxios` interceptor is wired |
+| `data?.leads` undefined crash | Check `isLoading` guard before render |

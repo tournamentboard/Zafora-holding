@@ -1,0 +1,71 @@
+---
+description: Performance rules — RSC for public pages, pagination, image optimization, bundle discipline
+globs: zafora-frontend/**/*.tsx,zafora-frontend/**/*.ts
+alwaysApply: false
+---
+
+# Performance Rules
+
+## Public Pages — Server Components First
+
+```tsx
+// ✅ Public page — no client JS needed
+// app/(public)/projects/page.tsx
+export default async function ProjectsPage() {
+  const projects = await apiClient.get(API.PROJECTS.LIST);
+  return <ProjectsGrid projects={projects} />;
+}
+
+// ❌ Wrong — adds unnecessary client bundle
+"use client";
+export default function ProjectsPage() {
+  const { data } = useQuery(...); // Not needed for public read pages
+}
+```
+
+Rule: **Never** use `useQuery` or `useEffect` for data on public `(public)/` pages — use RSC.
+
+## Admin Pages — TanStack Query
+
+Admin pages ARE client-interactive (CRUD, real-time updates) — `useQuery` is correct here.  
+But always server-paginate:
+
+```ts
+// ✅ Server pagination — never fetch all records
+useLeads({ page: 1, limit: 20 });
+useAdminProjects({ page, limit: 20, sector: filter });
+
+// ❌ Never
+useLeads({ limit: 9999 }); // Don't pull entire table
+```
+
+## Images
+
+```tsx
+// ✅ Always next/image
+import Image from "next/image";
+<Image src={url} alt="..." width={400} height={300} />
+// or with fill:
+<Image src={url} alt="..." fill className="object-cover" />
+
+// ❌ Never raw <img>
+<img src={url} alt="..." />
+```
+
+## Zustand — No Server Data
+
+```ts
+// ✅ Zustand for UI state
+useModalStore()      // isOpen, selectedId
+useAdminFiltersStore() // filterStatus, searchTerm
+
+// ❌ Never put API response data in Zustand
+// TanStack Query is the cache for server state
+```
+
+## Bundle Discipline
+
+- No new npm packages without checking if existing library covers it
+- framer-motion, sonner, lucide-react — already installed, use them
+- Never re-install what's already in `package.json`
+- `"use client"` boundary as deep as possible — minimize client JS on public pages

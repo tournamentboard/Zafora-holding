@@ -1,0 +1,65 @@
+---
+description: Tailwind class conventions, spacing, typography, and animation standards
+globs: zafora-frontend/**/*.tsx
+alwaysApply: false
+---
+
+# Theme Rules
+
+## Spacing Conventions
+
+| Context | Class |
+|---------|-------|
+| Admin page padding | `p-4 md:p-6` (set by AdminShell) |
+| Section vertical gap | `space-y-6` |
+| Card internal padding | `p-4` or `p-5` |
+| Button padding | `px-4 py-2.5` (standard) · `px-6 py-3` (large) |
+| Form field gap | `space-y-4` |
+| Icon + text gap | `gap-2` |
+| Grid gap | `gap-4` or `gap-6` |
+
+## Border Radius
+
+| Element | Class |
+|---------|-------|
+| Inputs, buttons | `rounded-xl` |
+| Cards, panels | `rounded-2xl` |
+| Badges, pills | `rounded-full` |
+| Avatar / circle | `rounded-full` |
+
+## Typography Scale
+
+| Use | Class |
+|-----|-------|
+| Page title | `text-2xl font-bold text-[#10231f]` |
+| Section title | `text-xl font-bold text-[#10231f]` |
+| Card title | `text-base font-semibold text-[#10231f]` |
+| Body text | `text-sm text-[#10231f]` |
+| Description / muted | `text-sm text-[#65736f]` |
+| Label (uppercase) | `text-xs font-bold text-[#10231f] uppercase tracking-wide` |
+| Faint / placeholder | `text-xs text-[#8a958f]` |
+
+## Shadows
+
+| Element | Class |
+|---------|-------|
+| Cards | `shadow-sm` |
+| Primary action buttons | `shadow-md` |
+| Dropdowns / modals | `shadow-xl` |
+
+## Animations
+
+- Loading skeleton: `animate-pulse`
+- Spinner: `animate-spin`
+- Interactive: `transition-colors` (always — never bare hover without transition)
+- Modals: use framer-motion `AnimatePresence` — framer is installed, use it
+
+## Admin Layout Structure
+
+```
+min-h-screen flex bg-[#f7f4ef]
+  ├── AdminSidebar  (w-64, bg-white, border-r border-[#e5ded3], hidden md:flex)
+  └── flex-1 flex flex-col
+        ├── AdminHeader  (h-14, bg-white, border-b border-[#e5ded3])
+        └── main  (flex-1 overflow-auto p-4 md:p-6)
+```
