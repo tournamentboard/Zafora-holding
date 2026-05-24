@@ -4,6 +4,56 @@ _Last updated: 2026-05-24_
 
 ---
 
+## Replit Sync (RR-Series) — HIGHEST PRIORITY
+See `.cursor/rules/replit-update-code-to-sync.mdc` for full execution plan.
+
+### RR1 — Schema + FAQ Backend
+- [ ] Create `zafora-backend/src/db/schema/faqs.ts`
+- [ ] Export from schema `index.ts`
+- [ ] Run `drizzle-kit generate && drizzle-kit push`
+- [ ] Create `zafora-backend/src/modules/faqs/` (routes, service, validator, index)
+- [ ] Mount in `routes/index.ts` and add to `route-paths.ts`
+- [ ] Update `swagger.ts` with Faq schema + 4 endpoints
+
+### RR2 — Backend Settings Defaults
+- [ ] Add `SETTING_DEFAULTS` for `announcement_bar`, `maintenance_mode`, `legal_privacy`, `legal_terms`, `section_visibility`
+- [ ] Expand `branding`, `hero`, `about`, `services_page`, `government_page`, `submit_page`, `footer`, `seo_*` defaults
+- [ ] Test `GET /api/content/settings/<key>` for each
+
+### RR3 — Frontend Admin Components
+- [ ] `FaqManager` in `modules/admin/faqs/components/`
+- [ ] `AnnouncementManager` in `modules/admin/content/components/`
+- [ ] `MaintenanceManager` in `modules/admin/content/components/`
+- [ ] `LegalPagesEditor` in `modules/admin/content/components/`
+- [ ] `SectionVisibilityManager` in `modules/admin/content/components/`
+- [ ] Add "Site Control" group to `AdminSidebar`
+- [ ] Add new ROUTES + API endpoint constants
+- [ ] Create 5 thin admin route pages (`app/(admin)/admin/{faq,announcement,maintenance,legal,section-visibility}/page.tsx`)
+
+### RR4 — Frontend Public Pages
+- [ ] `LegalPageView` shared component in `modules/public/legal/components/`
+- [ ] `app/(public)/privacy/page.tsx` (RSC)
+- [ ] `app/(public)/terms/page.tsx` (RSC)
+- [ ] `app/maintenance/page.tsx` (standalone)
+- [ ] Update `middleware.ts` for maintenance redirect
+- [ ] `AnnouncementBar` server component + wire into `(public)/layout.tsx`
+- [ ] Add `getSectionVisibility()` helper in `lib/site-settings.ts`
+- [ ] Remove sticky/fixed/top-0 classes from Navbar (FR-HEADER-001)
+
+### RR5 — Auth Enhancements
+- [ ] `GET /api/auth/setup-status` endpoint
+- [ ] `POST /api/auth/setup` endpoint (uses `ADMIN_SETUP_EMAIL`)
+- [ ] `POST /api/auth/reset-password` endpoint
+- [ ] Add `ADMIN_SETUP_EMAIL` to `.env.example`
+- [ ] Update login page UI for setup-required flow
+
+### RR6 — Seed Data
+- [ ] Add 5+ FAQ entries to `scripts/seed.ts`
+- [ ] Add new `site_settings` keys with full JSON defaults
+- [ ] Run `npx tsx scripts/seed.ts`
+
+---
+
 ## Frontend — Pending
 
 ### F11 — File Uploads (Next Priority)

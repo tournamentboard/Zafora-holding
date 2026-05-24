@@ -36,10 +36,16 @@ export default function Navbar() {
   })();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)", backdropFilter: "blur(16px)" }}>
-      <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <img src={logo} alt="Zafora Holding" className="h-16 w-auto object-contain" />
+    <nav className="relative w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)" }}>
+      <div className="container mx-auto px-4 md:px-8 h-40 flex items-center justify-between">
+        <Link href="/" className="flex flex-col items-start" style={{ gap: "5px" }}>
+          {/* crop top 75% of image only — hides the baked-in tiny tagline at bottom */}
+          <div style={{ overflow: "hidden", height: "120px" }}>
+            <img src={logo} alt="Zafora Holding" style={{ height: "160px", width: "auto", display: "block", imageRendering: "auto" }} />
+          </div>
+          <span style={{ fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#173f35", fontWeight: 500, paddingLeft: "2px", whiteSpace: "nowrap" }}>
+            {motto}
+          </span>
         </Link>
 
         {/* Desktop Nav */}
@@ -79,7 +85,7 @@ export default function Navbar() {
 
       {/* Mobile Nav */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-[#f7f4ef] border-b border-[#e5ded3] p-4 flex flex-col gap-3 shadow-lg">
+        <div className="md:hidden absolute top-40 left-0 w-full bg-[#f7f4ef] border-b border-[#e5ded3] p-4 flex flex-col gap-3 shadow-lg">
           {links.map((link: any) => (
             <Link
               key={link.id ?? link.href}
