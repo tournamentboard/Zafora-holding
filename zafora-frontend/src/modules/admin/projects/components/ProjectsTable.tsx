@@ -8,6 +8,7 @@ import {
   useUpdateProject,
   useDeleteProject,
 } from "@/src/modules/admin/projects";
+import type { Project } from "@/src/lib/types";
 import InterestsModal from "@/src/modules/admin/modals/InterestsModal";
 import { Plus, Pencil, Trash2, X, MapPin, DollarSign, Eye, ChevronDown, ChevronUp, Users } from "lucide-react";
 
@@ -60,7 +61,7 @@ function SectorPicker({ value, onChange }: { value: string; onChange: (v: string
 }
 
 function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: {
-  defaultValues?: Record<string, unknown>;
+  defaultValues?: Project | null;
   onSubmit: (e: React.FormEvent<HTMLFormElement>, sectors: string) => void;
   buttonText: string;
   onCancel?: () => void;
@@ -149,7 +150,7 @@ export default function ProjectsTable() {
   const { mutateAsync: updateProject } = useUpdateProject();
   const { mutateAsync: deleteProject } = useDeleteProject();
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingProject, setEditingProject] = useState<(typeof data)["projects"][0] | null>(null);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [viewingInterestsId, setViewingInterestsId] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
