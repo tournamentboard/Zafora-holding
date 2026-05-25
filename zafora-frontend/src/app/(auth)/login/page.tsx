@@ -15,7 +15,7 @@ type Mode = "loading" | "setup" | "login";
 
 // ─── Setup Form ───────────────────────────────────────────────────
 
-function SetupForm({ onDone }: { onDone: () => void }) {
+function SetupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [values, setValues] = useState({ adminEmail: "", newPassword: "", confirmPassword: "" });
@@ -248,7 +248,7 @@ function AuthGate() {
   }
 
   if (mode === "setup") {
-    return <SetupForm onDone={() => setMode("login")} />;
+    return <SetupForm />;
   }
 
   return <LoginForm />;

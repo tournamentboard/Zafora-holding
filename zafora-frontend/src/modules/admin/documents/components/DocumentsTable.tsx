@@ -10,9 +10,10 @@ import {
 import { Plus, Trash2, X, FileText, Eye, Pencil, ExternalLink, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import type { CreateDocumentInput, UpdateDocumentInput } from "@/src/lib/validators";
+import type { Document } from "@/src/lib/types";
 
 function DocumentForm({ defaultValues, onSubmit, buttonText, onCancel }: {
-  defaultValues?: Record<string, unknown>;
+  defaultValues?: Document | null;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   buttonText: string;
   onCancel?: () => void;
@@ -72,8 +73,8 @@ export default function DocumentsTable() {
   const { mutateAsync: updateDoc } = useUpdateDocument();
   const { mutateAsync: deleteDoc } = useDeleteDocument();
   const [showForm, setShowForm] = useState(false);
-  const [editingDoc, setEditingDoc] = useState<(typeof data)["documents"][0] | null>(null);
-  const [previewDoc, setPreviewDoc] = useState<(typeof data)["documents"][0] | null>(null);
+  const [editingDoc, setEditingDoc] = useState<Document | null>(null);
+  const [previewDoc, setPreviewDoc] = useState<Document | null>(null);
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -132,7 +132,7 @@ export default function SettingsPanel() {
   };
 
   const handleExportLeads = () => {
-    const leads = (leadsData?.leads ?? []) as Array<Record<string, unknown>>;
+    const leads = (leadsData?.leads ?? []) as unknown as Array<Record<string, unknown>>;
     if (!leads.length) { toast.error("No leads to export yet."); return; }
     exportLeadsToCSV(leads);
     toast.success(`Exported ${leads.length} lead${leads.length !== 1 ? "s" : ""} to CSV.`);

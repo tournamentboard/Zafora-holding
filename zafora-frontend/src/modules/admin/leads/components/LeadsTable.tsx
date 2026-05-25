@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useLeads, useUpdateLead } from "@/src/modules/admin/leads";
+import type { Lead } from "@/src/lib/types";
 import { X, Mail, Phone, Building2, MapPin, MessageSquare, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 
@@ -43,14 +44,14 @@ function InfoBlock({ icon, label, value }: { icon: React.ReactNode; label: strin
 export default function LeadsTable() {
   const { data, isLoading } = useLeads({ limit: 100 });
   const { mutateAsync: updateLead } = useUpdateLead();
-  const [selectedLead, setSelectedLead] = useState<(typeof data)["leads"][0] | null>(null);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [filterStatus, setFilterStatus] = useState("all");
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
       await updateLead({ id, data: { status: newStatus } });
       toast.success("Status updated!");
-      if (selectedLead?.id === id) setSelectedLead((p) => p ? { ...p, status: newStatus } : p);
+      if (selectedLead?.id === id) setSelectedLead((p: Lead | null) => p ? { ...p, status: newStatus } : p);
     } catch {
       toast.error("Could not update status. Try again.");
     }
