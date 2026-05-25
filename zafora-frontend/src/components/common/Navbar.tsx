@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useGetSiteSettings } from "@/src/modules/admin/content/services/site-settings.service";
 import logo from "@/src/assets/logo.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
