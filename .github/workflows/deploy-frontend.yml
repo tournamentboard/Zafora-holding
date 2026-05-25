@@ -67,6 +67,8 @@ jobs:
     if: |
       (github.ref == 'refs/heads/development' && github.event_name == 'push') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'development')
+    permissions:
+      contents: write
     environment:
       name: development
       url: ${{ steps.deploy.outputs.preview_url }}
@@ -99,9 +101,6 @@ jobs:
 
       - name: Build (Development)
         working-directory: zafora-frontend
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.DEV_NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_BASE_URL: ${{ secrets.DEV_NEXT_PUBLIC_BASE_URL }}
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt to Vercel (Preview)
@@ -139,6 +138,8 @@ jobs:
     if: |
       (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    permissions:
+      contents: write
     environment:
       name: production
       url: ${{ steps.deploy.outputs.production_url }}
@@ -171,9 +172,6 @@ jobs:
 
       - name: Build (Production)
         working-directory: zafora-frontend
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.PROD_NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_BASE_URL: ${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt to Vercel (Production)
