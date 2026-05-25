@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
 
   if (!isPublicBypass) {
     try {
-      const apiBase = process.env["NEXT_PUBLIC_API_URL"];
+      const apiBase = process.env["API_URL"] ?? process.env["NEXT_PUBLIC_API_URL"];
       const res = await fetch(`${apiBase}/api/content/settings/maintenance_mode`, {
         next: { revalidate: 60 },
       });
