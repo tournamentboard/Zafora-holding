@@ -43,9 +43,9 @@ const spec: OpenAPIV3.Document = {
       // Auth
       LoginBody: {
         type: "object",
-        required: ["email", "password"],
+        required: ["password"],
+        description: "Password-only login. Admin email is resolved server-side from ADMIN_EMAIL env var.",
         properties: {
-          email: { type: "string", format: "email", example: "admin@zaforaholding.com" },
           password: { type: "string", minLength: 1, example: "mypassword" },
         },
       },

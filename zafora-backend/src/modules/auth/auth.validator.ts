@@ -1,7 +1,6 @@
 import { z } from "zod/v4";
 
 export const LoginBody = z.object({
-  email: z.string().email(),
   password: z.string().min(1),
 });
 
@@ -12,14 +11,14 @@ export const ChangePasswordBody = z.object({
 
 export const SetupBody = z.object({
   adminEmail: z.string().email(),
-  newPassword: z.string().min(8),
-  confirmPassword: z.string().min(8),
+  newPassword: z.string().min(4),
+  confirmPassword: z.string().min(4),
 });
 
 export const ResetPasswordBody = z.object({
   adminEmail: z.string().email(),
-  newPassword: z.string().min(8),
-  confirmPassword: z.string().min(8),
+  newPassword: z.string().min(4),
+  confirmPassword: z.string().min(4),
 });
 
 export type LoginBodyType = z.infer<typeof LoginBody>;

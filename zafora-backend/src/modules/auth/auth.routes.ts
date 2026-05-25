@@ -28,17 +28,23 @@ import {
 import { ROUTE_PATHS } from "@/shared/url-helpers/route-paths.js";
 const router = Router();
 
-// POST /api/auth/login
+// POST /api/auth/login — password only; email resolved from ADMIN_EMAIL env
 router.post(ROUTE_PATHS.AUTH.LOGIN, async (req, res) => {
   const parsed = LoginBody.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Invalid request body" });
+    res.status(400).json({ error: "Password is required" });
     return;
   }
 
-  const user = await validateCredentials(parsed.data.email, parsed.data.password);
+  const adminEmail = process.env["ADMIN_EMAIL"];
+  if (!adminEmail) {
+    res.status(503).json({ error: "ADMIN_EMAIL is not configured on this server." });
+    return;
+  }
+
+  const user = await validateCredentials(adminEmail, parsed.data.password);
   if (!user) {
-    res.status(401).json({ error: "Invalid credentials" });
+    res.status(401).json({ error: "Invalid password" });
     return;
   }
 
@@ -198,8 +204,18 @@ router.post(ROUTE_PATHS.AUTH.SETUP, async (req, res) => {
     return;
   }
 
-  await createUser(adminEmail, newPassword, "admin");
-  res.json({ ok: true });
+  const userId = await createUser(adminEmail, newPassword, "admin");
+
+  // Auto-login: issue JWT cookies so the admin lands directly in the panel
+  const tokenPayload = { userId, email: adminEmail, role: "admin" };
+  const accessToken = generateAccessToken(tokenPayload);
+  const { token: refreshToken, tokenId, expiresAt } = generateRefreshToken(tokenPayload);
+  await storeRefreshToken(tokenId, userId, expiresAt);
+
+  res.cookie(ACCESS_COOKIE, accessToken, ACCESS_COOKIE_OPTIONS);
+  res.cookie(REFRESH_COOKIE, refreshToken, REFRESH_COOKIE_OPTIONS);
+
+  res.json({ ok: true, user: { id: userId, email: adminEmail, role: "admin" } });
 });
 
 // POST /api/auth/reset-password — emergency reset (for locked out admin)

@@ -8,7 +8,7 @@ export interface LoginResponse {
 }
 
 export async function loginAdmin(data: LoginFormValues): Promise<LoginResponse> {
-  const res = await apiAxios.post<LoginResponse>(API.AUTH.LOGIN, data);
+  const res = await apiAxios.post<LoginResponse>(API.AUTH.LOGIN, { password: data.password });
   return res.data;
 }
 
