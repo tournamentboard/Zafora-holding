@@ -28,6 +28,7 @@ import {
 import { ROUTE_PATHS } from "@/shared/url-helpers/route-paths.js";
 const router = Router();
 
+// Updated
 // POST /api/auth/login — password only; email resolved from ADMIN_EMAIL env
 router.post(ROUTE_PATHS.AUTH.LOGIN, async (req, res) => {
   const parsed = LoginBody.safeParse(req.body);
