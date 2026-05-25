@@ -51,11 +51,12 @@ jobs:
 
       - name: Deploy to Vercel (Preview)
         id: deploy
-        working-directory: zafora-frontend
         run: |
-          DEPLOYMENT_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          DEPLOYMENT_URL=$(vercel deploy --cwd zafora-frontend \
+            --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | grep -E "^https://" | tail -1)
+          echo "Deployment URL: $DEPLOYMENT_URL"
           vercel alias set "$DEPLOYMENT_URL" zafora-frontend-dev.vercel.app \
-            --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
+            --token=${{ secrets.VERCEL_TOKEN }}
           echo "url=https://zafora-frontend-dev.vercel.app" >> $GITHUB_OUTPUT
 
       - name: Post deployment comment
@@ -97,9 +98,9 @@ jobs:
 
       - name: Deploy to Vercel (Production)
         id: deploy
-        working-directory: zafora-frontend
         run: |
-          URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          URL=$(vercel deploy --prod --cwd zafora-frontend \
+            --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | grep -E "^https://" | tail -1)
           echo "url=$URL" >> $GITHUB_OUTPUT
 
       - name: Post deployment comment
