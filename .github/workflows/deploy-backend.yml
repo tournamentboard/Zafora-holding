@@ -86,10 +86,11 @@ jobs:
         working-directory: zafora-backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID_DEV }}
         run: |
           railway up \
-            --service "${{ secrets.RAILWAY_BACKEND_SERVICE_NAME }}" \
-            --environment development \
+            --service "${{ secrets.RAILWAY_BACKEND_SERVICE_NAME_DEV }}" \
+            --environment production \
             --detach
 
       - name: Post deployment comment
@@ -135,9 +136,10 @@ jobs:
         working-directory: zafora-backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID_PROD }}
         run: |
           railway up \
-            --service "${{ secrets.RAILWAY_BACKEND_SERVICE_NAME }}" \
+            --service "${{ secrets.RAILWAY_BACKEND_SERVICE_NAME_PROD }}" \
             --environment production \
             --detach
 
