@@ -53,8 +53,10 @@ jobs:
         id: deploy
         working-directory: zafora-frontend
         run: |
-          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
-          echo "url=$URL" >> $GITHUB_OUTPUT
+          DEPLOYMENT_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          vercel alias set "$DEPLOYMENT_URL" zafora-frontend-dev.vercel.app \
+            --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
+          echo "url=https://zafora-frontend-dev.vercel.app" >> $GITHUB_OUTPUT
 
       - name: Post deployment comment
         uses: actions/github-script@v7
@@ -66,7 +68,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
-              body: `✅ **Frontend → Vercel Preview** deployed for \`${sha}\`\n\n🔗 ${{ steps.deploy.outputs.url }}`
+              body: `✅ **Frontend → Vercel Dev** deployed for \`${sha}\`\n\n🔗 https://zafora-frontend-dev.vercel.app`
             });
 
   # ── Production deploy on `main` branch ──────────────────────────────────────
