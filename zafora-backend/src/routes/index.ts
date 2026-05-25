@@ -10,6 +10,7 @@ import { contentRouter } from "@/modules/content/index.js";
 import { notificationsRouter } from "@/modules/notifications/index.js";
 import { testimonialsRouter } from "@/modules/testimonials/index.js";
 import { auditRouter } from "@/modules/audit/index.js";
+import { faqsRouter } from "@/modules/faqs/index.js";
 import storageRouter from "./storage.js";
 
 const router: IRouter = Router();
@@ -25,6 +26,7 @@ router.use(contentRouter);
 router.use(notificationsRouter);
 router.use(testimonialsRouter);
 router.use(auditRouter);
+router.use(faqsRouter);
 router.use(storageRouter);
 
 export default router;

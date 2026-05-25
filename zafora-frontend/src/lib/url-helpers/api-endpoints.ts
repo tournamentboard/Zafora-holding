@@ -10,6 +10,9 @@ export const API = {
     VERIFY: `${API_PREFIX}/auth/verify`,
     REFRESH: `${API_PREFIX}/auth/refresh`,
     CHANGE_PASSWORD: `${API_PREFIX}/auth/change-password`,
+    SETUP_STATUS: `${API_PREFIX}/auth/setup-status`,
+    SETUP: `${API_PREFIX}/auth/setup`,
+    RESET_PASSWORD: `${API_PREFIX}/auth/reset-password`,
   },
   LEADS: {
     LIST: `${API_PREFIX}/leads`,
@@ -39,6 +42,8 @@ export const API = {
     METHODOLOGY_BY_ID: (id: number | string) =>
       `${API_PREFIX}/content/methodology/${id}`,
     SETTINGS: (key: string) => `${API_PREFIX}/content/settings/${key}`,
+    FAQS: `${API_PREFIX}/content/faqs`,
+    FAQS_BY_ID: (id: number | string) => `${API_PREFIX}/content/faqs/${id}`,
   },
   TESTIMONIALS: {
     LIST: `${API_PREFIX}/testimonials`,

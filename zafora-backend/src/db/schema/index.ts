@@ -10,3 +10,4 @@ export * from "./testimonials.js";
 export * from "./audit-logs.js";
 export * from "./users.js";
 export * from "./sessions.js";
+export * from "./faqs.js";

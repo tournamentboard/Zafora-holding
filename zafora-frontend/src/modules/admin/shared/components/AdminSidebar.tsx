@@ -7,7 +7,8 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Inbox, FolderOpen, FileText, Settings, Settings2,
   BarChart2, Briefcase, Target, ChevronDown, ChevronRight, Quote,
-  Navigation, Palette, Activity, Users, LogOut,
+  Navigation, Palette, Activity, Users, LogOut, HelpCircle,
+  Megaphone, ShieldAlert, Scale, Layout,
 } from "lucide-react";
 import { ROUTES } from "@/src/lib/url-helpers";
 import logo from "@/src/assets/logo.png";
@@ -30,6 +31,19 @@ const SIDEBAR_GROUPS: NavGroup[] = [
       { label: "Testimonials", href: ROUTES.ADMIN.CONTENT + "?section=testimonials", icon: Quote, desc: "Client quotes & partners" },
       { label: "Site Stats", href: ROUTES.ADMIN.CONTENT + "?section=stats", icon: BarChart2, desc: "Homepage numbers" },
       { label: "Methodology", href: ROUTES.ADMIN.CONTENT + "?section=methodology", icon: Target, desc: "Delivery model steps" },
+      { label: "Team", href: ROUTES.ADMIN.CONTENT + "?section=team", icon: Users, desc: "Leadership team profiles" },
+      { label: "FAQs", href: ROUTES.ADMIN.FAQ, icon: HelpCircle, desc: "Frequently asked questions" },
+      { label: "Navigation Menu", href: ROUTES.ADMIN.CONTENT + "?section=navigation", icon: Navigation, desc: "Header nav links & order" },
+      { label: "Branding", href: ROUTES.ADMIN.CONTENT + "?section=branding", icon: Palette, desc: "Colors, logo & typography" },
+      { label: "Legal Pages", href: ROUTES.ADMIN.LEGAL, icon: Scale, desc: "Privacy Policy & Terms" },
+    ],
+  },
+  {
+    group: "Site Control",
+    items: [
+      { label: "Announcement Bar", href: ROUTES.ADMIN.ANNOUNCEMENT, icon: Megaphone, desc: "Sitewide banner message" },
+      { label: "Section Visibility", href: ROUTES.ADMIN.SECTION_VISIBILITY, icon: Layout, desc: "Show/hide page sections" },
+      { label: "Maintenance Mode", href: ROUTES.ADMIN.MAINTENANCE, icon: ShieldAlert, desc: "Lock site for maintenance" },
     ],
   },
   {

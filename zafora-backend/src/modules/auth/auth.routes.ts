@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { LoginBody, ChangePasswordBody } from "./auth.validator.js";
+import { eq } from "drizzle-orm";
+import { db, usersTable } from "@/db/index.js";
+import { LoginBody, ChangePasswordBody, SetupBody, ResetPasswordBody } from "./auth.validator.js";
 import {
   validateCredentials,
   findRefreshToken,
@@ -7,6 +9,10 @@ import {
   deleteRefreshToken,
   deleteAllUserTokens,
   changePassword,
+  hasAdminUser,
+  createUser,
+  hashPassword,
+  findUserByEmail,
 } from "./auth.service.js";
 import {
   generateAccessToken,
@@ -156,6 +162,76 @@ router.post(ROUTE_PATHS.AUTH.CHANGE_PASSWORD, async (req, res) => {
   // Invalidate all refresh tokens for this user after password change
   await deleteAllUserTokens(sessionUser.userId);
   clearAuthCookies(res);
+
+  res.json({ ok: true });
+});
+
+// GET /api/auth/setup-status — check if initial admin account exists
+router.get(ROUTE_PATHS.AUTH.SETUP_STATUS, async (_req, res) => {
+  const required = !(await hasAdminUser());
+  res.json({ required });
+});
+
+// POST /api/auth/setup — first-time admin account creation
+router.post(ROUTE_PATHS.AUTH.SETUP, async (req, res) => {
+  const ADMIN_SETUP_EMAIL = process.env["ADMIN_SETUP_EMAIL"];
+  if (!ADMIN_SETUP_EMAIL) {
+    res.status(503).json({ error: "ADMIN_SETUP_EMAIL is not configured on this server." });
+    return;
+  }
+
+  if (await hasAdminUser()) {
+    res.status(403).json({ error: "Setup is already complete. Use change-password to update credentials." });
+    return;
+  }
+
+  const parsed = SetupBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid request body" }); return; }
+
+  const { adminEmail, newPassword, confirmPassword } = parsed.data;
+  if (adminEmail !== ADMIN_SETUP_EMAIL) {
+    res.status(403).json({ error: "Unauthorized. Email does not match the authorized admin email." });
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    res.status(400).json({ error: "Passwords do not match." });
+    return;
+  }
+
+  await createUser(adminEmail, newPassword, "admin");
+  res.json({ ok: true });
+});
+
+// POST /api/auth/reset-password — emergency reset (for locked out admin)
+router.post(ROUTE_PATHS.AUTH.RESET_PASSWORD, async (req, res) => {
+  const ADMIN_SETUP_EMAIL = process.env["ADMIN_SETUP_EMAIL"];
+  if (!ADMIN_SETUP_EMAIL) {
+    res.status(503).json({ error: "Password reset is not configured on this server." });
+    return;
+  }
+
+  const parsed = ResetPasswordBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid request body" }); return; }
+
+  const { adminEmail, newPassword, confirmPassword } = parsed.data;
+  if (adminEmail !== ADMIN_SETUP_EMAIL) {
+    res.status(403).json({ error: "Unauthorized. Email does not match the authorized admin email." });
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    res.status(400).json({ error: "Passwords do not match." });
+    return;
+  }
+
+  const user = await findUserByEmail(adminEmail);
+  if (!user) {
+    res.status(404).json({ error: "No admin account found. Use /auth/setup to create one." });
+    return;
+  }
+
+  const passwordHash = await hashPassword(newPassword);
+  await db.update(usersTable).set({ passwordHash }).where(eq(usersTable.id, user.id));
+  await deleteAllUserTokens(user.id);
 
   res.json({ ok: true });
 });

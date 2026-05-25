@@ -7,6 +7,9 @@ export const ROUTE_PATHS = {
     VERIFY: "/auth/verify",
     REFRESH: "/auth/refresh",
     CHANGE_PASSWORD: "/auth/change-password",
+    SETUP_STATUS: "/auth/setup-status",
+    SETUP: "/auth/setup",
+    RESET_PASSWORD: "/auth/reset-password",
   },
 
   LEADS: {
@@ -34,6 +37,8 @@ export const ROUTE_PATHS = {
     SETTINGS: "/content/settings/:key",
     STATS: "/content/stats",
     METHODOLOGY: "/content/methodology",
+    FAQS: "/content/faqs",
+    FAQS_BY_ID: "/content/faqs/:id",
   },
 
   TESTIMONIALS: {

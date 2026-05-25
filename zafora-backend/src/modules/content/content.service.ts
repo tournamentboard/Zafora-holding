@@ -120,10 +120,149 @@ export async function deleteMethodologyStep(id: number) {
 
 // ── Site Settings ─────────────────────────────────────────────────
 
-export async function getOrCreateSetting(key: string, defaultValue: object = {}) {
+const SETTING_DEFAULTS: Record<string, object> = {
+  notifications: {
+    adminEmail: "Office@zaforaholding.com",
+    notifyOnInquiry: true,
+    notifyOnInterest: true,
+  },
+  navigation: [
+    { id: "about", label: "About", href: "/about", visible: true, openNewTab: false, order: 0 },
+    { id: "services", label: "Services", href: "/services", visible: true, openNewTab: false, order: 1 },
+    { id: "pipeline", label: "Pipeline", href: "/projects", visible: true, openNewTab: false, order: 2 },
+    { id: "gov", label: "Government Review", href: "/government-review", visible: true, openNewTab: false, order: 3 },
+  ],
+  branding: {
+    siteName: "Zafora Holding",
+    tagline: "Infrastructure. Capital. Delivery.",
+    logoUrl: "",
+    faviconUrl: "",
+    primaryColor: "#173f35",
+    accentColor: "#c59b4a",
+    bgColor: "#f7f4ef",
+    footerColor: "#10231f",
+    bodyFont: "Inter",
+    headingFont: "Inter",
+  },
+  hero: {
+    headline: "Structuring, funding, and delivering high-impact projects.",
+    subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
+    badge: "Strategic Infrastructure & Consulting · Est. 2025",
+    primaryBtnText: "Partner With Us",
+    primaryBtnLink: "/submit",
+    secondaryBtnText: "View Pipeline",
+    secondaryBtnLink: "/projects",
+    thirdBtnText: "Our Services",
+    thirdBtnLink: "/services",
+    featureBadge1: "Government-ready documentation",
+    featureBadge2: "PPP & funding advisory",
+    featureBadge3: "Project lifecycle governance",
+    panelCaption: "For governments, funders, and delivery partners.",
+    panelStat: "Open",
+    panelStatLabel: "Accepting Mandates",
+  },
+  footer: {
+    description: "Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm connecting governments, investors, and contractors with large-scale infrastructure projects.",
+    email: "Office@zaforaholding.com",
+    address: "3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607, USA",
+    phone: "",
+    copyright: "2025",
+  },
+  announcement_bar: {
+    enabled: false,
+    message: "Welcome to Zafora Holding",
+    link: "",
+    linkText: "Learn more",
+    dismissible: true,
+    bgColor: "#173f35",
+    textColor: "#ffffff",
+  },
+  maintenance_mode: {
+    enabled: false,
+    headline: "We'll be back soon.",
+    message: "We're performing scheduled maintenance. Please check back shortly.",
+    showContactEmail: true,
+    estimatedTime: "",
+  },
+  legal_privacy: {
+    title: "Privacy Policy",
+    lastUpdated: "January 2025",
+    content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
+  },
+  legal_terms: {
+    title: "Terms of Service",
+    lastUpdated: "January 2025",
+    content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+  },
+  section_visibility: {
+    home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
+    about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
+    services: { hero: true, stats: true, cards: true, cta: true },
+    projects: { hero: true, filter: true, grid: true },
+    government: { hero: true, stats: true, capability: true, framework: true, cta: true },
+    submit: { hero: true, form: true, sidebar: true },
+  },
+  seo_home: {
+    title: "Zafora Holding — Infrastructure Advisory & Project Development",
+    description: "Zafora Holding connects governments, investors, and contractors with large-scale infrastructure projects across Africa.",
+    keywords: "infrastructure advisory, project finance, PPP, Africa infrastructure, DFI funding",
+    ogTitle: "Zafora Holding",
+    ogDescription: "Strategic infrastructure advisory and development firm.",
+  },
+  seo_about: {
+    title: "About Us — Zafora Holding",
+    description: "Learn about Zafora Holding, founded in January 2025 in Tampa, Florida, and our mission to bridge the infrastructure gap across Africa.",
+    keywords: "Zafora Holding, about, infrastructure firm, Tampa Florida",
+  },
+  seo_services: {
+    title: "Services — Zafora Holding",
+    description: "End-to-end infrastructure advisory services: Government Advisory, Project Finance, PPP Structuring, Capital Raising, ESG Compliance, and more.",
+    keywords: "infrastructure services, government advisory, project finance, PPP, ESG compliance",
+  },
+  seo_projects: {
+    title: "Project Pipeline — Zafora Holding",
+    description: "Explore Zafora Holding's curated portfolio of high-impact infrastructure projects across Africa seeking funding and partners.",
+    keywords: "infrastructure projects, Africa pipeline, investment opportunities, project finance",
+  },
+  about: {
+    hero: {
+      headline: "Bridging global opportunities through infrastructure intelligence.",
+      subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
+      badge: "About Zafora Holding",
+      btn1Text: "Work With Us",
+      btn1Link: "/submit",
+      btn2Text: "View Our Pipeline",
+      btn2Link: "/projects",
+    },
+    stats: [
+      { value: "2025", label: "Founded — Tampa, FL, USA" },
+      { value: "Africa · Americas", label: "Primary Markets" },
+      { value: "6", label: "Core Practice Areas" },
+      { value: "Global", label: "Strategic Partnerships" },
+    ],
+    identity: {
+      quote: "Infrastructure development across Africa requires more than advisory. It requires a partner who structures projects that capital trusts, governments can deliver, and communities benefit from.",
+      quoteAttribution: "— Zafora Holding",
+      founded: "January 2025",
+      headquarters: "Tampa, FL, USA",
+      contact: "Office@zaforaholding.com",
+      markets: "Africa · Americas · Caribbean",
+    },
+    mvp: {
+      sectionHeadline: "Mission, Vision & Purpose",
+      sectionSubheadline: "Three commitments that define how we work — and why Zafora was built.",
+      mission: "To structure bankable, deliverable infrastructure across Africa and emerging markets — connecting sovereign governments, development finance institutions, and private capital through trusted, execution-focused advisory.",
+      vision: "To be recognized as the most trusted infrastructure advisory and development partner for African governments and global investors.",
+      purpose: "To prove that infrastructure development in Africa can be transparent, scalable, and community-positive.",
+    },
+  },
+};
+
+export async function getOrCreateSetting(key: string, defaultValue?: object) {
   const [existing] = await db.select().from(siteSettingsTable).where(eq(siteSettingsTable.key, key)).limit(1);
   if (existing) return existing;
-  const [created] = await db.insert(siteSettingsTable).values({ key, value: JSON.stringify(defaultValue) }).returning();
+  const fallback = defaultValue ?? SETTING_DEFAULTS[key] ?? {};
+  const [created] = await db.insert(siteSettingsTable).values({ key, value: JSON.stringify(fallback) }).returning();
   return created!;
 }
 

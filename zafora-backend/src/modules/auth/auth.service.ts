@@ -56,6 +56,11 @@ export async function createUser(email: string, password: string, role = "admin"
   return user!.id;
 }
 
+export async function hasAdminUser(): Promise<boolean> {
+  const [user] = await db.select({ id: usersTable.id }).from(usersTable).limit(1);
+  return !!user;
+}
+
 // ─── Refresh token DB operations ────────────────────────────────────────────
 
 export async function storeRefreshToken(
