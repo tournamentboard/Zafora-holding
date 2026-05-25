@@ -14,6 +14,16 @@ on:
       - development
     paths:
       - "zafora-frontend/**"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - production
 
 # Cancel any in-progress run for the same branch
 concurrency:
@@ -54,7 +64,9 @@ jobs:
     name: Deploy → Vercel (Preview / Development)
     runs-on: ubuntu-latest
     needs: ci
-    if: github.ref == 'refs/heads/development' && github.event_name == 'push'
+    if: |
+      (github.ref == 'refs/heads/development' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'development')
     environment:
       name: development
       url: ${{ steps.deploy.outputs.preview_url }}
@@ -124,7 +136,9 @@ jobs:
     name: Deploy → Vercel (Production)
     runs-on: ubuntu-latest
     needs: ci
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
     environment:
       name: production
       url: ${{ steps.deploy.outputs.production_url }}
