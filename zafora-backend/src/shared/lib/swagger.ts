@@ -25,7 +25,7 @@ const spec: OpenAPIV3.Document = {
     { name: "Testimonials", description: "Client testimonials" },
     { name: "Stats", description: "Admin dashboard aggregate statistics" },
     { name: "Notifications", description: "Email notification configuration" },
-    { name: "Storage", description: "File upload (Replit GCS → AWS S3 in B6)" },
+    { name: "Storage", description: "File upload — AWS S3 presigned PUT URLs. Client uploads directly to S3; no file bytes through Express." },
     { name: "Audit", description: "Audit log trail" },
   ],
 
@@ -1156,13 +1156,13 @@ const spec: OpenAPIV3.Document = {
       },
     },
 
-    // ── Storage (Replit GCS — will be replaced in B6) ────────────────
-    "/api/storage/uploads/request-url": {
+    // ── Storage (AWS S3 presigned upload) ────────────────────────────
+    "/api/storage/presign": {
       post: {
         tags: ["Storage"],
-        summary: "Request presigned upload URL 🔒",
-        description: "Returns a presigned URL for direct file upload. Client uploads the file directly to the returned URL.",
-        operationId: "requestUploadUrl",
+        summary: "Request S3 presigned upload URL 🔒",
+        description: "Returns a presigned PUT URL for direct-to-S3 upload. The client uploads the file directly to `uploadUrl`; the resulting object is accessible at `publicUrl`. No file bytes pass through Express.",
+        operationId: "presignUpload",
         security: [{ cookieAuth: [] }],
         requestBody: {
           required: true,
@@ -1170,11 +1170,26 @@ const spec: OpenAPIV3.Document = {
             "application/json": {
               schema: {
                 type: "object",
-                required: ["name", "size", "contentType"],
+                required: ["fileName", "contentType", "size"],
                 properties: {
-                  name: { type: "string", example: "document.pdf" },
-                  size: { type: "integer", example: 204800 },
-                  contentType: { type: "string", example: "application/pdf" },
+                  fileName: { type: "string", example: "logo.png" },
+                  contentType: {
+                    type: "string",
+                    enum: ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml", "application/pdf"],
+                    example: "image/png",
+                  },
+                  size: {
+                    type: "integer",
+                    description: "File size in bytes (max 10 MB)",
+                    example: 204800,
+                    maximum: 10485760,
+                  },
+                  folder: {
+                    type: "string",
+                    description: "S3 key prefix folder (lowercase alphanumeric with dashes)",
+                    default: "uploads",
+                    example: "projects",
+                  },
                 },
               },
             },
@@ -1182,20 +1197,23 @@ const spec: OpenAPIV3.Document = {
         },
         responses: {
           "200": {
-            description: "Upload URL",
+            description: "Presigned upload details",
             content: {
               "application/json": {
                 schema: {
                   type: "object",
                   properties: {
-                    uploadURL: { type: "string" },
-                    objectPath: { type: "string" },
-                    metadata: { type: "object" },
+                    uploadUrl: { type: "string", description: "Presigned S3 PUT URL (valid 60 min)" },
+                    publicUrl: { type: "string", description: "Final public URL of the uploaded object" },
+                    key: { type: "string", description: "S3 object key" },
                   },
                 },
               },
             },
           },
+          "400": { description: "Validation error", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "500": { description: "Failed to generate presigned URL", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
     },

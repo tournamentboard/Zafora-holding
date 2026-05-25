@@ -207,6 +207,20 @@ _Last updated: 2026-05-25_
 
 ---
 
+### B6 — File Upload & Storage Module ✅ (2026-05-26)
+- `zafora-backend/src/shared/lib/object-storage.ts` — AWS S3 service: `getPresignedPutUrl()` + `deleteObject()`
+- `zafora-backend/src/modules/storage/storage.validator.ts` — Zod `PresignBody` (fileName, contentType, size, folder)
+- `zafora-backend/src/modules/storage/storage.routes.ts` — `POST /storage/presign` behind `requireAuth`
+- `zafora-backend/src/modules/storage/index.ts`
+- `zafora-backend/src/routes/index.ts` — replaced old Replit GCS storageRouter with new module
+- `zafora-backend/src/shared/lib/swagger.ts` — `/api/storage/presign` documented
+- `zafora-backend/.env` — AWS_S3_BUCKET, AWS_S3_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_CUSTOM_DOMAIN added
+- `zafora-frontend/src/lib/url-helpers/api-endpoints.ts` — STORAGE.PRESIGN added
+- Installed: `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`
+- **Constraint:** Fill AWS credentials in `.env` and Railway before F11 uploads work
+
+---
+
 ## Partially Done / In Progress
 
 ### AnnouncementBar Wiring ⚠️ (2026-05-25)

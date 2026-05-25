@@ -11,7 +11,7 @@ import { notificationsRouter } from "@/modules/notifications/index.js";
 import { testimonialsRouter } from "@/modules/testimonials/index.js";
 import { auditRouter } from "@/modules/audit/index.js";
 import { faqsRouter } from "@/modules/faqs/index.js";
-import storageRouter from "./storage.js";
+import { storageRouter } from "@/modules/storage/index.js";
 
 const router: IRouter = Router();
 
