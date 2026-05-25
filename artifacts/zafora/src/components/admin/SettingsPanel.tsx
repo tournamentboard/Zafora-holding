@@ -379,7 +379,8 @@ export default function SettingsPanel() {
           <h4 className="font-bold">Security Reminder</h4>
         </div>
         <ul className="space-y-2 text-sm text-white/75">
-          <li className="flex items-start gap-2"><CheckCircle2 className="h-4 w-4 text-[#c59b4a] mt-0.5 shrink-0" /> Change the default password (zafora2024) to something unique and strong.</li>
+          <li className="flex items-start gap-2"><CheckCircle2 className="h-4 w-4 text-[#c59b4a] mt-0.5 shrink-0" /> Your password is hashed with bcrypt — it is never stored in plain text.</li>
+          <li className="flex items-start gap-2"><CheckCircle2 className="h-4 w-4 text-[#c59b4a] mt-0.5 shrink-0" /> Use a strong, unique password and change it regularly.</li>
           <li className="flex items-start gap-2"><CheckCircle2 className="h-4 w-4 text-[#c59b4a] mt-0.5 shrink-0" /> Never share admin login credentials by email or text message.</li>
           <li className="flex items-start gap-2"><CheckCircle2 className="h-4 w-4 text-[#c59b4a] mt-0.5 shrink-0" /> Sign out when using a shared or public device.</li>
           <li className="flex items-start gap-2"><RefreshCw className="h-4 w-4 text-[#c59b4a] mt-0.5 shrink-0" /> Export your leads regularly as a backup.</li>

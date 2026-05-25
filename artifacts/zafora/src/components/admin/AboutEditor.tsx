@@ -6,6 +6,7 @@ import {
   Users, Target, Eye, EyeOff, Globe, ShieldCheck, TrendingUp,
   Award, Handshake, MapPin, Plus, Trash2, ChevronUp, Linkedin, Mail,
 } from "lucide-react";
+import { PhotoUploadField } from "./PhotoUploadField";
 
 type Section = "hero" | "stats" | "identity" | "whoweare" | "mvp" | "values" | "team" | "timeline" | "cta";
 
@@ -407,16 +408,12 @@ export default function AboutEditor() {
                 <Field label="Bio / Description" value={member.bio ?? ""} onChange={v => setArrayItem("team", i, "bio", v)} type="textarea" maxLength={280} />
 
                 {/* Photo */}
-                <div className="flex items-start gap-3">
-                  <div className="flex-1">
-                    <Field label="Photo URL (optional)" value={member.photo ?? ""} onChange={v => setArrayItem("team", i, "photo", v)} placeholder="https://... (leave blank to use initials)" />
-                  </div>
-                  {member.photo && (
-                    <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#e5ded3] shrink-0 mt-6">
-                      <img src={member.photo} alt={member.name} className="w-full h-full object-cover object-top" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
-                    </div>
-                  )}
-                </div>
+                <PhotoUploadField
+                  label="Photo (optional)"
+                  value={member.photo ?? ""}
+                  onChange={v => setArrayItem("team", i, "photo", v)}
+                  placeholder="Paste URL or upload — leave blank to use initials"
+                />
 
                 {/* LinkedIn + Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

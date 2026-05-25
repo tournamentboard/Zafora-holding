@@ -6,8 +6,8 @@ _Last updated: 2026-05-24_
 
 ## Active Phase
 
-**None — all F1–F10, B1–B5 complete.**  
-Next recommended: **F11 (File Uploads) + B6 (AWS S3)**
+**Replit Sync — COMPLETED ✅ (2026-05-25)**  
+All RR1–RR8 phases executed. Next priority: **F11 (File Uploads) + B6 (AWS S3)**
 
 ---
 
@@ -49,11 +49,17 @@ Next recommended: **F11 (File Uploads) + B6 (AWS S3)**
 
 ## Next Actions (Priority Order)
 
-1. **B6**: `shared/lib/object-storage.ts` → AWS S3 SDK presigned URL service
-2. **F11**: `app/api/storage/presign/route.ts` → `hooks/use-s3-upload.ts` → `ImageUploader`
-3. **F12**: Add `loading.tsx` + `error.tsx` to each admin route segment
-4. **B7**: Wire Resend email — `RESEND_API_KEY` must be set in Railway
-5. **Cleanup**: Delete deprecated `lib/api-client-react`, `lib/api-zod`, etc. (verify zero imports first)
+1. **RR1**: Create `faqs` table + 4 endpoints + module structure
+2. **RR2**: Add new SETTING_DEFAULTS (announcement_bar, maintenance_mode, legal_privacy, legal_terms, section_visibility)
+3. **RR3**: Create 5 new admin manager components + sidebar entries + route pages
+4. **RR4**: Create `/privacy`, `/terms`, `/maintenance` pages + AnnouncementBar + remove sticky header
+5. **RR5**: Add auth setup-status / setup / reset-password endpoints
+6. **RR6**: Seed FAQs + new site_settings entries
+7. **B6**: `shared/lib/object-storage.ts` → AWS S3 SDK presigned URL service
+8. **F11**: `app/api/storage/presign/route.ts` → `hooks/use-s3-upload.ts` → `ImageUploader`
+9. **F12**: Add `loading.tsx` + `error.tsx` to each admin route segment
+10. **B7**: Wire Resend email — `RESEND_API_KEY` must be set in Railway
+11. **Cleanup**: Delete deprecated `lib/api-client-react`, `lib/api-zod`, etc. (verify zero imports first)
 
 ---
 

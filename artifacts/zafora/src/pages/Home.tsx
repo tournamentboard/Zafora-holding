@@ -96,10 +96,10 @@ const getSectorStyle = (sector: string) => {
 };
 
 const FALLBACK_STATS = [
-  { id: -1, label: "Project Value Advised", value: "$2.4B", suffix: "+", displayOrder: 0, visible: true },
-  { id: -2, label: "African Countries Active", value: "12", suffix: "+", displayOrder: 1, visible: true },
-  { id: -3, label: "Client Retention Rate", value: "95", suffix: "%", displayOrder: 2, visible: true },
-  { id: -4, label: "Infrastructure Sectors", value: "6", suffix: "", displayOrder: 3, visible: true },
+  { id: -1, label: "Regional Coverage", value: "Pan-African", suffix: "", displayOrder: 0, visible: true },
+  { id: -2, label: "Project Lifecycle", value: "End-to-End", suffix: "", displayOrder: 1, visible: true },
+  { id: -3, label: "Infrastructure Sectors", value: "6", suffix: "", displayOrder: 2, visible: true },
+  { id: -4, label: "Core Service Pillars", value: "3", suffix: "", displayOrder: 3, visible: true },
 ];
 
 const FALLBACK_STEPS = [
@@ -142,8 +142,8 @@ const HERO_DEFAULTS = {
   featureBadge2: "PPP & funding advisory",
   featureBadge3: "Project lifecycle governance",
   panelCaption: "For governments, funders, and delivery partners.",
-  panelStat: "1,240+",
-  panelStatLabel: "Global inquiries",
+  panelStat: "Open",
+  panelStatLabel: "Accepting Mandates",
 };
 
 export default function Home() {
@@ -275,38 +275,55 @@ export default function Home() {
                   <div className="text-[#c59b4a] text-xs font-bold uppercase tracking-wider mb-1">Executive Advisory</div>
                   <h3 className="text-white font-bold text-xl leading-tight">{hero.panelCaption}</h3>
                 </div>
-                {/* Live indicator */}
+                {/* Status indicator */}
                 <div className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
-                  </span>
-                  <span className="text-white text-[10px] font-semibold">Active Pipeline</span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#c59b4a]"></span>
+                  <span className="text-white text-[10px] font-semibold">Open for Engagement</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-[1fr_1.8fr] gap-4 relative z-10">
                 {/* Stats mini card */}
                 <div className="bg-white/10 backdrop-blur border border-white/15 rounded-[18px] p-5 flex flex-col justify-center">
-                  <div className="text-white/60 text-xs font-semibold mb-2">Partner Interests</div>
+                  <div className="text-white/60 text-xs font-semibold mb-2">Pipeline Status</div>
                   <div className="text-4xl font-bold text-white tracking-tight mb-1">{hero.panelStat}</div>
                   <div className="text-sm font-semibold text-[#c59b4a]">{hero.panelStatLabel}</div>
                 </div>
 
                 {/* Project mini-list */}
                 <div className="bg-white/5 border border-white/8 rounded-[18px] p-4 flex flex-col gap-2.5">
-                  <div className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">Live Projects</div>
-                  {projectsData?.projects?.slice(0, 3).map((p) => (
-                    <Link key={p.id} href="/projects" className="group bg-white/6 hover:bg-white/12 border border-white/8 rounded-xl p-2.5 transition-all flex items-center justify-between gap-2">
-                      <div className="truncate">
-                        <div className="text-sm font-bold text-white truncate">{p.name}</div>
-                        <div className="text-[10px] text-white/50 truncate">{p.sector} · {p.country}</div>
+                  <div className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">Project Pipeline</div>
+                  {projectsData?.projects && projectsData.projects.length > 0 ? (
+                    projectsData.projects.slice(0, 3).map((p) => (
+                      <Link key={p.id} href="/projects" className="group bg-white/6 hover:bg-white/12 border border-white/8 rounded-xl p-2.5 transition-all flex items-center justify-between gap-2">
+                        <div className="truncate">
+                          <div className="text-sm font-bold text-white truncate">{p.name}</div>
+                          <div className="text-[10px] text-white/50 truncate">{p.sector} · {p.country}</div>
+                        </div>
+                        <span className="text-[9px] uppercase tracking-wide font-bold px-2 py-1 rounded-lg bg-[#c59b4a]/20 text-[#c59b4a] whitespace-nowrap shrink-0">
+                          {formatStatus(p.fundingStatus)}
+                        </span>
+                      </Link>
+                    ))
+                  ) : (
+                    <>
+                      <div className="bg-white/6 border border-white/8 rounded-xl p-3 flex flex-col gap-1">
+                        <div className="text-sm font-bold text-white/70">Pipeline under development</div>
+                        <div className="text-[10px] text-white/40">Projects being onboarded</div>
                       </div>
-                      <span className="text-[9px] uppercase tracking-wide font-bold px-2 py-1 rounded-lg bg-[#c59b4a]/20 text-[#c59b4a] whitespace-nowrap shrink-0">
-                        {formatStatus(p.fundingStatus)}
-                      </span>
-                    </Link>
-                  ))}
+                      <Link href="/submit" className="group bg-[#c59b4a]/15 hover:bg-[#c59b4a]/25 border border-[#c59b4a]/30 rounded-xl p-3 transition-all flex items-center justify-between gap-2">
+                        <div>
+                          <div className="text-sm font-bold text-[#c59b4a]">Submit a mandate</div>
+                          <div className="text-[10px] text-white/40">Be among the first projects</div>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-[#c59b4a] shrink-0" />
+                      </Link>
+                      <Link href="/projects" className="group bg-white/6 hover:bg-white/12 border border-white/8 rounded-xl p-2.5 transition-all flex items-center justify-between gap-2">
+                        <div className="text-sm font-semibold text-white/60">View pipeline</div>
+                        <ArrowRight className="h-3.5 w-3.5 text-white/40 shrink-0" />
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -612,8 +629,8 @@ export default function Home() {
 
               {/* Badge */}
               <div className="absolute -bottom-4 -right-4 bg-[#c59b4a] rounded-2xl px-4 py-3 shadow-xl">
-                <div className="text-[#10231f] font-bold text-lg leading-none">12</div>
-                <div className="text-[#10231f]/70 text-xs font-semibold">Markets</div>
+                <div className="text-[#10231f] font-bold text-sm leading-none">Pan-African</div>
+                <div className="text-[#10231f]/70 text-xs font-semibold mt-0.5">Coverage</div>
               </div>
             </motion.div>
             <motion.div {...fadeInView(0.15)}>
@@ -641,55 +658,68 @@ export default function Home() {
           <motion.div {...fadeInView()} className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6">
             <div>
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
-                <MapPin className="h-3.5 w-3.5" /> Live Pipeline
+                <MapPin className="h-3.5 w-3.5" /> Project Pipeline
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">Project Pipeline</h2>
-              <p className="text-lg text-[#65736f]">High-impact infrastructure assets currently seeking partners.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#10231f] tracking-tight mb-3">Infrastructure Projects</h2>
+              <p className="text-lg text-[#65736f]">Mandates under development and open for partner engagement.</p>
             </div>
             <Link href="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#e5ded3] text-[#10231f] font-semibold hover:border-[#173f35] hover:shadow-md transition-all whitespace-nowrap">
-              View Entire Portfolio <ChevronRight className="h-4 w-4" />
+              View Pipeline <ChevronRight className="h-4 w-4" />
             </Link>
           </motion.div>
 
           <div className="bg-white rounded-[36px] p-8 border border-[#e5ded3] shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {projectsData?.projects?.slice(0, 3).map((project, i) => (
-                <motion.div key={project.id} {...fadeInView(i * 0.08)} className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[22px] p-6 flex flex-col hover:border-[#173f35]/30 hover:shadow-md transition-all">
-                  <div className="flex justify-between items-start mb-4">
-                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getSectorStyle(project.sector)}`}>
-                      {project.sector}
-                    </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getStatusColor(project.fundingStatus)}`}>
-                      {formatStatus(project.fundingStatus)}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#10231f] mb-1.5 leading-snug">{project.name}</h3>
-                  <div className="flex items-center gap-1.5 text-sm text-[#65736f] mb-5">
-                    <MapPin className="h-3.5 w-3.5" /> {project.country}
-                  </div>
-                  <div className="bg-white rounded-xl p-4 mb-5 grid grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Est. Value</div>
-                      <div className="font-bold text-[#10231f] flex items-center gap-1">
-                        <DollarSign className="h-3.5 w-3.5 text-[#173f35]" /> {project.estimatedValue || "TBD"}
+            {projectsData?.projects && projectsData.projects.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {projectsData.projects.slice(0, 3).map((project, i) => (
+                  <motion.div key={project.id} {...fadeInView(i * 0.08)} className="bg-[#f7f4ef] border border-[#e5ded3] rounded-[22px] p-6 flex flex-col hover:border-[#173f35]/30 hover:shadow-md transition-all">
+                    <div className="flex justify-between items-start mb-4">
+                      <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getSectorStyle(project.sector)}`}>
+                        {project.sector}
+                      </span>
+                      <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border ${getStatusColor(project.fundingStatus)}`}>
+                        {formatStatus(project.fundingStatus)}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-[#10231f] mb-1.5 leading-snug">{project.name}</h3>
+                    <div className="flex items-center gap-1.5 text-sm text-[#65736f] mb-5">
+                      <MapPin className="h-3.5 w-3.5" /> {project.country}
+                    </div>
+                    <div className="bg-white rounded-xl p-4 mb-5 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Est. Value</div>
+                        <div className="font-bold text-[#10231f] flex items-center gap-1">
+                          <DollarSign className="h-3.5 w-3.5 text-[#173f35]" /> {project.estimatedValue || "TBD"}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Zafora Role</div>
+                        <div className="font-bold text-[#10231f] truncate">{project.zaforaRole}</div>
                       </div>
                     </div>
-                    <div>
-                      <div className="text-xs text-[#8a958f] mb-1 font-semibold uppercase tracking-wider">Zafora Role</div>
-                      <div className="font-bold text-[#10231f] truncate">{project.zaforaRole}</div>
+                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#e5ded3]">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-[#8a958f]">
+                        <Users className="h-3.5 w-3.5" /> {project.interestCount} interested
+                      </div>
+                      <Link href="/projects" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f35] hover:underline">
+                        Express Interest <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
                     </div>
-                  </div>
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#e5ded3]">
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-[#8a958f]">
-                      <Users className="h-3.5 w-3.5" /> {project.interestCount} interested
-                    </div>
-                    <Link href="/projects" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f35] hover:underline">
-                      Express Interest <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16 border border-dashed border-[#e5ded3] rounded-[24px]">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#173f35]/8 mb-4">
+                  <BarChart3 className="h-7 w-7 text-[#173f35]" />
+                </div>
+                <h3 className="text-xl font-bold text-[#10231f] mb-2">Pipeline under development</h3>
+                <p className="text-[#65736f] mb-6 max-w-sm mx-auto text-sm">We are actively onboarding infrastructure mandates. Projects will appear here as they are structured and validated.</p>
+                <Link href="/submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all text-sm">
+                  Submit a Mandate <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -794,12 +824,12 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
                 <Building className="h-3.5 w-3.5" /> Who We Are
               </div>
-              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A global infrastructure and strategic solutions company.</h2>
+              <h2 className="text-4xl font-bold text-[#10231f] tracking-tight mb-6">A U.S.-based advisory firm purpose-built for African infrastructure.</h2>
               <p className="text-lg text-[#65736f] leading-relaxed mb-6">
-                Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built to bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions.
+                Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was established to close the gap between government infrastructure ambition and the capital, structure, and execution required to bring projects to life.
               </p>
               <p className="text-lg text-[#65736f] leading-relaxed mb-8">
-                We support public and private sector initiatives across Africa, the Americas, the Caribbean, and emerging markets worldwide — connecting innovation with scalable development opportunities.
+                We operate at the intersection of public policy and private capital — structuring projects that attract DFI and institutional funding, meet international compliance standards, and deliver measurable impact across Africa, the Americas, and the Caribbean.
               </p>
               <Link href="/about" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md">
                 Our Full Story <ArrowRight className="h-4 w-4" />

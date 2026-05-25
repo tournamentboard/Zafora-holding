@@ -1,0 +1,388 @@
+Below are end-to-end requirements you can give the developer for Zafora.
+
+Zafora Website Admin Panel Requirements
+Main Goal
+
+Build the admin panel so every visible item on the live Zafora website can be edited, managed, updated, hidden, reordered, replaced, or removed without touching code.
+
+This includes:
+
+All page text
+All images
+All buttons
+All links
+Navigation menus
+Footer content
+Services
+Projects
+Pipeline items
+Team members
+Contact info
+Forms
+SEO
+Testimonials
+Stats
+Banners
+Announcements
+Legal pages
+Page sections
+Website settings
+
+The admin panel should be simple enough that a company team member can make changes without needing a developer.
+
+1. Global Website Management
+
+Admin must be able to manage:
+
+Website name
+Logo
+Favicon
+Brand colors
+Fonts
+Default images
+Social media links
+Contact email
+Phone number
+Address
+Business hours
+Global CTA buttons
+Sitewide announcement bar
+Maintenance mode
+2. Page Management
+
+Admin must be able to manage every page on the website.
+
+Required controls:
+
+Create page
+Edit page
+Delete page
+Duplicate page
+Rename page
+Change page URL
+Change page status: draft / published
+Reorder page sections
+Hide/show page sections
+Preview before publishing
+Schedule publish date
+Restore previous version
+
+Pages should include:
+
+Home
+About
+Services
+Projects
+Pipeline
+Contact
+Leadership
+Privacy Policy
+Terms & Conditions
+Any future pages
+3. Section Management
+
+Every section on every page must be editable.
+
+Admin must be able to:
+
+Edit section title
+Edit section subtitle
+Edit body text
+Change images
+Change background image
+Change icons
+Change buttons
+Change links
+Reorder sections
+Hide/show sections
+Duplicate sections
+Delete sections
+Add new sections
+Change layout style
+
+Section types should include:
+
+Hero section
+About section
+Services section
+Project section
+Pipeline section
+Feature cards
+Stats section
+CTA section
+Testimonial section
+Leadership section
+Contact section
+FAQ section
+Footer section
+4. Text Management
+
+Admin must be able to edit all text across the website.
+
+This includes:
+
+Headlines
+Subheadlines
+Paragraphs
+Button text
+Card titles
+Card descriptions
+Labels
+Captions
+Footer text
+Form labels
+Error messages
+Success messages
+
+Recommendation: create a Content Library where all editable text is stored and searchable.
+
+5. Image & Media Management
+
+Admin must be able to manage all images and files.
+
+Required features:
+
+Upload images
+Replace images
+Delete images
+Crop images
+Add alt text
+Add captions
+Organize by folder
+Search media
+Preview media
+Set default image
+Prevent broken images
+
+Supported files:
+
+JPG
+PNG
+WEBP
+SVG
+PDF
+MP4
+6. Pipeline Management
+
+Admin must be able to manage all pipeline/project opportunity items.
+
+Fields should include:
+
+Pipeline title
+Category
+Location
+Status
+Stage
+Description
+Budget range
+Funding status
+Timeline
+Image
+Documents
+Featured toggle
+Visibility toggle
+Contact person
+Related services
+Publish status
+
+Statuses can include:
+
+Idea
+Under Review
+Planning
+Funding Needed
+Active
+Completed
+Paused
+7. Services Management
+
+Admin must be able to manage all services.
+
+Fields:
+
+Service name
+Service category
+Short description
+Full description
+Icon
+Image
+CTA button
+Display order
+Featured toggle
+Show/hide toggle
+8. Projects / Case Studies Management
+
+Admin must be able to manage:
+
+Project title
+Project description
+Location
+Category
+Status
+Images
+Start date
+Completion date
+Investment amount
+Partners
+Documents
+Featured status
+Show/hide toggle
+9. Leadership / Team Management
+
+Admin must be able to manage:
+
+First name
+Last name
+Display name
+Title / position
+Department / role
+Bio
+Location
+Photo
+LinkedIn
+Email
+Sort order
+Show/hide toggle
+
+Recommendation: remove initials unless no photo exists and initials are intentionally used as a fallback.
+
+10. Navigation Management
+
+Admin must be able to manage:
+
+Header navigation
+Footer navigation
+Dropdown menus
+Button links
+External links
+Menu order
+Menu visibility
+11. Contact & Forms Management
+
+Admin must be able to manage:
+
+Contact form fields
+Required fields
+Email recipient
+Success message
+Error message
+Spam protection
+Form submissions
+Export submissions
+Lead status
+
+Forms should support:
+
+Name
+Email
+Phone
+Company
+Service interest
+Message
+File upload if needed
+12. SEO Management
+
+Admin must be able to manage SEO for every page.
+
+Fields:
+
+SEO title
+Meta description
+Keywords
+Page slug
+Open Graph image
+Social share title
+Social share description
+Index / no-index toggle
+13. User & Permission Management
+
+Create admin roles:
+
+Super Admin — full access
+Website Admin — manage all website content
+Content Editor — edit text and sections
+Media Manager — manage images/files
+Pipeline Manager — manage pipeline/projects
+SEO Manager — manage SEO only
+Viewer — view only
+14. Publishing Workflow
+
+Admin must support:
+
+Save draft
+Preview
+Publish
+Unpublish
+Schedule publish
+Version history
+Rollback
+Last edited by
+Last edited date
+15. Activity Log
+
+Track every admin action:
+
+Login
+Logout
+Text edit
+Image upload
+Image deletion
+Page publish
+Pipeline update
+Service update
+User permission change
+16. Search Inside Admin
+
+Admin should include search for:
+
+Pages
+Sections
+Text
+Images
+Pipeline items
+Projects
+Services
+Users
+Form submissions
+17. Required Quality Checks Before Going Live
+
+Before launch, test that admin can edit:
+
+Homepage hero text
+Homepage hero image
+CTA buttons
+About section
+Service cards
+Pipeline items
+Project cards
+Leadership section
+Contact info
+Footer
+Navigation
+SEO
+Forms
+Images
+Page visibility
+Section order
+My Recommendations
+
+Create these admin panel tabs:
+
+Dashboard
+Pages
+Sections
+Media Library
+Services
+Pipeline
+Projects
+Leadership Team
+Forms & Leads
+Navigation
+SEO
+Brand Settings
+Users & Roles
+Activity Log
+Site Settings
+Final Requirement Statement
+
+The Zafora website must be fully CMS-driven. No visible website content should be hard-coded unless approved. Any text, image, button, card, section, page, service, project, pipeline item, form, navigation link, SEO setting, or footer content visible on the live website must be manageable from the admin panel.

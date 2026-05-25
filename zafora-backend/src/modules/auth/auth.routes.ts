@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { LoginBody, ChangePasswordBody } from "./auth.validator.js";
+import { eq } from "drizzle-orm";
+import { db, usersTable } from "@/db/index.js";
+import { LoginBody, ChangePasswordBody, SetupBody, ResetPasswordBody } from "./auth.validator.js";
 import {
   validateCredentials,
   findRefreshToken,
@@ -7,6 +9,10 @@ import {
   deleteRefreshToken,
   deleteAllUserTokens,
   changePassword,
+  hasAdminUser,
+  createUser,
+  hashPassword,
+  findUserByEmail,
 } from "./auth.service.js";
 import {
   generateAccessToken,
@@ -22,17 +28,23 @@ import {
 import { ROUTE_PATHS } from "@/shared/url-helpers/route-paths.js";
 const router = Router();
 
-// POST /api/auth/login
+// POST /api/auth/login — password only; email resolved from ADMIN_EMAIL env
 router.post(ROUTE_PATHS.AUTH.LOGIN, async (req, res) => {
   const parsed = LoginBody.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Invalid request body" });
+    res.status(400).json({ error: "Password is required" });
     return;
   }
 
-  const user = await validateCredentials(parsed.data.email, parsed.data.password);
+  const adminEmail = process.env["ADMIN_EMAIL"];
+  if (!adminEmail) {
+    res.status(503).json({ error: "ADMIN_EMAIL is not configured on this server." });
+    return;
+  }
+
+  const user = await validateCredentials(adminEmail, parsed.data.password);
   if (!user) {
-    res.status(401).json({ error: "Invalid credentials" });
+    res.status(401).json({ error: "Invalid password" });
     return;
   }
 
@@ -156,6 +168,86 @@ router.post(ROUTE_PATHS.AUTH.CHANGE_PASSWORD, async (req, res) => {
   // Invalidate all refresh tokens for this user after password change
   await deleteAllUserTokens(sessionUser.userId);
   clearAuthCookies(res);
+
+  res.json({ ok: true });
+});
+
+// GET /api/auth/setup-status — check if initial admin account exists
+router.get(ROUTE_PATHS.AUTH.SETUP_STATUS, async (_req, res) => {
+  const required = !(await hasAdminUser());
+  res.json({ required });
+});
+
+// POST /api/auth/setup — first-time admin account creation
+router.post(ROUTE_PATHS.AUTH.SETUP, async (req, res) => {
+  const ADMIN_SETUP_EMAIL = process.env["ADMIN_SETUP_EMAIL"];
+  if (!ADMIN_SETUP_EMAIL) {
+    res.status(503).json({ error: "ADMIN_SETUP_EMAIL is not configured on this server." });
+    return;
+  }
+
+  if (await hasAdminUser()) {
+    res.status(403).json({ error: "Setup is already complete. Use change-password to update credentials." });
+    return;
+  }
+
+  const parsed = SetupBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid request body" }); return; }
+
+  const { adminEmail, newPassword, confirmPassword } = parsed.data;
+  if (adminEmail !== ADMIN_SETUP_EMAIL) {
+    res.status(403).json({ error: "Unauthorized. Email does not match the authorized admin email." });
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    res.status(400).json({ error: "Passwords do not match." });
+    return;
+  }
+
+  const userId = await createUser(adminEmail, newPassword, "admin");
+
+  // Auto-login: issue JWT cookies so the admin lands directly in the panel
+  const tokenPayload = { userId, email: adminEmail, role: "admin" };
+  const accessToken = generateAccessToken(tokenPayload);
+  const { token: refreshToken, tokenId, expiresAt } = generateRefreshToken(tokenPayload);
+  await storeRefreshToken(tokenId, userId, expiresAt);
+
+  res.cookie(ACCESS_COOKIE, accessToken, ACCESS_COOKIE_OPTIONS);
+  res.cookie(REFRESH_COOKIE, refreshToken, REFRESH_COOKIE_OPTIONS);
+
+  res.json({ ok: true, user: { id: userId, email: adminEmail, role: "admin" } });
+});
+
+// POST /api/auth/reset-password — emergency reset (for locked out admin)
+router.post(ROUTE_PATHS.AUTH.RESET_PASSWORD, async (req, res) => {
+  const ADMIN_SETUP_EMAIL = process.env["ADMIN_SETUP_EMAIL"];
+  if (!ADMIN_SETUP_EMAIL) {
+    res.status(503).json({ error: "Password reset is not configured on this server." });
+    return;
+  }
+
+  const parsed = ResetPasswordBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid request body" }); return; }
+
+  const { adminEmail, newPassword, confirmPassword } = parsed.data;
+  if (adminEmail !== ADMIN_SETUP_EMAIL) {
+    res.status(403).json({ error: "Unauthorized. Email does not match the authorized admin email." });
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    res.status(400).json({ error: "Passwords do not match." });
+    return;
+  }
+
+  const user = await findUserByEmail(adminEmail);
+  if (!user) {
+    res.status(404).json({ error: "No admin account found. Use /auth/setup to create one." });
+    return;
+  }
+
+  const passwordHash = await hashPassword(newPassword);
+  await db.update(usersTable).set({ passwordHash }).where(eq(usersTable.id, user.id));
+  await deleteAllUserTokens(user.id);
 
   res.json({ ok: true });
 });

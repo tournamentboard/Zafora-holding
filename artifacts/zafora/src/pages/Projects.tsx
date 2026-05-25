@@ -153,13 +153,29 @@ export default function Projects() {
               {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} className="h-[450px] w-full rounded-[24px] bg-[#e5ded3]/50" />)}
             </div>
           ) : data?.projects?.length === 0 ? (
-            <div className="text-center py-24 border border-dashed border-[#e5ded3] rounded-[24px] bg-[#f7f4ef]">
-              <h3 className="text-2xl font-bold text-[#10231f] mb-3">No projects found</h3>
-              <p className="text-[#65736f] mb-6">Try adjusting your filters or search query.</p>
-              <Button variant="outline" className="rounded-full border-[#173f35] text-[#173f35]" onClick={() => { setSector("All"); setStatus("All"); setSearch(""); }}>
-                Clear Filters
-              </Button>
-            </div>
+            rawData?.projects?.length === 0 && sector === "All" && status === "All" && !search ? (
+              // Genuinely empty pipeline
+              <div className="text-center py-24 border border-dashed border-[#e5ded3] rounded-[24px] bg-[#f7f4ef]">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#173f35]/8 mb-5">
+                  <BarChart3 className="h-8 w-8 text-[#173f35]" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#10231f] mb-3">Pipeline under development</h3>
+                <p className="text-[#65736f] mb-2 max-w-md mx-auto">We are actively onboarding infrastructure projects across Africa. New mandates are added as they are structured and validated.</p>
+                <p className="text-[#65736f] mb-8 max-w-md mx-auto text-sm">Governments, investors, and contractors are welcome to submit a mandate for review.</p>
+                <Link href="/submit" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all shadow-md">
+                  Submit a Mandate <Users className="h-4 w-4" />
+                </Link>
+              </div>
+            ) : (
+              // Filters returned no results
+              <div className="text-center py-24 border border-dashed border-[#e5ded3] rounded-[24px] bg-[#f7f4ef]">
+                <h3 className="text-2xl font-bold text-[#10231f] mb-3">No projects match your filters</h3>
+                <p className="text-[#65736f] mb-6">Try adjusting your sector, status, or search query.</p>
+                <Button variant="outline" className="rounded-full border-[#173f35] text-[#173f35]" onClick={() => { setSector("All"); setStatus("All"); setSearch(""); }}>
+                  Clear Filters
+                </Button>
+              </div>
+            )
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {data?.projects?.map((project, index) => (

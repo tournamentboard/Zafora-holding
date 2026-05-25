@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 import { useCreateLead, useGetSiteSettings } from "@/src/lib/api-client-react";
-import { useToast } from "@/src/hooks/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
@@ -47,8 +47,7 @@ const fadeInView = (delay = 0) => ({
 export default function Submit() {
   const { data: seoData } = useGetSiteSettings("seo_submit");
   usePageTitle("Submit a Request", parseSeoSettings(seoData));
-const router = useRouter()
-  const { toast } = useToast();
+const router = useRouter();
   const createLead = useCreateLead();
   const [loading, setLoading] = useState(false);
   const [defaultType, setDefaultType] = useState("consultation");
@@ -99,10 +98,10 @@ const router = useRouter()
           roleType: (formData.get("roleType") as string) || undefined,
         }
       });
-      toast({ title: "Request Submitted", description: "Your inquiry has been submitted. Our advisory team will contact you within 48 hours." });
+      toast.success("Request Submitted", { description: "Your inquiry has been submitted. Our advisory team will contact you within 48 hours." });
       router.push("/");
     } catch {
-      toast({ title: "Submission Failed", description: "Please try again or contact us directly.", variant: "destructive" });
+      toast.error("Submission Failed", { description: "Please try again or contact us directly." });
     } finally {
       setLoading(false);
     }

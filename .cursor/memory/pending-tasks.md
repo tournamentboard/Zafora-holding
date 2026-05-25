@@ -1,6 +1,11 @@
 # Pending Tasks
 
-_Last updated: 2026-05-24_
+_Last updated: 2026-05-25_
+
+---
+
+## Replit Sync (RR-Series) — COMPLETED ✅
+All RR1–RR8 phases executed. See `.cursor/rules/replit-update-code-to-sync.mdc` for details.
 
 ---
 
@@ -10,8 +15,8 @@ _Last updated: 2026-05-24_
 **Dependencies:** B6 must be done first (AWS S3)
 - [ ] `app/api/storage/presign/route.ts` — Next.js Route Handler for presign URL
 - [ ] `hooks/use-s3-upload.ts` — client hook that calls presign then uploads directly to S3
-- [ ] `modules/admin/content/components/ImageUploader.tsx` — drag-drop UI component
-- [ ] Wire ImageUploader into content forms (project imageUrl, branding logo, etc.)
+- [ ] `modules/admin/shared/components/PhotoUploadField.tsx` — drag-drop UI component
+- [ ] Wire PhotoUploadField into content forms (project imageUrl, branding logo, team photos, etc.)
 - [ ] Update `next/image` domains in `next.config.ts` to allow S3 bucket URL
 
 ### F12 — Error, Loading & Performance

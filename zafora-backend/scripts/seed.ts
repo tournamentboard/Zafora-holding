@@ -14,6 +14,7 @@ import {
   documentsTable,
   siteSettingsTable,
   leadsTable,
+  faqsTable,
 } from "../src/db/schema/index.js";
 
 async function seed() {
@@ -541,8 +542,119 @@ async function seed() {
         { id: "gov", label: "Government Review", href: "/government", visible: true, openNewTab: false, order: 3 },
       ]),
     },
+    {
+      key: "announcement_bar",
+      value: JSON.stringify({
+        enabled: false,
+        message: "Welcome to Zafora Holding — Africa's trusted infrastructure advisory partner.",
+        link: "/submit",
+        linkText: "Partner with us",
+        dismissible: true,
+        bgColor: "#173f35",
+        textColor: "#ffffff",
+      }),
+    },
+    {
+      key: "maintenance_mode",
+      value: JSON.stringify({
+        enabled: false,
+        headline: "We'll be back soon.",
+        message: "We're performing scheduled maintenance. Please check back shortly.",
+        showContactEmail: true,
+        estimatedTime: "",
+      }),
+    },
+    {
+      key: "legal_privacy",
+      value: JSON.stringify({
+        title: "Privacy Policy",
+        lastUpdated: "January 2025",
+        content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
+      }),
+    },
+    {
+      key: "legal_terms",
+      value: JSON.stringify({
+        title: "Terms of Service",
+        lastUpdated: "January 2025",
+        content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+      }),
+    },
+    {
+      key: "section_visibility",
+      value: JSON.stringify({
+        home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
+        about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
+        services: { hero: true, stats: true, cards: true, cta: true },
+        projects: { hero: true, filter: true, grid: true },
+        government: { hero: true, stats: true, capability: true, framework: true, cta: true },
+        submit: { hero: true, form: true, sidebar: true },
+      }),
+    },
   ]).onConflictDoNothing();
-  console.log("  ✓ 6 site settings inserted");
+  console.log("  ✓ 11 site settings inserted");
+
+  // ── FAQs ───────────────────────────────────────────────────────────
+  console.log("Inserting FAQs...");
+  await db.insert(faqsTable).values([
+    {
+      question: "What services does Zafora Holding offer?",
+      answer: "Full-spectrum infrastructure advisory — project finance, PPP structuring, government advisory, investor origination, ESG due diligence, and green finance. We advise governments, developers, and institutional investors at every stage of the project lifecycle.",
+      category: "services",
+      page: "general",
+      displayOrder: 1,
+      visible: true,
+    },
+    {
+      question: "Which countries do you operate in?",
+      answer: "We are active across 34+ African countries spanning Sub-Saharan and North Africa, with a strong presence in West Africa (Nigeria, Ghana, Senegal), East Africa (Kenya, Ethiopia, Rwanda), and Southern Africa (South Africa, Zambia, Zimbabwe).",
+      category: "general",
+      page: "about",
+      displayOrder: 2,
+      visible: true,
+    },
+    {
+      question: "How do I submit a project for review?",
+      answer: "Use the Submit a Project form on our website. A senior advisor will review your submission within 48 business hours. Please include project type, country, estimated value, and your role (government, developer, or investor).",
+      category: "process",
+      page: "submit",
+      displayOrder: 3,
+      visible: true,
+    },
+    {
+      question: "Do you work with governments directly?",
+      answer: "Yes. We support ministries, sovereign wealth funds, and infrastructure agencies on national pipeline strategy, PPP procurement, and DFI engagement. Our government advisory practice covers feasibility through financial close.",
+      category: "government",
+      page: "government",
+      displayOrder: 4,
+      visible: true,
+    },
+    {
+      question: "What are typical project sizes you advise on?",
+      answer: "We advise on transactions ranging from $20M for early-stage feasibility studies through to $500M+ for sovereign-scale infrastructure programmes. Our sweet spot is $50M–$300M projects where structuring complexity is highest.",
+      category: "investment",
+      page: "projects",
+      displayOrder: 5,
+      visible: true,
+    },
+    {
+      question: "What makes Zafora different from other advisory firms?",
+      answer: "Zafora was purpose-built for Africa's infrastructure market. We combine transaction advisory expertise with deep government relationships and a proprietary network of DFIs, pension funds, and strategic investors specifically focused on African infrastructure.",
+      category: "general",
+      page: "general",
+      displayOrder: 6,
+      visible: true,
+    },
+    {
+      question: "How are your advisory fees structured?",
+      answer: "Advisory engagements are structured as retainer + success fee arrangements, calibrated to project size and complexity. We also offer pre-feasibility engagements on a fixed-fee basis. Contact us for a tailored proposal.",
+      category: "process",
+      page: "services",
+      displayOrder: 7,
+      visible: true,
+    },
+  ]).onConflictDoNothing();
+  console.log("  ✓ 7 FAQs inserted");
 
   console.log("\n✅ Seed complete.");
   process.exit(0);

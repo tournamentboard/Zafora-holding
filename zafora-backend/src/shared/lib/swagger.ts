@@ -43,9 +43,9 @@ const spec: OpenAPIV3.Document = {
       // Auth
       LoginBody: {
         type: "object",
-        required: ["email", "password"],
+        required: ["password"],
+        description: "Password-only login. Admin email is resolved server-side from ADMIN_EMAIL env var.",
         properties: {
-          email: { type: "string", format: "email", example: "admin@zaforaholding.com" },
           password: { type: "string", minLength: 1, example: "mypassword" },
         },
       },
@@ -339,6 +339,45 @@ const spec: OpenAPIV3.Document = {
         },
       },
 
+      // FAQ
+      Faq: {
+        type: "object",
+        properties: {
+          id: { type: "integer" },
+          question: { type: "string" },
+          answer: { type: "string" },
+          category: { type: "string", example: "general" },
+          page: { type: "string", example: "general", description: "Which page this FAQ appears on (general/home/about/services/projects/government/submit)" },
+          displayOrder: { type: "integer" },
+          visible: { type: "boolean" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      CreateFaqBody: {
+        type: "object",
+        required: ["question", "answer"],
+        properties: {
+          question: { type: "string", example: "What services does Zafora offer?" },
+          answer: { type: "string", example: "Full-spectrum infrastructure advisory..." },
+          category: { type: "string", default: "general", example: "services" },
+          page: { type: "string", default: "general", example: "general" },
+          displayOrder: { type: "integer", default: 0 },
+          visible: { type: "boolean", default: true },
+        },
+      },
+      UpdateFaqBody: {
+        type: "object",
+        properties: {
+          question: { type: "string" },
+          answer: { type: "string" },
+          category: { type: "string" },
+          page: { type: "string" },
+          displayOrder: { type: "integer" },
+          visible: { type: "boolean" },
+        },
+      },
+
       // Site Setting
       SiteSetting: {
         type: "object",
@@ -476,6 +515,77 @@ const spec: OpenAPIV3.Document = {
           "200": { description: "Password changed", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
           "400": { description: "Validation error", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "401": { description: "Not authenticated", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+        },
+      },
+    },
+    "/api/auth/setup-status": {
+      get: {
+        tags: ["Auth"],
+        summary: "Check if initial setup is required",
+        description: "Returns `{ required: true }` if no admin user exists yet.",
+        operationId: "setupStatus",
+        responses: {
+          "200": { description: "Setup status", content: { "application/json": { schema: { type: "object", properties: { required: { type: "boolean" } } } } } },
+        },
+      },
+    },
+    "/api/auth/setup": {
+      post: {
+        tags: ["Auth"],
+        summary: "First-time admin setup",
+        description: "Creates the initial admin account. Requires `ADMIN_SETUP_EMAIL` env var to match.",
+        operationId: "setupAdmin",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["adminEmail", "newPassword", "confirmPassword"],
+                properties: {
+                  adminEmail: { type: "string", format: "email" },
+                  newPassword: { type: "string", minLength: 8 },
+                  confirmPassword: { type: "string", minLength: 8 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Admin account created", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "400": { description: "Validation error or passwords mismatch" },
+          "403": { description: "Setup already complete or email mismatch" },
+          "503": { description: "ADMIN_SETUP_EMAIL not configured" },
+        },
+      },
+    },
+    "/api/auth/reset-password": {
+      post: {
+        tags: ["Auth"],
+        summary: "Emergency password reset",
+        description: "Resets admin password without knowing the current one. Requires `ADMIN_SETUP_EMAIL` match.",
+        operationId: "resetPassword",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["adminEmail", "newPassword", "confirmPassword"],
+                properties: {
+                  adminEmail: { type: "string", format: "email" },
+                  newPassword: { type: "string", minLength: 8 },
+                  confirmPassword: { type: "string", minLength: 8 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Password reset successfully", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "400": { description: "Validation error or passwords mismatch" },
+          "403": { description: "Email does not match ADMIN_SETUP_EMAIL" },
+          "404": { description: "No admin account found — use /setup first" },
         },
       },
     },
@@ -932,6 +1042,55 @@ const spec: OpenAPIV3.Document = {
               },
             },
           },
+        },
+      },
+    },
+
+    // ── FAQs ─────────────────────────────────────────────────────────
+    "/api/content/faqs": {
+      get: {
+        tags: ["Content"],
+        summary: "List FAQs (public)",
+        operationId: "listFaqs",
+        responses: {
+          "200": { description: "FAQ list", content: { "application/json": { schema: { type: "object", properties: { faqs: { type: "array", items: { $ref: "#/components/schemas/Faq" } } } } } } },
+        },
+      },
+      post: {
+        tags: ["Content"],
+        summary: "Create FAQ 🔒",
+        operationId: "createFaq",
+        security: [{ cookieAuth: [] }],
+        requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/CreateFaqBody" } } } },
+        responses: {
+          "201": { description: "FAQ created", content: { "application/json": { schema: { $ref: "#/components/schemas/Faq" } } } },
+          "400": { description: "Validation error" },
+          "401": { description: "Authentication required" },
+        },
+      },
+    },
+    "/api/content/faqs/{id}": {
+      patch: {
+        tags: ["Content"],
+        summary: "Update FAQ 🔒",
+        operationId: "updateFaq",
+        security: [{ cookieAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/UpdateFaqBody" } } } },
+        responses: {
+          "200": { description: "Updated FAQ", content: { "application/json": { schema: { $ref: "#/components/schemas/Faq" } } } },
+          "404": { description: "Not found" },
+        },
+      },
+      delete: {
+        tags: ["Content"],
+        summary: "Delete FAQ 🔒",
+        operationId: "deleteFaq",
+        security: [{ cookieAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "204": { description: "Deleted" },
+          "404": { description: "Not found" },
         },
       },
     },

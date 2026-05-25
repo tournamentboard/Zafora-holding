@@ -6,6 +6,8 @@ export const ROUTES = {
   GOVERNMENT: "/government",
   GOVERNMENT_REVIEW: "/government-review",
   SUBMIT: "/submit",
+  PRIVACY: "/privacy",
+  TERMS: "/terms",
   LOGIN: "/login",
   ADMIN: {
     ROOT: "/admin",
@@ -16,5 +18,10 @@ export const ROUTES = {
     CONTENT: "/admin/content",
     AUDIT: "/admin/audit",
     SETTINGS: "/admin/settings",
+    FAQ: "/admin/faq",
+    ANNOUNCEMENT: "/admin/announcement",
+    SECTION_VISIBILITY: "/admin/section-visibility",
+    MAINTENANCE: "/admin/maintenance",
+    LEGAL: "/admin/legal",
   },
 } as const;

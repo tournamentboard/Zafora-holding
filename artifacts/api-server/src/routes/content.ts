@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, contentStatsTable, methodologyStepsTable, siteSettingsTable } from "@workspace/db";
+import { db, contentStatsTable, methodologyStepsTable, siteSettingsTable, faqsTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
 
 const router = Router();
@@ -7,10 +7,10 @@ const router = Router();
 // ── Default seed data ──────────────────────────────────────────────
 
 const DEFAULT_STATS = [
-  { label: "Project Value Advised", value: "$2.4B", suffix: "+", description: "Total value of infrastructure projects advised", iconName: "DollarSign", displayOrder: 0, visible: true },
-  { label: "African Countries Active", value: "12", suffix: "+", description: "Countries across the continent where Zafora operates", iconName: "Globe", displayOrder: 1, visible: true },
-  { label: "Client Retention Rate", value: "95", suffix: "%", description: "Percentage of clients who continue working with us", iconName: "Award", displayOrder: 2, visible: true },
-  { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Specialized sectors we cover end-to-end", iconName: "Briefcase", displayOrder: 3, visible: true },
+  { label: "Regional Coverage", value: "Pan-African", suffix: "", description: "Infrastructure advisory spanning multiple African markets", iconName: "Globe", displayOrder: 0, visible: true },
+  { label: "Project Lifecycle", value: "End-to-End", suffix: "", description: "From concept and structuring through to delivery and operations", iconName: "TrendingUp", displayOrder: 1, visible: true },
+  { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Specialized sectors we cover end-to-end", iconName: "Briefcase", displayOrder: 2, visible: true },
+  { label: "Core Service Pillars", value: "3", suffix: "", description: "Advisory · Capital · Delivery", iconName: "Award", displayOrder: 3, visible: true },
 ];
 
 const DEFAULT_STEPS = [
@@ -60,8 +60,8 @@ const SETTING_DEFAULTS: Record<string, object> = {
     featureBadge2: "PPP & funding advisory",
     featureBadge3: "Project lifecycle governance",
     panelCaption: "For governments, funders, and delivery partners.",
-    panelStat: "1,240+",
-    panelStatLabel: "Global inquiries",
+    panelStat: "Open",
+    panelStatLabel: "Accepting Mandates",
   },
   services_page: {
     hero: {
@@ -70,9 +70,9 @@ const SETTING_DEFAULTS: Record<string, object> = {
       badge: "Six Specialized Practices",
     },
     stats: [
-      { value: "$2.4B+", label: "Value Structured" },
-      { value: "12+", label: "Countries" },
-      { value: "45+", label: "Professionals" },
+      { value: "6", label: "Infrastructure Sectors" },
+      { value: "Pan-African", label: "Regional Reach" },
+      { value: "End-to-End", label: "Project Lifecycle" },
       { value: "100%", label: "Confidential" },
     ],
     cta: {
@@ -93,10 +93,10 @@ const SETTING_DEFAULTS: Record<string, object> = {
       btn2Link: "/submit",
     },
     stats: [
-      { value: "12+", label: "Countries Served" },
-      { value: "$2.4B+", label: "Projects Structured" },
+      { value: "Pan-African", label: "Regional Coverage" },
+      { value: "End-to-End", label: "Project Delivery" },
       { value: "100%", label: "DFI-Compatible" },
-      { value: "10+", label: "Years Experience" },
+      { value: "6", label: "Infrastructure Sectors" },
     ],
     capability: {
       headline: "The critical bridge between state ambition and global capital.",
@@ -108,7 +108,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
       subheadline: "Begin with a confidential briefing. Our senior advisors will assess your project and propose the most bankable structure.",
       btn1Text: "Start a Confidential Briefing",
       btn1Link: "/submit?type=government",
-      btn2Text: "View Active Projects",
+      btn2Text: "View Pipeline",
       btn2Link: "/projects",
     },
     sidebar: {
@@ -138,7 +138,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
         "No-obligation preliminary assessment",
         "Direct DFI and investor connections",
         "Full confidentiality guaranteed",
-        "Active in 12+ African countries",
+        "Pan-African infrastructure focus",
       ],
       responseTime: "48-hour response",
       responseDesc: "A senior advisor will review your submission and respond within two business days.",
@@ -179,6 +179,40 @@ const SETTING_DEFAULTS: Record<string, object> = {
     ogTitle: "Zafora Holding Project Pipeline",
     ogDescription: "Curated infrastructure projects across Africa.",
   },
+  announcement_bar: {
+    enabled: false,
+    message: "Welcome to Zafora Holding",
+    link: "",
+    linkText: "Learn more",
+    dismissible: true,
+    bgColor: "#173f35",
+    textColor: "#ffffff",
+  },
+  maintenance_mode: {
+    enabled: false,
+    headline: "We'll be back soon.",
+    message: "We're performing scheduled maintenance. Please check back shortly.",
+    showContactEmail: true,
+    estimatedTime: "",
+  },
+  legal_privacy: {
+    title: "Privacy Policy",
+    lastUpdated: "January 2025",
+    content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
+  },
+  legal_terms: {
+    title: "Terms of Service",
+    lastUpdated: "January 2025",
+    content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+  },
+  section_visibility: {
+    home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
+    about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
+    services: { hero: true, stats: true, cards: true, cta: true },
+    projects: { hero: true, filter: true, grid: true },
+    government: { hero: true, stats: true, capability: true, framework: true, cta: true },
+    submit: { hero: true, form: true, sidebar: true },
+  },
   about: {
     hero: {
       headline: "Bridging global opportunities through infrastructure intelligence.",
@@ -189,12 +223,12 @@ const SETTING_DEFAULTS: Record<string, object> = {
     },
     stats: [
       { value: "2025", label: "Founded — Tampa, FL, USA" },
-      { value: "5+", label: "Global Market Regions" },
-      { value: "6", label: "Core Focus Areas" },
+      { value: "Africa · Americas", label: "Primary Markets" },
+      { value: "6", label: "Core Practice Areas" },
       { value: "Global", label: "Strategic Partnerships" },
     ],
     identity: {
-      quote: "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets.",
+      quote: "Infrastructure development across Africa requires more than advisory. It requires a partner who structures projects that capital trusts, governments can deliver, and communities benefit from.",
       quoteAttribution: "— Zafora Holding",
       founded: "January 2025",
       headquarters: "Tampa, FL, USA",
@@ -202,21 +236,21 @@ const SETTING_DEFAULTS: Record<string, object> = {
       markets: "Africa · Americas · Caribbean",
     },
     whoWeAre: {
-      headline: "A company built for global infrastructure opportunities.",
-      paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built with a vision to bridge global opportunities through infrastructure intelligence, strategic partnerships, technology-driven solutions, and international business development.",
-      paragraph2: "We support public and private sector initiatives by connecting innovation, operational strategy, and scalable development opportunities across emerging and developed markets.",
-      paragraph3: "Our organization is built around the belief that the future of infrastructure, technology, logistics, energy, communications, and smart development requires trusted partnerships, transparency, strategic execution, and long-term vision.",
-      bullet1: "Strategic infrastructure development & modernization",
-      bullet2: "Government & enterprise operational solutions",
-      bullet3: "International partnerships across global markets",
-      bullet4: "Technology-enabled development strategies",
+      headline: "Built to close the gap between political ambition and investable infrastructure.",
+      paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
+      paragraph2: "We operate at the intersection of public ambition and private capital — structuring projects that meet international finance standards, attract DFI and institutional funding, and deliver measurable, lasting impact on the ground.",
+      paragraph3: "Our organization brings together expertise in sovereign advisory, project finance structuring, PPP frameworks, ESG compliance, and end-to-end project delivery — serving governments, investors, and contractors across Africa, the Americas, and the Caribbean.",
+      bullet1: "Sovereign advisory & project structuring",
+      bullet2: "DFI engagement & capital mobilization",
+      bullet3: "PPP design & concession management",
+      bullet4: "End-to-end delivery oversight",
     },
     mvp: {
       sectionHeadline: "Mission, Vision & Purpose",
-      sectionSubheadline: "Everything we do flows from a single conviction: infrastructure development must be driven by trust, innovation, and execution excellence.",
-      mission: "To create strategic global partnerships and deliver innovative infrastructure, technology, and development solutions that drive sustainable growth, operational efficiency, and long-term economic impact.",
-      vision: "To become a globally recognized infrastructure and strategic solutions company that bridges international opportunities, emerging technologies, and large-scale development initiatives through trust, innovation, and execution excellence.",
-      purpose: "To demonstrate that infrastructure development — across any market — can be transparent, scalable, and community-positive, creating a trusted template for responsible global development.",
+      sectionSubheadline: "Three commitments that define how we work — and why Zafora was built.",
+      mission: "To structure bankable, deliverable infrastructure across Africa and emerging markets — connecting sovereign governments, development finance institutions, and private capital through trusted, execution-focused advisory.",
+      vision: "To be recognized as the most trusted infrastructure advisory and development partner for African governments and global investors — setting the standard for transparent, impactful, and financially sustainable project delivery.",
+      purpose: "To prove that infrastructure development in Africa can be transparent, scalable, and community-positive — and to build a replicable model that creates lasting economic value across generations.",
     },
     values: [
       { title: "Integrity First", desc: "Every engagement is conducted with full transparency, ethical rigor, and accountability to all stakeholders — governments, investors, and communities alike." },
@@ -227,15 +261,15 @@ const SETTING_DEFAULTS: Record<string, object> = {
       { title: "Excellence in Practice", desc: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement." },
     ],
     team: [
-      { initials: "ZH", name: "Leadership", title: "Executive Team", bio: "Zafora Holding's leadership brings deep expertise in infrastructure, strategic consulting, international business development, and global partnerships.", location: "Tampa, FL, USA" },
-      { initials: "ZH", name: "Advisory", title: "Strategic Advisors", bio: "Our advisory network spans infrastructure, government relations, technology, and international markets across Africa, the Americas, and beyond.", location: "Global" },
-      { initials: "ZH", name: "Operations", title: "Operations Team", bio: "Supporting project development, partnership management, compliance readiness, and day-to-day strategic execution across all active engagements.", location: "Tampa, FL, USA" },
-      { initials: "ZH", name: "Partnerships", title: "Global Partnerships", bio: "Building and managing relationships with governments, contractors, investors, and enterprise organizations across emerging and developed markets.", location: "Global Markets" },
+      { initials: "ZH", name: "Executive Team", title: "Founder & Executive Leadership", bio: "Zafora's founding team drives the organization's strategic vision, senior government relationships, and capital mobilization mandates. The executive office oversees all active engagements and institutional partnerships across African and international markets.", location: "Tampa, FL, USA" },
+      { initials: "ZH", name: "Advisory Panel", title: "Infrastructure Advisory Panel", bio: "Our advisory panel encompasses specialists in PPP structuring, DFI engagement, sovereign project finance, and ESG compliance. Advisors are drawn from across Sub-Saharan Africa, the Americas, and global financial and development institutions.", location: "Global" },
+      { initials: "ZH", name: "Operations Team", title: "Operations & Project Delivery", bio: "The operations function governs every active engagement — managing project governance, compliance readiness, stakeholder coordination, and end-to-end delivery from origination through commissioning and handover.", location: "Tampa, FL, USA" },
+      { initials: "ZH", name: "Global Partnerships", title: "Global Partnerships", bio: "Our partnerships function builds and manages relationships across sovereign governments, development finance institutions, institutional investors, international engineering contractors, and enterprise organizations throughout Africa and beyond.", location: "Global Markets" },
     ],
     timeline: [
-      { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
-      { year: "Mid 2025", event: "Initiated relationship-building efforts and market research focused on infrastructure, technology, and development opportunities across Africa, the Caribbean, and emerging international markets. Expanded focus toward infrastructure intelligence, smart development, and strategic consulting." },
-      { year: "Late 2025", event: "Began developing strategic initiatives involving infrastructure visibility systems, smart operational ecosystems, technology-enabled development strategies, and international business partnerships." },
+      { year: "Jan 2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
+      { year: "Mid 2025", event: "Initiated market engagement and project origination activities across Sub-Saharan Africa, the Caribbean, and the Americas. Deepened focus on sovereign infrastructure advisory, PPP structuring, and DFI capital mobilization frameworks." },
+      { year: "Late 2025", event: "Advanced strategic advisory mandates and began formalizing pipeline of infrastructure projects across energy, transport, water, and digital sectors. Strengthened institutional partnerships and compliance infrastructure." },
       { year: "2026", event: "Continuing to build strategic relationships and positioning for international opportunities involving infrastructure, technology, consulting, operational transformation, and global development initiatives across emerging and established markets." },
     ],
     cta: {
@@ -370,6 +404,49 @@ router.patch("/content/settings/:key", async (req, res) => {
     const [updated] = await db.update(siteSettingsTable).set({ value }).where(eq(siteSettingsTable.key, key)).returning();
     res.json(updated);
   }
+});
+
+// ── FAQs ───────────────────────────────────────────────────────────
+
+router.get("/content/faqs", async (_req, res) => {
+  const faqs = await db.select().from(faqsTable).orderBy(asc(faqsTable.displayOrder));
+  res.json({ faqs });
+});
+
+router.post("/content/faqs", async (req, res) => {
+  const body = req.body as any;
+  const [faq] = await db.insert(faqsTable).values({
+    question: body.question,
+    answer: body.answer,
+    category: body.category ?? "general",
+    page: body.page ?? "general",
+    displayOrder: body.displayOrder ?? 0,
+    visible: body.visible ?? true,
+  }).returning();
+  res.status(201).json(faq);
+});
+
+router.patch("/content/faqs/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  const body = req.body as any;
+  const [faq] = await db.update(faqsTable).set({
+    ...(body.question !== undefined && { question: body.question }),
+    ...(body.answer !== undefined && { answer: body.answer }),
+    ...(body.category !== undefined && { category: body.category }),
+    ...(body.page !== undefined && { page: body.page }),
+    ...(body.displayOrder !== undefined && { displayOrder: body.displayOrder }),
+    ...(body.visible !== undefined && { visible: body.visible }),
+  }).where(eq(faqsTable.id, id)).returning();
+  if (!faq) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(faq);
+});
+
+router.delete("/content/faqs/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  await db.delete(faqsTable).where(eq(faqsTable.id, id));
+  res.status(204).send();
 });
 
 export default router;

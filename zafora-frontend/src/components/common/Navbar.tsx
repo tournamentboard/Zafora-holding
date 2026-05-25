@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useGetSiteSettings } from "@/src/modules/admin/content/services/site-settings.service";
 import logo from "@/src/assets/logo.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -39,7 +39,7 @@ export default function Navbar() {
   })();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.92)", backdropFilter: "blur(16px)" }}>
+    <nav className="relative w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.97)" }}>
       <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image src={logo} alt="Zafora Holding" className="h-16 w-auto object-contain" />
@@ -82,7 +82,7 @@ export default function Navbar() {
 
       {/* Mobile Nav */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-[#f7f4ef] border-b border-[#e5ded3] p-4 flex flex-col gap-3 shadow-lg">
+        <div className="md:hidden w-full bg-[#f7f4ef] border-b border-[#e5ded3] p-4 flex flex-col gap-3 shadow-lg">
           {links.map((link: any) => (
             <Link
               key={link.id ?? link.href}
