@@ -146,7 +146,7 @@ function SetupScreen({ onSetupComplete }: { onSetupComplete: () => void }) {
   const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (newPw.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (newPw.length < 4) { setError("Password must be at least 4 characters."); return; }
     if (newPw !== confirmPw) { setError("Passwords do not match."); return; }
     setSubmitting(true);
     try {
@@ -209,7 +209,7 @@ function SetupScreen({ onSetupComplete }: { onSetupComplete: () => void }) {
                     type={showPw ? "text" : "password"}
                     value={newPw}
                     onChange={e => { setNewPw(e.target.value); setError(""); }}
-                    placeholder="At least 8 characters"
+                    placeholder="At least 4 characters"
                     className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 pr-10 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]"
                     required
                   />
@@ -269,7 +269,7 @@ function ResetPasswordScreen({ onBack }: { onBack: () => void }) {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (newPw.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (newPw.length < 4) { setError("Password must be at least 4 characters."); return; }
     if (newPw !== confirmPw) { setError("Passwords do not match."); return; }
     setSubmitting(true);
     try {
@@ -325,7 +325,7 @@ function ResetPasswordScreen({ onBack }: { onBack: () => void }) {
                     type={showPw ? "text" : "password"}
                     value={newPw}
                     onChange={e => { setNewPw(e.target.value); setError(""); }}
-                    placeholder="At least 8 characters"
+                    placeholder="At least 4 characters"
                     className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 pr-10 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]"
                     required
                   />
