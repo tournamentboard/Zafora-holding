@@ -1,13 +1,12 @@
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { API } from "@/src/lib/url-helpers";
-import { ENV } from "../constants";
 
-// Use relative base URL so all client requests flow through the Next.js rewrite
-// proxy (/api/* → backend). This ensures httpOnly cookies are scoped to the
-// frontend domain, making them readable by Next.js middleware.
+// Empty baseURL so all client requests use relative paths (/api/*) and flow
+// through the Next.js rewrite proxy → Railway. httpOnly cookies are scoped
+// to the frontend domain and remain readable by Next.js middleware.
 export const apiAxios = axios.create({
-  baseURL: ENV.API_URL,
+  baseURL: "",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -20,7 +19,6 @@ let failedQueue: Array<{
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
 }> = [];
-// updated
 
 function processQueue(error: unknown) {
   failedQueue.forEach((p) => (error ? p.reject(error) : p.resolve(null)));
