@@ -99,9 +99,15 @@ jobs:
         working-directory: zafora-frontend
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Install dependencies
+        working-directory: zafora-frontend
+        run: npm ci
+
       - name: Build (Development)
         working-directory: zafora-frontend
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          node -e "const fs=require('fs');const c=JSON.parse(fs.readFileSync('vercel.json'));c.installCommand='';fs.writeFileSync('vercel.json',JSON.stringify(c,null,2));"
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt to Vercel (Preview)
         id: deploy
@@ -117,7 +123,7 @@ jobs:
           script: |
             const url = '${{ steps.deploy.outputs.preview_url }}';
             const sha = context.sha.substring(0, 7);
-            github.rest.repos.createCommitComment({
+            await github.rest.repos.createCommitComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
@@ -170,9 +176,15 @@ jobs:
         working-directory: zafora-frontend
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Install dependencies
+        working-directory: zafora-frontend
+        run: npm ci
+
       - name: Build (Production)
         working-directory: zafora-frontend
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          node -e "const fs=require('fs');const c=JSON.parse(fs.readFileSync('vercel.json'));c.installCommand='';fs.writeFileSync('vercel.json',JSON.stringify(c,null,2));"
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt to Vercel (Production)
         id: deploy
@@ -188,7 +200,7 @@ jobs:
           script: |
             const url = '${{ steps.deploy.outputs.production_url }}';
             const sha = context.sha.substring(0, 7);
-            github.rest.repos.createCommitComment({
+            await github.rest.repos.createCommitComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,

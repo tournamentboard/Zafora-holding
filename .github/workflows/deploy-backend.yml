@@ -25,6 +25,9 @@ on:
           - development
           - production
 
+permissions:
+  contents: write   # required for createCommitComment
+
 # Cancel any in-progress run for the same branch
 concurrency:
   group: backend-${{ github.ref }}
@@ -99,7 +102,7 @@ jobs:
         with:
           script: |
             const sha = context.sha.substring(0, 7);
-            github.rest.repos.createCommitComment({
+            await github.rest.repos.createCommitComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
@@ -149,7 +152,7 @@ jobs:
         with:
           script: |
             const sha = context.sha.substring(0, 7);
-            github.rest.repos.createCommitComment({
+            await github.rest.repos.createCommitComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
