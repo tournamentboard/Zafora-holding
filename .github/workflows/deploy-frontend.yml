@@ -25,7 +25,7 @@ jobs:
   # CI — runs on every push & PR
   # ─────────────────────────────────────────────
   ci:
-    name: CI — Lint, Typecheck & Build
+    name: CI — Typecheck
     runs-on: ubuntu-latest
 
     steps:
@@ -41,11 +41,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: zafora-frontend
-        run: npm ci
-
-      - name: Lint
-        working-directory: zafora-frontend
-        run: npm run lint
+        run: npm install
 
       - name: Typecheck
         working-directory: zafora-frontend

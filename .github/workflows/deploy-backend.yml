@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: zafora-backend
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Typecheck
         working-directory: zafora-backend
@@ -61,7 +61,7 @@ jobs:
     if: github.ref == 'refs/heads/development' && github.event_name == 'push'
     environment:
       name: development
-      url: ${{ secrets.DEV_BACKEND_URL }}
+      url: ${{ vars.DEV_BACKEND_URL }}
 
     steps:
       - name: Checkout code
@@ -93,8 +93,8 @@ jobs:
               body: [
                 '✅ **Backend → Railway Development** deployed for `' + sha + '`',
                 '',
-                '🔗 API URL: ${{ secrets.DEV_BACKEND_URL }}',
-                '📋 Swagger: ${{ secrets.DEV_BACKEND_URL }}/api/docs',
+                '🔗 API URL: ${{ vars.DEV_BACKEND_URL }}',
+                '📋 Swagger: ${{ vars.DEV_BACKEND_URL }}/api/docs',
               ].join('\n')
             });
 
@@ -108,7 +108,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: production
-      url: ${{ secrets.PROD_BACKEND_URL }}
+      url: ${{ vars.PROD_BACKEND_URL }}
 
     steps:
       - name: Checkout code
@@ -140,7 +140,7 @@ jobs:
               body: [
                 '🚀 **Backend → Railway Production** deployed for `' + sha + '`',
                 '',
-                '🌐 API URL: ${{ secrets.PROD_BACKEND_URL }}',
-                '📋 Swagger: ${{ secrets.PROD_BACKEND_URL }}/api/docs',
+                '🌐 API URL: ${{ vars.PROD_BACKEND_URL }}',
+                '📋 Swagger: ${{ vars.PROD_BACKEND_URL }}/api/docs',
               ].join('\n')
             });
