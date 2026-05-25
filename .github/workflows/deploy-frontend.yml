@@ -1,0 +1,114 @@
+name: Frontend — Vercel Deploy
+
+on:
+  push:
+    branches: [main, development]
+    paths:
+      - "zafora-frontend/**"
+      - ".github/workflows/deploy-frontend.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - production
+
+permissions:
+  contents: write
+
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Preview deploy on `development` branch ──────────────────────────────────
+  deploy-dev:
+    name: Deploy → Vercel (Preview)
+    runs-on: ubuntu-latest
+    if: |
+      (github.ref == 'refs/heads/development' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'development')
+    environment:
+      name: development
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Write Vercel project config
+        run: |
+          mkdir -p zafora-frontend/.vercel
+          printf '{"projectId":"%s","orgId":"%s"}' \
+            "${{ secrets.VERCEL_PROJECT_ID }}" \
+            "${{ secrets.VERCEL_ORG_ID }}" > zafora-frontend/.vercel/project.json
+
+      - name: Deploy to Vercel (Preview)
+        id: deploy
+        working-directory: zafora-frontend
+        run: |
+          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Post deployment comment
+        uses: actions/github-script@v7
+        if: success()
+        with:
+          script: |
+            const sha = context.sha.substring(0, 7);
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `✅ **Frontend → Vercel Preview** deployed for \`${sha}\`\n\n🔗 ${{ steps.deploy.outputs.url }}`
+            });
+
+  # ── Production deploy on `main` branch ──────────────────────────────────────
+  deploy-prod:
+    name: Deploy → Vercel (Production)
+    runs-on: ubuntu-latest
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Write Vercel project config
+        run: |
+          mkdir -p zafora-frontend/.vercel
+          printf '{"projectId":"%s","orgId":"%s"}' \
+            "${{ secrets.VERCEL_PROJECT_ID }}" \
+            "${{ secrets.VERCEL_ORG_ID }}" > zafora-frontend/.vercel/project.json
+
+      - name: Deploy to Vercel (Production)
+        id: deploy
+        working-directory: zafora-frontend
+        run: |
+          URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Post deployment comment
+        uses: actions/github-script@v7
+        if: success()
+        with:
+          script: |
+            const sha = context.sha.substring(0, 7);
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `🚀 **Frontend → Vercel Production** deployed for \`${sha}\`\n\n🌐 ${{ steps.deploy.outputs.url }}`
+            });

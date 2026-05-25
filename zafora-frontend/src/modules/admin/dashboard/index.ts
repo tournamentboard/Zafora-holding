@@ -1,1 +1,1 @@
-/** Admin dashboard module — feature UI added in F8 */
+export { useDashboardStats, useProjectStats, statsKeys } from "./services/stats.service";

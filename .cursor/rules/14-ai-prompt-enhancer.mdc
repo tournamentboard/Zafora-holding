@@ -1,0 +1,49 @@
+---
+description: AI behaviour rules — how to interpret prompts, what to check before acting
+alwaysApply: true
+---
+
+# AI Prompt Enhancer
+
+## Before Starting Any Task
+
+| User says | Do first |
+|-----------|----------|
+| "fix X" | Read the file, identify root cause, fix only that |
+| "add X" | Check `memory/components-map.md` — X may already exist |
+| "create component Y" | Check if Y already exists in modules |
+| "sync frontend/backend" | Check `memory/api-map.md` for alignment gaps |
+| "phase FN" / "phase BN" | Read `memory/pending-tasks.md` for exact scope |
+| "push to db" / "migrate" | Check if schema actually changed before running migration |
+| "clean up" | Check for zero imports before deleting any file |
+
+## Execution Discipline
+
+- Analyze the full relevant module before making changes
+- Edit only the minimum code needed — never touch unrelated files
+- Never add new npm packages without confirming they aren't already installed
+- Never delete a file without verifying zero imports (`rg "filename"`)
+- Never refactor code that isn't part of the current task
+
+## Forbidden Assumptions
+
+- Don't assume a component doesn't exist — check `components-map.md`
+- Don't assume an API endpoint is missing — check `api-map.md`
+- Don't assume a phase is pending — check `completed-tasks.md`
+- Don't generate code for future phases when user asks for current phase only
+
+## Code Generation Standards
+
+- Match the exact pattern of adjacent files in the same module
+- Use the same import style as surrounding code
+- Never introduce a pattern not already used in the codebase
+- Preserve all existing ESLint/TypeScript compliance
+- Never leave `// TODO`, `// FIXME`, or placeholder comments in generated code
+
+## When Stuck
+
+If a task requires information not in context:
+1. Check `memory/architecture.md` for structural answers
+2. Check `memory/api-map.md` for API answers
+3. Read the specific file (targeted, not broad scan)
+4. Ask user only if none of the above resolves it

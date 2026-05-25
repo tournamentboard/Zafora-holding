@@ -4,23 +4,32 @@ import { eq } from "drizzle-orm";
 
 const API_KEY = process.env["RESEND_API_KEY"];
 const FROM_EMAIL = process.env["RESEND_FROM_EMAIL"] || "Zafora Holding <onboarding@resend.dev>";
+const DEFAULT_ADMIN_EMAIL = process.env["ADMIN_EMAIL"] ?? "Office@zaforaholding.com";
+
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) _resend = new Resend(API_KEY!);
+  return _resend;
+}
 
 export function isEmailConfigured(): boolean {
   return !!API_KEY;
 }
 
-async function getAdminEmail(): Promise<{ email: string; notifyOnInquiry: boolean; notifyOnInterest: boolean } | null> {
+async function getAdminEmail(): Promise<{ email: string; notifyOnInquiry: boolean; notifyOnInterest: boolean }> {
   try {
     const [row] = await db.select().from(siteSettingsTable).where(eq(siteSettingsTable.key, "notifications")).limit(1);
-    if (!row) return null;
+    if (!row) {
+      return { email: DEFAULT_ADMIN_EMAIL, notifyOnInquiry: true, notifyOnInterest: true };
+    }
     const parsed = JSON.parse(row.value) as Record<string, unknown>;
     return {
-      email: (parsed["adminEmail"] as string) || "",
+      email: (parsed["adminEmail"] as string) || DEFAULT_ADMIN_EMAIL,
       notifyOnInquiry: parsed["notifyOnInquiry"] !== false,
       notifyOnInterest: parsed["notifyOnInterest"] !== false,
     };
   } catch {
-    return null;
+    return { email: DEFAULT_ADMIN_EMAIL, notifyOnInquiry: true, notifyOnInterest: true };
   }
 }
 
@@ -63,9 +72,9 @@ export async function sendInquiryNotification(lead: {
 }) {
   if (!API_KEY) return;
   const config = await getAdminEmail();
-  if (!config?.email || !config.notifyOnInquiry) return;
+  if (!config.email || !config.notifyOnInquiry) return;
 
-  const resend = new Resend(API_KEY);
+  const resend = getResend();
   const body = `
     <p style="margin:0 0 20px;color:#65736f;font-size:14px;">A new inquiry has been submitted through your website.</p>
     <div style="background:#f7f4ef;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
@@ -107,9 +116,9 @@ export async function sendInterestNotification(
 ) {
   if (!API_KEY) return;
   const config = await getAdminEmail();
-  if (!config?.email || !config.notifyOnInterest) return;
+  if (!config.email || !config.notifyOnInterest) return;
 
-  const resend = new Resend(API_KEY);
+  const resend = getResend();
   const body = `
     <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Someone has expressed interest in one of your pipeline projects.</p>
     <div style="background:#f7f4ef;border-radius:12px;padding:16px 24px;margin-bottom:20px;">
@@ -144,7 +153,7 @@ export async function sendInterestNotification(
 export async function sendTestEmail(toEmail: string): Promise<{ ok: boolean; error?: string }> {
   if (!API_KEY) return { ok: false, error: "RESEND_API_KEY is not configured." };
   try {
-    const resend = new Resend(API_KEY);
+    const resend = getResend();
     const body = `
       <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Your email notifications are working correctly.</p>
       <div style="text-align:center;">

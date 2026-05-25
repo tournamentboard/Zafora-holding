@@ -6,7 +6,7 @@ const spec: OpenAPIV3.Document = {
     title: "Zafora Backend API",
     version: "1.0.0",
     description:
-      "REST API for Zafora Holding — infrastructure advisory platform.\n\n**Auth:** Session cookie (`connect.sid`). Call `POST /api/auth/login` first, then send `credentials: include` on subsequent requests.\n\nProtected routes are marked 🔒.",
+      "REST API for Zafora Holding — infrastructure advisory platform.\n\n**Auth:** JWT cookies (`access_token` 15 min + `refresh_token` 7 days). Call `POST /api/auth/login` first; cookies are set automatically. Use `POST /api/auth/refresh` to rotate tokens. Protected routes are marked 🔒.",
     contact: { email: "Office@zaforaholding.com" },
   },
   servers: [
@@ -43,9 +43,9 @@ const spec: OpenAPIV3.Document = {
       // Auth
       LoginBody: {
         type: "object",
-        required: ["email", "password"],
+        required: ["password"],
+        description: "Password-only login. Admin email is resolved server-side from ADMIN_EMAIL env var.",
         properties: {
-          email: { type: "string", format: "email", example: "admin@zaforaholding.com" },
           password: { type: "string", minLength: 1, example: "mypassword" },
         },
       },
@@ -103,7 +103,7 @@ const spec: OpenAPIV3.Document = {
           budgetFundingNeed: { type: "string", nullable: true },
           projectTimeline: { type: "string", nullable: true },
           roleType: { type: "string", nullable: true },
-          status: { type: "string", enum: ["new", "contacted", "in_progress", "qualified", "disqualified", "closed"], default: "new" },
+          status: { type: "string", enum: ["new", "reviewed", "contacted", "qualified", "proposal_sent", "in_progress", "closed", "rejected"], default: "new" },
           notes: { type: "string", nullable: true },
           followUpDate: { type: "string", nullable: true },
           createdAt: { type: "string", format: "date-time" },
@@ -130,7 +130,7 @@ const spec: OpenAPIV3.Document = {
       UpdateLeadBody: {
         type: "object",
         properties: {
-          status: { type: "string", enum: ["new", "contacted", "in_progress", "qualified", "disqualified", "closed"] },
+          status: { type: "string", enum: ["new", "reviewed", "contacted", "qualified", "proposal_sent", "in_progress", "closed", "rejected"] },
           notes: { type: "string", nullable: true },
           followUpDate: { type: "string", nullable: true },
         },
@@ -339,6 +339,45 @@ const spec: OpenAPIV3.Document = {
         },
       },
 
+      // FAQ
+      Faq: {
+        type: "object",
+        properties: {
+          id: { type: "integer" },
+          question: { type: "string" },
+          answer: { type: "string" },
+          category: { type: "string", example: "general" },
+          page: { type: "string", example: "general", description: "Which page this FAQ appears on (general/home/about/services/projects/government/submit)" },
+          displayOrder: { type: "integer" },
+          visible: { type: "boolean" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      CreateFaqBody: {
+        type: "object",
+        required: ["question", "answer"],
+        properties: {
+          question: { type: "string", example: "What services does Zafora offer?" },
+          answer: { type: "string", example: "Full-spectrum infrastructure advisory..." },
+          category: { type: "string", default: "general", example: "services" },
+          page: { type: "string", default: "general", example: "general" },
+          displayOrder: { type: "integer", default: 0 },
+          visible: { type: "boolean", default: true },
+        },
+      },
+      UpdateFaqBody: {
+        type: "object",
+        properties: {
+          question: { type: "string" },
+          answer: { type: "string" },
+          category: { type: "string" },
+          page: { type: "string" },
+          displayOrder: { type: "integer" },
+          visible: { type: "boolean" },
+        },
+      },
+
       // Site Setting
       SiteSetting: {
         type: "object",
@@ -388,13 +427,13 @@ const spec: OpenAPIV3.Document = {
       },
     },
 
-    // Cookie-based session security
+    // JWT cookie-based security
     securitySchemes: {
       cookieAuth: {
         type: "apiKey",
         in: "cookie",
-        name: "connect.sid",
-        description: "Session cookie — obtained via POST /api/auth/login. Enable 'credentials: include' in your client.",
+        name: "access_token",
+        description: "Short-lived JWT access token (15 min) — set automatically by POST /api/auth/login. Send credentials with every request.",
       },
     },
   },
@@ -418,11 +457,11 @@ const spec: OpenAPIV3.Document = {
       post: {
         tags: ["Auth"],
         summary: "Login",
-        description: "Validates email + password (bcrypt). Sets a session cookie on success.",
+        description: "Validates email + password (bcrypt). Sets `access_token` (15 min) and `refresh_token` (7 days) httpOnly cookies.",
         operationId: "login",
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/LoginBody" } } } },
         responses: {
-          "200": { description: "Authenticated", content: { "application/json": { schema: { $ref: "#/components/schemas/LoginResponse" } } } },
+          "200": { description: "Authenticated — cookies set", content: { "application/json": { schema: { $ref: "#/components/schemas/LoginResponse" } } } },
           "400": { description: "Invalid request body", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "401": { description: "Invalid credentials", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
@@ -431,12 +470,24 @@ const spec: OpenAPIV3.Document = {
     "/api/auth/verify": {
       get: {
         tags: ["Auth"],
-        summary: "Verify session",
-        description: "Returns current session state — safe to call on page load.",
+        summary: "Verify access token 🔒",
+        description: "Validates the `access_token` cookie. Returns current user if valid.",
         operationId: "verifySession",
         security: [{ cookieAuth: [] }],
         responses: {
-          "200": { description: "Session state", content: { "application/json": { schema: { $ref: "#/components/schemas/VerifyResponse" } } } },
+          "200": { description: "Token state", content: { "application/json": { schema: { $ref: "#/components/schemas/VerifyResponse" } } } },
+        },
+      },
+    },
+    "/api/auth/refresh": {
+      post: {
+        tags: ["Auth"],
+        summary: "Refresh tokens",
+        description: "Rotates the `refresh_token` cookie and issues a new `access_token`. Old refresh token is invalidated.",
+        operationId: "refreshTokens",
+        responses: {
+          "200": { description: "New tokens issued", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "401": { description: "Missing, invalid, or revoked refresh token", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
     },
@@ -444,11 +495,11 @@ const spec: OpenAPIV3.Document = {
       post: {
         tags: ["Auth"],
         summary: "Logout",
-        description: "Destroys the session cookie.",
+        description: "Invalidates the refresh token in DB and clears both auth cookies.",
         operationId: "logout",
         security: [{ cookieAuth: [] }],
         responses: {
-          "200": { description: "Logged out", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "200": { description: "Logged out — cookies cleared", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
         },
       },
     },
@@ -467,13 +518,85 @@ const spec: OpenAPIV3.Document = {
         },
       },
     },
+    "/api/auth/setup-status": {
+      get: {
+        tags: ["Auth"],
+        summary: "Check if initial setup is required",
+        description: "Returns `{ required: true }` if no admin user exists yet.",
+        operationId: "setupStatus",
+        responses: {
+          "200": { description: "Setup status", content: { "application/json": { schema: { type: "object", properties: { required: { type: "boolean" } } } } } },
+        },
+      },
+    },
+    "/api/auth/setup": {
+      post: {
+        tags: ["Auth"],
+        summary: "First-time admin setup",
+        description: "Creates the initial admin account. Requires `ADMIN_SETUP_EMAIL` env var to match.",
+        operationId: "setupAdmin",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["adminEmail", "newPassword", "confirmPassword"],
+                properties: {
+                  adminEmail: { type: "string", format: "email" },
+                  newPassword: { type: "string", minLength: 8 },
+                  confirmPassword: { type: "string", minLength: 8 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Admin account created", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "400": { description: "Validation error or passwords mismatch" },
+          "403": { description: "Setup already complete or email mismatch" },
+          "503": { description: "ADMIN_SETUP_EMAIL not configured" },
+        },
+      },
+    },
+    "/api/auth/reset-password": {
+      post: {
+        tags: ["Auth"],
+        summary: "Emergency password reset",
+        description: "Resets admin password without knowing the current one. Requires `ADMIN_SETUP_EMAIL` match.",
+        operationId: "resetPassword",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["adminEmail", "newPassword", "confirmPassword"],
+                properties: {
+                  adminEmail: { type: "string", format: "email" },
+                  newPassword: { type: "string", minLength: 8 },
+                  confirmPassword: { type: "string", minLength: 8 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Password reset successfully", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
+          "400": { description: "Validation error or passwords mismatch" },
+          "403": { description: "Email does not match ADMIN_SETUP_EMAIL" },
+          "404": { description: "No admin account found — use /setup first" },
+        },
+      },
+    },
 
     // ── Leads ───────────────────────────────────────────────────────
     "/api/leads": {
       get: {
         tags: ["Leads"],
-        summary: "List leads",
+        summary: "List leads 🔒",
         operationId: "listLeads",
+        security: [{ cookieAuth: [] }],
         parameters: [
           { name: "status", in: "query", schema: { type: "string", enum: ["new", "contacted", "in_progress", "qualified", "disqualified", "closed"] } },
           { name: "requestType", in: "query", schema: { type: "string" } },
@@ -486,6 +609,7 @@ const spec: OpenAPIV3.Document = {
             content: { "application/json": { schema: { type: "object", properties: { leads: { type: "array", items: { $ref: "#/components/schemas/Lead" } }, total: { type: "integer" } } } } },
           },
           "400": { description: "Invalid query params", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
       post: {
@@ -503,12 +627,14 @@ const spec: OpenAPIV3.Document = {
     "/api/leads/{id}": {
       get: {
         tags: ["Leads"],
-        summary: "Get lead by ID",
+        summary: "Get lead by ID 🔒",
         operationId: "getLead",
+        security: [{ cookieAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
         responses: {
           "200": { description: "Lead", content: { "application/json": { schema: { $ref: "#/components/schemas/Lead" } } } },
           "400": { description: "Invalid id", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "404": { description: "Not found", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
@@ -620,13 +746,17 @@ const spec: OpenAPIV3.Document = {
     "/api/documents": {
       get: {
         tags: ["Documents"],
-        summary: "List documents",
+        summary: "List documents 🔒",
         operationId: "listDocuments",
+        security: [{ cookieAuth: [] }],
         parameters: [
           { name: "visibility", in: "query", schema: { type: "string", enum: ["public", "private"] } },
+          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
+          { name: "limit", in: "query", schema: { type: "integer", default: 20 } },
         ],
         responses: {
           "200": { description: "Document list", content: { "application/json": { schema: { type: "object", properties: { documents: { type: "array", items: { $ref: "#/components/schemas/Document" } }, total: { type: "integer" } } } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
       post: {
@@ -916,6 +1046,55 @@ const spec: OpenAPIV3.Document = {
       },
     },
 
+    // ── FAQs ─────────────────────────────────────────────────────────
+    "/api/content/faqs": {
+      get: {
+        tags: ["Content"],
+        summary: "List FAQs (public)",
+        operationId: "listFaqs",
+        responses: {
+          "200": { description: "FAQ list", content: { "application/json": { schema: { type: "object", properties: { faqs: { type: "array", items: { $ref: "#/components/schemas/Faq" } } } } } } },
+        },
+      },
+      post: {
+        tags: ["Content"],
+        summary: "Create FAQ 🔒",
+        operationId: "createFaq",
+        security: [{ cookieAuth: [] }],
+        requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/CreateFaqBody" } } } },
+        responses: {
+          "201": { description: "FAQ created", content: { "application/json": { schema: { $ref: "#/components/schemas/Faq" } } } },
+          "400": { description: "Validation error" },
+          "401": { description: "Authentication required" },
+        },
+      },
+    },
+    "/api/content/faqs/{id}": {
+      patch: {
+        tags: ["Content"],
+        summary: "Update FAQ 🔒",
+        operationId: "updateFaq",
+        security: [{ cookieAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/UpdateFaqBody" } } } },
+        responses: {
+          "200": { description: "Updated FAQ", content: { "application/json": { schema: { $ref: "#/components/schemas/Faq" } } } },
+          "404": { description: "Not found" },
+        },
+      },
+      delete: {
+        tags: ["Content"],
+        summary: "Delete FAQ 🔒",
+        operationId: "deleteFaq",
+        security: [{ cookieAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        responses: {
+          "204": { description: "Deleted" },
+          "404": { description: "Not found" },
+        },
+      },
+    },
+
     // ── Audit ────────────────────────────────────────────────────────
     "/api/audit": {
       get: {
@@ -938,17 +1117,19 @@ const spec: OpenAPIV3.Document = {
     },
 
     // ── Notifications ────────────────────────────────────────────────
-    "/api/email/status": {
+    "/api/notifications/status": {
       get: {
         tags: ["Notifications"],
-        summary: "Check email configuration",
+        summary: "Check email configuration 🔒",
         operationId: "emailStatus",
+        security: [{ cookieAuth: [] }],
         responses: {
           "200": { description: "Email status", content: { "application/json": { schema: { type: "object", properties: { configured: { type: "boolean" } } } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
         },
       },
     },
-    "/api/email/test": {
+    "/api/notifications/test": {
       post: {
         tags: ["Notifications"],
         summary: "Send test email 🔒",
@@ -969,6 +1150,7 @@ const spec: OpenAPIV3.Document = {
         responses: {
           "200": { description: "Email sent", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
           "400": { description: "Missing email", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          "401": { description: "Authentication required", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
           "500": { description: "Email send failed", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" }, error: { type: "string" } } } } } },
         },
       },

@@ -1,0 +1,56 @@
+---
+description: Response format rules — concise output, step format, verification pattern
+alwaysApply: true
+---
+
+# Response Format
+
+## General
+
+- Max 2–3 sentences of explanation before showing code
+- Show only changed lines for edits — not full file rewrites unless file is new
+- No "Here's what I did" summaries unless the user asks
+- No emoji unless user requests it
+- No unnecessary padding or filler text
+
+## Step Format (for multi-step tasks)
+
+```
+Step 1/4 — Creating leads.service.ts
+Step 2/4 — Updating LeadsTable imports
+Step 3/4 — Deleting legacy component
+Step 4/4 — Verifying no remaining imports
+```
+
+## Verification Format
+
+```
+✓ No remaining api-client-react imports in modules/
+✓ All 8 admin routes respond 401 without cookie
+✓ Seed: 8 projects, 6 services, 8 leads inserted
+```
+
+## Error Format
+
+```
+✗ BrandingManager still imports useToast → replaced with sonner
+✗ Migration failed: column already exists → skipped, no schema change needed
+```
+
+## Code Output
+
+- Always cite file path above code blocks
+- Use CODE REFERENCES format for existing code
+- Use MARKDOWN CODE BLOCKS for new code proposals
+- Never include line numbers in code block content
+
+## Phase Completion Report
+
+When finishing a phase, output a short table:
+
+| Item | Count | Status |
+|------|-------|--------|
+| Files created | N | ✅ |
+| Files deleted | N | ✅ |
+| DB migration | yes/no | ✅ |
+| Swagger updated | yes/no | ✅ |

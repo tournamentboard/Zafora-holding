@@ -1,1 +1,1 @@
-/** Admin audit module — feature UI added in F9 */
+export { useAuditLogs, useClearAuditLogs, auditKeys } from "./services/audit.service";

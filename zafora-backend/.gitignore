@@ -1,0 +1,19 @@
+node_modules/
+dist/
+build/
+
+# env files — real credentials must NEVER be committed
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript build output
+*.tsbuildinfo

@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 import Navbar from "../common/Navbar";
 import logo from "@/src/assets/logo.png";
-import { useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useGetSiteSettings } from "@/src/modules/admin/content/services/site-settings.service";
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 

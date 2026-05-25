@@ -1,0 +1,128 @@
+Requirement — Remove Sticky/Fixed Header Behavior
+Objective
+
+Ensure the top light-colored section/header scrolls naturally with the page and does NOT remain fixed or sticky at the top of the screen during scrolling.
+
+Functional Requirement
+FR-HEADER-001 — Remove Sticky Header Behavior
+Description
+
+The top header/light section currently remains visible while the user scrolls down the page. This behavior must be removed so the section scrolls away naturally with the rest of the page content.
+
+Expected Behavior
+Current Behavior (Issue)
+Top light section stays pinned at the top during scroll.
+Header/navigation does not move with page content.
+Creates unwanted sticky/fixed scrolling behavior.
+Required Behavior
+Header/light section must scroll naturally with page content.
+No sticky or fixed positioning should exist on the section.
+User should only see the header at the top of the page.
+Once user scrolls down, the header disappears naturally.
+Technical Requirements
+Remove Sticky Positioning
+Remove ALL of the following if present:
+position: sticky;
+position: fixed;
+top: 0;
+CSS Requirement
+Update Header Container
+Replace with:
+position: relative;
+
+OR
+
+position: static;
+Tailwind CSS Requirement
+Remove These Classes
+sticky
+top-0
+fixed
+Replace With
+relative
+
+OR no positioning class.
+
+Z-Index Governance
+Requirement
+
+Remove unnecessary z-index layering associated with sticky/fixed behavior.
+
+Remove Examples
+z-index: 9999;
+z-50;
+z-40;
+
+Unless absolutely required for overlays/modals.
+
+Mobile Requirements
+Requirement
+
+Header must behave consistently across:
+
+Desktop
+Tablet
+Mobile devices
+Expected Result
+
+No pinned/sticky behavior on any screen size.
+
+Scrolling Requirements
+Requirement
+
+Page scrolling must remain smooth after removal.
+
+Validation
+No jumping
+No layout shift
+No overlapping content
+No hidden sections after scroll
+QA Test Cases
+Test 1 — Desktop Scroll
+Open page
+Scroll downward
+Verify top section scrolls away naturally
+
+PASS:
+Header disappears with content.
+
+FAIL:
+Header remains visible/pinned.
+
+Test 2 — Mobile Scroll
+Open page on mobile
+Scroll down
+
+PASS:
+Header scrolls away normally.
+
+FAIL:
+Header remains fixed at top.
+
+Test 3 — Layout Validation
+Verify content spacing after removing sticky behavior
+
+PASS:
+No white gaps or overlapping sections.
+
+FAIL:
+Content jumps or spacing breaks.
+
+Developer Notes
+Search Entire Project For:
+sticky
+fixed
+top-0
+position: sticky
+position: fixed
+Check:
+Header component
+Navbar component
+Layout wrapper
+Global CSS
+Mobile navigation
+Scroll listeners
+Animation wrappers
+Final Expected Result
+
+The top light-colored section/header behaves like normal page content and scrolls away naturally instead of remaining fixed or sticky during scrolling.

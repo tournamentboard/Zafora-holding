@@ -21,14 +21,7 @@ const fade = (delay = 0) => ({
   transition: { duration: 0.55, delay },
 });
 
-const VALUE_ICONS = [
-  <ShieldCheck className="h-6 w-6" />,
-  <Globe className="h-6 w-6" />,
-  <Handshake className="h-6 w-6" />,
-  <TrendingUp className="h-6 w-6" />,
-  <Target className="h-6 w-6" />,
-  <Award className="h-6 w-6" />,
-];
+const VALUE_ICON_COMPONENTS = [ShieldCheck, Globe, Handshake, TrendingUp, Target, Award];
 
 const STAT_ICONS_ABOUT = [
   { icon: <Calendar className="h-5 w-5" />, bg: "bg-[#173f35]", text: "text-[#c59b4a]" },
@@ -307,7 +300,7 @@ export default function About() {
             {d.values.map((v, i) => (
               <motion.div key={i} {...fade(i * 0.08)} className="group bg-[#f7f4ef] rounded-2xl p-7 border border-[#e5ded3] hover:border-[#173f35]/40 hover:shadow-md transition-all">
                 <div className="w-12 h-12 rounded-xl bg-[#173f35] text-[#c59b4a] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                  {VALUE_ICONS[i % VALUE_ICONS.length]}
+                  {(() => { const Icon = VALUE_ICON_COMPONENTS[i % VALUE_ICON_COMPONENTS.length]; return <Icon className="h-6 w-6" />; })()}
                 </div>
                 <h3 className="font-bold text-[#10231f] text-lg mb-2">{v.title}</h3>
                 <p className="text-[#65736f] text-sm leading-relaxed">{v.desc}</p>

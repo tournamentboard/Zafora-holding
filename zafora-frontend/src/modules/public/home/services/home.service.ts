@@ -1,29 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiAxios } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
-import type {
-  ContentStat,
-  MethodologyStep,
-  Service,
-  SiteSetting,
-} from "@/src/lib/api-client-react/generated/api.schemas";
+import type { ContentStat, MethodologyStep, CatalogService, SiteSetting } from "@/src/lib/types";
 
-async function fetchServices(): Promise<{ services: Service[] }> {
-  const res = await apiAxios.get<{ services: Service[] }>(API.SERVICES.LIST);
+async function fetchServices(): Promise<{ services: CatalogService[] }> {
+  const res = await apiAxios.get<{ services: CatalogService[] }>(API.SERVICES.LIST);
   return res.data;
 }
 
 async function fetchContentStats(): Promise<{ stats: ContentStat[] }> {
-  const res = await apiAxios.get<{ stats: ContentStat[] }>(
-    API.CONTENT.STATS,
-  );
+  const res = await apiAxios.get<{ stats: ContentStat[] }>(API.CONTENT.STATS);
   return res.data;
 }
 
 async function fetchMethodologySteps(): Promise<{ steps: MethodologyStep[] }> {
-  const res = await apiAxios.get<{ steps: MethodologyStep[] }>(
-    API.CONTENT.METHODOLOGY,
-  );
+  const res = await apiAxios.get<{ steps: MethodologyStep[] }>(API.CONTENT.METHODOLOGY);
   return res.data;
 }
 
@@ -48,10 +39,7 @@ export function useContentStats() {
 }
 
 export function useMethodologySteps() {
-  return useQuery({
-    queryKey: homeKeys.methodology,
-    queryFn: fetchMethodologySteps,
-  });
+  return useQuery({ queryKey: homeKeys.methodology, queryFn: fetchMethodologySteps });
 }
 
 export function useSiteSetting(key: string) {

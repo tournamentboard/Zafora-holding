@@ -5,7 +5,11 @@ export const ROUTE_PATHS = {
     LOGIN: "/auth/login",
     LOGOUT: "/auth/logout",
     VERIFY: "/auth/verify",
+    REFRESH: "/auth/refresh",
     CHANGE_PASSWORD: "/auth/change-password",
+    SETUP_STATUS: "/auth/setup-status",
+    SETUP: "/auth/setup",
+    RESET_PASSWORD: "/auth/reset-password",
   },
 
   LEADS: {
@@ -30,9 +34,11 @@ export const ROUTE_PATHS = {
   },
 
   CONTENT: {
-    SETTINGS: "/content/settings",
+    SETTINGS: "/content/settings/:key",
     STATS: "/content/stats",
     METHODOLOGY: "/content/methodology",
+    FAQS: "/content/faqs",
+    FAQS_BY_ID: "/content/faqs/:id",
   },
 
   TESTIMONIALS: {
@@ -49,6 +55,7 @@ export const ROUTE_PATHS = {
   },
 
   NOTIFICATIONS: {
+    STATUS: "/notifications/status",
     SEND_TEST: "/notifications/test",
   },
 

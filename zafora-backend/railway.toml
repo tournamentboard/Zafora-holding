@@ -1,0 +1,13 @@
+[build]
+builder = "nixpacks"
+buildCommand = "./node_modules/.bin/tsc && ./node_modules/.bin/tsc-alias"
+
+[deploy]
+startCommand = "npm run start"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[healthcheck]
+httpPath = "/api/healthz"
+timeoutSeconds = 30
+intervalSeconds = 10
