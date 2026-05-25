@@ -1,6 +1,6 @@
 # Components Map
 
-_Last updated: 2026-05-24_
+_Last updated: 2026-05-25_
 
 Every component and its exact file path. Check here before creating a new component.
 
@@ -55,6 +55,16 @@ Every component and its exact file path. Check here before creating a new compon
 | `MethodologyManager` | `zafora-frontend/src/modules/admin/content/components/MethodologyManager.tsx` |
 | `AboutEditor` | `zafora-frontend/src/modules/admin/content/components/AboutEditor.tsx` |
 | `ImagesEditor` | `zafora-frontend/src/modules/admin/content/components/ImagesEditor.tsx` |
+| `AnnouncementManager` | `zafora-frontend/src/modules/admin/content/components/AnnouncementManager.tsx` |
+| `MaintenanceManager` | `zafora-frontend/src/modules/admin/content/components/MaintenanceManager.tsx` |
+| `LegalPagesEditor` | `zafora-frontend/src/modules/admin/content/components/LegalPagesEditor.tsx` |
+| `SectionVisibilityManager` | `zafora-frontend/src/modules/admin/content/components/SectionVisibilityManager.tsx` |
+
+## Admin — FAQs
+
+| Component | File |
+|-----------|------|
+| `FaqManager` | `zafora-frontend/src/modules/admin/faqs/components/FaqManager.tsx` |
 
 ## Admin — Audit
 
@@ -81,6 +91,12 @@ Every component and its exact file path. Check here before creating a new compon
 |-----------|------|
 | `ExpressInterestModal` | `zafora-frontend/src/modules/public/modals/ExpressInterestModal.tsx` |
 
+## Public — Legal
+
+| Component | File |
+|-----------|------|
+| `LegalPageView` | `zafora-frontend/src/modules/public/legal/components/LegalPageView.tsx` |
+
 ## Shared Hooks
 
 | Hook | File |
@@ -92,5 +108,13 @@ Every component and its exact file path. Check here before creating a new compon
 
 | Component | File |
 |-----------|------|
-| `Navbar` | `zafora-frontend/src/components/common/Navbar.tsx` (or similar) |
-| `Footer` | `zafora-frontend/src/components/common/Footer.tsx` (or similar) |
+| `Navbar` | `zafora-frontend/src/components/common/Navbar.tsx` |
+| `Footer` | `zafora-frontend/src/components/common/Footer.tsx` |
+| `AnnouncementBar` | `zafora-frontend/src/components/common/AnnouncementBar.tsx` |
+
+## Pending — Not Yet Created
+
+| Component | Target File | Blocked On |
+|-----------|-------------|------------|
+| `PhotoUploadField` | `modules/admin/shared/components/PhotoUploadField.tsx` | F11 (S3 upload) |
+| `ImageUploader` | `modules/admin/shared/components/ImageUploader.tsx` | F11 (S3 upload) |

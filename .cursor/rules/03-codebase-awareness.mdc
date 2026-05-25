@@ -9,22 +9,39 @@ alwaysApply: true
 
 ```
 src/app/
-  (public)/          → public user-facing routes
+  (public)/           → public user-facing routes
+    page.tsx           → Home
+    about/             → About
+    services/          → Services
+    projects/          → Projects
+    government/        → Government
+    government-review/ → Government Review
+    submit/            → Submit a Project
+    privacy/           → Privacy Policy (RSC — reads legal_privacy setting)
+    terms/             → Terms of Service (RSC — reads legal_terms setting)
   (admin)/
-    layout.tsx        → requireAdmin() guard
-    admin/page.tsx    → DashboardPage
-    admin/leads/      admin/projects/  admin/documents/
-    admin/content/    admin/audit/     admin/settings/
-  api/auth/          → JWT route handlers (login, logout, refresh)
+    layout.tsx         → requireAdmin() guard
+    admin/page.tsx     → DashboardPage
+    admin/leads/       admin/projects/  admin/documents/
+    admin/content/     admin/audit/     admin/settings/
+    admin/faq/         → FaqManager
+    admin/announcement/→ AnnouncementManager
+    admin/section-visibility/ → SectionVisibilityManager
+    admin/maintenance/ → MaintenanceManager
+    admin/legal/       → LegalPagesEditor
+  maintenance/         → standalone maintenance page (no layout)
+  api/auth/            → JWT route handlers (login, logout, refresh)
 
 src/modules/admin/
   dashboard/   → DashboardPage, stats.service.ts, useDashboardStats, useProjectStats
   leads/       → LeadsTable, leads.service.ts, useLeads, useUpdateLead
   projects/    → ProjectsTable, projects.service.ts, useAdminProjects, useCreateProject, useUpdateProject, useDeleteProject
   documents/   → DocumentsTable, documents.service.ts, useDocuments, useCreateDocument, useUpdateDocument, useDeleteDocument
+  faqs/        → FaqManager, faqs.service.ts, useFaqs, useCreateFaq, useUpdateFaq, useDeleteFaq
   content/     → ContentPage, SiteSettingsManager, BrandingManager, NavigationManager,
                   TeamManager, ServicesManager, TestimonialsManager, ContentStatsManager,
-                  MethodologyManager, AboutEditor, ImagesEditor
+                  MethodologyManager, AboutEditor, ImagesEditor,
+                  AnnouncementManager, MaintenanceManager, LegalPagesEditor, SectionVisibilityManager
                   content.service.ts (stats/methodology/testimonials/services)
                   site-settings.service.ts (useGetSiteSettings, useUpdateSiteSettings)
   audit/       → AuditLogViewer, audit.service.ts, useAuditLogs, useClearAuditLogs
@@ -37,8 +54,14 @@ src/modules/admin/
 src/modules/public/
   home/        → home.service.ts
   projects/    → projects.service.ts, interest.service.ts
+  legal/       → LegalPageView (shared RSC renderer for privacy + terms)
   modals/      → ExpressInterestModal
   shared/      → shared public UI
+
+src/components/common/
+  Navbar.tsx          → dynamic nav (no sticky — FR-HEADER-001)
+  Footer.tsx
+  AnnouncementBar.tsx → server component (reads announcement_bar setting)
 
 src/lib/
   actions/admin.ts   → all admin Server Actions + requireAdmin()
@@ -48,28 +71,36 @@ src/lib/
   constants/         → branding.ts (BRAND.*), site.ts, env.ts
   types/domain.ts    → Lead, Project, Document, CatalogService, Testimonial,
                         ContentStat, MethodologyStep, SiteSetting, AuditLog,
-                        DashboardStats, ProjectStats
+                        DashboardStats, ProjectStats, Faq
   validators/        → lead.ts, project.ts, document.ts, service.ts, interest.ts, content.ts
   auth.ts            → verifySession(), requireAdmin()
   store/             → modal.store.ts, admin-filters.store.ts
+  site-settings.ts   → ⚠️ NOT YET CREATED — getSectionVisibility() server helper
 ```
 
 ## Backend Module Map
 
 ```
 src/modules/
-  auth/         → login, verify, logout, refresh, change-password + requireAuth middleware
+  auth/         → login, verify, logout, refresh, change-password,
+                  setup-status, setup, reset-password + requireAuth middleware
   leads/        → public POST /leads · protected GET/PATCH /leads/:id
   projects/     → public GET · protected POST/PATCH/DELETE + interests
   documents/    → all protected (GET/POST/PATCH/DELETE)
   services/     → public GET · protected POST/PATCH/DELETE
-  content/      → public GET stats/methodology/settings · protected mutations
+  faqs/         → public GET /content/faqs · protected POST/PATCH/DELETE
+  content/      → public GET stats/methodology/settings/faqs · protected mutations
+                  SETTING_DEFAULTS: hero, footer, branding, seo_*, navigation, about,
+                  services_page, government_page, submit_page, announcement_bar,
+                  maintenance_mode, legal_privacy, legal_terms, section_visibility
   testimonials/ → public GET · protected POST/PATCH/DELETE
   stats/        → protected /stats + /stats/projects
   audit/        → protected GET/DELETE /audit
   notifications/→ protected /notifications/status + /notifications/test
 
-src/db/schema/  → one file per table, all exported from index.ts
+src/db/schema/  → leads, projects, project_interests, documents, services,
+                  content_stats, methodology_steps, site_settings, testimonials,
+                  audit_logs, users, sessions, faqs
 src/shared/
   middleware/require-auth.ts   → JWT validation
   url-helpers/route-paths.ts   → ROUTE_PATHS.*
