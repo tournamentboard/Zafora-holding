@@ -17,7 +17,7 @@ export const REFRESH_COOKIE = "refresh_token";
 export const COOKIE_BASE = {
   httpOnly: true,
   secure: process.env["NODE_ENV"] === "production",
-  sameSite: (process.env["NODE_ENV"] === "production" ? "strict" : "lax") as "strict" | "lax",
+  sameSite: "lax" as const,
   path: "/",
 };
 

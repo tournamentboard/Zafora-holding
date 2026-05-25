@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, Loader2, AlertTriangle } from "lucide-react";
@@ -16,7 +16,6 @@ type Mode = "loading" | "setup" | "login";
 // ─── Setup Form ───────────────────────────────────────────────────
 
 function SetupForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [values, setValues] = useState({ adminEmail: "", newPassword: "", confirmPassword: "" });
   const [showPw, setShowPw] = useState(false);
@@ -35,10 +34,11 @@ function SetupForm() {
     setLoading(true);
     try {
       await apiAxios.post(API.AUTH.SETUP, values);
-      // auto-logged in — go to admin panel
+      // auto-logged in — hard redirect so the browser commits httpOnly cookies
+      // before the next request; router.replace (soft nav) can race with Set-Cookie
       const from = searchParams.get("from");
       const redirectTo = from && from.startsWith("/admin") ? from : ROUTES.ADMIN.ROOT;
-      router.replace(redirectTo);
+      window.location.replace(redirectTo);
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
       setError(msg ?? "Setup failed. Check the email matches ADMIN_SETUP_EMAIL on the server.");
@@ -143,7 +143,6 @@ function SetupForm() {
 // ─── Login Form ───────────────────────────────────────────────────
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -159,7 +158,7 @@ function LoginForm() {
       await apiAxios.post(API.AUTH.LOGIN, { password });
       const from = searchParams.get("from");
       const redirectTo = from && from.startsWith("/admin") ? from : ROUTES.ADMIN.ROOT;
-      router.replace(redirectTo);
+      window.location.replace(redirectTo);
     } catch {
       setError("Invalid password. Try again.");
     } finally {
