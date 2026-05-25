@@ -20,6 +20,7 @@ let failedQueue: Array<{
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
 }> = [];
+// updated
 
 function processQueue(error: unknown) {
   failedQueue.forEach((p) => (error ? p.reject(error) : p.resolve(null)));
