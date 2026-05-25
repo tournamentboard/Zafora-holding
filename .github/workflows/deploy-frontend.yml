@@ -1,4 +1,4 @@
-name: Deploy Frontend to Vercel
+name: Frontend — CI & Vercel Deploy
 
 on:
   push:
@@ -7,13 +7,58 @@ on:
       - development
     paths:
       - "zafora-frontend/**"
-      - ".github/workflows/deploy.yml"
+      - ".github/workflows/deploy-frontend.yml"
+  pull_request:
+    branches:
+      - main
+      - development
+    paths:
+      - "zafora-frontend/**"
+
+# Cancel any in-progress run for the same branch
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  deploy-development:
-    name: Deploy to Development (Vercel Preview)
+  # ─────────────────────────────────────────────
+  # CI — runs on every push & PR
+  # ─────────────────────────────────────────────
+  ci:
+    name: CI — Lint, Typecheck & Build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/development'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: zafora-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: zafora-frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: zafora-frontend
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: zafora-frontend
+        run: npm run typecheck
+
+  # ─────────────────────────────────────────────
+  # Deploy to DEV — only on push to `development`
+  # ─────────────────────────────────────────────
+  deploy-dev:
+    name: Deploy → Vercel (Preview / Development)
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/development' && github.event_name == 'push'
     environment:
       name: development
       url: ${{ steps.deploy.outputs.preview_url }}
@@ -22,7 +67,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -31,14 +76,6 @@ jobs:
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
-
-      - name: Reset Vercel project to Next.js defaults
-        run: |
-          curl -s -X PATCH \
-            "https://api.vercel.com/v9/projects/${{ secrets.VERCEL_PROJECT_ID }}?teamId=${{ secrets.VERCEL_ORG_ID }}" \
-            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{"framework":"nextjs","rootDirectory":null,"buildCommand":null,"outputDirectory":null,"installCommand":null}'
 
       - name: Write Vercel project config
         working-directory: zafora-frontend
@@ -52,11 +89,11 @@ jobs:
         working-directory: zafora-frontend
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build project
+      - name: Build (Development)
         working-directory: zafora-frontend
         env:
-          NEXT_PUBLIC_BASE_URL: ${{ secrets.DEV_NEXT_PUBLIC_BASE_URL }}
           NEXT_PUBLIC_API_URL: ${{ secrets.DEV_NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.DEV_NEXT_PUBLIC_BASE_URL }}
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt to Vercel (Preview)
@@ -65,9 +102,8 @@ jobs:
         run: |
           DEPLOY_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
           echo "preview_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $DEPLOY_URL"
 
-      - name: Post deployment URL as commit comment
+      - name: Post deployment comment
         uses: actions/github-script@v7
         if: success()
         with:
@@ -78,13 +114,21 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
-              body: `✅ **Development deployment** for \`${sha}\`\n\n🔗 Preview URL: ${url}`
+              body: [
+                '✅ **Frontend → Vercel Development** deployed for `' + sha + '`',
+                '',
+                '🔗 Preview URL: ' + url,
+              ].join('\n')
             });
 
-  deploy-production:
-    name: Deploy to Production (Vercel)
+  # ─────────────────────────────────────────────
+  # Deploy to PROD — only on push to `main`
+  # ─────────────────────────────────────────────
+  deploy-prod:
+    name: Deploy → Vercel (Production)
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: production
       url: ${{ steps.deploy.outputs.production_url }}
@@ -93,7 +137,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -102,14 +146,6 @@ jobs:
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
-
-      - name: Reset Vercel project to Next.js defaults
-        run: |
-          curl -s -X PATCH \
-            "https://api.vercel.com/v9/projects/${{ secrets.VERCEL_PROJECT_ID }}?teamId=${{ secrets.VERCEL_ORG_ID }}" \
-            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{"framework":"nextjs","rootDirectory":null,"buildCommand":null,"outputDirectory":null,"installCommand":null}'
 
       - name: Write Vercel project config
         working-directory: zafora-frontend
@@ -123,11 +159,11 @@ jobs:
         working-directory: zafora-frontend
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build project
+      - name: Build (Production)
         working-directory: zafora-frontend
         env:
-          NEXT_PUBLIC_BASE_URL: ${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}
           NEXT_PUBLIC_API_URL: ${{ secrets.PROD_NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt to Vercel (Production)
@@ -136,9 +172,8 @@ jobs:
         run: |
           DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
           echo "production_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $DEPLOY_URL"
 
-      - name: Post deployment URL as commit comment
+      - name: Post deployment comment
         uses: actions/github-script@v7
         if: success()
         with:
@@ -149,5 +184,9 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
-              body: `🚀 **Production deployment** for \`${sha}\`\n\n🌐 Live URL: ${url}`
+              body: [
+                '🚀 **Frontend → Vercel Production** deployed for `' + sha + '`',
+                '',
+                '🌐 Live URL: ' + url,
+              ].join('\n')
             });
