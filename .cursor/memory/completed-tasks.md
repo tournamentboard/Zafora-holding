@@ -197,6 +197,16 @@ _Last updated: 2026-05-25_
 
 ---
 
+### B7 — Resend Email Integration ✅ (2026-05-25)
+- `getAdminEmail()` now returns hardcoded default (ADMIN_EMAIL env) when DB row missing — no more silent skip on fresh DB
+- Resend client refactored to lazy singleton (`getResend()`) — no more per-call instantiation
+- `notifications` key added to `seed.ts` — fresh installs have admin email wired from day 1
+- All three email functions (`sendInquiryNotification`, `sendInterestNotification`, `sendTestEmail`) use singleton
+- Frontend `SettingsPanel.tsx` already complete (no changes needed)
+- `RESEND_API_KEY` already set in `.env` and Railway
+
+---
+
 ## Partially Done / In Progress
 
 ### AnnouncementBar Wiring ⚠️ (2026-05-25)

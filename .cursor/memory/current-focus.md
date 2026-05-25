@@ -66,7 +66,7 @@ FAQs module, 5 new admin managers, 5 new public/admin pages, maintenance middlew
 3. **B6**: `zafora-backend/src/shared/lib/object-storage.ts` → AWS S3 SDK presigned URL service
 4. **F11**: `app/api/storage/presign/route.ts` → `hooks/use-s3-upload.ts` → `ImageUploader`
 5. **R6/PhotoUploadField**: `modules/admin/shared/components/PhotoUploadField.tsx` (after F11)
-6. **B7**: Wire Resend email — set `RESEND_API_KEY` in Railway, test `/api/notifications/test`
+6. **B7**: ✅ DONE — Resend fully wired; `getAdminEmail()` fallback fixed; Resend singleton; notifications seeded
 7. **F12**: Add `loading.tsx` + `error.tsx` to each individual admin route segment (leads, projects, documents, etc.)
 8. **B9**: Add `helmet`, `express-rate-limit`, body size limits to `zafora-backend/src/app.ts`
 9. **F13**: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`
