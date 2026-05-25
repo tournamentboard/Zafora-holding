@@ -44,17 +44,22 @@ jobs:
 
       - name: Write Vercel project config
         run: |
-          mkdir -p zafora-frontend/.vercel
+          mkdir -p .vercel
           printf '{"projectId":"%s","orgId":"%s"}' \
             "${{ secrets.VERCEL_PROJECT_ID }}" \
-            "${{ secrets.VERCEL_ORG_ID }}" > zafora-frontend/.vercel/project.json
+            "${{ secrets.VERCEL_ORG_ID }}" > .vercel/project.json
 
       - name: Deploy to Vercel (Preview)
         id: deploy
         run: |
-          DEPLOYMENT_URL=$(vercel deploy --cwd zafora-frontend \
-            --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | grep -E "^https://" | tail -1)
+          OUTPUT=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          echo "$OUTPUT"
+          DEPLOYMENT_URL=$(echo "$OUTPUT" | grep -oE "https://[a-zA-Z0-9._-]+\.vercel\.app" | tail -1)
           echo "Deployment URL: $DEPLOYMENT_URL"
+          if [ -z "$DEPLOYMENT_URL" ]; then
+            echo "ERROR: Could not extract deployment URL from vercel output"
+            exit 1
+          fi
           vercel alias set "$DEPLOYMENT_URL" zafora-frontend-dev.vercel.app \
             --token=${{ secrets.VERCEL_TOKEN }}
           echo "url=https://zafora-frontend-dev.vercel.app" >> $GITHUB_OUTPUT
@@ -91,16 +96,17 @@ jobs:
 
       - name: Write Vercel project config
         run: |
-          mkdir -p zafora-frontend/.vercel
+          mkdir -p .vercel
           printf '{"projectId":"%s","orgId":"%s"}' \
             "${{ secrets.VERCEL_PROJECT_ID }}" \
-            "${{ secrets.VERCEL_ORG_ID }}" > zafora-frontend/.vercel/project.json
+            "${{ secrets.VERCEL_ORG_ID }}" > .vercel/project.json
 
       - name: Deploy to Vercel (Production)
         id: deploy
         run: |
-          URL=$(vercel deploy --prod --cwd zafora-frontend \
-            --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | grep -E "^https://" | tail -1)
+          OUTPUT=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          echo "$OUTPUT"
+          URL=$(echo "$OUTPUT" | grep -oE "https://[a-zA-Z0-9._-]+\.vercel\.app" | tail -1)
           echo "url=$URL" >> $GITHUB_OUTPUT
 
       - name: Post deployment comment
