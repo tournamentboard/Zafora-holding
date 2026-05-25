@@ -591,8 +591,16 @@ async function seed() {
         submit: { hero: true, form: true, sidebar: true },
       }),
     },
+    {
+      key: "notifications",
+      value: JSON.stringify({
+        adminEmail: process.env["ADMIN_EMAIL"] ?? "Office@zaforaholding.com",
+        notifyOnInquiry: true,
+        notifyOnInterest: true,
+      }),
+    },
   ]).onConflictDoNothing();
-  console.log("  ✓ 11 site settings inserted");
+  console.log("  ✓ 12 site settings inserted");
 
   // ── FAQs ───────────────────────────────────────────────────────────
   console.log("Inserting FAQs...");

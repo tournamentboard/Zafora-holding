@@ -1,12 +1,13 @@
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { API } from "@/src/lib/url-helpers";
+import { ENV } from "../constants";
 
 // Use relative base URL so all client requests flow through the Next.js rewrite
 // proxy (/api/* → backend). This ensures httpOnly cookies are scoped to the
 // frontend domain, making them readable by Next.js middleware.
 export const apiAxios = axios.create({
-  baseURL: "/",
+  baseURL: ENV.API_URL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
