@@ -1,6 +1,6 @@
 # Completed Tasks
 
-_Last updated: 2026-05-24_
+_Last updated: 2026-05-25_
 
 ---
 
@@ -127,3 +127,82 @@ _Last updated: 2026-05-24_
 - 6 documents
 - 8 leads (mixed statuses: new/reviewed/contacted/qualified/proposal_sent/in_progress)
 - 6 site settings (hero, footer, branding, seo_home, seo_projects, navigation)
+
+### Seed Data Extended ✅ (2026-05-25)
+- 5 FAQs (services/general/process/government/investment categories)
+- New site_settings keys seeded: announcement_bar, maintenance_mode, legal_privacy, legal_terms, section_visibility
+
+---
+
+## Replit Sync Phases
+
+### R1 — FAQs Schema & Backend Module ✅ (2026-05-25)
+- `zafora-backend/src/db/schema/faqs.ts` — faqsTable schema
+- `zafora-backend/src/db/schema/index.ts` — faqs export added
+- `zafora-backend/src/modules/faqs/faqs.routes.ts` — GET/POST/PATCH/DELETE /api/content/faqs
+- `zafora-backend/src/modules/faqs/faqs.service.ts` — CRUD service
+- `zafora-backend/src/modules/faqs/faqs.validator.ts` — Zod CreateFaqBody + UpdateFaqBody
+- `zafora-backend/src/modules/faqs/index.ts`
+- route-paths.ts + routes/index.ts updated to mount faqsRouter
+- swagger.ts updated with FAQ schema + 4 endpoints
+
+### R2 — Backend Setting Defaults ✅ (2026-05-25)
+- `content.service.ts` SETTING_DEFAULTS extended with:
+  - `announcement_bar` (enabled, message, link, linkText, dismissible, bgColor, textColor)
+  - `maintenance_mode` (enabled, headline, message, showContactEmail, estimatedTime)
+  - `legal_privacy` (title, lastUpdated, content)
+  - `legal_terms` (title, lastUpdated, content)
+  - `section_visibility` (per-page section toggles for all 6 public pages)
+  - Expanded `branding`, `hero`, `about` defaults
+
+### R3 — Frontend Module Setup ✅ (2026-05-25)
+- `modules/admin/faqs/` — service + index created
+- `lib/url-helpers/routes.ts` — added ADMIN.FAQ, ANNOUNCEMENT, SECTION_VISIBILITY, MAINTENANCE, LEGAL
+- `lib/url-helpers/api-endpoints.ts` — added CONTENT.FAQS + CONTENT.FAQS_BY_ID
+- `app/(public)/privacy/page.tsx` — public route stub
+- `app/(public)/terms/page.tsx` — public route stub
+
+### R4 — New Admin Components ✅ (2026-05-25)
+- `modules/admin/faqs/components/FaqManager.tsx` — list/filter/CRUD/toggle/order
+- `modules/admin/content/components/AnnouncementManager.tsx` — live preview, color picker, presets
+- `modules/admin/content/components/MaintenanceManager.tsx` — toggle + warning banner
+- `modules/admin/content/components/LegalPagesEditor.tsx` — tabbed Privacy/Terms markdown editor
+- `modules/admin/content/components/SectionVisibilityManager.tsx` — per-page section toggles
+- `app/(admin)/admin/faq/page.tsx` — thin page → FaqManager
+- `app/(admin)/admin/announcement/page.tsx` — thin page → AnnouncementManager
+- `app/(admin)/admin/maintenance/page.tsx` — thin page → MaintenanceManager
+- `app/(admin)/admin/legal/page.tsx` — thin page → LegalPagesEditor
+- `app/(admin)/admin/section-visibility/page.tsx` — thin page → SectionVisibilityManager
+- `modules/admin/shared/components/AdminSidebar.tsx` — added Site Control group + FAQ/Legal nav items
+
+### R5 — Frontend Public Pages & Layout ✅ (2026-05-25)
+- `modules/public/legal/components/LegalPageView.tsx` — shared RSC renderer (Privacy + Terms)
+- `app/(public)/privacy/page.tsx` — RSC fetches legal_privacy setting
+- `app/(public)/terms/page.tsx` — RSC fetches legal_terms setting
+- `app/maintenance/page.tsx` — standalone maintenance page (no layout)
+- `middleware.ts` — maintenance_mode guard with 60s revalidate cache
+- `components/common/AnnouncementBar.tsx` — server component (reads announcement_bar setting)
+- `components/common/Navbar.tsx` — sticky/fixed classes removed (FR-HEADER-001)
+
+### R7 — Auth Enhancements ✅ (2026-05-25)
+- `GET /api/auth/setup-status` — returns `{ required: boolean }` based on users table
+- `POST /api/auth/setup` — first-time admin creation, requires ADMIN_SETUP_EMAIL match
+- `POST /api/auth/reset-password` — emergency reset without current password
+- `ADMIN_SETUP_EMAIL` added to `zafora-backend/.env`
+- Login page updated to handle setupRequired response
+
+### R8 — Seed Data Updates ✅ (2026-05-25)
+- `scripts/seed.ts` — FAQs seeded (5 entries, mixed categories/pages)
+- `scripts/seed.ts` — new site_settings keys seeded (announcement_bar, maintenance_mode, legal_privacy, legal_terms, section_visibility)
+
+---
+
+## Partially Done / In Progress
+
+### AnnouncementBar Wiring ⚠️ (2026-05-25)
+- `AnnouncementBar` component exists at `components/common/AnnouncementBar.tsx`
+- NOT yet imported/rendered in `app/(public)/layout.tsx`
+
+### lib/site-settings.ts ⚠️ (2026-05-25)
+- `getSectionVisibility()` server helper NOT yet created
+- Public pages do NOT yet consume section_visibility setting

@@ -13,14 +13,14 @@ alwaysApply: true
 | F2 — Routing Shell | ✅ Done | (public)/ + (admin)/ route groups, layouts, middleware.ts |
 | F3 — UI System | ✅ Done | shadcn/Radix, Navbar, Footer, branding constants, sonner provider |
 | F4 — API Layer | ✅ Done | apiAxios, apiClient, TanStack Query, module services pattern, Zod validators |
-| F5 — Public Pages | ✅ Done | Home, About, Services, Projects, Government pages |
+| F5 — Public Pages | ✅ Done | Home, About, Services, Projects, Government, Submit pages |
 | F6 — Public Forms | ✅ Done | submitLead Server Action, ExpressInterestModal, lib/actions/public.ts |
 | F7 — Auth Flow | ✅ Done | JWT access+refresh tokens, middleware.ts, requireAdmin(), login page |
 | F8 — Admin Shell | ✅ Done | AdminSidebar, AdminHeader, route-based admin pages (/admin/leads etc.) |
 | F9 — Admin Modules | ✅ Done | All components migrated to modules/admin/*, api-client-react deprecated |
 | F10 — Tables/Search | ✅ Done | StatusBadge, TableToolbar, useDebouncedSearch, useTableFilters |
 | F11 — File Uploads | ⏳ Pending | S3 presign route, use-s3-upload hook, ImageUploader component |
-| F12 — Error/Loading | ⏳ Pending | loading.tsx/error.tsx per segment, Suspense audit |
+| F12 — Error/Loading | ⚠️ Partial | Group-level loading.tsx done; per-segment (leads/projects/etc.) missing |
 | F13 — SEO | ⏳ Pending | generateMetadata(), sitemap.ts, robots.ts |
 | F14 — RBAC UI | ⏳ Future | Role-based sidebar/actions when backend supports roles |
 
@@ -28,15 +28,38 @@ alwaysApply: true
 
 | Phase | Status | Summary |
 |-------|--------|---------|
-| B1 — DB Foundation | ✅ Done | Neon schema, all tables, Drizzle migrations |
+| B1 — DB Foundation | ✅ Done | Neon schema, all tables + faqs, Drizzle migrations |
 | B2 — Shared Layer | ✅ Done | error-handler, api-helpers, route-paths, CORS, logger |
-| B3 — Auth Module | ✅ Done | JWT login/logout/refresh/change-password, requireAuth, bcrypt |
-| B4 — Public APIs | ✅ Done | Public GET: projects, services, testimonials, content, stats; POST: leads, interests |
+| B3 — Auth Module | ✅ Done | JWT login/logout/refresh/change-password/setup-status/setup/reset-password, requireAuth, bcrypt |
+| B4 — Public APIs | ✅ Done | Public GET: projects, services, testimonials, content, stats, faqs; POST: leads, interests |
 | B5 — Admin APIs | ✅ Done | All admin CRUD behind requireAuth, audit logging, pagination |
 | B6 — File Storage | ⏳ Pending | AWS S3 presigned URLs, storage module (replace Replit GCS) |
-| B7 — Notifications | ⏳ Pending | Resend email — inquiry notification, interest notification |
+| B7 — Notifications | ⏳ Pending | Resend email — RESEND_API_KEY must be set in Railway env |
 | B8 — Error/Logging | ⏳ Pending | Structured pino logger, standard ApiError shape |
 | B9 — Security | ⏳ Pending | Rate limiting, Helmet, body size limits, login slow-down |
+
+## Replit Sync Phases
+
+| Phase | Status | Summary |
+|-------|--------|---------|
+| R1 — FAQs Backend | ✅ Done | faqs schema, module (routes/service/validator), swagger docs |
+| R2 — Setting Defaults | ✅ Done | 5 new SETTING_DEFAULTS + expanded branding/hero/about in content.service.ts |
+| R3 — Frontend Module Setup | ✅ Done | modules/admin/faqs/, new ROUTES.ADMIN.* constants, API.CONTENT.FAQS* |
+| R4 — New Admin Components | ✅ Done | FaqManager, AnnouncementManager, MaintenanceManager, LegalPagesEditor, SectionVisibilityManager + 5 route pages |
+| R5 — Public Pages & Layout | ✅ Done | /privacy, /terms, /maintenance pages, maintenance middleware, AnnouncementBar component, sticky header removed |
+| R6 — Photo Upload | ⏳ Blocked | PhotoUploadField depends on F11 (S3) |
+| R7 — Auth Enhancements | ✅ Done | setup-status, setup, reset-password endpoints + ADMIN_SETUP_EMAIL env |
+| R8 — Seed Updates | ✅ Done | FAQs seeded + new site_settings keys seeded |
+| R9 — Verification | ⏳ Pending | End-to-end verify all R1–R8 features in staging |
+
+## Small Remaining Gaps (Not a Full Phase)
+
+| Item | File | Priority |
+|------|------|----------|
+| Wire AnnouncementBar into layout | `app/(public)/layout.tsx` | High |
+| Create `lib/site-settings.ts` helper | `lib/site-settings.ts` | High |
+| Use section_visibility in public pages | All public RSC pages | Medium |
+| PhotoUploadField component | `modules/admin/shared/components/PhotoUploadField.tsx` | After F11 |
 
 ## Cleanup Required (After F11)
 
@@ -48,6 +71,10 @@ alwaysApply: true
 
 ## Next Recommended Actions
 
-1. F11: `app/api/storage/presign/route.ts` → `hooks/use-s3-upload.ts` → ImageUploader
-2. B6: `shared/lib/object-storage.ts` (AWS S3 SDK)
-3. F12: Add `loading.tsx` to each admin route segment
+1. Wire `<AnnouncementBar />` into `app/(public)/layout.tsx` above `<Navbar />`
+2. Create `lib/site-settings.ts` → `getSectionVisibility()` → use in public RSC pages
+3. B6: `shared/lib/object-storage.ts` (AWS S3 SDK) + F11: presign route + use-s3-upload hook
+4. B9: Add `helmet` + `express-rate-limit` to `zafora-backend/src/app.ts`
+5. F12: Add `loading.tsx` + `error.tsx` to each individual admin route segment
+6. F13: `generateMetadata()` on public pages + `sitemap.ts` + `robots.ts`
+7. B7: Set `RESEND_API_KEY` in Railway, test `/api/notifications/test`

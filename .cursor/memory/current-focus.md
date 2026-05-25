@@ -1,65 +1,92 @@
 # Current Focus
 
-_Last updated: 2026-05-24_
+_Last updated: 2026-05-25_
 
 ---
 
 ## Active Phase
 
-**Replit Sync — COMPLETED ✅ (2026-05-25)**  
-All RR1–RR8 phases executed. Next priority: **F11 (File Uploads) + B6 (AWS S3)**
+**Replit Sync R1–R8 — COMPLETED ✅ (2026-05-25)**  
+FAQs module, 5 new admin managers, 5 new public/admin pages, maintenance middleware, auth setup endpoints, seed extended.
+
+**Next priority: Wire AnnouncementBar + lib/site-settings.ts → then F11/B6 (S3)**
 
 ---
 
-## Last Completed Work (Today — 2026-05-24)
+## Last Completed Work (2026-05-25)
 
-1. **F9-3**: Migrated all content managers to `modules/admin/content/components/`
-   - SiteSettingsManager, BrandingManager, NavigationManager, TeamManager
-   - AboutEditor, ImagesEditor, ServicesManager, TestimonialsManager
-   - ContentStatsManager, MethodologyManager
-   - Created `site-settings.service.ts` compatibility layer
+1. **R1**: Created `faqs` DB schema + full backend module (routes/service/validator/swagger)
 
-2. **F10**: Created shared admin utilities
-   - StatusBadge, TableToolbar, useDebouncedSearch, useTableFilters
+2. **R2**: Extended SETTING_DEFAULTS in `content.service.ts` with 5 new keys + expanded branding/hero/about
 
-3. **Cleanup**: Deleted all 16 legacy `components/admin/*.tsx` files
+3. **R3**: Created `modules/admin/faqs/` frontend module, added 5 new ADMIN routes constants, CONTENT.FAQS API endpoint constants
 
-4. **Swagger**: Updated Lead status enum to match frontend values
+4. **R4**: Created 5 new admin manager components:
+   - FaqManager, AnnouncementManager, MaintenanceManager, LegalPagesEditor, SectionVisibilityManager
+   - 5 thin admin route pages (/admin/faq, /announcement, /maintenance, /legal, /section-visibility)
+   - Updated AdminSidebar with "Site Control" group + FAQ/Legal nav items
 
-5. **Seed**: Inserted realistic Zafora-relevant dummy data into Neon DB
+5. **R5**: Created LegalPageView shared component, /privacy, /terms, /maintenance pages, wired maintenance guard in middleware.ts, created AnnouncementBar component, removed sticky header from Navbar
 
-6. **Cursor Rules**: Created full `.cursor/rules/` + `.cursor/memory/` architecture
+6. **R7**: Added auth setup-status / setup / reset-password endpoints + ADMIN_SETUP_EMAIL env var
+
+7. **R8**: Seeded FAQs (5 entries) + new site_settings keys in seed.ts
 
 ---
 
 ## Last Edited Files
 
-- `.cursor/rules/00-core.mdc` through `15-response-format.mdc` (new)
-- `.cursor/memory/*.md` (new)
-- `zafora-frontend/src/modules/admin/content/components/ContentPage.tsx` (new)
-- `zafora-frontend/src/modules/admin/content/services/site-settings.service.ts` (new)
-- `zafora-frontend/src/modules/admin/shared/components/StatusBadge.tsx` (new)
-- `zafora-frontend/src/modules/admin/shared/components/TableToolbar.tsx` (new)
-- `zafora-frontend/src/modules/admin/shared/hooks/useDebouncedSearch.ts` (new)
-- `zafora-frontend/src/modules/admin/shared/hooks/useTableFilters.ts` (new)
-- `zafora-backend/src/shared/lib/swagger.ts` (updated Lead status enum)
-- `zafora-backend/scripts/seed.ts` (new — ran successfully)
+- `zafora-backend/src/db/schema/faqs.ts` (new)
+- `zafora-backend/src/modules/faqs/` (new — full module)
+- `zafora-backend/src/modules/content/content.service.ts` (extended SETTING_DEFAULTS)
+- `zafora-backend/src/modules/auth/auth.routes.ts` (added setup-status, setup, reset-password)
+- `zafora-backend/scripts/seed.ts` (extended — FAQs + new settings keys)
+- `zafora-frontend/src/modules/admin/faqs/` (new — FaqManager + service)
+- `zafora-frontend/src/modules/admin/content/components/AnnouncementManager.tsx` (new)
+- `zafora-frontend/src/modules/admin/content/components/MaintenanceManager.tsx` (new)
+- `zafora-frontend/src/modules/admin/content/components/LegalPagesEditor.tsx` (new)
+- `zafora-frontend/src/modules/admin/content/components/SectionVisibilityManager.tsx` (new)
+- `zafora-frontend/src/modules/admin/shared/components/AdminSidebar.tsx` (updated nav groups)
+- `zafora-frontend/src/modules/public/legal/components/LegalPageView.tsx` (new)
+- `zafora-frontend/src/app/(public)/privacy/page.tsx` (new)
+- `zafora-frontend/src/app/(public)/terms/page.tsx` (new)
+- `zafora-frontend/src/app/maintenance/page.tsx` (new)
+- `zafora-frontend/src/middleware.ts` (maintenance guard added)
+- `zafora-frontend/src/components/common/AnnouncementBar.tsx` (new)
+- `zafora-frontend/src/components/common/Navbar.tsx` (sticky removed)
+- `zafora-frontend/src/lib/url-helpers/routes.ts` (5 new ADMIN routes)
+- `zafora-frontend/src/lib/url-helpers/api-endpoints.ts` (FAQS endpoints)
 
 ---
 
 ## Next Actions (Priority Order)
 
-1. **RR1**: Create `faqs` table + 4 endpoints + module structure
-2. **RR2**: Add new SETTING_DEFAULTS (announcement_bar, maintenance_mode, legal_privacy, legal_terms, section_visibility)
-3. **RR3**: Create 5 new admin manager components + sidebar entries + route pages
-4. **RR4**: Create `/privacy`, `/terms`, `/maintenance` pages + AnnouncementBar + remove sticky header
-5. **RR5**: Add auth setup-status / setup / reset-password endpoints
-6. **RR6**: Seed FAQs + new site_settings entries
-7. **B6**: `shared/lib/object-storage.ts` → AWS S3 SDK presigned URL service
-8. **F11**: `app/api/storage/presign/route.ts` → `hooks/use-s3-upload.ts` → `ImageUploader`
-9. **F12**: Add `loading.tsx` + `error.tsx` to each admin route segment
-10. **B7**: Wire Resend email — `RESEND_API_KEY` must be set in Railway
-11. **Cleanup**: Delete deprecated `lib/api-client-react`, `lib/api-zod`, etc. (verify zero imports first)
+1. **Wire AnnouncementBar**: Import `<AnnouncementBar />` into `app/(public)/layout.tsx` above `<Navbar />`
+2. **Create `lib/site-settings.ts`**: Server helper `getSectionVisibility()` + use in public page RSCs
+3. **B6**: `zafora-backend/src/shared/lib/object-storage.ts` → AWS S3 SDK presigned URL service
+4. **F11**: `app/api/storage/presign/route.ts` → `hooks/use-s3-upload.ts` → `ImageUploader`
+5. **R6/PhotoUploadField**: `modules/admin/shared/components/PhotoUploadField.tsx` (after F11)
+6. **B7**: Wire Resend email — set `RESEND_API_KEY` in Railway, test `/api/notifications/test`
+7. **F12**: Add `loading.tsx` + `error.tsx` to each individual admin route segment (leads, projects, documents, etc.)
+8. **B9**: Add `helmet`, `express-rate-limit`, body size limits to `zafora-backend/src/app.ts`
+9. **F13**: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`
+10. **Cleanup**: Verify zero imports then delete deprecated `lib/api-client-react`, `lib/api-zod`, `lib/api-spec`, `lib/object-storage-web`, `lib/db`
+
+---
+
+## Known Gaps (Found in 2026-05-25 Audit)
+
+| Gap | File | Status |
+|-----|------|--------|
+| AnnouncementBar not in layout | `app/(public)/layout.tsx` | ⚠️ Needs wiring |
+| site-settings.ts helper missing | `lib/site-settings.ts` | ⚠️ Not created |
+| Section visibility not in public pages | All public RSC pages | ⚠️ Depends on site-settings.ts |
+| PhotoUploadField missing | `modules/admin/shared/components/PhotoUploadField.tsx` | ⏳ Blocked on F11 |
+| F12 per-segment loading | `/admin/leads/`, `/admin/projects/`, etc. | ⏳ Pending |
+| B6 S3 storage | `shared/lib/object-storage.ts` | ⏳ Pending |
+| B7 Resend email | `RESEND_API_KEY` empty in .env | ⏳ Pending |
+| B9 Security (helmet, rate limit) | `src/app.ts` | ⏳ Pending |
+| F13 SEO | generateMetadata, sitemap, robots | ⏳ Pending |
 
 ---
 
@@ -71,3 +98,6 @@ All RR1–RR8 phases executed. Next priority: **F11 (File Uploads) + B6 (AWS S3)
 | `useUpdateSiteSettings` takes `{ key, data: { value } }` | Preserves original Orval hook shape — no component rewrites needed |
 | ContentPage uses `?section=` query param | Preserves URL state, works with Next.js App Router |
 | Lead statuses: new/reviewed/contacted/qualified/proposal_sent/in_progress/closed/rejected | Frontend-defined; DB column is open text; swagger updated to match |
+| Maintenance guard uses `next: { revalidate: 60 }` | Avoids hitting backend on every request — 60s cache |
+| Auth setup uses ADMIN_SETUP_EMAIL env match | Prevents unauthorized first-time admin creation |
+| Sticky header removed entirely (no position class) | Per FR-HEADER-001 spec requirement |

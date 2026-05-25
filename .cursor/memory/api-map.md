@@ -1,6 +1,6 @@
 # API Map
 
-_Last updated: 2026-05-24_
+_Last updated: 2026-05-25_
 
 Frontend constant → Backend route → Service function → Frontend hook(s)
 
@@ -15,6 +15,9 @@ Frontend constant → Backend route → Service function → Frontend hook(s)
 | `API.AUTH.VERIFY` | `GET /api/auth/verify` | `verifyToken()` | `lib/auth.ts:verifySession()` |
 | `API.AUTH.REFRESH` | `POST /api/auth/refresh` | `refreshTokens()` | `axios-instance.ts interceptor` |
 | `API.AUTH.CHANGE_PASSWORD` | `POST /api/auth/change-password` | `changePassword()` | `SettingsPanel` via `apiAxios` |
+| — | `GET /api/auth/setup-status` | `hasAdminUser()` | `login/page.tsx` setup check |
+| — | `POST /api/auth/setup` | `createUser()` | `login/page.tsx` first-time setup form |
+| — | `POST /api/auth/reset-password` | `hashPassword()` | `login/page.tsx` emergency reset |
 
 ## Leads
 
@@ -99,5 +102,22 @@ Frontend constant → Backend route → Service function → Frontend hook(s)
 |------------------|--------------|---------------|
 | `API.NOTIFICATIONS.STATUS` | `GET /api/notifications/status` 🔒 | `SettingsPanel` via `apiAxios` |
 | `API.NOTIFICATIONS.TEST` | `POST /api/notifications/test` 🔒 | `SettingsPanel` via `apiAxios` |
+
+## FAQs
+
+| Frontend Constant | Backend Route | Service Fn | Frontend Hook |
+|------------------|--------------|------------|---------------|
+| `API.CONTENT.FAQS` | `GET /api/content/faqs` | `listFaqs()` | `useFaqs()` |
+| `API.CONTENT.FAQS` | `POST /api/content/faqs` 🔒 | `createFaq(data)` | `useCreateFaq()` |
+| `API.CONTENT.FAQS_BY_ID(id)` | `PATCH /api/content/faqs/:id` 🔒 | `updateFaq(id, data)` | `useUpdateFaq()` |
+| `API.CONTENT.FAQS_BY_ID(id)` | `DELETE /api/content/faqs/:id` 🔒 | `deleteFaq(id)` | `useDeleteFaq()` |
+
+## Storage (Pending — B6/F11)
+
+| Frontend Constant | Backend Route | Status |
+|------------------|--------------|--------|
+| — | `POST /api/storage/uploads/request-url` | ⏳ B6 pending |
+| — | `GET /api/storage/public-objects/*filePath` | ⏳ B6 pending |
+| — | `GET /api/storage/objects/*path` | ⏳ B6 pending |
 
 🔒 = requires `access_token` cookie
