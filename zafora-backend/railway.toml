@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "./node_modules/.bin/tsc"
+buildCommand = "./node_modules/.bin/tsc && ./node_modules/.bin/tsc-alias"
 
 [deploy]
 startCommand = "npm run start"
