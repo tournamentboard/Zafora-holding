@@ -29,6 +29,8 @@ export function useUpdateSiteSettings() {
       apiAxios.patch<SiteSettingResponse>(API.CONTENT.SETTINGS(key), { value: data.value }).then((r) => r.data),
     onSuccess: (_res, vars) => {
       qc.invalidateQueries({ queryKey: siteSettingsKeys.single(vars.key) });
+      // also bust the public cache used by useSiteSetting in public pages
+      qc.invalidateQueries({ queryKey: ["content", "settings", vars.key] });
     },
   });
 }

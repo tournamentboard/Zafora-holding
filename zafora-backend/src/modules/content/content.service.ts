@@ -208,6 +208,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
     keywords: "infrastructure advisory, project finance, PPP, Africa infrastructure, DFI funding",
     ogTitle: "Zafora Holding",
     ogDescription: "Strategic infrastructure advisory and development firm.",
+    ogImage: "",
   },
   seo_about: {
     title: "About Us — Zafora Holding",
@@ -215,6 +216,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
     keywords: "Zafora Holding, about, infrastructure firm, Tampa Florida",
     ogTitle: "About Zafora Holding",
     ogDescription: "U.S.-based infrastructure advisory firm bridging global capital with African projects.",
+    ogImage: "",
   },
   seo_services: {
     title: "Services — Zafora Holding",
@@ -222,6 +224,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
     keywords: "infrastructure services, government advisory, project finance, PPP, ESG compliance",
     ogTitle: "Infrastructure Advisory Services — Zafora Holding",
     ogDescription: "Six specialized practices covering the full infrastructure project lifecycle.",
+    ogImage: "",
   },
   seo_projects: {
     title: "Project Pipeline — Zafora Holding",
@@ -229,6 +232,7 @@ const SETTING_DEFAULTS: Record<string, object> = {
     keywords: "infrastructure projects, Africa pipeline, investment opportunities, project finance",
     ogTitle: "Project Pipeline — Zafora Holding",
     ogDescription: "High-impact infrastructure projects across Africa seeking capital and delivery partners.",
+    ogImage: "",
   },
   seo_government: {
     title: "Government Review Center — Zafora Holding",
@@ -236,6 +240,33 @@ const SETTING_DEFAULTS: Record<string, object> = {
     keywords: "government infrastructure, PPP, sovereign advisory, Africa DFI, national projects",
     ogTitle: "Government Review Center — Zafora Holding",
     ogDescription: "Partnering with governments to structure and deliver bankable national infrastructure.",
+    ogImage: "",
+  },
+  seo_submit: {
+    title: "Submit a Project — Zafora Holding",
+    description: "Submit your African infrastructure project for Zafora Holding's advisory review. Governments, investors, and developers welcome.",
+    keywords: "submit project, infrastructure inquiry, Zafora advisory, project finance request",
+    ogTitle: "Submit a Project — Zafora Holding",
+    ogDescription: "Initiate a confidential dialogue with Zafora's senior advisory team.",
+    ogImage: "",
+  },
+  site_images: {
+    home: {
+      heroPanel: "",
+      band1: "",
+      band2: "",
+      band3: "",
+      pillar1: "",
+      pillar2: "",
+      pillar3: "",
+    },
+    about: {
+      hero: "",
+      story: "",
+    },
+    government: {
+      hero: "",
+    },
   },
   services_page: {
     hero: {

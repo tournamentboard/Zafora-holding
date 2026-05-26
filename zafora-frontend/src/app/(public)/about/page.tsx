@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
+import { useSiteSetting, useSectionVisibility, isSectionVisible } from "@/src/modules/public/home/services/home.service";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
   Landmark, Zap, Droplets, Truck, Stethoscope, ArrowRight,
@@ -134,6 +134,7 @@ function deepMerge(base: any, override: any): any {
 export default function About() {
   const { data: seoData } = useSiteSetting("seo_about");
   usePageTitle("About Us", parseSeoSettings(seoData));
+  const visibility = useSectionVisibility("about");
   const { data: settingsData } = useSiteSetting("about");
 
   let d = DEFAULTS;
@@ -153,7 +154,7 @@ export default function About() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="bg-[#173f35] pt-20 pb-14 relative overflow-hidden">
+      <section className="bg-[#173f35] pt-20 pb-14 relative overflow-hidden" hidden={!isSectionVisible(visibility, "hero")}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
@@ -257,7 +258,7 @@ export default function About() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-14" style={{ background: "#f7f4ef" }}>
+      <section className="py-14" style={{ background: "#f7f4ef" }} hidden={!isSectionVisible(visibility, "mvp")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
@@ -280,7 +281,7 @@ export default function About() {
       </section>
 
       {/* Core Values */}
-      <section className="py-14 bg-white">
+      <section className="py-14 bg-white" hidden={!isSectionVisible(visibility, "values")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
@@ -305,7 +306,7 @@ export default function About() {
       </section>
 
       {/* Leadership Team */}
-      <section className="py-14" style={{ background: "#f7f4ef" }}>
+      <section className="py-14" style={{ background: "#f7f4ef" }} hidden={!isSectionVisible(visibility, "team")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
@@ -381,7 +382,7 @@ export default function About() {
       </section>
 
       {/* Timeline / Milestones */}
-      <section className="py-14 bg-white">
+      <section className="py-14 bg-white" hidden={!isSectionVisible(visibility, "timeline")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fade(0)} className="text-center max-w-2xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-6">
@@ -433,7 +434,7 @@ export default function About() {
       </section>
 
       {/* CTA Banner */}
-      <section className="py-14 bg-[#173f35]">
+      <section className="py-14 bg-[#173f35]" hidden={!isSectionVisible(visibility, "cta")}>
         <div className="container mx-auto px-4 md:px-8 text-center">
           <motion.div {...fade(0)}>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-5">{d.cta.headline}</h2>

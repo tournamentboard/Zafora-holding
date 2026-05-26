@@ -38,7 +38,7 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
 
       try {
         const { data } = await apiAxios.post<PresignResponse>(API.STORAGE.PRESIGN, {
-          name: file.name,
+          fileName: file.name,
           size: file.size,
           contentType: file.type,
         });

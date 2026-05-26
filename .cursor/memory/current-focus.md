@@ -6,8 +6,8 @@ _Last updated: 2026-05-26_
 
 ## Active Phase
 
-**P0/P1/P2 Implementation (2026-05-26) — COMPLETED ✅**  
-All items from the Replit re-audit priority list implemented.
+**Frontend/Backend Sync Audit Fixes (2026-05-26) — COMPLETED ✅**  
+All 10 P1 sync issues fixed. No P0 issues existed.
 
 **Next priority: P3 — SEO + security hardening**
 
@@ -70,6 +70,26 @@ Key gaps identified this round:
 
 ---
 
+## Last Edited Files (2026-05-26 — Sync Audit Fixes)
+
+- `zafora-frontend/src/proxy.ts` (renamed function to `proxy`, kept `next/server` types — correct for Next.js 16.2.6)
+- `zafora-frontend/src/modules/admin/content/components/BrandingManager.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/AboutEditor.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/TeamManager.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/ImagesEditor.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/SiteSettingsManager.tsx` (fixed invalidation keys x2)
+- `zafora-frontend/src/modules/admin/content/components/NavigationManager.tsx` (added invalidateQueries on save)
+- `zafora-frontend/src/modules/admin/content/services/site-settings.service.ts` (bust both admin+public caches on save)
+- `zafora-frontend/src/modules/public/home/services/home.service.ts` (added useSectionVisibility + isSectionVisible)
+- `zafora-frontend/src/app/(public)/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/about/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/services/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/projects/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/government/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/submit/page.tsx` (wired section visibility)
+- `zafora-backend/src/modules/content/content.service.ts` (added seo_submit, site_images, ogImage to SETTING_DEFAULTS)
+- `zafora-frontend/src/modules/admin/settings/components/SettingsPanel.tsx` (clearTokens + redirect after password change)
+
 ## Last Edited Files (2026-05-26 — P0/P1/P2 Implementation)
 
 - `zafora-frontend/src/modules/admin/shared/components/AdminMobileNav.tsx` (new — mobile scrollable pill nav)
@@ -126,6 +146,8 @@ Key gaps identified this round:
 **P0 — Mobile regressions** ✅ DONE
 **P1 — Public Navbar + Image upload pipeline** ✅ DONE
 **P2 — Complete settings + section visibility** ✅ DONE
+
+**R9 — Full QA Audit (2026-05-26)** ✅ COMPLETE — 5 fixes applied  
 
 **P3 — SEO + verification**
 9. **F13**: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`.

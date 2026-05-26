@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
-import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
+import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Info, ChevronDown, ChevronRight, Home, Settings2, Shield } from "lucide-react";
 
@@ -151,7 +151,7 @@ export default function ImagesEditor() {
       { key: "site_images", data: { value: JSON.stringify(form) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ["/api/content/settings/site_images"] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single("site_images") });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         },

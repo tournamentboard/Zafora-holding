@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
+import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft, Plus, Loader2, Check, Trash2, Mail,
@@ -128,7 +128,7 @@ export default function TeamManager() {
       { key: "about", data: { value: JSON.stringify(payload) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ["/api/content/settings/about"] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single("about") });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         },

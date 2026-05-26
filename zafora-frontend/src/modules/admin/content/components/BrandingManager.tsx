@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
+import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Palette, AlertCircle, ExternalLink } from "lucide-react";
 import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
@@ -115,7 +115,7 @@ export default function BrandingManager() {
       { key: "branding", data: { value: JSON.stringify(form) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ["/api/content/settings/branding"] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single("branding") });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         },

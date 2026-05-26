@@ -15,9 +15,9 @@ const VISIBILITY_DEFAULTS: VisibilityConfig = {
 
 export async function getSectionVisibility(page: string): Promise<SectionMap> {
   try {
-    const data = await apiClient<{ key: string; value: string }>(
-      API.CONTENT.SETTINGS("section_visibility")
-    );
+    const data = await apiClient<{ key: string; value: string }>({
+      path: API.CONTENT.SETTINGS("section_visibility"),
+    });
     const parsed: VisibilityConfig = data?.value ? JSON.parse(data.value) : {};
     return { ...(VISIBILITY_DEFAULTS[page] ?? {}), ...(parsed[page] ?? {}) };
   } catch {

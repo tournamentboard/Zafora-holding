@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useProjects } from "@/src/modules/public/projects/services/projects.service";
-import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
+import { useSiteSetting, useSectionVisibility, isSectionVisible } from "@/src/modules/public/home/services/home.service";
 import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf } from "lucide-react";
@@ -39,6 +39,7 @@ const getSectorStyle = (sector: string) => {
 export default function Projects() {
   const { data: seoData } = useSiteSetting("seo_projects");
   usePageTitle("Project Pipeline", parseSeoSettings(seoData));
+  const visibility = useSectionVisibility("projects");
   const [sector, setSector] = useState("All");
   const [status, setStatus] = useState("All");
   const [search, setSearch] = useState("");
@@ -82,7 +83,7 @@ export default function Projects() {
   return (
     <div className="flex flex-col pb-24 bg-[#f7f4ef] min-h-screen">
       {/* Header */}
-      <section className="bg-[#173f35] pt-20 pb-14 relative overflow-hidden">
+      <section className="bg-[#173f35] pt-20 pb-14 relative overflow-hidden" hidden={!isSectionVisible(visibility, "hero")}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
@@ -99,7 +100,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 md:px-8 pt-8 pb-20">
+      <section className="container mx-auto px-4 md:px-8 pt-8 pb-20" hidden={!isSectionVisible(visibility, "grid")}>
         <div className="bg-white rounded-[36px] p-6 md:p-10 border border-[#e5ded3] shadow-sm">
           
           {/* Filters */}

@@ -50,9 +50,9 @@ export default function Navbar() {
          className="h-[120px] w-auto overflow-hidden"
          >
           {branding.logoUrl ? (
-            <img src={branding.logoUrl} alt={branding.siteName} className="h-[160px] w-auto object-contain" />
+            <img src={branding.logoUrl} alt={branding.siteName} className="h-[160px] w-auto object-contain" loading="eager" />
           ) : (
-            <Image src={logo} alt={branding.siteName} className="h-[160px] w-auto object-contain" />
+            <Image src={logo} alt={branding.siteName} className="h-[160px] w-auto object-contain" priority />
           )}
          </div>
           {branding.tagline && (
