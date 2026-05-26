@@ -1,7 +1,15 @@
 import { useState, useCallback } from "react";
+import { apiAxios } from "@/src/lib/api-helpers";
+import { API } from "@/src/lib/url-helpers";
+
+interface PresignResponse {
+  uploadUrl: string;
+  publicUrl: string;
+  key: string;
+}
 
 interface UploadResult {
-  objectPath: string;
+  key: string;
   publicUrl: string;
 }
 
@@ -29,25 +37,15 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
       setProgress(10);
 
       try {
-        const urlRes = await fetch("/api/storage/uploads/request-url", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: file.name,
-            size: file.size,
-            contentType: file.type,
-          }),
+        const { data } = await apiAxios.post<PresignResponse>(API.STORAGE.PRESIGN, {
+          fileName: file.name,
+          size: file.size,
+          contentType: file.type,
         });
 
-        if (!urlRes.ok) {
-          const d = await urlRes.json().catch(() => ({}));
-          throw new Error(d.error || "Failed to request upload URL");
-        }
-
-        const { uploadURL, objectPath } = await urlRes.json();
         setProgress(40);
 
-        const putRes = await fetch(uploadURL, {
+        const putRes = await fetch(data.uploadUrl, {
           method: "PUT",
           body: file,
           headers: { "Content-Type": file.type },
@@ -56,8 +54,7 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         if (!putRes.ok) throw new Error("Failed to upload file to storage");
         setProgress(100);
 
-        const publicUrl = `/api/storage/objects/${objectPath.replace(/^\//, "")}`;
-        const result: UploadResult = { objectPath, publicUrl };
+        const result: UploadResult = { key: data.key, publicUrl: data.publicUrl };
         options.onSuccess?.(result);
         return result;
       } catch (err) {

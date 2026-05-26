@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
+import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Settings2, Globe, Layout, FileText, Info, Loader2, ExternalLink,
@@ -84,7 +84,7 @@ function useSavableSettings(settingKey: string) {
       { key: settingKey, data: { value: JSON.stringify(overrideForm ?? form) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: [`/api/content/settings/${settingKey}`] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single(settingKey) });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         }
@@ -192,7 +192,7 @@ function SeoEditor() {
       { key: activePage, data: { value: JSON.stringify(form) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: [`/api/content/settings/${activePage}`] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single(activePage) });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         }

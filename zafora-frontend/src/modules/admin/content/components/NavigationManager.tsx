@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { apiAxios } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
+import { siteSettingsKeys } from "../services/site-settings.service";
 import {
   Plus, Trash2, Check, Eye, EyeOff,
   Navigation, Loader2, ExternalLink, X, ChevronUp, ChevronDown
@@ -28,6 +30,7 @@ const DEFAULT_NAV: NavItem[] = [
 const newId = () => Math.random().toString(36).slice(2, 9);
 
 export default function NavigationManager() {
+  const qc = useQueryClient();
   const [items, setItems] = useState<NavItem[]>(DEFAULT_NAV);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -51,6 +54,7 @@ export default function NavigationManager() {
     setSaving(true);
     try {
       await apiAxios.patch(API.CONTENT.SETTINGS("navigation"), { value: JSON.stringify(nav) });
+      qc.invalidateQueries({ queryKey: siteSettingsKeys.single("navigation") });
       toast.success("Navigation saved.");
     } catch {
       toast.error("Failed to save.");

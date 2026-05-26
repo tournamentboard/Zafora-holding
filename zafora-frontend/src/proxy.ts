@@ -7,7 +7,7 @@ import { ROUTES } from "@/src/lib/url-helpers";
  * 2. Maintenance guard: public pages redirect to /maintenance when enabled.
  *    Uses a cached header set by the backend or falls back to a setting fetch.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ── Auth guard ────────────────────────────────────────────────────

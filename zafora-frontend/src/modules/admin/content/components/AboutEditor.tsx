@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
+import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Check, Loader2, Info, ChevronDown, ChevronRight,
@@ -214,7 +214,7 @@ export default function AboutEditor() {
       { key: "about", data: { value: JSON.stringify(form) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ["/api/content/settings/about"] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single("about") });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         },

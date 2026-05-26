@@ -50,7 +50,7 @@ function SetupForm() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
+          <Image src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-6" />
           <div className="inline-flex items-center gap-2 bg-[#173f35]/10 text-[#173f35] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
             <ShieldCheck size={12} /> First-Time Setup
           </div>
@@ -172,7 +172,7 @@ function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
+          <Image src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-[#10231f] mb-1">Reset Password</h1>
           <p className="text-[#65736f] text-sm">Enter the authorized admin email and choose a new password.</p>
         </div>
@@ -300,7 +300,7 @@ function LoginForm({ onForgot }: { onForgot: () => void }) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image src={logo} alt="Zafora Holding" className="h-16 w-auto mx-auto mb-6" />
+          <Image src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-[#10231f] mb-1">Admin Sign In</h1>
           <p className="text-[#65736f] text-sm">Enter your password to access the admin panel</p>
         </div>

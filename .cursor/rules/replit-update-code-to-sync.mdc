@@ -5,7 +5,7 @@ alwaysApply: false
 
 # Replit Update Code — Sync Audit
 
-_Last audited: 2026-05-24_
+_Last audited: **2026-05-26**_ (previous: 2026-05-24)
 
 This file documents **every difference** between the latest Replit code (`artifacts/`, `lib/`, `attached_assets/`) and the current migrated Next.js + Express codebase (`zafora-frontend/`, `zafora-backend/`).
 
@@ -15,558 +15,458 @@ Source locations audited:
 - `lib/db/`, `lib/api-client-react/`, `lib/api-zod/` — Shared Replit packages
 - `attached_assets/` — Client specs and requirements docs
 
+> Status legend: ✅ Done · ⚠️ Partial · ❌ Pending · 🗑️ Deprecated/skip
+
 ---
 
-## 1. DATABASE SCHEMA CHANGES
+## 0. EXECUTIVE SUMMARY (2026-05-26)
 
-### 1.1 NEW Table — `faqs`
+| Area | Status | Note |
+|------|--------|------|
+| `faqs` table + module | ✅ | R1 complete |
+| Auth setup-status / setup / reset-password | ✅ | R7 complete |
+| 5 admin managers (FAQ/Announcement/Maintenance/Legal/SectionVisibility) | ✅ | R4 complete |
+| Privacy / Terms / Maintenance public pages | ✅ | R5 complete |
+| AnnouncementBar wired into `(public)/layout.tsx` | ✅ | R5 complete |
+| Sticky-header removal (FR-HEADER-001) | ✅ | R5 complete |
+| Seed FAQs + new settings keys | ✅ | R8 complete |
+| `api-client-react` removal from all `app/(public)/` pages | ✅ | Audit Round 2 |
+| DB unique constraints + clean seed | ✅ | Audit Round 3 |
+| 6 real projects seeded (no fabricated data) | ✅ | Audit Round 3 |
+| `branding.logoUrl` wired into Navbar + Footer | ✅ | Audit Round 3 |
+| Next.js `images.remotePatterns` | ✅ | v0.3.1 |
+| **Admin mobile tab bar (port `Admin.tsx:619–637`)** | ❌ | **P0 — primary mobile regression** |
+| **`AdminHeader` `ROUTE_META` for FAQ/Announcement/Maintenance/Legal/Section Visibility** | ❌ | **P0** |
+| **Public Navbar mobile layout (`h-40` + tagline restoration)** | ❌ | **P1** |
+| **`PhotoUploadField` + wire into 6 admin managers** | ❌ | **P1 (blocks F11)** |
+| **`use-image-upload.ts` calls wrong storage endpoint** | ❌ | **P1 (presign path mismatch)** |
+| Missing `SETTING_DEFAULTS` keys (services_page / government_page / submit_page / full about) | ⚠️ | **P2** |
+| `lib/site-settings.ts` + `section_visibility` on public RSC | ❌ | P2 |
+| `GET /storage/objects/*` public/private object serve | ❌ | P3 (or use CloudFront direct) |
+| F13 `generateMetadata()`, `sitemap.ts`, `robots.ts` | ❌ | P3 |
+| R9 end-to-end verification | ❌ | After P0–P2 land |
 
-**Source:** `lib/db/src/schema/faqs.ts`  
-**Status:** Missing from `zafora-backend/src/db/schema/`
+---
+
+## 1. DATABASE SCHEMA
+
+### 1.1 `faqs` table ✅
+Migrated to `zafora-backend/src/db/schema/faqs.ts` with `question.unique()` added beyond the Replit spec.
+
+### 1.2 No new columns
+Replit and migrated schemas for shared tables (`leads`, `projects`, `project_interests`, `documents`, `services`, `content_stats`, `methodology_steps`, `site_settings`, `testimonials`, `audit_logs`) are **identical** at the column level.
+
+### 1.3 Migrated-only tables
+`users`, `sessions` — required for JWT auth, not present in Replit (sessions via `express-session`).
+
+### 1.4 Unique constraints ADDED beyond Replit (Audit Round 3)
+| Table | Column | Status |
+|-------|--------|--------|
+| `projects` | `name` | ✅ live on Neon |
+| `services` | `name` | ✅ |
+| `faqs` | `question` | ✅ |
+| `content_stats` | `label` | ✅ |
+| `methodology_steps` | `step_number` | ✅ |
+| `documents` | `title` | ✅ |
+| `site_settings` | `key` | ✅ (pre-existing) |
+| `users` | `email` | ✅ (pre-existing) |
+| `sessions` | `session_id` | ✅ (pre-existing) |
+
+---
+
+## 2. SITE SETTINGS DEFAULTS
+
+### 2.1 Status of each key
+
+**Source:** `artifacts/api-server/src/routes/content.ts` lines 25–282  
+**Target:** `zafora-backend/src/modules/content/content.service.ts` lines 123–259
+
+| Key | Status | Notes |
+|-----|--------|-------|
+| `notifications` | ✅ | Migrated L124–128 |
+| `navigation` | ✅ | Migrated L129–134 (gov link → `/government-review`) |
+| `branding` | ✅ | Full 10-field shape — Audit Round 3 |
+| `hero` | ✅ | Full shape including `panelStatLabel: "Accepting Mandates"` |
+| `footer` | ✅ | `description` (not `tagline`) — Audit Round 3 |
+| `announcement_bar` | ✅ | |
+| `maintenance_mode` | ✅ | |
+| `legal_privacy` | ✅ | |
+| `legal_terms` | ✅ | |
+| `section_visibility` | ✅ in DB | ❌ Not consumed by public pages |
+| `seo_home` | ✅ | |
+| `seo_about` | ⚠️ Partial | Missing `ogTitle`, `ogDescription` |
+| `seo_services` | ⚠️ Partial | Missing OG fields |
+| `seo_projects` | ⚠️ Partial | Missing OG fields |
+| `seo_government` | ✅ | |
+| `seo_submit` | ✅ | |
+| `about` | ⚠️ Partial | Missing `whoWeAre`, full `values[]`, `team[]` placeholders, `timeline[]`, `cta` |
+| `services_page` | ⚠️ Seeded but not in `SETTING_DEFAULTS` map | Replit lines 66–84 |
+| `government_page` | ⚠️ Seeded but not in `SETTING_DEFAULTS` map | Replit lines 85–127 |
+| `submit_page` | ⚠️ Seeded but not in `SETTING_DEFAULTS` map | Replit lines 128–146 |
+
+### 2.2 Action — finish `SETTING_DEFAULTS`
+
+Copy the following Replit blocks into `content.service.ts` `SETTING_DEFAULTS`:
+
+1. **`services_page`** — full hero + stats + cta (Replit `content.ts` L66–84)
+2. **`government_page`** — full hero + stats + capability + cta + sidebar (Replit L85–127)
+3. **`submit_page`** — full hero + sidebar (Replit L128–146)
+4. **`about`** — add `whoWeAre`, `values[]`, empty `team[]`, `timeline[]`, `cta` (Replit L233–280)
+5. **`seo_about` / `seo_services` / `seo_projects`** — add `ogTitle`, `ogDescription` fields (Replit L160–180)
+
+### 2.3 Intentional divergence (do NOT change)
+
+- Migrated `navigation` gov link uses `/government-review` (matches actual route); Replit uses `/government`
+- Migrated `DEFAULT_STATS` uses real Zafora numbers from current `content_stats` table; do not revert to Replit hardcoded fallbacks
+
+---
+
+## 3. BACKEND ROUTES
+
+### 3.1 Endpoint parity — ALL CORE ROUTES MIGRATED ✅
+
+| Replit path | Migrated path | Status |
+|-------------|---------------|--------|
+| `/admin/auth/*` | `/auth/*` | ✅ (path prefix renamed) |
+| `/leads/*` | same | ✅ |
+| `/projects/*` (+ interests) | same | ✅ |
+| `/documents/*` | same | ✅ |
+| `/services/*` | same | ✅ |
+| `/testimonials/*` | same | ✅ |
+| `/content/stats`, `/content/methodology`, `/content/settings/:key`, `/content/faqs` | same | ✅ |
+| `/stats`, `/stats/projects` | same | ✅ |
+| `/audit` | same | ✅ |
+| `/email/status`, `/email/test` | `/notifications/status`, `/notifications/test` | ✅ Renamed |
+| **`POST /storage/uploads/request-url`** | **`POST /storage/presign`** | ⚠️ **Path + body shape differ** |
+| **`GET /storage/public-objects/*filePath`** | — | ❌ **Missing** |
+| **`GET /storage/objects/*path`** | — | ❌ **Missing** |
+
+### 3.2 Storage module — gap detail
+
+**Migrated:** Only `POST /storage/presign` (AWS S3 presigned PUT)
+
+**Missing for full image upload pipeline:**
+
+| Need | Option A | Option B |
+|------|----------|----------|
+| Public read of uploaded image | Add `GET /storage/objects/:key` proxy that streams S3 | Use CloudFront direct URLs + `AWS_S3_CUSTOM_DOMAIN` env |
+| Private/authenticated reads | Same proxy with `requireAuth` | Signed GET URLs |
+
+**Recommended:** Option B — set `AWS_S3_CUSTOM_DOMAIN`, store final public URLs in DB. Avoids streaming through Express. Already provisioned in `.env` (line 27).
+
+### 3.3 Frontend storage hook mismatch
+
+**File:** `zafora-frontend/src/hooks/use-image-upload.ts` line 32
 
 ```ts
-// File to create: zafora-backend/src/db/schema/faqs.ts
-import { pgTable, text, serial, boolean, integer, timestamp } from "drizzle-orm/pg-core";
-
-export const faqsTable = pgTable("faqs", {
-  id: serial("id").primaryKey(),
-  question: text("question").notNull(),
-  answer: text("answer").notNull(),
-  category: text("category").default("general"),
-  page: text("page").default("general"),
-  displayOrder: integer("display_order").default(0),
-  visible: boolean("visible").default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
-});
-
-export type Faq = typeof faqsTable.$inferSelect;
-export type InsertFaq = typeof faqsTable.$inferInsert;
+const urlRes = await fetch("/api/storage/uploads/request-url", { ... });  // ← Replit path
 ```
 
-**Action required:**
-1. Create the file above
-2. Add `export * from "./faqs.js";` to `zafora-backend/src/db/schema/index.ts`
-3. Run `npm run db:generate` then `npm run db:push` in `zafora-backend/`
-
-### 1.2 Existing Tables — NO column changes
-Verified identical between `lib/db/src/schema/*.ts` and `zafora-backend/src/db/schema/*.ts`:
-- `leads`, `projects`, `project_interests`, `documents`, `services`
-- `content_stats`, `methodology_steps`, `site_settings`, `testimonials`, `audit_logs`
+Should be migrated to:
+- Use `apiAxios.post(API.STORAGE.PRESIGN, ...)`
+- Handle new response shape `{ uploadUrl, publicUrl, key }` instead of `{ url }`
+- Return `publicUrl` to caller (replaces "build URL from key" pattern at line 59)
 
 ---
 
-## 2. NEW SITE SETTINGS KEYS
+## 4. FRONTEND ADMIN COMPONENTS
 
-These are NEW JSON-stored keys in the existing `site_settings` table. The backend `content.ts` route returns defaults for missing keys.
+### 4.1 Component parity table
 
-**Source:** `artifacts/api-server/src/routes/content.ts` (lines 25–282)  
-**Action:** Add to `zafora-backend/src/modules/content/content.service.ts` `SETTING_DEFAULTS` map.
+| Replit component | Migrated location | Status | Replit-only delta |
+|------------------|-------------------|--------|-------------------|
+| `AboutEditor.tsx` | `modules/admin/content/components/` | ⚠️ | Replit uses `PhotoUploadField` for team photos (L411) |
+| `AnnouncementManager.tsx` | same | ✅ | |
+| `AuditLogViewer.tsx` | `modules/admin/audit/components/` | ✅ | |
+| `BrandingManager.tsx` | `modules/admin/content/components/` | ⚠️ | Replit uses `PhotoUploadField` for logo/favicon (L159–171) |
+| `ContentStatsManager.tsx` | same | ✅ | |
+| `DashboardHome.tsx` | `modules/admin/dashboard/components/DashboardPage.tsx` | ✅ | Renamed |
+| `DocumentsTable.tsx` | `modules/admin/documents/components/` | ✅ | |
+| `FaqManager.tsx` | `modules/admin/faqs/components/` | ✅ | |
+| `ImagesEditor.tsx` | `modules/admin/content/components/` | ⚠️ | Uses `useImageUpload` but wrong API path |
+| `LeadsTable.tsx` | `modules/admin/leads/components/` | ✅ | Notes field added |
+| `LegalPagesEditor.tsx` | `modules/admin/content/components/` | ✅ | |
+| `MaintenanceManager.tsx` | same | ✅ | |
+| `MethodologyManager.tsx` | same | ✅ | |
+| `NavigationManager.tsx` | same | ✅ | |
+| **`PhotoUploadField.tsx`** | **—** | ❌ | **Reusable upload+preview** |
+| `ProjectsTable.tsx` | `modules/admin/projects/components/` | ⚠️ | Replit `PhotoUploadField` for `imageUrl` |
+| `SectionVisibilityManager.tsx` | `modules/admin/content/components/` | ✅ | Admin only; public not wired |
+| `ServicesManager.tsx` | same | ⚠️ | Replit `PhotoUploadField` |
+| `SettingsPanel.tsx` | `modules/admin/settings/components/` | ✅ | |
+| `SiteSettingsManager.tsx` | `modules/admin/content/components/` | ✅ | |
+| `TeamManager.tsx` | same | ⚠️ | Replit `PhotoUploadField` |
+| `TestimonialsManager.tsx` | same | ⚠️ | Replit `PhotoUploadField` (circle preview) |
 
-### 2.1 `announcement_bar`
-```json
-{
-  "enabled": false,
-  "message": "Welcome to Zafora Holding",
-  "link": "",
-  "linkText": "Learn more",
-  "dismissible": true,
-  "bgColor": "#173f35",
-  "textColor": "#ffffff"
-}
-```
+### 4.2 P0 — Admin mobile tab bar (CRITICAL)
 
-### 2.2 `maintenance_mode`
-```json
-{
-  "enabled": false,
-  "headline": "We'll be back soon.",
-  "message": "We're performing scheduled maintenance. Please check back shortly.",
-  "showContactEmail": true,
-  "estimatedTime": ""
-}
-```
+**Replit source:** `artifacts/zafora/src/pages/admin/Admin.tsx` lines **619–637**
 
-### 2.3 `legal_privacy`
-```json
-{
-  "title": "Privacy Policy",
-  "lastUpdated": "January 2025",
-  "content": "<markdown content>"
-}
-```
-
-### 2.4 `legal_terms`
-```json
-{
-  "title": "Terms of Service",
-  "lastUpdated": "January 2025",
-  "content": "<markdown content>"
-}
-```
-
-### 2.5 `section_visibility`
-Per-page section show/hide toggles:
-```json
-{
-  "home": { "hero": true, "ticker": true, "stats": true, "services": true, "methodology": true, "testimonial": true, "projects": true, "sectors": true, "cta": true },
-  "about": { "hero": true, "stats": true, "story": true, "mvp": true, "values": true, "team": true, "timeline": true, "cta": true },
-  "services": { "hero": true, "stats": true, "cards": true, "cta": true },
-  "projects": { "hero": true, "filter": true, "grid": true },
-  "government": { "hero": true, "stats": true, "capability": true, "framework": true, "cta": true },
-  "submit": { "hero": true, "form": true, "sidebar": true }
-}
-```
-
-### 2.6 EXPANDED Defaults (review and merge)
-- `branding` — adds `siteName`, `tagline`, `logoUrl`, `faviconUrl`, `bgColor`, `footerColor`, `bodyFont`, `headingFont`
-- `hero` — adds `badge`, `primaryBtnText`, `secondaryBtnText`, `thirdBtnText`, `featureBadge1-3`, `panelCaption`, `panelStat`, `panelStatLabel`
-- `services_page`, `government_page`, `submit_page`, `footer`, `seo_*` — large structured defaults (see `content.ts` lines 49–281)
-- `about` — full structured content (identity, whoWeAre, mvp, values[], team[], timeline[], cta)
-
-**Action:** Copy the full `SETTING_DEFAULTS` map from `artifacts/api-server/src/routes/content.ts` into the new `zafora-backend/src/modules/content/content.service.ts` `getOrCreateSetting()` function.
-
----
-
-## 3. BACKEND ROUTE CHANGES (zafora-backend)
-
-### 3.1 NEW FAQ Endpoints
-**Source:** `artifacts/api-server/src/routes/content.ts` (lines 411–450)  
-**Files to create:**
-- `zafora-backend/src/modules/faqs/faqs.routes.ts`
-- `zafora-backend/src/modules/faqs/faqs.service.ts`
-- `zafora-backend/src/modules/faqs/faqs.validator.ts`
-- `zafora-backend/src/modules/faqs/index.ts`
-
-| Method | Route | Auth | Purpose |
-|--------|-------|------|---------|
-| GET | `/api/content/faqs` | public | List all FAQs ordered by displayOrder |
-| POST | `/api/content/faqs` | 🔒 requireAuth | Create FAQ |
-| PATCH | `/api/content/faqs/:id` | 🔒 requireAuth | Update FAQ |
-| DELETE | `/api/content/faqs/:id` | 🔒 requireAuth | Delete FAQ |
-
-**Validator (Zod):**
-```ts
-export const CreateFaqBody = z.object({
-  question: z.string().min(1),
-  answer: z.string().min(1),
-  category: z.string().default("general"),
-  page: z.string().default("general"),
-  displayOrder: z.number().int().default(0),
-  visible: z.boolean().default(true),
-});
-export const UpdateFaqBody = CreateFaqBody.partial();
-```
-
-**Add to:**
-- `zafora-backend/src/shared/url-helpers/route-paths.ts` → `CONTENT.FAQS: "/content/faqs"`, `CONTENT.FAQS_BY_ID: "/content/faqs/:id"`
-- `zafora-backend/src/routes/index.ts` → mount `faqsRouter`
-- `zafora-backend/src/shared/lib/swagger.ts` → document the 4 endpoints + `Faq` schema
-
-### 3.2 NEW Auth Features (port from Replit `adminAuth.ts`)
-**Source:** `artifacts/api-server/src/routes/adminAuth.ts`
-
-> ⚠️ **DO NOT** port the entire file — Replit uses `express-session` + bcrypt-in-site-settings. Our migrated JWT auth in `zafora-backend/src/modules/auth/` is correct. **ONLY port these NEW concepts:**
-
-| Feature | Add to `zafora-backend/src/modules/auth/auth.routes.ts` |
-|---------|--------------------------------------------------------|
-| First-time setup detection | `GET /api/auth/setup-status` → returns `{ required: boolean }` based on whether any `users` row exists |
-| First-time setup | `POST /api/auth/setup` → creates initial admin user, requires `ADMIN_SETUP_EMAIL` env var match |
-| Password reset (locked out) | `POST /api/auth/reset-password` → requires `ADMIN_SETUP_EMAIL` match, no current password needed |
-
-Add env var: `ADMIN_SETUP_EMAIL` in `zafora-backend/.env`.
-
-### 3.3 Storage Routes (defer to F11/B6)
-**Source:** `artifacts/api-server/src/routes/storage.ts`  
-**Status:** B6 pending — already in `memory/pending-tasks.md`. Re-implement with **AWS S3** (not Replit GCS) when F11 starts.
-
-Endpoints to implement:
-- `POST /api/storage/uploads/request-url` — presigned PUT URL
-- `GET /api/storage/public-objects/*filePath` — serve public S3 objects
-- `GET /api/storage/objects/*path` — serve private S3 objects with optional ACL
-
-### 3.4 Existing Routes — NO endpoint changes
-Verified identical endpoints between Replit `api-server` and migrated `zafora-backend`:
-- `/api/leads`, `/api/projects`, `/api/projects/:id/interests`
-- `/api/documents`, `/api/services`, `/api/testimonials`
-- `/api/content/stats`, `/api/content/methodology`, `/api/content/settings/:key`
-- `/api/stats`, `/api/stats/projects`, `/api/audit`, `/api/notifications/*`
-
----
-
-## 4. FRONTEND — NEW ADMIN COMPONENTS
-
-All new components live in `artifacts/zafora/src/components/admin/`.  
-**Target:** `zafora-frontend/src/modules/admin/`  
-**Rewrite rules:**
-- Add `"use client";` at top of every component
-- Replace `useToast()` (legacy) → `import { toast } from "sonner"`
-- Replace `useGetSiteSettings`/`useUpdateSiteSettings` from `@workspace/api-client-react` → import from `@/src/modules/admin/content/services/site-settings.service`
-- Replace raw `fetch("/api/...")` → `apiAxios` + `API.*` constants from `@/src/lib/url-helpers`
-- Replace `@/components/...` → `@/src/components/...` and `@/src/modules/...`
-
-### 4.1 FaqManager — NEW
-**Source:** `artifacts/zafora/src/components/admin/FaqManager.tsx` (245 lines)  
-**Target:** `zafora-frontend/src/modules/admin/faqs/components/FaqManager.tsx`  
-**Module structure:**
-```
-modules/admin/faqs/
-  ├── index.ts
-  ├── components/FaqManager.tsx
-  └── services/faqs.service.ts   ← TanStack Query hooks: useFaqs, useCreateFaq, useUpdateFaq, useDeleteFaq
-```
-**Features:**
-- List + filter by `page` (general/home/about/services/projects/government/submit)
-- Add/edit/delete with confirm-twice delete pattern
-- Toggle visibility from list view
-- Display order field
-- Category filter (general/services/pipeline/government/investment/process)
-
-### 4.2 AnnouncementManager — NEW
-**Source:** `artifacts/zafora/src/components/admin/AnnouncementManager.tsx` (210 lines)  
-**Target:** `zafora-frontend/src/modules/admin/content/components/AnnouncementManager.tsx`  
-**Uses:** `useGetSiteSettings("announcement_bar")` + `useUpdateSiteSettings()`  
-**Features:**
-- Live preview at top
-- Color picker (bg + text) with hex input
-- Link URL + link text fields
-- Dismissible toggle
-- Enabled toggle (live on site / hidden)
-- Quick presets: Forest Green, Gold, Dark, Cream
-
-### 4.3 MaintenanceManager — NEW
-**Source:** `artifacts/zafora/src/components/admin/MaintenanceManager.tsx` (160 lines)  
-**Target:** `zafora-frontend/src/modules/admin/content/components/MaintenanceManager.tsx`  
-**Uses:** `useGetSiteSettings("maintenance_mode")` + `useUpdateSiteSettings()`  
-**Features:**
-- Headline + message textarea
-- Estimated return time field
-- Show contact email toggle
-- Maintenance active toggle (red warning banner when active)
-
-### 4.4 LegalPagesEditor — NEW
-**Source:** `artifacts/zafora/src/components/admin/LegalPagesEditor.tsx` (206 lines)  
-**Target:** `zafora-frontend/src/modules/admin/content/components/LegalPagesEditor.tsx`  
-**Uses:** `useGetSiteSettings("legal_privacy")` + `useGetSiteSettings("legal_terms")`  
-**Features:**
-- Tabbed UI: Privacy Policy | Terms of Service
-- Title + lastUpdated + markdown content (textarea with monospace font)
-- Note: page accessible at `/privacy` and `/terms` after save
-
-### 4.5 SectionVisibilityManager — NEW
-**Source:** `artifacts/zafora/src/components/admin/SectionVisibilityManager.tsx` (219 lines)  
-**Target:** `zafora-frontend/src/modules/admin/content/components/SectionVisibilityManager.tsx`  
-**Uses:** `useGetSiteSettings("section_visibility")`  
-**Features:**
-- Page tabs (Home/About/Services/Projects/Government/Submit) with hidden count badge
-- Per-section toggle with eye icon
-- Section descriptions explaining what each section is
-- See PAGES_CONFIG constant in source for the full sections list per page
-
-### 4.6 PhotoUploadField — NEW (depends on F11/B6)
-**Source:** `artifacts/zafora/src/components/admin/PhotoUploadField.tsx`  
-**Target:** `zafora-frontend/src/modules/admin/shared/components/PhotoUploadField.tsx`  
-**Uses:** `useImageUpload` hook (to be created in F11 → `hooks/use-s3-upload.ts`)  
-**Features:**
-- URL input + Upload button
-- Live preview (square or circle)
-- Error display
-- Used by SiteSettingsManager, BrandingManager, TeamManager, etc.
-
----
-
-## 5. FRONTEND — NEW PUBLIC PAGES
-
-### 5.1 `/privacy` page
-**Source:** `artifacts/zafora/src/pages/Privacy.tsx` (94 lines)  
-**Target:** `zafora-frontend/src/app/(public)/privacy/page.tsx`  
-**Convert to RSC** — fetch via `apiClient` in the page component, not `useGetSiteSettings`:
 ```tsx
-import { apiClient } from "@/src/lib/api-helpers";
-import { API } from "@/src/lib/url-helpers";
-
-export async function generateMetadata() {
-  return { title: "Privacy Policy — Zafora Holding" };
-}
-
-export default async function PrivacyPage() {
-  const setting = await apiClient.get(API.CONTENT.SETTINGS("legal_privacy"));
-  const page = JSON.parse(setting.value || "{}");
-  return <LegalPageView icon="Shield" {...page} />;
-}
+{/* Mobile tab bar */}
+<div className="md:hidden flex overflow-x-auto bg-white border-b border-[#e5ded3] px-2 py-2 gap-1.5 shrink-0">
+  {ALL_TABS.map(tab => { ... <button ...>{tab.label}</button> })}
+</div>
 ```
-**Component:** Create `modules/public/legal/components/LegalPageView.tsx` for shared rendering (used by Privacy + Terms).
 
-### 5.2 `/terms` page
-**Source:** `artifacts/zafora/src/pages/Terms.tsx` (95 lines)  
-**Target:** `zafora-frontend/src/app/(public)/terms/page.tsx`  
-**Same pattern as Privacy** — use shared `LegalPageView` component.
+**Migrated target:** Create `zafora-frontend/src/modules/admin/shared/components/AdminMobileNav.tsx` and render in `AdminShell.tsx` between header and content.
 
-### 5.3 Maintenance Mode UI
-**Source:** `artifacts/zafora/src/pages/Maintenance.tsx`  
-**Target:** Two implementations needed:
+**Requirements:**
+- Horizontally scrollable pill nav (`overflow-x-auto`)
+- Pulls items from same source as `AdminSidebar.tsx` nav groups (Dashboard, Inquiries, Projects, Documents, Content sub-items, Audit, Settings, FAQ, Announcement, Section Visibility, Maintenance, Legal)
+- Active state matches `pathname`
+- `md:hidden` only — sidebar handles desktop
 
-**A. Standalone page** — `zafora-frontend/src/app/maintenance/page.tsx`  
-   Renders the maintenance screen. Reads `maintenance_mode` setting.
+### 4.3 P0 — Extend `AdminHeader` ROUTE_META
 
-**B. Middleware check** — Update `zafora-frontend/src/middleware.ts`:
+**File:** `zafora-frontend/src/modules/admin/shared/components/AdminHeader.tsx` lines 9–17
+
+**Current entries:** only 7 routes (dashboard, leads, projects, documents, content, audit, settings)
+
+**Missing entries (add these):**
 ```ts
-// Inside middleware()
-// Fetch maintenance_mode setting and redirect public routes (not /admin/*) if enabled
-// Recommended: use Next.js cache + revalidate(60) to avoid hitting backend on every request
+"/admin/faq":                { title: "FAQs",            subtitle: "..." },
+"/admin/announcement":       { title: "Announcement Bar", subtitle: "..." },
+"/admin/section-visibility": { title: "Section Visibility", subtitle: "..." },
+"/admin/maintenance":        { title: "Maintenance Mode", subtitle: "..." },
+"/admin/legal":              { title: "Legal Pages",      subtitle: "..." },
 ```
 
-### 5.4 Files NOT to port from Replit pages
-| File | Why skip |
-|------|----------|
-| `artifacts/zafora/src/pages/Home.tsx` | Already migrated to `app/(public)/page.tsx` |
-| `artifacts/zafora/src/pages/About.tsx` | Already migrated |
-| `artifacts/zafora/src/pages/Services.tsx` | Already migrated |
-| `artifacts/zafora/src/pages/Projects.tsx` | Already migrated |
-| `artifacts/zafora/src/pages/Submit.tsx` | Already migrated |
-| `artifacts/zafora/src/pages/Government.tsx` | Already migrated |
-| `artifacts/zafora/src/pages/admin/Admin.tsx` | Already split into modular admin routes (F8) |
+### 4.4 P1 — `PhotoUploadField` migration
+
+**Source:** `artifacts/zafora/src/components/admin/PhotoUploadField.tsx`  
+**Target:** `zafora-frontend/src/modules/admin/shared/components/PhotoUploadField.tsx`
+
+**Features to port:**
+- Two-mode input: paste URL OR upload via `useImageUpload`
+- Live preview (square / circle prop)
+- Error display
+- Loading state during upload
+
+**Wire into (6 places):**
+- `BrandingManager.tsx` — logo, favicon
+- `TeamManager.tsx` — team member photos
+- `AboutEditor.tsx` — team member photos in About tab
+- `ServicesManager.tsx` — service `imageUrl`
+- `ProjectsTable.tsx` — project `imageUrl`
+- `TestimonialsManager.tsx` — testimonial `photoUrl` (circular)
+
+**Blocks on:** F11 (`use-s3-upload`) + storage endpoint fix (§3.3)
 
 ---
 
-## 6. FRONTEND — PUBLIC LAYOUT CHANGES
+## 5. FRONTEND PUBLIC COMPONENTS
 
-### 6.1 Add AnnouncementBar Component
-**Target:** `zafora-frontend/src/components/common/AnnouncementBar.tsx` (server component)  
-**Location in layout:** Top of `zafora-frontend/src/app/(public)/layout.tsx`, ABOVE the Navbar.  
-**Logic:**
-- Fetch `announcement_bar` setting via `apiClient`
-- If `enabled === false` → render nothing
-- Render bar with bgColor/textColor/message/link/dismissible (use `localStorage` for dismiss state in `"use client"` child)
+### 5.1 Component parity
 
-### 6.2 Section Visibility Hook
-**Target:** `zafora-frontend/src/lib/site-settings.ts` (server helper)  
+| Replit | Migrated | Status |
+|--------|----------|--------|
+| `components/AnnouncementBar.tsx` | `components/common/AnnouncementBar.tsx` | ⚠️ Missing Megaphone icon + message-keyed sessionStorage |
+| `components/layout/Navbar.tsx` | `components/common/Navbar.tsx` | ⚠️ Height regression (h-40 → h-20), tagline removed |
+| `components/layout/Layout.tsx` | `components/layout/GlobalLayout.tsx` + `PublicShell.tsx` | ✅ Plus `branding.logoUrl` wiring |
+| `components/ScrollToTop.tsx` | `components/ScrollToTop.tsx` | ✅ |
+| `pages/ExpressInterestModal.tsx` | `modules/public/modals/ExpressInterestModal.tsx` | ✅ |
+| All public `pages/*.tsx` | `app/(public)/*/page.tsx` | ✅ |
+
+### 5.2 P1 — Restore Replit Navbar mobile layout
+
+**Replit `Navbar.tsx`:**
+- Header height: `h-40` (mobile + desktop) — taller, branded feel
+- Tagline rendered from `branding.tagline` below logo
+- Mobile drawer positioned `absolute top-40` (matches header height)
+
+**Migrated `Navbar.tsx`:**
+- Header height: `h-20` — compact
+- No tagline rendered (parsed but unused)
+- Mobile drawer flows in document (not `absolute`)
+
+**Action:** Decide if compact `h-20` is intentional. If client expects the Replit look:
+- Increase header to `h-32` or `h-40`
+- Add tagline display under logo on mobile + desktop
+- Reposition mobile drawer accordingly
+
+### 5.3 P2 — AnnouncementBar polish
+
+Add Megaphone icon (`lucide-react`) and key dismiss `sessionStorage` by message content so a new message re-appears after the admin edits it.
+
+---
+
+## 6. PUBLIC LAYOUT / SECTION VISIBILITY
+
+### 6.1 AnnouncementBar wiring ✅
+Wired in `app/(public)/layout.tsx` lines 26–27 via server-fetched setting.
+
+### 6.2 `lib/site-settings.ts` server helper — ❌ NOT CREATED
+
+**Target:** `zafora-frontend/src/lib/site-settings.ts`
+
 ```ts
 import { apiClient } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
 
 export async function getSectionVisibility(): Promise<Record<string, Record<string, boolean>>> {
-  const setting = await apiClient.get(API.CONTENT.SETTINGS("section_visibility"));
-  try { return JSON.parse(setting.value); } catch { return {}; }
-}
-```
-**Usage in public pages:**
-```tsx
-const visibility = await getSectionVisibility();
-{visibility.home?.hero !== false && <HeroSection />}
-{visibility.home?.stats !== false && <StatsSection />}
-```
-
-### 6.3 Remove Sticky Header (spec FR-HEADER-001)
-**Source:** `attached_assets/Pasted-Requirement-Remove-Sticky-Fixed-Header-Behavior-Objecti_1779514498570.txt`  
-**Target:** `zafora-frontend/src/components/common/Navbar.tsx` (or wherever the header lives)  
-**Action:**
-- Remove `sticky`, `fixed`, `top-0` Tailwind classes
-- Remove `z-50` / `z-40` if used only for sticky positioning
-- Replace with `relative` or no position class
-- Verify mobile, tablet, desktop all scroll naturally
-
----
-
-## 7. UPDATE EXISTING ADMIN COMPONENTS
-
-The migrated admin components already exist. These are **enhancements** spotted in the Replit version that should be ported:
-
-### 7.1 AdminSidebar — Add new nav groups
-**Source:** `artifacts/zafora/src/pages/admin/Admin.tsx` (lines 39–89)  
-**Target:** `zafora-frontend/src/modules/admin/shared/components/AdminSidebar.tsx`
-
-Add the **Site Control** group:
-```ts
-{
-  group: "Site Control",
-  items: [
-    { id: "announcement", label: "Announcement Bar", icon: Megaphone, desc: "Sitewide banner message", href: ROUTES.ADMIN.ANNOUNCEMENT },
-    { id: "section_visibility", label: "Section Visibility", icon: Layout, desc: "Show/hide page sections", href: ROUTES.ADMIN.SECTION_VISIBILITY },
-    { id: "maintenance", label: "Maintenance Mode", icon: ShieldAlert, desc: "Lock site for maintenance", href: ROUTES.ADMIN.MAINTENANCE },
-  ],
+  try {
+    const setting = await apiClient.get(API.CONTENT.SETTINGS("section_visibility"));
+    return JSON.parse(setting.value || "{}");
+  } catch { return {}; }
 }
 ```
 
-Add **Content** group items:
-- `faq` → "FAQs" → `ROUTES.ADMIN.FAQ`
-- `legal` → "Legal Pages" → `ROUTES.ADMIN.LEGAL`
+**Wire into all public RSC pages** — gate each section by `visibility[page]?.[section] !== false`.
 
-### 7.2 Update ROUTES constants
-**Target:** `zafora-frontend/src/lib/url-helpers/routes.ts`
-```ts
-ADMIN: {
-  ...existing,
-  FAQ: "/admin/faq",
-  ANNOUNCEMENT: "/admin/announcement",
-  SECTION_VISIBILITY: "/admin/section-visibility",
-  MAINTENANCE: "/admin/maintenance",
-  LEGAL: "/admin/legal",
-}
-```
-
-### 7.3 Update API constants
-**Target:** `zafora-frontend/src/lib/url-helpers/api-endpoints.ts`
-```ts
-CONTENT: {
-  ...existing,
-  FAQS: `${API_PREFIX}/content/faqs`,
-  FAQS_BY_ID: (id: number | string) => `${API_PREFIX}/content/faqs/${id}`,
-}
-```
-
-### 7.4 New Admin Route Pages
-Create thin Next.js page files:
-- `app/(admin)/admin/faq/page.tsx` → renders `<FaqManager />`
-- `app/(admin)/admin/announcement/page.tsx` → renders `<AnnouncementManager />`
-- `app/(admin)/admin/section-visibility/page.tsx` → renders `<SectionVisibilityManager />`
-- `app/(admin)/admin/maintenance/page.tsx` → renders `<MaintenanceManager />`
-- `app/(admin)/admin/legal/page.tsx` → renders `<LegalPagesEditor />`
+### 6.3 Sticky-header removal ✅
+Both Replit and migrated use `relative` nav. FR-HEADER-001 satisfied.
 
 ---
 
-## 8. SEED DATA UPDATES
+## 7. ADMIN ROUTES + SIDEBAR
 
-**Target:** `zafora-backend/scripts/seed.ts`  
-**Action:** Add seed entries for new tables and settings keys.
+### 7.1 ROUTES constants ✅
+`zafora-frontend/src/lib/url-helpers/routes.ts` has all 5 new admin routes (`FAQ`, `ANNOUNCEMENT`, `SECTION_VISIBILITY`, `MAINTENANCE`, `LEGAL`).
 
-### 8.1 Seed FAQs (NEW)
-```ts
-await db.insert(faqsTable).values([
-  { question: "What services does Zafora Holding offer?", answer: "Full-spectrum infrastructure advisory — project finance, PPP structuring, government advisory, investor origination, ESG due diligence, and green finance.", category: "services", page: "general", displayOrder: 1 },
-  { question: "Which countries do you operate in?", answer: "We are active across 34+ African countries spanning Sub-Saharan and North Africa, with a strong presence in West, East, and Southern Africa.", category: "general", page: "about", displayOrder: 2 },
-  { question: "How do I submit a project for review?", answer: "Use the Submit a Project form. A senior advisor will review your submission within 48 business hours.", category: "process", page: "submit", displayOrder: 3 },
-  { question: "Do you work with governments directly?", answer: "Yes. We support ministries, sovereign wealth funds, and infrastructure agencies on national pipeline strategy, PPP procurement, and DFI engagement.", category: "government", page: "government", displayOrder: 4 },
-  { question: "What are typical project sizes?", answer: "We advise on transactions ranging from $20M for early-stage feasibility through to $500M+ for sovereign-scale infrastructure programmes.", category: "investment", page: "projects", displayOrder: 5 },
-]).onConflictDoNothing();
-```
+### 7.2 API constants ✅
+`api-endpoints.ts` has `CONTENT.FAQS` + `CONTENT.FAQS_BY_ID`.
 
-### 8.2 Update site_settings seed
-Add entries for the new keys (`announcement_bar`, `maintenance_mode`, `legal_privacy`, `legal_terms`, `section_visibility`) with the JSON defaults from §2.
+### 7.3 Sidebar nav groups ✅
+"Site Control" group added with all 5 items. FAQ + Legal added to Content group.
+
+### 7.4 Thin admin route pages ✅
+All 5 `page.tsx` files exist under `app/(admin)/admin/*/`.
 
 ---
 
-## 9. FILES TO IGNORE — DO NOT PORT
+## 8. SEED DATA
 
-These are Replit-only patterns that violate the Next.js App Router architecture:
+### 8.1 Status (post Audit Round 3) ✅
 
-| Pattern | Replit Source | Reason |
-|---------|--------------|--------|
-| `wouter` `<Link>` | Most pages | Use `next/link` |
-| `useSeoMeta()` hook | All pages | Use `generateMetadata()` |
-| `useToast()` | All managers | Use `sonner` `toast.success/error` |
-| `@workspace/api-client-react` | All hooks | Use module services with `apiAxios` |
-| `@workspace/db` | All routes | Frontend imports from `@/src/lib/types`, backend from `@/db/schema` |
-| `@workspace/api-zod` | All routes | Use `lib/validators/` (frontend) and module `validator.ts` (backend) |
-| Vite config (`vite.config.ts`) | Frontend | Not applicable |
-| `index.html` + `main.tsx` | Frontend | Replaced by Next.js App Router |
-| `react-router-dom`/`wouter` | Frontend | Replaced by Next.js routing |
-| `express-session` | Backend `adminAuth.ts` | We use JWT (access + refresh) |
-| `ObjectStorageService` (Replit GCS) | Backend | Replace with AWS S3 in B6 |
-| `useImageUpload` from `@/hooks/use-image-upload` | Frontend | Rewrite as `use-s3-upload.ts` in F11 |
-| Components without `"use client"` directive | All admin | Must add `"use client"` since they have state/handlers |
+| Item | Status |
+|------|--------|
+| Seed fully idempotent (`DELETE` before insert) | ✅ |
+| FAQs (7 entries) | ✅ |
+| Site settings — all keys | ✅ |
+| Services (6) | ✅ |
+| Content stats (6) | ✅ |
+| Methodology steps (6) | ✅ |
+| Projects (6 REAL from client screenshot) | ✅ Rwanda Smart Grid, Mozambique LNG Roads, Lagos-Ibadan Healthcare, Nairobi Water, Sahel Solar Corridor, Lamu Port |
+| Testimonials | ✅ Removed (fabricated) — empty until admin adds real ones |
+| Leads | ✅ Removed (fabricated) |
+| Documents | ✅ Removed (placeholder) |
 
----
-
-## 10. EXECUTION ORDER
-
-When syncing, follow this strict order to avoid breaking things:
-
-### Phase R1 — Schema & Backend Foundation
-1. Create `zafora-backend/src/db/schema/faqs.ts`
-2. Update `zafora-backend/src/db/schema/index.ts`
-3. Run `drizzle-kit generate` + `drizzle-kit push`
-4. Create `zafora-backend/src/modules/faqs/` (routes + service + validator + index)
-5. Update `route-paths.ts` + `routes/index.ts` to mount faqsRouter
-6. Update `swagger.ts` with FAQ schema + 4 endpoints
-
-### Phase R2 — Backend Settings Defaults
-7. Update `content.service.ts` `getOrCreateSetting()` to include all new SETTING_DEFAULTS (announcement_bar, maintenance_mode, legal_privacy, legal_terms, section_visibility, expanded branding/hero/about)
-8. Test endpoints with curl: `GET /api/content/settings/announcement_bar` etc.
-
-### Phase R3 — Frontend Module Setup
-9. Create `modules/admin/faqs/` (service + index)
-10. Update `lib/url-helpers/routes.ts` with new ADMIN routes
-11. Update `lib/url-helpers/api-endpoints.ts` with FAQS endpoints
-12. Update `modules/admin/content/services/site-settings.service.ts` if needed for new keys
-
-### Phase R4 — Frontend Admin Components
-13. Create `FaqManager.tsx` in `modules/admin/faqs/components/`
-14. Create `AnnouncementManager.tsx` in `modules/admin/content/components/`
-15. Create `MaintenanceManager.tsx` in `modules/admin/content/components/`
-16. Create `LegalPagesEditor.tsx` in `modules/admin/content/components/`
-17. Create `SectionVisibilityManager.tsx` in `modules/admin/content/components/`
-18. Update `modules/admin/shared/components/AdminSidebar.tsx` with new nav items
-19. Create thin admin route pages for each new component
-
-### Phase R5 — Frontend Public Pages
-20. Create `LegalPageView` shared component in `modules/public/legal/components/`
-21. Create `app/(public)/privacy/page.tsx` (RSC)
-22. Create `app/(public)/terms/page.tsx` (RSC)
-23. Create `app/maintenance/page.tsx` (standalone)
-24. Update `middleware.ts` to redirect to `/maintenance` when enabled
-25. Create `AnnouncementBar` server component and wire into `(public)/layout.tsx`
-26. Remove sticky header behavior from Navbar (FR-HEADER-001)
-
-### Phase R6 — Photo Upload Integration (depends on F11/B6)
-27. Defer until F11 (S3 upload pipeline) and B6 (S3 backend) are complete
-28. Create `PhotoUploadField` in `modules/admin/shared/components/`
-29. Wire into SiteSettingsManager, BrandingManager, TeamManager where image URLs are entered
-
-### Phase R7 — Auth Enhancements
-30. Add `GET /api/auth/setup-status` to `zafora-backend/src/modules/auth/auth.routes.ts`
-31. Add `POST /api/auth/setup` (first-time setup) — requires `ADMIN_SETUP_EMAIL` env
-32. Add `POST /api/auth/reset-password` (emergency reset) — requires `ADMIN_SETUP_EMAIL` env
-33. Add `ADMIN_SETUP_EMAIL` to `zafora-backend/.env.example`
-34. Update frontend login page to handle `setupRequired` response → show setup form
-
-### Phase R8 — Seed Data
-35. Update `zafora-backend/scripts/seed.ts` with FAQ entries + new site_settings defaults
-36. Run `npx tsx scripts/seed.ts`
-
-### Phase R9 — Verification
-37. Visit `/admin/faq` → CRUD a FAQ
-38. Visit `/admin/announcement` → toggle on, verify banner appears on public site
-39. Visit `/admin/maintenance` → toggle on, verify `/` redirects to `/maintenance`
-40. Visit `/privacy` and `/terms` → verify content from settings renders
-41. Visit `/admin/section-visibility` → toggle a section off, verify it disappears from public site
-42. Visit `/admin/legal` → edit Privacy/Terms, verify changes appear at `/privacy` and `/terms`
-43. Verify Swagger UI lists all new FAQ endpoints
+### 8.2 Remaining
+None — seed is production-ready.
 
 ---
 
-## 11. SUMMARY TABLE
+## 9. FILES TO IGNORE — DO NOT PORT 🗑️
 
-| Area | New Items | Lines of work |
-|------|-----------|---------------|
-| **DB schema** | 1 new table (`faqs`) | ~20 lines |
-| **Backend routes** | 4 new FAQ endpoints + module structure | ~150 lines |
-| **Backend defaults** | 5 new setting keys + expanded existing | ~200 lines (mostly JSON copy) |
-| **Backend auth** | 3 new endpoints (setup-status, setup, reset) | ~120 lines |
-| **Frontend admin** | 5 new manager components | ~1100 lines |
-| **Frontend public** | 2 new pages + AnnouncementBar + maintenance check | ~250 lines |
-| **Frontend admin routes** | 5 new `page.tsx` files | ~40 lines (thin pages) |
-| **Frontend constants** | 5 new ROUTES + 2 new API endpoints | ~10 lines |
-| **Sidebar nav** | 5 new menu items + 1 new group | ~30 lines |
-| **Seed data** | FAQs + site_settings keys | ~80 lines |
-| **Layout fixes** | Remove sticky header | ~5 lines |
+| Pattern | Reason |
+|---------|--------|
+| `wouter` `<Link>` | Use `next/link` |
+| `useSeoMeta()` / `usePageTitle()` | Use `generateMetadata()` (F13) |
+| `useToast()` | Use `sonner` |
+| `@workspace/api-client-react` | Use module services + `apiAxios` |
+| `@workspace/db`, `@workspace/api-zod` | Use local schema + validators |
+| Vite config, `index.html`, `main.tsx` | Replaced by Next.js |
+| `react-router-dom` / `wouter` | Use App Router |
+| `express-session` | JWT |
+| `ObjectStorageService` (Replit GCS) | AWS S3 in B6 |
+| `useImageUpload` calling `/api/storage/uploads/request-url` | Rewrite for `/storage/presign` |
+| Components without `"use client"` | Add directive |
+| `Pasted-ProjectControls-OS-Pricing...txt` (attached_assets, NEW 2026-05-26) | **UNRELATED** — ProjectControls OS pricing spec, not Zafora |
 
-**Total estimated:** ~2000 lines of new code + JSON config + UI tabs.
+---
+
+## 10. EXECUTION ORDER (UPDATED 2026-05-26)
+
+### ✅ DONE
+- R1: faqs schema + module + endpoints
+- R2: backend SETTING_DEFAULTS (partial — see §2)
+- R3: frontend admin module setup
+- R4: 5 admin manager components
+- R5: Privacy, Terms, Maintenance + layout wiring + sticky removal
+- R7: auth setup-status / setup / reset-password
+- R8: seed updates
+- Audit Round 1: 6 client requirement bug fixes
+- Audit Round 2: full `api-client-react` removal
+- Audit Round 3: DB unique constraints + clean seed + admin-public sync
+
+### ❌ PENDING (priority order)
+
+**P0 — Admin mobile + header coverage (smallest, fastest)**
+1. Create `AdminMobileNav.tsx` (horizontal scroll tab bar) — see §4.2
+2. Extend `AdminHeader.ROUTE_META` with 5 missing entries — see §4.3
+
+**P1 — Public Navbar + Image upload pipeline**
+3. Restore Navbar mobile/desktop layout (h-40 + tagline) — see §5.2
+4. Migrate `PhotoUploadField` + wire into 6 admin managers — see §4.4
+5. Fix `use-image-upload.ts` to call `API.STORAGE.PRESIGN` with new shape — see §3.3
+6. Add `AWS_S3_CUSTOM_DOMAIN` env on Vercel + Railway
+
+**P2 — Complete settings + section visibility**
+7. Add missing `SETTING_DEFAULTS` keys to backend (`services_page`, `government_page`, `submit_page`, full `about`, `seo_*.og*`) — see §2.2
+8. Create `lib/site-settings.ts` + use `getSectionVisibility()` in all public RSC pages — see §6.2
+
+**P3 — SEO + storage serve + verification**
+9. F13: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`
+10. Optional: `GET /storage/objects/*` proxy (skip if using CloudFront direct)
+11. R9 end-to-end verification pass
+
+**Cleanup (after F11/P1):**
+- Delete `zafora-frontend/src/lib/api-client-react/`
+- Delete `zafora-frontend/src/lib/api-zod/`
+- Delete `zafora-frontend/src/lib/api-spec/`
+- Delete `zafora-frontend/src/lib/object-storage-web/`
+- Delete `zafora-frontend/src/lib/db/`
+
+---
+
+## 11. SUMMARY DELTA TABLE (2026-05-26)
+
+| Area | Pending items | Lines of work |
+|------|---------------|---------------|
+| **Admin mobile nav** | 1 new component | ~80 lines |
+| **AdminHeader ROUTE_META** | 5 entries | ~10 lines |
+| **Public Navbar layout** | h-40 + tagline + drawer reposition | ~30 lines |
+| **PhotoUploadField + 6 wirings** | 1 new component + 6 edits | ~250 lines |
+| **use-image-upload fix** | Endpoint + response shape | ~30 lines |
+| **Storage object serve** | Optional proxy or CloudFront env | ~50 lines |
+| **SETTING_DEFAULTS completion** | 4 keys + SEO OG fields | ~150 lines (JSON) |
+| **lib/site-settings.ts + wiring** | 1 helper + 7 page edits | ~80 lines |
+| **F13 SEO** | `generateMetadata` + sitemap + robots | ~120 lines |
+
+**Total estimated remaining:** ~800 lines + JSON.
 
 ---
 
 ## 12. SPEC DOCUMENT REFERENCES
 
-For any feature uncertainty, consult these attached_assets:
+| Spec | File | Date |
+|------|------|------|
+| Full admin panel scope | `Pasted-Below-are-end-to-end-requirements-you-can-give-the-deve_1779511324719.txt` | 2026-05-23 |
+| Sticky header removal (FR-HEADER-001) | `Pasted-Requirement-Remove-Sticky-Fixed-Header-Behavior-Objecti_1779514498570.txt` | 2026-05-23 |
+| Duplicate of sticky-header spec | `Pasted-Requirement-Remove-Sticky-Fixed-Header-Behavior-Objecti_1779514683438.txt` | 2026-05-23 |
+| Landing page CMS (early) | `Pasted-requirements-for-a-Landing-Page-Management-Admin-Tool-s_1778107245185.txt` | 2026-05-06 |
+| Landing page admin tool variant | `Pasted-requirements-for-a-Landing-Page-Management-Admin-Tool-s_1778107194384.txt` | 2026-05-06 |
+| Landing page admin components | `Pasted-Zafora-Landing-Page-Admin-Components-1-Hero-Section-Man_1778126660932.txt` | 2026-05-07 |
+| Original site requirements | `Pasted-requirements-to-build-this-exact-Zafora-Holding-site-as_1778049697987.txt` | 2026-05-05 |
+| HTML mockup | `Pasted--DOCTYPE-html-html-lang-en-head-meta-charset-UTF-8-meta_1778050191511.txt` | 2026-05-05 |
+| Content admin panel | `Pasted-Zafora-Holding-Website-Content-Management-Admin-Panel-R_1778127640373.txt` | 2026-05-07 |
+| About Zafora content | `Pasted-About-Zafora-Holding-Bridging-global-opportunities-thro_1778128061843.txt` | 2026-05-07 |
+| Hero/modern enterprise version | `Pasted-Here-s-a-stronger-more-modern-enterprise-level-version-_1778105582277.txt` | 2026-05-06 |
+| **ProjectControls OS pricing (NEW 2026-05-26)** | `Pasted-ProjectControls-OS-Pricing-Section-Update-Requirements-_1779778613647.txt` | **UNRELATED — different product, skip** |
 
-| Spec | File |
-|------|------|
-| Full admin panel scope | `attached_assets/Pasted-Below-are-end-to-end-requirements-you-can-give-the-deve_1779511324719.txt` |
-| Sticky header removal | `attached_assets/Pasted-Requirement-Remove-Sticky-Fixed-Header-Behavior-Objecti_1779514498570.txt` |
-| Landing page CMS | `attached_assets/Pasted-requirements-for-a-Landing-Page-Management-Admin-Tool-s_1778107245185.txt` |
-| Original site requirements | `attached_assets/Pasted-requirements-to-build-this-exact-Zafora-Holding-site-as_1778049697987.txt` |
-| Content admin panel | `attached_assets/Pasted-Zafora-Holding-Website-Content-Management-Admin-Panel-R_1778127640373.txt` |
-| About Zafora content | `attached_assets/Pasted-About-Zafora-Holding-Bridging-global-opportunities-thro_1778128061843.txt` |
-| Hero/stronger version | `attached_assets/Pasted-Here-s-a-stronger-more-modern-enterprise-level-version-_1778105582277.txt` |
+Screenshots in `attached_assets/*.png` (5 new since 2026-05-23) are visual references for current Replit live site appearance.
 
-Screenshots in `attached_assets/*.png` and `*.jpeg` are visual references for the live Zafora site appearance.
+---
+
+## 13. NEXT.JS IMAGE DOMAINS
+
+**Current `zafora-frontend/next.config.ts` whitelist:**
+- `images.unsplash.com`
+- `images.pexels.com`
+- `**.amazonaws.com` (for S3 uploads)
+- `**.cloudfront.net` (for CDN)
+
+**Audit result:** No image hostnames found in either codebase outside this whitelist. ✅ No changes needed.
+
+If client switches to a different CDN or image host, add the hostname to `remotePatterns`.

@@ -29,34 +29,35 @@ const STATUS_COLORS: Record<string, string> = {
   rejected: "bg-red-100 text-red-600",
 };
 
-const MANAGEMENT_TIPS = [
+type Tip = { icon: React.ElementType; title: string; desc: string };
+const MANAGEMENT_TIPS: Tip[] = [
   {
-    icon: <Bell className="h-5 w-5 text-[#c59b4a]" />,
+    icon: Bell,
     title: "Check Inquiries Weekly",
     desc: "Review new inquiries every Monday. Move each one from 'New' to 'Reviewed' to 'Contacted' to keep your pipeline moving. Reply within 48 hours to maximize conversion.",
   },
   {
-    icon: <FolderOpen className="h-5 w-5 text-[#c59b4a]" />,
+    icon: FolderOpen,
     title: "Keep Projects Current",
     desc: "Update funding status and partner needs regularly. Stale project listings reduce credibility. Archive closed projects rather than deleting them so you maintain a track record.",
   },
   {
-    icon: <FileText className="h-5 w-5 text-[#c59b4a]" />,
+    icon: FileText,
     title: "Upload Your Capability Statement",
     desc: "Add your Capability Statement as the first document and set visibility to 'Public'. This is the most requested document from government agencies and institutional investors.",
   },
   {
-    icon: <TrendingUp className="h-5 w-5 text-[#c59b4a]" />,
+    icon: TrendingUp,
     title: "Grow Your Pipeline Visibility",
     desc: "Projects with multi-sector tags and detailed descriptions attract 3x more interest. Add a project image URL and complete all fields — especially Partner Needs.",
   },
   {
-    icon: <RefreshCw className="h-5 w-5 text-[#c59b4a]" />,
+    icon: RefreshCw,
     title: "Export Leads Monthly",
     desc: "Go to Settings and export your leads to CSV each month. Store copies in Google Drive as a backup, and share with your team for outreach coordination.",
   },
   {
-    icon: <CheckCircle2 className="h-5 w-5 text-[#c59b4a]" />,
+    icon: CheckCircle2,
     title: "Change the Default Password",
     desc: "If you haven't already, go to Settings and change your Admin Password. Use a strong, unique password and never share it over email or text.",
   },
@@ -86,15 +87,15 @@ function timeAgo(date: string) {
   return `${Math.floor(h / 24)}d ago`;
 }
 
-const QUICK_LINKS: { label: string; desc: string; icon: React.ReactNode; tab: string }[] = [
-  { label: "Site Settings", desc: "Hero, about & footer", icon: <Settings2 size={18} />, tab: "site_settings" },
-  { label: "Services", desc: "Edit service cards", icon: <Briefcase size={18} />, tab: "services_mgr" },
-  { label: "Projects", desc: "Manage pipeline", icon: <FolderOpen size={18} />, tab: "projects" },
-  { label: "Inquiries", desc: "CRM & lead status", icon: <Inbox size={18} />, tab: "leads" },
-  { label: "Testimonials", desc: "Client quotes", icon: <Quote size={18} />, tab: "testimonials" },
-  { label: "Branding", desc: "Colors & logo", icon: <Palette size={18} />, tab: "branding" },
-  { label: "Navigation", desc: "Header links", icon: <Navigation size={18} />, tab: "navigation" },
-  { label: "Activity Log", desc: "All admin actions", icon: <Activity size={18} />, tab: "audit_log" },
+const QUICK_LINKS: { label: string; desc: string; icon: React.ElementType; tab: string }[] = [
+  { label: "Site Settings", desc: "Hero, about & footer", icon: Settings2, tab: "site_settings" },
+  { label: "Services", desc: "Edit service cards", icon: Briefcase, tab: "services_mgr" },
+  { label: "Projects", desc: "Manage pipeline", icon: FolderOpen, tab: "projects" },
+  { label: "Inquiries", desc: "CRM & lead status", icon: Inbox, tab: "leads" },
+  { label: "Testimonials", desc: "Client quotes", icon: Quote, tab: "testimonials" },
+  { label: "Branding", desc: "Colors & logo", icon: Palette, tab: "branding" },
+  { label: "Navigation", desc: "Header links", icon: Navigation, tab: "navigation" },
+  { label: "Activity Log", desc: "All admin actions", icon: Activity, tab: "audit_log" },
 ];
 
 interface DashboardHomeProps {
@@ -240,7 +241,7 @@ export default function DashboardHome({ onNavigate }: DashboardHomeProps) {
               className="flex flex-col items-start gap-2 p-4 rounded-xl border border-[#e5ded3] bg-[#f7f4ef] hover:border-[#173f35] hover:bg-white transition-all text-left group"
             >
               <div className="p-2 rounded-lg bg-white text-[#173f35] shadow-sm group-hover:bg-[#173f35] group-hover:text-white transition-colors">
-                {link.icon}
+                <link.icon size={18} />
               </div>
               <div>
                 <div className="font-bold text-[#10231f] text-sm">{link.label}</div>
@@ -366,7 +367,7 @@ export default function DashboardHome({ onNavigate }: DashboardHomeProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {MANAGEMENT_TIPS.map((tip, i) => (
             <div key={i} className="flex gap-3 p-4 rounded-xl bg-[#f7f4ef] hover:bg-[#efe3cf] transition-colors">
-              <div className="bg-white rounded-xl p-2 h-fit shadow-sm shrink-0">{tip.icon}</div>
+              <div className="bg-white rounded-xl p-2 h-fit shadow-sm shrink-0"><tip.icon className="h-5 w-5 text-[#c59b4a]" /></div>
               <div>
                 <div className="font-bold text-[#10231f] text-sm mb-1">{tip.title}</div>
                 <div className="text-xs text-[#65736f] leading-relaxed">{tip.desc}</div>

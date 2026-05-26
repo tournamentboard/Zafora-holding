@@ -6,6 +6,7 @@ import {
 } from "@/src/modules/admin/content";
 import { Plus, Pencil, Trash2, Check, X, Eye, EyeOff, Briefcase, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import type { CatalogService } from "@/src/lib/types";
+import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
 
 const ICON_OPTIONS = ["Briefcase","Landmark","ShieldCheck","TrendingUp","Globe","Award","DollarSign","Users","Building","Zap","Handshake","Target","BarChart2","FileText","Settings","Leaf","Wifi","Truck","Stethoscope"];
 const CATEGORY_OPTIONS = ["Advisory","Finance","Development","Compliance","Operations","Strategy","Other"];
@@ -105,8 +106,12 @@ function ServiceCard({ service, onSave, onDelete }: {
               <textarea className="w-full border border-[#e5ded3] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35] resize-none" rows={3} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-[#10231f] mb-1 uppercase tracking-wide">Image URL</label>
-              <input className="w-full border border-[#e5ded3] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#173f35]" value={form.imageUrl ?? ""} onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value || null }))} placeholder="https://..." />
+              <PhotoUploadField
+                label="SERVICE IMAGE"
+                value={form.imageUrl ?? ""}
+                onChange={(v) => setForm((f) => ({ ...f, imageUrl: v || null }))}
+                placeholder="https://..."
+              />
             </div>
             <div className="md:col-span-2">
               <BulletEditor bullets={form.bullets ?? []} onChange={(bullets) => setForm((f) => ({ ...f, bullets }))} />

@@ -143,10 +143,18 @@ function SetupScreen({ onSetupComplete }: { onSetupComplete: () => void }) {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
+  // If setup is already done on mount, redirect straight to login
+  useEffect(() => {
+    fetch("/api/admin/auth/setup-status")
+      .then(r => r.json())
+      .then(d => { if (!d.required) onSetupComplete(); })
+      .catch(() => {});
+  }, [onSetupComplete]);
+
   const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (newPw.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (newPw.length < 4) { setError("Password must be at least 4 characters."); return; }
     if (newPw !== confirmPw) { setError("Passwords do not match."); return; }
     setSubmitting(true);
     try {
@@ -156,9 +164,17 @@ function SetupScreen({ onSetupComplete }: { onSetupComplete: () => void }) {
         body: JSON.stringify({ adminEmail, newPassword: newPw, confirmPassword: confirmPw }),
       });
       const d = await r.json();
-      if (!r.ok) { setError(d.error || "Setup failed."); return; }
+      if (!r.ok) {
+        // Setup already done — go straight to login
+        if (d.error?.toLowerCase().includes("already complete")) {
+          onSetupComplete();
+          return;
+        }
+        setError(d.error || "Setup failed.");
+        return;
+      }
       setDone(true);
-      setTimeout(onSetupComplete, 2000);
+      setTimeout(onSetupComplete, 1500);
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -209,7 +225,7 @@ function SetupScreen({ onSetupComplete }: { onSetupComplete: () => void }) {
                     type={showPw ? "text" : "password"}
                     value={newPw}
                     onChange={e => { setNewPw(e.target.value); setError(""); }}
-                    placeholder="At least 8 characters"
+                    placeholder="At least 4 characters"
                     className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 pr-10 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]"
                     required
                   />
@@ -248,9 +264,17 @@ function SetupScreen({ onSetupComplete }: { onSetupComplete: () => void }) {
           )}
         </div>
 
-        <p className="text-center text-xs text-[#8a958f] mt-6">
-          Once set, this setup form is permanently disabled. Use Admin Settings to change your password later.
-        </p>
+        <div className="text-center mt-6 space-y-2">
+          <button
+            onClick={onSetupComplete}
+            className="text-sm text-[#173f35] font-semibold hover:underline flex items-center gap-1.5 mx-auto"
+          >
+            <ArrowLeft size={13} /> Already have a password? Go to Sign In
+          </button>
+          <p className="text-xs text-[#8a958f]">
+            Once set, this setup form is permanently disabled. Use Admin Settings to change your password later.
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -269,7 +293,7 @@ function ResetPasswordScreen({ onBack }: { onBack: () => void }) {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (newPw.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (newPw.length < 4) { setError("Password must be at least 4 characters."); return; }
     if (newPw !== confirmPw) { setError("Passwords do not match."); return; }
     setSubmitting(true);
     try {
@@ -325,7 +349,7 @@ function ResetPasswordScreen({ onBack }: { onBack: () => void }) {
                     type={showPw ? "text" : "password"}
                     value={newPw}
                     onChange={e => { setNewPw(e.target.value); setError(""); }}
-                    placeholder="At least 8 characters"
+                    placeholder="At least 4 characters"
                     className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 pr-10 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]"
                     required
                   />

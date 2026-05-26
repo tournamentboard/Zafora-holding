@@ -1,5 +1,5 @@
 "use client"
-import { useServices, useSiteSetting } from "@/src/modules/public/home/services/home.service";
+import { useServices, useSiteSetting, useSectionVisibility, isSectionVisible } from "@/src/modules/public/home/services/home.service";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -71,6 +71,7 @@ const fadeInView = (delay = 0) => ({
 export default function Services() {
   const { data: seoData } = useSiteSetting("seo_services");
   usePageTitle("Services", parseSeoSettings(seoData));
+  const visibility = useSectionVisibility("services");
   const { data, isLoading } = useServices();
   const { data: settingsData } = useSiteSetting("services_page");
   const { data: imagesData } = useSiteSetting("site_images");
@@ -101,7 +102,7 @@ export default function Services() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="relative pt-20 pb-0 overflow-hidden bg-[#f7f4ef]">
+      <section className="relative pt-20 pb-0 overflow-hidden bg-[#f7f4ef]" hidden={!isSectionVisible(visibility, "hero")}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#c59b4a]/8 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#173f35]/6 rounded-full blur-3xl" />
@@ -153,7 +154,7 @@ export default function Services() {
       </section>
 
       {/* Stats strip */}
-      <section className="bg-[#173f35] py-10">
+      <section className="bg-[#173f35] py-10" hidden={!isSectionVisible(visibility, "stats")}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {settings.stats.map((s: any, i: number) => (
@@ -168,7 +169,7 @@ export default function Services() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-14 bg-[#f7f4ef]">
+      <section className="py-14 bg-[#f7f4ef]" hidden={!isSectionVisible(visibility, "cards")}>
         <div className="container mx-auto px-4 md:px-8">
           {isLoading ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -231,7 +232,7 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#173f35] relative overflow-hidden">
+      <section className="py-16 bg-[#173f35] relative overflow-hidden" hidden={!isSectionVisible(visibility, "cta")}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c59b4a]/8 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
