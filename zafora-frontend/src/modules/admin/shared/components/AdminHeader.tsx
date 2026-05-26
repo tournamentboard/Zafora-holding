@@ -1,8 +1,10 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
-import { ROUTES } from "@/src/lib/url-helpers";
+import Link from "next/link";
+import { LogOut, Globe } from "lucide-react";
+import { ROUTES, API } from "@/src/lib/url-helpers";
+import { apiAxios, clearTokens } from "@/src/lib/api-helpers";
 
 const ROUTE_META: Record<string, { label: string; group: string; desc: string }> = {
   [ROUTES.ADMIN.ROOT]:      { label: "Dashboard",    group: "Overview", desc: "Stats & recent activity" },
@@ -25,10 +27,11 @@ export default function AdminHeader() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      await apiAxios.post(API.AUTH.LOGOUT);
     } catch {
-      // ignore
+      // ignore network errors — still clear local tokens
     }
+    clearTokens();
     router.replace(ROUTES.LOGIN);
   };
 
@@ -48,13 +51,22 @@ export default function AdminHeader() {
           <p className="text-[10px] text-[#8a958f] hidden md:block leading-tight">{meta.desc}</p>
         )}
       </div>
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-colors"
-      >
-        <LogOut className="h-4 w-4" />
-        <span className="hidden md:inline text-sm font-medium">Sign Out</span>
-      </button>
+      <div className="flex items-center gap-1">
+        <Link
+          href={ROUTES.HOME}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#65736f] hover:text-[#173f35] hover:bg-[#f7f4ef] transition-colors"
+        >
+          <Globe className="h-4 w-4" />
+          <span className="hidden md:inline text-sm font-medium">View Website</span>
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-colors"
+        >
+          <LogOut className="h-4 w-4" />
+          <span className="hidden md:inline text-sm font-medium">Sign Out</span>
+        </button>
+      </div>
     </header>
   );
 }

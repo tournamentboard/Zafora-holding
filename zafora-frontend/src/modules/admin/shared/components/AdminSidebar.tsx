@@ -10,7 +10,8 @@ import {
   Navigation, Palette, Activity, Users, LogOut, HelpCircle,
   Megaphone, ShieldAlert, Scale, Layout,
 } from "lucide-react";
-import { ROUTES } from "@/src/lib/url-helpers";
+import { ROUTES, API } from "@/src/lib/url-helpers";
+import { apiAxios, clearTokens } from "@/src/lib/api-helpers";
 import logo from "@/src/assets/logo.png";
 
 type NavItem = { label: string; href: string; icon: React.ElementType; desc: string };
@@ -136,10 +137,11 @@ export default function AdminSidebar() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      await apiAxios.post(API.AUTH.LOGOUT);
     } catch {
-      // ignore
+      // ignore network errors — still clear local tokens
     }
+    clearTokens();
     router.replace(ROUTES.LOGIN);
   };
 

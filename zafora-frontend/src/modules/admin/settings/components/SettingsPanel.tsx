@@ -118,7 +118,7 @@ export default function SettingsPanel() {
     e.preventDefault();
     setPwError("");
     setPwSuccess(false);
-    if (newPw.length < 8) { setPwError("New password must be at least 8 characters."); return; }
+    if (newPw.length < 4) { setPwError("New password must be at least 4 characters."); return; }
     if (newPw !== confirmPw) { setPwError("New passwords do not match."); return; }
     try {
       await apiAxios.post(API.AUTH.CHANGE_PASSWORD, { currentPassword: currentPw, newPassword: newPw });
@@ -259,7 +259,7 @@ export default function SettingsPanel() {
           <div>
             <label className="block text-sm font-semibold text-[#10231f] mb-1.5">New Password</label>
             <div className="relative">
-              <input type={showNewPw ? "text" : "password"} value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="At least 8 characters"
+              <input type={showNewPw ? "text" : "password"} value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="At least 4 characters"
                 className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef] pr-10" />
               <button type="button" onClick={() => setShowNewPw(!showNewPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a958f]">
                 {showNewPw ? <EyeOff size={16} /> : <Eye size={16} />}

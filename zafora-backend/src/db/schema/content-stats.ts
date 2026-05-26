@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 export const contentStatsTable = pgTable("content_stats", {
   id: serial("id").primaryKey(),
-  label: text("label").notNull(),
+  label: text("label").notNull().unique(),
   value: text("value").notNull(),
   suffix: text("suffix"),
   description: text("description"),

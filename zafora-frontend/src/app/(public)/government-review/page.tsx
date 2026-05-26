@@ -3,7 +3,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import { useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
 import {
   Shield, FileCheck, Scale, Users, Target, Activity,
   ArrowRight, CheckCircle2, Globe, TrendingUp, Lock,
@@ -93,10 +93,10 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Government() {
-  const { data: seoData } = useGetSiteSettings("seo_government");
+  const { data: seoData } = useSiteSetting("seo_government");
   usePageTitle("Government Review Center", parseSeoSettings(seoData));
-  const { data: settingsData } = useGetSiteSettings("government_page");
-  const { data: imagesData } = useGetSiteSettings("site_images");
+  const { data: settingsData } = useSiteSetting("government_page");
+  const { data: imagesData } = useSiteSetting("site_images");
 
   const s = (() => {
     try {

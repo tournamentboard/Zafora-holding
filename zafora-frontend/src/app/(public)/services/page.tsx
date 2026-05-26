@@ -1,5 +1,5 @@
 "use client"
-import { useListServices, useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useServices, useSiteSetting } from "@/src/modules/public/home/services/home.service";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -69,11 +69,11 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Services() {
-  const { data: seoData } = useGetSiteSettings("seo_services");
+  const { data: seoData } = useSiteSetting("seo_services");
   usePageTitle("Services", parseSeoSettings(seoData));
-  const { data, isLoading } = useListServices();
-  const { data: settingsData } = useGetSiteSettings("services_page");
-  const { data: imagesData } = useGetSiteSettings("site_images");
+  const { data, isLoading } = useServices();
+  const { data: settingsData } = useSiteSetting("services_page");
+  const { data: imagesData } = useSiteSetting("site_images");
 
   const settings = (() => {
     try {

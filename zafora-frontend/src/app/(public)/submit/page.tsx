@@ -1,7 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { useCreateLead, useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useMutation } from "@tanstack/react-query";
+import { apiAxios } from "@/src/lib/api-helpers";
+import { API } from "@/src/lib/url-helpers";
+import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
 import { toast } from "sonner";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -45,13 +48,15 @@ const fadeInView = (delay = 0) => ({
 });
 
 export default function Submit() {
-  const { data: seoData } = useGetSiteSettings("seo_submit");
+  const { data: seoData } = useSiteSetting("seo_submit");
   usePageTitle("Submit a Request", parseSeoSettings(seoData));
 const router = useRouter();
-  const createLead = useCreateLead();
+  const createLead = useMutation({
+    mutationFn: (data: Record<string, unknown>) => apiAxios.post(API.LEADS.LIST, data),
+  });
   const [loading, setLoading] = useState(false);
   const [defaultType, setDefaultType] = useState("consultation");
-  const { data: settingsData } = useGetSiteSettings("submit_page");
+  const { data: settingsData } = useSiteSetting("submit_page");
 
   const settings = (() => {
     try {
@@ -83,20 +88,17 @@ const router = useRouter();
     const formData = new FormData(e.currentTarget);
     try {
       await createLead.mutateAsync({
-        // @ts-ignore
-        data: {
-          fullName: formData.get("fullName") as string,
-          organization: formData.get("organization") as string,
-          email: formData.get("email") as string,
-          phone: (formData.get("phone") as string) || undefined,
-          country: formData.get("country") as string,
-          requestType: formData.get("requestType") as string,
-          projectSector: (formData.get("projectSector") as string) || undefined,
-          message: formData.get("message") as string,
-          budgetFundingNeed: (formData.get("budgetFundingNeed") as string) || undefined,
-          projectTimeline: (formData.get("projectTimeline") as string) || undefined,
-          roleType: (formData.get("roleType") as string) || undefined,
-        }
+        fullName: formData.get("fullName") as string,
+        organization: formData.get("organization") as string,
+        email: formData.get("email") as string,
+        phone: (formData.get("phone") as string) || undefined,
+        country: formData.get("country") as string,
+        requestType: formData.get("requestType") as string,
+        projectSector: (formData.get("projectSector") as string) || undefined,
+        message: formData.get("message") as string,
+        budgetFundingNeed: (formData.get("budgetFundingNeed") as string) || undefined,
+        projectTimeline: (formData.get("projectTimeline") as string) || undefined,
+        roleType: (formData.get("roleType") as string) || undefined,
       });
       toast.success("Request Submitted", { description: "Your inquiry has been submitted. Our advisory team will contact you within 48 hours." });
       router.push("/");

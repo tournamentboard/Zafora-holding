@@ -35,6 +35,7 @@ const SERVICE_LINKS = [
 
 export default function GlobalLayout({ children }: { children: ReactNode }) {
   const { data: footerData } = useGetSiteSettings("footer");
+  const { data: brandingData } = useGetSiteSettings("branding");
 
   const footer = (() => {
     try {
@@ -44,6 +45,13 @@ export default function GlobalLayout({ children }: { children: ReactNode }) {
       }
     } catch {}
     return DEFAULT_FOOTER;
+  })();
+
+  const logoUrl = (() => {
+    try {
+      const parsed = brandingData?.value ? JSON.parse(brandingData.value) : null;
+      return parsed?.logoUrl || "";
+    } catch { return ""; }
   })();
 
   const copyrightYear = footer.copyright || new Date().getFullYear();
@@ -65,12 +73,21 @@ export default function GlobalLayout({ children }: { children: ReactNode }) {
 
             {/* Brand column */}
             <div className="lg:col-span-1">
-              <Image
-                src={logo}
-                alt="Zafora Holding"
-                className="h-14 w-auto object-contain mb-5"
-                style={{ filter: "brightness(0) invert(1)" }}
-              />
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt="Zafora Holding"
+                  className="h-14 w-auto object-contain mb-5"
+                  style={{ filter: "brightness(0) invert(1)" }}
+                />
+              ) : (
+                <Image
+                  src={logo}
+                  alt="Zafora Holding"
+                  className="h-14 w-auto object-contain mb-5"
+                  style={{ filter: "brightness(0) invert(1)" }}
+                />
+              )}
               <p className="text-white/55 text-sm leading-relaxed mb-6">
                 {footer.description}
               </p>

@@ -57,9 +57,6 @@ export const API = {
     TEST: `${API_PREFIX}/notifications/test`,
   },
   STORAGE: {
-    REQUEST_UPLOAD_URL: `${API_PREFIX}/storage/uploads/request-url`,
-    PUBLIC_OBJECT: (filePath: string) =>
-      `${API_PREFIX}/storage/public-objects/${filePath}`,
-    OBJECT: (objectPath: string) => `${API_PREFIX}/storage/objects/${objectPath}`,
+    PRESIGN: `${API_PREFIX}/storage/presign`,
   },
 } as const;
