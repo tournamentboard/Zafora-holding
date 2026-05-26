@@ -7,13 +7,18 @@ import { ROUTES, API } from "@/src/lib/url-helpers";
 import { apiAxios, clearTokens } from "@/src/lib/api-helpers";
 
 const ROUTE_META: Record<string, { label: string; group: string; desc: string }> = {
-  [ROUTES.ADMIN.ROOT]:      { label: "Dashboard",    group: "Overview", desc: "Stats & recent activity" },
-  [ROUTES.ADMIN.LEADS]:     { label: "Inquiries",    group: "CRM",      desc: "Contact form leads" },
-  [ROUTES.ADMIN.PROJECTS]:  { label: "Projects",     group: "Pipeline", desc: "Project pipeline" },
-  [ROUTES.ADMIN.DOCUMENTS]: { label: "Documents",    group: "Pipeline", desc: "Files & reports" },
-  [ROUTES.ADMIN.CONTENT]:   { label: "Content",      group: "Content",  desc: "CMS management" },
-  [ROUTES.ADMIN.AUDIT]:     { label: "Activity Log", group: "Admin",    desc: "Track all admin actions" },
-  [ROUTES.ADMIN.SETTINGS]:  { label: "Settings",     group: "Admin",    desc: "Password & data export" },
+  [ROUTES.ADMIN.ROOT]:              { label: "Dashboard",          group: "Overview",      desc: "Stats & recent activity" },
+  [ROUTES.ADMIN.LEADS]:             { label: "Inquiries",          group: "CRM",           desc: "Contact form leads" },
+  [ROUTES.ADMIN.PROJECTS]:          { label: "Projects",           group: "Pipeline",      desc: "Project pipeline" },
+  [ROUTES.ADMIN.DOCUMENTS]:         { label: "Documents",          group: "Pipeline",      desc: "Files & reports" },
+  [ROUTES.ADMIN.CONTENT]:           { label: "Content",            group: "Content",       desc: "CMS management" },
+  [ROUTES.ADMIN.AUDIT]:             { label: "Activity Log",       group: "Admin",         desc: "Track all admin actions" },
+  [ROUTES.ADMIN.SETTINGS]:          { label: "Settings",           group: "Admin",         desc: "Password & data export" },
+  [ROUTES.ADMIN.FAQ]:               { label: "FAQs",               group: "Content",       desc: "Frequently asked questions" },
+  [ROUTES.ADMIN.ANNOUNCEMENT]:      { label: "Announcement Bar",   group: "Site Control",  desc: "Sitewide banner message" },
+  [ROUTES.ADMIN.SECTION_VISIBILITY]:{ label: "Section Visibility", group: "Site Control",  desc: "Show/hide page sections" },
+  [ROUTES.ADMIN.MAINTENANCE]:       { label: "Maintenance Mode",   group: "Site Control",  desc: "Lock site for maintenance" },
+  [ROUTES.ADMIN.LEGAL]:             { label: "Legal Pages",        group: "Content",       desc: "Privacy Policy & Terms of Service" },
 };
 
 export default function AdminHeader() {

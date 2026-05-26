@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Loader2, Palette, Info, AlertCircle, ExternalLink } from "lucide-react";
+import { Check, Loader2, Palette, AlertCircle, ExternalLink } from "lucide-react";
+import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
 
 interface BrandingConfig {
   siteName: string;
@@ -157,29 +158,21 @@ export default function BrandingManager() {
           <FieldRow label="Tagline" value={form.tagline} onChange={v => set("tagline", v)} placeholder="Strategic Infrastructure Advisory" hint="Short description used in SEO and footer" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FieldRow
-            label="Logo URL"
+          <PhotoUploadField
+            label="Logo"
             value={form.logoUrl}
             onChange={v => set("logoUrl", v)}
-            type="url"
             placeholder="https://example.com/logo.png"
-            hint="Paste a direct link to your logo image (PNG or SVG recommended)"
+            hint="PNG or SVG recommended"
           />
-          <FieldRow
-            label="Favicon URL"
+          <PhotoUploadField
+            label="Favicon"
             value={form.faviconUrl}
             onChange={v => set("faviconUrl", v)}
-            type="url"
             placeholder="https://example.com/favicon.png"
-            hint="Small icon shown in browser tabs (32×32 or 64×64 PNG)"
+            hint="32×32 or 64×64 PNG"
           />
         </div>
-        {form.logoUrl && (
-          <div className="flex items-center gap-4 p-3 bg-[#f7f4ef] rounded-xl">
-            <img src={form.logoUrl} alt="Logo preview" className="h-12 object-contain rounded" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-            <div className="text-xs text-[#65736f]">Logo preview — if nothing shows, the URL may be invalid.</div>
-          </div>
-        )}
       </div>
 
       {/* Colors */}
