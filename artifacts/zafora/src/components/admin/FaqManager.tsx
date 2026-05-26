@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Loader2, Trash2, ChevronRight, ArrowLeft, Eye, EyeOff, HelpCircle, Check } from "lucide-react";
 
@@ -36,18 +36,16 @@ export default function FaqManager() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [filterPage, setFilterPage] = useState("all");
 
-  const loadFaqs = async () => {
+  useEffect(() => {
     if (loaded) return;
     setLoading(true);
-    try {
-      const data = await apiFetch("/api/content/faqs");
-      setFaqs(data.faqs ?? []);
-      setLoaded(true);
-    } finally { setLoading(false); }
-  };
+    apiFetch("/api/content/faqs")
+      .then(data => { setFaqs(data.faqs ?? []); setLoaded(true); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [loaded]);
 
   if (!loaded) {
-    loadFaqs();
     return <div className="h-64 flex items-center justify-center"><Loader2 className="animate-spin h-6 w-6 text-[#173f35]" /></div>;
   }
 

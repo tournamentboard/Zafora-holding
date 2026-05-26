@@ -1,0 +1,411 @@
+ProjectControls OS — Pricing Section Update Requirements
+Requirement Title
+
+Enterprise Pricing Section Update & Governance Requirements
+
+Requirement ID
+
+PCOS-LP-PRICING-V2
+
+Priority
+
+Critical
+
+Objective
+
+Update the ProjectControls OS landing page pricing section to reflect:
+
+enterprise-grade positioning
+scalable SaaS pricing architecture
+operational intelligence value
+infrastructure scaling realities
+user-based growth governance
+professional U.S. enterprise software standards
+
+The pricing section must feel:
+
+premium
+believable
+scalable
+enterprise-ready
+operationally critical
+
+NOT:
+
+startup SaaS
+cheap subscription software
+lightweight PM application
+SECTION 1 — Pricing Structure Update
+Requirement ID
+
+PCOS-LP-PRICING-001
+
+Requirement
+
+Update pricing cards to use:
+
+“Starting at” pricing language
+USD currency formatting
+scalable user governance wording
+enterprise pricing positioning
+
+Pricing architecture must support:
+
+future scaling
+user expansion
+integrations
+implementation pricing
+enterprise customization
+SECTION 2 — Pilot Program Card
+Requirement ID
+
+PCOS-LP-PRICING-002
+
+Requirement
+
+Update Pilot Program pricing card.
+
+Title
+
+Pilot Program
+
+Price Display
+
+Display exactly:
+
+Starting at $4,995/month USD
+
+“Starting at” must be visually smaller but clearly readable above or beside pricing.
+
+Subtitle
+
+Replace manual reporting immediately.
+
+Best For Section
+
+Display:
+
+Small EPC firms
+Pilot projects
+Owner/operators
+Features List
+
+Display:
+
+Up to 15 users
+3 active projects
+Procurement & engineering tracking
+S-curves & variance analysis
+Automated reporting (PDF/Excel)
+Executive dashboards
+Standard support
+User Governance
+
+Add new line:
+
+Additional users: $65/user/month
+
+This line should appear:
+
+beneath feature list
+above CTA button
+
+Styling:
+
+smaller text
+muted enterprise tone
+subtle gray text color
+CTA
+
+Button text:
+
+Discuss Pilot
+Visual Styling
+
+Card should:
+
+feel professional
+use enterprise spacing
+use subtle shadows
+use teal/blue enterprise accenting
+not overpower Professional card
+SECTION 3 — Professional Program Card
+Requirement ID
+
+PCOS-LP-PRICING-003
+
+Requirement
+
+Update Professional pricing card.
+
+Badge
+
+Display:
+
+Most Selected
+
+Badge styling:
+
+premium enterprise style
+soft glow or highlighted border
+teal/blue accent
+Title
+
+Professional
+
+Price Display
+
+Display exactly:
+
+Starting at $12,500/month USD
+Subtitle
+
+Full operational intelligence across disciplines.
+
+Best For Section
+
+Display:
+
+Mid-size EPC firms
+PMO teams
+Infrastructure programs
+Features List
+
+Display:
+
+Up to 75 users
+Portfolio dashboards
+Material Intelligence & spend governance
+Emergency order governance
+Mobile scanning (QR / RFID)
+Forecasting engine & risk tracking
+API access & priority support
+User Governance
+
+Add:
+
+Additional users: $85/user/month
+
+Styling:
+
+smaller muted text
+enterprise appearance
+CTA
+
+Button text:
+
+Request Briefing
+Visual Styling
+
+Professional card should:
+
+be primary highlighted card
+slightly larger than surrounding cards
+include elevated enterprise styling
+use premium border glow
+have highest visual hierarchy
+SECTION 4 — Enterprise Card
+Requirement ID
+
+PCOS-LP-PRICING-004
+
+Requirement
+
+Update Enterprise pricing card.
+
+Title
+
+Enterprise
+
+Price Display
+
+Replace all pricing ranges with:
+
+Custom Pricing
+
+DO NOT publicly display:
+
+$50k–$500k
+$250k–$1.5M
+annual ranges
+
+Reason:
+
+prevents unsupported pricing expectations
+aligns with enterprise SaaS standards
+improves pricing flexibility
+Subtitle
+
+Mission-critical programs at portfolio scale.
+
+Best For Section
+
+Display:
+
+Oil & Gas
+Utilities
+Government
+Mega construction
+Features List
+
+Display:
+
+Unlimited users & projects
+Multi-program governance
+SSO / SAML enterprise security
+SAP & Primavera P6 integrations
+AI forecasting & portfolio analytics
+White labeling & dedicated customer success manager
+Enterprise Pricing Governance Text
+
+Add section beneath features:
+
+Enterprise pricing based on:
+user count
+project volume
+integrations
+data/storage usage
+reporting complexity
+implementation scope
+
+This section should:
+
+appear smaller
+use muted enterprise typography
+feel informational not promotional
+CTA
+
+Button text:
+
+Contact Enterprise Sales
+Visual Styling
+
+Enterprise card should:
+
+feel executive-grade
+use darker premium styling
+include enterprise security visual language
+maintain clean professional spacing
+SECTION 5 — Pricing Disclaimer
+Requirement ID
+
+PCOS-LP-PRICING-005
+
+Requirement
+
+Add pricing disclaimer below all pricing cards.
+
+Disclaimer Text
+
+Display:
+
+Pricing shown in USD. Additional implementation, onboarding, integrations, storage, AI processing, and enterprise support services may be quoted separately based on deployment scope.
+Styling
+Small typography
+Muted gray
+Enterprise SaaS style
+Center aligned
+SECTION 6 — Enterprise Positioning Requirements
+Requirement ID
+
+PCOS-LP-PRICING-006
+
+Requirement
+
+Pricing section must visually resemble:
+
+enterprise ERP systems
+operational intelligence platforms
+enterprise infrastructure software
+
+Avoid:
+
+playful startup design
+cheap SaaS styling
+cartoon-like visuals
+overly bright colors
+
+Use:
+
+subtle gradients
+enterprise typography
+clean spacing
+premium shadows
+operational dashboard aesthetics
+SECTION 7 — Responsive Requirements
+Requirement ID
+
+PCOS-LP-PRICING-007
+
+Requirement
+
+Pricing section must fully support:
+
+desktop
+tablet
+mobile
+Mobile Requirements
+
+On mobile:
+
+pricing cards stack vertically
+buttons remain visible
+spacing remains readable
+pricing hierarchy preserved
+no overflow or clipping
+SECTION 8 — CMS Governance
+Requirement ID
+
+PCOS-LP-PRICING-008
+
+Requirement
+
+Admin CMS must support editing:
+
+pricing
+subtitles
+feature lists
+user pricing
+badges
+CTA labels
+disclaimer text
+enterprise governance text
+
+WITHOUT requiring code changes.
+
+SECTION 9 — Analytics & Lead Tracking
+Requirement ID
+
+PCOS-LP-PRICING-009
+
+Requirement
+
+All pricing CTA buttons must:
+
+open lead/contact flow
+track selected pricing tier
+log analytics event
+store inquiry source
+integrate into CRM/backend lead system
+
+Track:
+
+tier selected
+timestamp
+company name
+email
+inquiry type
+FINAL POSITIONING REQUIREMENT
+Requirement ID
+
+PCOS-LP-PRICING-010
+
+Requirement
+
+Entire pricing section must communicate that ProjectControls OS is:
+
+enterprise operational intelligence software
+project controls governance platform
+forecasting & analytics system
+material intelligence platform
+executive portfolio visibility solution
