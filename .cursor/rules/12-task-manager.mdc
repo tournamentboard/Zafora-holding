@@ -43,23 +43,30 @@ alwaysApply: true
 | Phase | Status | Summary |
 |-------|--------|---------|
 | R1 — FAQs Backend | ✅ Done | faqs schema, module (routes/service/validator), swagger docs |
-| R2 — Setting Defaults | ✅ Done | 5 new SETTING_DEFAULTS + expanded branding/hero/about in content.service.ts |
+| R2 — Setting Defaults | ⚠️ Partial | Missing `services_page`, `government_page`, `submit_page`, full `about`, `seo_*.og*` |
 | R3 — Frontend Module Setup | ✅ Done | modules/admin/faqs/, new ROUTES.ADMIN.* constants, API.CONTENT.FAQS* |
 | R4 — New Admin Components | ✅ Done | FaqManager, AnnouncementManager, MaintenanceManager, LegalPagesEditor, SectionVisibilityManager + 5 route pages |
 | R5 — Public Pages & Layout | ✅ Done | /privacy, /terms, /maintenance pages, maintenance middleware, AnnouncementBar component, sticky header removed |
-| R6 — Photo Upload | ⏳ Blocked | PhotoUploadField depends on F11 (S3) |
+| R6 — Photo Upload | ⏳ Pending | PhotoUploadField + use-image-upload endpoint fix (blocks all admin image uploads) |
 | R7 — Auth Enhancements | ✅ Done | setup-status, setup, reset-password endpoints + ADMIN_SETUP_EMAIL env |
-| R8 — Seed Updates | ✅ Done | FAQs seeded + new site_settings keys seeded |
+| R8 — Seed Updates | ✅ Done | FAQs + new site_settings keys + 6 real projects seeded |
 | R9 — Verification | ⏳ Pending | End-to-end verify all R1–R8 features in staging |
+| R10 — Admin Mobile Nav | ⏳ Pending | Port `Admin.tsx:619–637` horizontal tab bar to `AdminMobileNav.tsx` (mobile regression) |
+| R11 — Public Navbar Restore | ⏳ Pending | Restore h-40 + tagline (currently regressed to h-20) |
+| R12 — Section Visibility wiring | ⏳ Pending | Create `lib/site-settings.ts` + consume in all public RSC pages |
 
 ## Small Remaining Gaps (Not a Full Phase)
 
 | Item | File | Priority |
 |------|------|----------|
-| Wire AnnouncementBar into layout | `app/(public)/layout.tsx` | High |
-| Create `lib/site-settings.ts` helper | `lib/site-settings.ts` | High |
-| Use section_visibility in public pages | All public RSC pages | Medium |
-| PhotoUploadField component | `modules/admin/shared/components/PhotoUploadField.tsx` | After F11 |
+| Admin mobile tab bar | `modules/admin/shared/components/AdminMobileNav.tsx` (new) | **P0** |
+| AdminHeader ROUTE_META | `modules/admin/shared/components/AdminHeader.tsx` (5 entries) | **P0** |
+| Public Navbar restore | `components/common/Navbar.tsx` (h-40 + tagline) | P1 |
+| PhotoUploadField component | `modules/admin/shared/components/PhotoUploadField.tsx` | P1 |
+| use-image-upload endpoint fix | `hooks/use-image-upload.ts` (call `API.STORAGE.PRESIGN`) | P1 |
+| Create `lib/site-settings.ts` helper | `lib/site-settings.ts` | P2 |
+| Use section_visibility in public pages | All public RSC pages | P2 |
+| Complete SETTING_DEFAULTS | `content.service.ts` (4 keys + SEO OG) | P2 |
 
 ## Cleanup Required (After F11)
 
@@ -69,11 +76,22 @@ alwaysApply: true
 - Delete `zafora-frontend/src/lib/object-storage-web/`
 - Delete `zafora-frontend/src/lib/db/`
 
-## Next Recommended Actions
+## Next Recommended Actions (Updated 2026-05-26 — post Replit re-audit)
 
-1. Wire `<AnnouncementBar />` into `app/(public)/layout.tsx` above `<Navbar />`
-2. Create `lib/site-settings.ts` → `getSectionVisibility()` → use in public RSC pages
-3. B6: `shared/lib/object-storage.ts` (AWS S3 SDK) + F11: presign route + use-s3-upload hook
+**P0 (mobile regression — fastest wins):**
+1. Create `AdminMobileNav.tsx` — horizontal scrollable pill nav, port from Replit `Admin.tsx:619–637`
+2. Extend `AdminHeader.ROUTE_META` with FAQ / Announcement / Maintenance / Legal / Section Visibility entries
+
+**P1 (image upload pipeline + Navbar polish):**
+3. Restore Navbar `h-40` + tagline display
+4. Migrate `PhotoUploadField` from `artifacts/zafora/src/components/admin/`
+5. Fix `use-image-upload.ts` to call `API.STORAGE.PRESIGN` with new `{ uploadUrl, publicUrl, key }` shape
+6. Wire `PhotoUploadField` into BrandingManager, TeamManager, AboutEditor, ServicesManager, ProjectsTable, TestimonialsManager
+7. Set `AWS_S3_CUSTOM_DOMAIN` on Vercel + Railway
+
+**P2 (settings + section visibility):**
+8. Complete `SETTING_DEFAULTS` (services_page, government_page, submit_page, full about, seo_*.og*)
+9. Create `lib/site-settings.ts` → `getSectionVisibility()` → use in public RSC pages
 4. B9: Add `helmet` + `express-rate-limit` to `zafora-backend/src/app.ts`
 5. F12: Add `loading.tsx` + `error.tsx` to each individual admin route segment
 6. F13: `generateMetadata()` on public pages + `sitemap.ts` + `robots.ts`

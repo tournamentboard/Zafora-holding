@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-settings.service";
+import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft, Plus, Loader2, Check, Trash2, Mail,
   MapPin, ChevronRight, Users, Eye, EyeOff, FileText,
 } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
+import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
 
 const TEAM_COLORS = [
   "bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]",
@@ -127,7 +128,7 @@ export default function TeamManager() {
       { key: "about", data: { value: JSON.stringify(payload) } },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ["/api/content/settings/about"] });
+          qc.invalidateQueries({ queryKey: siteSettingsKeys.single("about") });
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         },
@@ -245,18 +246,14 @@ export default function TeamManager() {
 
               {/* Photo + LinkedIn + Email */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-[#f0ebe3]">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-[#10231f] block">Photo URL (optional)</label>
-                  <input
-                    type="text"
+                <div>
+                  <PhotoUploadField
+                    label="Photo (optional)"
                     value={member.photo ?? ""}
-                    onChange={e => setField("photo", e.target.value)}
-                    placeholder="https://... (leave blank if no photo)"
-                    className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
+                    onChange={v => setField("photo", v)}
+                    placeholder="https://... or upload"
+                    previewShape="circle"
                   />
-                  {member.photo && (
-                    <img src={member.photo} alt="" className="h-14 w-14 rounded-xl object-cover border border-[#e5ded3] mt-1" onError={e => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
-                  )}
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-[#10231f] flex items-center gap-1.5">

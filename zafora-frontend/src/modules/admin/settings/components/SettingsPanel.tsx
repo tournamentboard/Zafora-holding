@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { useLeads } from "@/src/modules/admin/leads";
-import { apiAxios } from "@/src/lib/api-helpers";
-import { API } from "@/src/lib/url-helpers";
+import { apiAxios, clearTokens } from "@/src/lib/api-helpers";
+import { API, ROUTES } from "@/src/lib/url-helpers";
 import {
   Lock, Eye, EyeOff, Download, CheckCircle2, Globe,
   Mail, MapPin, Phone, Shield, RefreshCw, Bell,
@@ -47,6 +48,7 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 }
 
 export default function SettingsPanel() {
+  const router = useRouter();
   const { data: leadsData } = useLeads({ limit: 1000 });
 
   const [currentPw, setCurrentPw] = useState("");
@@ -124,7 +126,9 @@ export default function SettingsPanel() {
       await apiAxios.post(API.AUTH.CHANGE_PASSWORD, { currentPassword: currentPw, newPassword: newPw });
       setPwSuccess(true);
       setCurrentPw(""); setNewPw(""); setConfirmPw("");
-      toast.success("Password updated successfully!");
+      toast.success("Password updated. Please sign in again.");
+      clearTokens();
+      router.replace(ROUTES.LOGIN);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Failed to update password.";
       setPwError(msg);

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiAxios } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
-import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
+import { useSiteSetting, useSectionVisibility, isSectionVisible } from "@/src/modules/public/home/services/home.service";
 import { toast } from "sonner";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -50,7 +50,8 @@ const fadeInView = (delay = 0) => ({
 export default function Submit() {
   const { data: seoData } = useSiteSetting("seo_submit");
   usePageTitle("Submit a Request", parseSeoSettings(seoData));
-const router = useRouter();
+  const visibility = useSectionVisibility("submit");
+  const router = useRouter();
   const createLead = useMutation({
     mutationFn: (data: Record<string, unknown>) => apiAxios.post(API.LEADS.LIST, data),
   });
@@ -113,7 +114,7 @@ const router = useRouter();
     <div className="flex flex-col bg-[#f7f4ef]">
 
       {/* Hero header */}
-      <section className="relative bg-[#173f35] pt-20 pb-16 overflow-hidden">
+      <section className="relative bg-[#173f35] pt-20 pb-16 overflow-hidden" hidden={!isSectionVisible(visibility, "hero")}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#c59b4a]/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
@@ -135,7 +136,7 @@ const router = useRouter();
       </section>
 
       {/* Form + Sidebar */}
-      <section className="py-12">
+      <section className="py-12" hidden={!isSectionVisible(visibility, "form")}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 items-start max-w-6xl mx-auto">
 

@@ -22,8 +22,12 @@ export default function Navbar() {
   const branding = (() => {
     try {
       const parsed = brandingData?.value ? JSON.parse(brandingData.value) : null;
-      return { logoUrl: parsed?.logoUrl || "", siteName: parsed?.siteName || "Zafora Holding" };
-    } catch { return { logoUrl: "", siteName: "Zafora Holding" }; }
+      return {
+        logoUrl: parsed?.logoUrl || "",
+        siteName: parsed?.siteName || "Zafora Holding",
+        tagline: parsed?.tagline || "Infrastructure. Capital. Delivery.",
+      };
+    } catch { return { logoUrl: "", siteName: "Zafora Holding", tagline: "Infrastructure. Capital. Delivery." }; }
   })();
 
   const links = (() => {
@@ -40,12 +44,21 @@ export default function Navbar() {
 
   return (
     <nav className="relative w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.97)" }}>
-      <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
+      <div className="container mx-auto px-4 pt-0 md:px-8 py-3 flex items-center justify-between">
+        <Link href="/" className="flex flex-col gap-1 shrink-0">
+         <div
+         className="h-[120px] w-auto overflow-hidden"
+         >
           {branding.logoUrl ? (
-            <img src={branding.logoUrl} alt={branding.siteName} className="h-16 w-auto object-contain" />
+            <img src={branding.logoUrl} alt={branding.siteName} className="h-[160px] w-auto object-contain" loading="eager" />
           ) : (
-            <Image src={logo} alt={branding.siteName} className="h-16 w-auto object-contain" />
+            <Image src={logo} alt={branding.siteName} className="h-[160px] w-auto object-contain" priority />
+          )}
+         </div>
+          {branding.tagline && (
+            <span className="text-[10px] text-[#8a958f] font-semibold tracking-widest uppercase leading-tight">
+              {branding.tagline}
+            </span>
           )}
         </Link>
 
@@ -87,6 +100,9 @@ export default function Navbar() {
       {/* Mobile Nav */}
       {isMobileMenuOpen && (
         <div className="md:hidden w-full bg-[#f7f4ef] border-b border-[#e5ded3] p-4 flex flex-col gap-3 shadow-lg">
+          {branding.tagline && (
+            <p className="text-xs text-[#8a958f] font-medium tracking-wide px-1">{branding.tagline}</p>
+          )}
           {links.map((link: any) => (
             <Link
               key={link.id ?? link.href}

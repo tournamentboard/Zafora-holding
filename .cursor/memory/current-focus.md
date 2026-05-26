@@ -6,10 +6,18 @@ _Last updated: 2026-05-26_
 
 ## Active Phase
 
-**Audit Round 2 — api-client-react full removal + duplicate data fix — COMPLETED ✅ (2026-05-26)**  
-All 5 remaining deprecated pages migrated. Duplicate stats/methodology DB data cleared via seed fix.
+**Frontend/Backend Sync Audit Fixes (2026-05-26) — COMPLETED ✅**  
+All 10 P1 sync issues fixed. No P0 issues existed.
 
-**Next priority: F11 — Frontend upload pipeline (presign Next.js route + use-s3-upload hook + ImageUploader + PhotoUploadField)**
+**Next priority: P3 — SEO + security hardening**
+
+Key gaps identified this round:
+- Admin mobile horizontal tab bar missing (Replit has it; migrated does not)
+- Public Navbar regressed from `h-40` + tagline to `h-20` without tagline
+- `PhotoUploadField` not migrated (blocks all image uploads)
+- `use-image-upload.ts` still pointing at Replit GCS path
+- Partial `SETTING_DEFAULTS` (missing `services_page`, `government_page`, `submit_page`, full `about`)
+- `section_visibility` saved in admin but not consumed on public pages
 
 ---
 
@@ -62,6 +70,42 @@ All 5 remaining deprecated pages migrated. Duplicate stats/methodology DB data c
 
 ---
 
+## Last Edited Files (2026-05-26 — Sync Audit Fixes)
+
+- `zafora-frontend/src/proxy.ts` (renamed function to `proxy`, kept `next/server` types — correct for Next.js 16.2.6)
+- `zafora-frontend/src/modules/admin/content/components/BrandingManager.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/AboutEditor.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/TeamManager.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/ImagesEditor.tsx` (fixed invalidation key)
+- `zafora-frontend/src/modules/admin/content/components/SiteSettingsManager.tsx` (fixed invalidation keys x2)
+- `zafora-frontend/src/modules/admin/content/components/NavigationManager.tsx` (added invalidateQueries on save)
+- `zafora-frontend/src/modules/admin/content/services/site-settings.service.ts` (bust both admin+public caches on save)
+- `zafora-frontend/src/modules/public/home/services/home.service.ts` (added useSectionVisibility + isSectionVisible)
+- `zafora-frontend/src/app/(public)/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/about/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/services/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/projects/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/government/page.tsx` (wired section visibility)
+- `zafora-frontend/src/app/(public)/submit/page.tsx` (wired section visibility)
+- `zafora-backend/src/modules/content/content.service.ts` (added seo_submit, site_images, ogImage to SETTING_DEFAULTS)
+- `zafora-frontend/src/modules/admin/settings/components/SettingsPanel.tsx` (clearTokens + redirect after password change)
+
+## Last Edited Files (2026-05-26 — P0/P1/P2 Implementation)
+
+- `zafora-frontend/src/modules/admin/shared/components/AdminMobileNav.tsx` (new — mobile scrollable pill nav)
+- `zafora-frontend/src/components/layout/AdminShell.tsx` (wired AdminMobileNav)
+- `zafora-frontend/src/modules/admin/shared/components/AdminHeader.tsx` (ROUTE_META extended — 5 new entries)
+- `zafora-frontend/src/components/common/Navbar.tsx` (tagline added to branding, shown in header + mobile menu)
+- `zafora-frontend/src/hooks/use-image-upload.ts` (fixed to use API.STORAGE.PRESIGN + new response shape)
+- `zafora-frontend/src/modules/admin/shared/components/PhotoUploadField.tsx` (new — migrated from artifacts)
+- `zafora-frontend/src/modules/admin/content/components/BrandingManager.tsx` (Logo/Favicon wired to PhotoUploadField)
+- `zafora-frontend/src/modules/admin/content/components/TeamManager.tsx` (photo wired to PhotoUploadField)
+- `zafora-frontend/src/modules/admin/content/components/ServicesManager.tsx` (imageUrl wired to PhotoUploadField)
+- `zafora-frontend/src/modules/admin/content/components/TestimonialsManager.tsx` (photoUrl wired to PhotoUploadField)
+- `zafora-frontend/src/modules/admin/projects/components/ProjectsTable.tsx` (imageUrl wired to PhotoUploadField)
+- `zafora-backend/src/modules/content/content.service.ts` (SETTING_DEFAULTS: +services_page, +government_page, +submit_page, +seo_government, ogTitle/ogDescription on all SEO keys, full about.values/team/timeline/cta/whoWeAre)
+- `zafora-frontend/src/lib/site-settings.ts` (new — getSectionVisibility() server helper)
+
 ## Last Edited Files (2026-05-26 — Bug Fixes)
 
 - `zafora-backend/src/modules/auth/auth.validator.ts` (ChangePasswordBody min 8→4)
@@ -97,16 +141,20 @@ All 5 remaining deprecated pages migrated. Duplicate stats/methodology DB data c
 
 ---
 
-## Next Actions (Priority Order)
+## Next Actions (Priority Order — Updated 2026-05-26 post Replit re-audit)
 
-1. **Create `lib/site-settings.ts`**: Server helper `getSectionVisibility()` + use in public page RSCs
-2. **F11**: `app/api/storage/presign/route.ts` (Next.js BFF → calls Express `/api/storage/presign`) → `hooks/use-s3-upload.ts` → `ImageUploader`
-3. **R6/PhotoUploadField**: `modules/admin/shared/components/PhotoUploadField.tsx` (after F11)
-4. **Set AWS credentials**: Fill `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` in `.env` + Railway
-5. **F12**: Add `loading.tsx` + `error.tsx` to each individual admin route segment (leads, projects, documents, etc.)
-6. **B9**: Add `helmet`, `express-rate-limit`, body size limits to `zafora-backend/src/app.ts`
-7. **F13**: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`
-8. **Cleanup**: Verify zero imports then delete deprecated `lib/api-client-react`, `lib/api-zod`, `lib/api-spec`, `lib/object-storage-web`, `lib/db`
+**P0 — Mobile regressions** ✅ DONE
+**P1 — Public Navbar + Image upload pipeline** ✅ DONE
+**P2 — Complete settings + section visibility** ✅ DONE
+
+**R9 — Full QA Audit (2026-05-26)** ✅ COMPLETE — 5 fixes applied  
+
+**P3 — SEO + verification**
+9. **F13**: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`.
+10. **F12**: Add per-segment `loading.tsx` + `error.tsx` under `/admin/leads/`, `/admin/projects/`, etc.
+11. **B9**: Add `helmet`, `express-rate-limit`, body size limits to `zafora-backend/src/app.ts`.
+12. **R9**: End-to-end verification of all 43 admin/public checks.
+13. **Cleanup**: Verify zero imports then delete deprecated `lib/api-client-react`, `lib/api-zod`, `lib/api-spec`, `lib/object-storage-web`, `lib/db`.
 
 ---
 
@@ -120,10 +168,10 @@ All 5 remaining deprecated pages migrated. Duplicate stats/methodology DB data c
 | View Website in header | `AdminHeader.tsx` | ✅ Fixed |
 | Projects empty state | `projects/page.tsx` | ✅ Fixed |
 | Hero badge / Accepting Mandates | `page.tsx` | ✅ Fixed |
-| Image uploads (F11) | `PhotoUploadField`, `ImageUploader`, `use-s3-upload` | ⏳ Pending — next priority |
+| Image uploads (F11) | `PhotoUploadField` ✅ migrated; S3 backend (B6) still ⏳ pending |
 | AnnouncementBar in layout | `app/(public)/layout.tsx` | ✅ Done (wired) |
-| site-settings.ts helper | `lib/site-settings.ts` | ⚠️ Not created |
-| Section visibility in public pages | All public RSC pages | ⚠️ Depends on site-settings.ts |
+| site-settings.ts helper | `lib/site-settings.ts` | ✅ Created |
+| Section visibility helper | `getSectionVisibility()` | ✅ Created — wire into RSC pages as needed |
 | F12 per-segment loading | `/admin/leads/`, `/admin/projects/`, etc. | ⏳ Pending |
 | B9 Security (helmet, rate limit) | `src/app.ts` | ⏳ Pending |
 | F13 SEO | generateMetadata, sitemap, robots | ⏳ Pending |

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
+import { useSiteSetting, useSectionVisibility, isSectionVisible } from "@/src/modules/public/home/services/home.service";
 import {
   Shield, FileCheck, Scale, Users, Target, Activity,
   ArrowRight, CheckCircle2, Globe, TrendingUp, Lock,
@@ -95,6 +95,7 @@ const fadeInView = (delay = 0) => ({
 export default function Government() {
   const { data: seoData } = useSiteSetting("seo_government");
   usePageTitle("Government Review Center", parseSeoSettings(seoData));
+  const visibility = useSectionVisibility("government");
   const { data: settingsData } = useSiteSetting("government_page");
   const { data: imagesData } = useSiteSetting("site_images");
 
@@ -132,7 +133,7 @@ export default function Government() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="relative bg-white overflow-hidden">
+      <section className="relative bg-white overflow-hidden" hidden={!isSectionVisible(visibility, "hero")}>
         <div className="relative h-[420px] md:h-[520px] overflow-hidden">
           <img
             src={govImgs.heroImage}
@@ -187,7 +188,7 @@ export default function Government() {
       </section>
 
       {/* Stats strip */}
-      <section className="bg-[#173f35] py-10 border-b border-[#245d4e]">
+      <section className="bg-[#173f35] py-10 border-b border-[#245d4e]" hidden={!isSectionVisible(visibility, "stats")}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {s.stats.map((stat: any, i: number) => (
@@ -202,7 +203,7 @@ export default function Government() {
       </section>
 
       {/* Main Content */}
-      <section className="py-14 bg-[#f7f4ef]">
+      <section className="py-14 bg-[#f7f4ef]" hidden={!isSectionVisible(visibility, "capability")}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10">
 

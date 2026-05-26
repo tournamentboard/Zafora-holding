@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   LayoutDashboard, Inbox, FolderOpen, FileText, Settings, Settings2,
   BarChart2, Briefcase, Target, ChevronDown, ChevronRight, Quote,
@@ -70,16 +70,28 @@ const SIDEBAR_GROUPS: NavGroup[] = [
 ];
 
 function SidebarGroup({
-  group, items, pathname, collapsed, onToggle,
+  group, items, pathname, currentSection, collapsed, onToggle,
 }: {
   group: string;
   items: NavItem[];
   pathname: string;
+  currentSection: string | null;
   collapsed: boolean;
   onToggle: () => void;
 }) {
   const isActive = (href: string) => {
-    const base = href.split("?")[0];
+    const [base, query] = href.split("?");
+    const tabSection = query ? new URLSearchParams(query).get("section") : null;
+
+    if (tabSection) {
+      return pathname === base && currentSection === tabSection;
+    }
+
+    const sharesBase = items.some((t) => t.href.startsWith(base + "?"));
+    if (sharesBase) {
+      return pathname === base && !currentSection;
+    }
+
     return pathname === base || (base !== ROUTES.ADMIN.ROOT && pathname.startsWith(base));
   };
   const hasActive = items.some((i) => isActive(i.href));
@@ -132,6 +144,8 @@ function SidebarGroup({
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentSection = searchParams.get("section");
   const router = useRouter();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
@@ -163,6 +177,7 @@ export default function AdminSidebar() {
             group={g.group}
             items={g.items}
             pathname={pathname}
+            currentSection={currentSection}
             collapsed={!!collapsed[g.group]}
             onToggle={() => toggle(g.group)}
           />

@@ -5,6 +5,8 @@ import {
   useContentStats,
   useMethodologySteps,
   useSiteSetting,
+  useSectionVisibility,
+  isSectionVisible,
 } from "@/src/modules/public/home/services/home.service";
 import { useQuery } from "@tanstack/react-query";
 import { apiAxios } from "@/src/lib/api-helpers";
@@ -307,6 +309,7 @@ const HERO_DEFAULTS = {
 export default function Home() {
   const { data: seoData } = useSiteSetting("seo_home");
   usePageTitle("Home", parseSeoSettings(seoData));
+  const visibility = useSectionVisibility("home");
   const { data: projectsData } = useProjects({ limit: 3 });
   const { data: servicesData } = useServices();
   const { data: contentStatsData } = useContentStats();
@@ -355,7 +358,7 @@ export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="pt-20 pb-14 relative overflow-hidden">
+      <section className="pt-20 pb-14 relative overflow-hidden" hidden={!isSectionVisible(visibility, "hero")}>
         {/* Background decoration */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-[#c59b4a]/8 rounded-full blur-3xl" />
@@ -538,7 +541,7 @@ export default function Home() {
       </section>
 
       {/* ── SCROLLING TICKER ─────────────────────────────────────── */}
-      <div className="py-4 bg-[#173f35] overflow-hidden border-y border-[#245d4e]">
+      <div className="py-4 bg-[#173f35] overflow-hidden border-y border-[#245d4e]" hidden={!isSectionVisible(visibility, "ticker")}>
         <div className="flex whitespace-nowrap">
           <div className="ticker-track flex items-center gap-0 shrink-0">
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
@@ -700,7 +703,7 @@ export default function Home() {
       </section>
 
       {/* ── BOLD STATS BAND ──────────────────────────────────────── */}
-      <section className="bg-[#173f35] py-12 relative overflow-hidden">
+      <section className="bg-[#173f35] py-12 relative overflow-hidden" hidden={!isSectionVisible(visibility, "stats")}>
         <div className="absolute inset-0 pointer-events-none opacity-10">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#c59b4a] rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
@@ -730,7 +733,7 @@ export default function Home() {
       </section>
 
       {/* ── SERVICES PREVIEW ─────────────────────────────────────── */}
-      <section className="py-16 bg-white border-y border-[#e5ded3]">
+      <section className="py-16 bg-white border-y border-[#e5ded3]" hidden={!isSectionVisible(visibility, "services")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div
             {...fadeInView()}
@@ -797,7 +800,7 @@ export default function Home() {
       </section>
 
       {/* ── DELIVERY MODEL ───────────────────────────────────────── */}
-      <section className="py-16">
+      <section className="py-16" hidden={!isSectionVisible(visibility, "methodology")}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="bg-[#173f35] rounded-[40px] p-10 md:p-14 relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
@@ -862,7 +865,7 @@ export default function Home() {
       </section>
 
       {/* ── QUOTE / TESTIMONIAL ──────────────────────────────────── */}
-      <section className="py-14 bg-white border-y border-[#e5ded3]">
+      <section className="py-14 bg-white border-y border-[#e5ded3]" hidden={!isSectionVisible(visibility, "testimonial")}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-center max-w-5xl mx-auto">
             <motion.div {...fadeInView()} className="relative">
@@ -1065,7 +1068,7 @@ export default function Home() {
       </section>
 
       {/* ── PROJECT PIPELINE PREVIEW ─────────────────────────────── */}
-      <section className="py-16 bg-[#f7f4ef]">
+      <section className="py-16 bg-[#f7f4ef]" hidden={!isSectionVisible(visibility, "projects")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div
             {...fadeInView()}
@@ -1235,7 +1238,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTORS GRID ─────────────────────────────────────────── */}
-      <section className="py-16 bg-white border-y border-[#e5ded3]">
+      <section className="py-16 bg-white border-y border-[#e5ded3]" hidden={!isSectionVisible(visibility, "sectors")}>
         <div className="container mx-auto px-4 md:px-8">
           <motion.div {...fadeInView()} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 bg-[#efe3cf] text-[#173f35] px-3 py-1.5 rounded-full text-xs font-bold mb-5">
@@ -1366,7 +1369,7 @@ export default function Home() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────────────────── */}
-      <section className="py-16 bg-[#173f35] relative overflow-hidden">
+      <section className="py-16 bg-[#173f35] relative overflow-hidden" hidden={!isSectionVisible(visibility, "cta")}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#c59b4a]/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />

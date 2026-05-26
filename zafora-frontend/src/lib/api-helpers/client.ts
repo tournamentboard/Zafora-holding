@@ -13,11 +13,8 @@ function buildApiUrl(
   path: string,
   searchParams?: ApiClientOptions["searchParams"],
 ): string {
-  console.log("path", path);
-  console.log("ENV.API_URL", ENV.API_URL);
   const base = path.startsWith("http") ? path : `${ENV.API_URL}${path}`;
   const url = new URL(base);
-  console.log("url", url);
 
   if (searchParams) {
     for (const [key, value] of Object.entries(searchParams)) {

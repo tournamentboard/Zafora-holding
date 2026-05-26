@@ -11,6 +11,7 @@ import {
 import type { Project } from "@/src/lib/types";
 import InterestsModal from "@/src/modules/admin/modals/InterestsModal";
 import { Plus, Pencil, Trash2, X, MapPin, DollarSign, Eye, ChevronDown, ChevronUp, Users } from "lucide-react";
+import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
 
 const SECTORS = ["Energy","Water","Transport","Healthcare","Agriculture","Housing","Digital","Education","Logistics","Telecom"];
 const FUNDING_STATUSES = [
@@ -62,15 +63,16 @@ function SectorPicker({ value, onChange }: { value: string; onChange: (v: string
 
 function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: {
   defaultValues?: Project | null;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>, sectors: string) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>, sectors: string, imageUrl: string) => void;
   buttonText: string;
   onCancel?: () => void;
 }) {
   const [sectors, setSectors] = useState((defaultValues?.sector as string) ?? "");
+  const [imageUrl, setImageUrl] = useState((defaultValues?.imageUrl as string) ?? "");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!sectors) { alert("Please select at least one sector."); return; }
-    onSubmit(e, sectors);
+    onSubmit(e, sectors, imageUrl);
   };
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -130,9 +132,12 @@ function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: {
           className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef] resize-none" />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-[#10231f] mb-1.5">Image URL <span className="text-xs font-normal text-[#8a958f]">(optional)</span></label>
-        <input name="imageUrl" defaultValue={defaultValues?.imageUrl as string} placeholder="https://..."
-          className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef]" />
+        <PhotoUploadField
+          label="Image (optional)"
+          value={imageUrl}
+          onChange={setImageUrl}
+          placeholder="https://..."
+        />
       </div>
       <div className="flex gap-3 pt-1">
         <button type="submit" className="flex-1 py-3 rounded-xl bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-colors">{buttonText}</button>
@@ -154,7 +159,7 @@ export default function ProjectsTable() {
   const [viewingInterestsId, setViewingInterestsId] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const handleCreate = async (e: React.FormEvent<HTMLFormElement>, sectors: string) => {
+  const handleCreate = async (e: React.FormEvent<HTMLFormElement>, sectors: string, imageUrl: string) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     try {
@@ -168,7 +173,7 @@ export default function ProjectsTable() {
         zaforaRole: fd.get("zaforaRole") as string,
         partnerNeed: (fd.get("partnerNeed") as string) || undefined,
         description: (fd.get("description") as string) || undefined,
-        imageUrl: (fd.get("imageUrl") as string) || undefined,
+        imageUrl: imageUrl || undefined,
       });
       toast.success("Project added!");
       setShowAddForm(false);
@@ -177,7 +182,7 @@ export default function ProjectsTable() {
     }
   };
 
-  const handleEdit = async (e: React.FormEvent<HTMLFormElement>, sectors: string) => {
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>, sectors: string, imageUrl: string) => {
     e.preventDefault();
     if (!editingProject) return;
     const fd = new FormData(e.currentTarget);
@@ -194,7 +199,7 @@ export default function ProjectsTable() {
           zaforaRole: fd.get("zaforaRole") as string,
           partnerNeed: (fd.get("partnerNeed") as string) || undefined,
           description: (fd.get("description") as string) || undefined,
-          imageUrl: (fd.get("imageUrl") as string) || undefined,
+          imageUrl: imageUrl || undefined,
         },
       });
       toast.success("Project updated!");

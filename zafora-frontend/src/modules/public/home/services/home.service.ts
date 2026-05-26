@@ -30,6 +30,31 @@ export const homeKeys = {
   setting: (key: string) => ["content", "settings", key] as const,
 };
 
+type SectionMap = Record<string, boolean>;
+
+const VISIBILITY_DEFAULTS: Record<string, SectionMap> = {
+  home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
+  about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
+  services: { hero: true, stats: true, cards: true, cta: true },
+  projects: { hero: true, filter: true, grid: true },
+  government: { hero: true, stats: true, capability: true, framework: true, cta: true },
+  submit: { hero: true, form: true, sidebar: true },
+};
+
+export function useSectionVisibility(page: string): SectionMap {
+  const { data } = useSiteSetting("section_visibility");
+  try {
+    const parsed: Record<string, SectionMap> = data?.value ? JSON.parse(data.value as string) : {};
+    return { ...(VISIBILITY_DEFAULTS[page] ?? {}), ...(parsed[page] ?? {}) };
+  } catch {
+    return VISIBILITY_DEFAULTS[page] ?? {};
+  }
+}
+
+export function isSectionVisible(visibility: SectionMap, section: string): boolean {
+  return visibility[section] !== false;
+}
+
 export function useServices() {
   return useQuery({ queryKey: homeKeys.services, queryFn: fetchServices });
 }
