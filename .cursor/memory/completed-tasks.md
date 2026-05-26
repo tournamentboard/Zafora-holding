@@ -1,6 +1,6 @@
 # Completed Tasks
 
-_Last updated: 2026-05-25_
+_Last updated: 2026-05-26_
 
 ---
 
@@ -207,12 +207,74 @@ _Last updated: 2026-05-25_
 
 ---
 
-## Partially Done / In Progress
+### Bug Fix Round 1 ✅ (2026-05-26)
+- `auth.validator.ts` — `ChangePasswordBody.newPassword` min(8) → min(4)
+- `SettingsPanel.tsx` — validation guard + placeholder updated to 4 chars
+- `login/page.tsx` — `ForgotPasswordForm` + `"forgot"` mode added to `AuthGate`; "Forgot password?" link in `LoginForm`
+- `LeadsTable.tsx` — notes textarea + `handleSaveNotes` in detail modal; `openLead()` initialises `notesValue`
+- `AdminHeader.tsx` — "View Website" Globe link added to top bar
+- `projects/page.tsx` — `hasActiveFilters` flag; "Pipeline under development" state when DB is empty
+- `page.tsx` — `HERO_DEFAULTS.badge` = "Open for Engagement · Est. 2025"; hardcoded "Active Pipeline" → "Accepting Mandates"
 
-### AnnouncementBar Wiring ⚠️ (2026-05-25)
-- `AnnouncementBar` component exists at `components/common/AnnouncementBar.tsx`
-- NOT yet imported/rendered in `app/(public)/layout.tsx`
+### B6 — File Upload & Storage Module ✅ (2026-05-26)
+- `zafora-backend/src/shared/lib/object-storage.ts` — AWS S3 service: `getPresignedPutUrl()` + `deleteObject()`
+- `zafora-backend/src/modules/storage/storage.validator.ts` — Zod `PresignBody` (fileName, contentType, size, folder)
+- `zafora-backend/src/modules/storage/storage.routes.ts` — `POST /storage/presign` behind `requireAuth`
+- `zafora-backend/src/modules/storage/index.ts`
+- `zafora-backend/src/routes/index.ts` — replaced old Replit GCS storageRouter with new module
+- `zafora-backend/src/shared/lib/swagger.ts` — `/api/storage/presign` documented
+- `zafora-backend/.env` — AWS_S3_BUCKET, AWS_S3_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_CUSTOM_DOMAIN added
+- `zafora-frontend/src/lib/url-helpers/api-endpoints.ts` — STORAGE.PRESIGN added
+- Installed: `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`
+- **Constraint:** Fill AWS credentials in `.env` and Railway before F11 uploads work
+
+---
+
+---
+
+## Audit Round 2 — api-client-react full removal ✅ (2026-05-26)
+
+- `app/(public)/about/page.tsx` — `useGetSiteSettings` → `useSiteSetting`
+- `app/(public)/services/page.tsx` — `useListServices` + `useGetSiteSettings` → `useServices` + `useSiteSetting`
+- `app/(public)/submit/page.tsx` — `useCreateLead` (Orval) → `useMutation(apiAxios.post)`, `useGetSiteSettings` → `useSiteSetting`
+- `app/(public)/government/page.tsx` — `useGetSiteSettings` → `useSiteSetting`
+- `app/(public)/government-review/page.tsx` — `useGetSiteSettings` → `useSiteSetting`
+- ✓ Zero `api-client-react` imports remain in `src/app/(public)/`
+
+---
+
+## Audit Round 3 — DB cleanup + admin-public sync ✅ (2026-05-26)
+
+### DB Unique Constraints (applied live on Neon)
+- `content_stats.label` — unique
+- `methodology_steps.step_number` — unique
+- `services.name` — unique
+- `faqs.question` — unique
+- `documents.title` — unique
+- `projects.name` — unique
+- Applied via `scripts/apply-unique-constraints.ts`
+
+### Seed Rewrite (`scripts/seed.ts`)
+- Removed all fabricated data: 8 fake projects, 5 fake testimonials, 6 fake stats, 8 fake leads, 6 placeholder documents
+- Seed now fully idempotent: `DELETE FROM` all seeded tables at start
+- Fixed JSON shape mismatches: `hero` (all fields), `footer` (`tagline`→`description`), `branding` (full 10-field admin shape), `navigation` (`/government`→`/government-review`)
+- Added new settings seeds: `about` (empty team), `site_images` (empty), `services_page`, `government_page`, `submit_page`, all `seo_*` keys
+
+### Admin → Public Sync
+- `Navbar.tsx` — now reads `branding.logoUrl` from DB; falls back to static `logo.png`
+- `GlobalLayout.tsx` — footer logo now reads `branding.logoUrl` from DB
+- `about/page.tsx` — removed 5 hardcoded fake team members from `DEFAULTS.team` (now `[]`)
+
+### Real Project Data Seeded
+- 6 live projects added: Rwanda Smart Grid, Mozambique LNG Roads, Lagos-Ibadan Healthcare, Nairobi Water, Sahel Solar Corridor, Lamu Port Phase II
+
+### Type Fix
+- `page.tsx` testimonial section: `clientName`→`name`, `clientTitle`→`role` (aligns with `Testimonial` type)
+
+---
+
+## Partially Done / In Progress
 
 ### lib/site-settings.ts ⚠️ (2026-05-25)
 - `getSectionVisibility()` server helper NOT yet created
-- Public pages do NOT yet consume section_visibility setting
+- Public pages do NOT yet consume `section_visibility` setting

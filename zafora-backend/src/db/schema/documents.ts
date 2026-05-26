@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 export const documentsTable = pgTable("documents", {
   id: serial("id").primaryKey(),
-  title: text("title").notNull(),
+  title: text("title").notNull().unique(),
   documentType: text("document_type").notNull(),
   visibility: text("visibility").notNull().default("public"),
   fileUrl: text("file_url"),

@@ -1,12 +1,15 @@
 "use client";
+import { useProjects } from "@/src/modules/public/projects/services/projects.service";
 import {
-  useListProjects,
-  useListServices,
-  useListContentStats,
-  useListMethodologySteps,
-  useGetSiteSettings,
-} from "@/src/lib/api-client-react";
+  useServices,
+  useContentStats,
+  useMethodologySteps,
+  useSiteSetting,
+} from "@/src/modules/public/home/services/home.service";
 import { useQuery } from "@tanstack/react-query";
+import { apiAxios } from "@/src/lib/api-helpers";
+import { API } from "@/src/lib/url-helpers";
+import type { Testimonial } from "@/src/lib/types";
 
 import { Button } from "@/src/components/ui/button";
 import { motion } from "framer-motion";
@@ -39,7 +42,6 @@ import {
   GraduationCap,
   ChevronRight,
 } from "lucide-react";
-import { use } from "react";
 import Link from "next/link";
 
 const TICKER_ITEMS = [
@@ -284,7 +286,7 @@ const HOME_IMAGE_DEFAULTS = {
 };
 
 const HERO_DEFAULTS = {
-  badge: "Strategic Infrastructure & Consulting · Est. 2025",
+  badge: "Open for Engagement · Est. 2025",
   headline: "Structuring, funding, and delivering high-impact projects.",
   subheadline:
     "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
@@ -303,20 +305,19 @@ const HERO_DEFAULTS = {
 };
 
 export default function Home() {
-  const { data: seoData } = useGetSiteSettings("seo_home");
+  const { data: seoData } = useSiteSetting("seo_home");
   usePageTitle("Home", parseSeoSettings(seoData));
-  const { data: projectsData } = useListProjects({ limit: 3 });
-  const { data: servicesData } = useListServices();
-  const { data: contentStatsData } = useListContentStats();
-  const { data: methodologyData } = useListMethodologySteps();
-  const { data: heroData } = useGetSiteSettings("hero");
-  const { data: imagesData } = useGetSiteSettings("site_images");
-  const { data: testimonialsData } = useQuery<{ testimonials: any[] }>({
-    queryKey: ["/api/testimonials"],
+  const { data: projectsData } = useProjects({ limit: 3 });
+  const { data: servicesData } = useServices();
+  const { data: contentStatsData } = useContentStats();
+  const { data: methodologyData } = useMethodologySteps();
+  const { data: heroData } = useSiteSetting("hero");
+  const { data: imagesData } = useSiteSetting("site_images");
+  const { data: testimonialsData } = useQuery({
+    queryKey: [API.TESTIMONIALS.LIST],
     queryFn: async () => {
-      const res = await fetch("/api/testimonials");
-      if (!res.ok) throw new Error("Failed to fetch testimonials");
-      return res.json();
+      const res = await apiAxios.get<{ testimonials: Testimonial[] }>(API.TESTIMONIALS.LIST);
+      return res.data;
     },
   });
 
@@ -486,7 +487,7 @@ export default function Home() {
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
                   </span>
                   <span className="text-white text-[10px] font-semibold">
-                    Active Pipeline
+                    Accepting Mandates
                   </span>
                 </div>
               </div>
@@ -1044,16 +1045,16 @@ export default function Home() {
               </p>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-[#173f35] flex items-center justify-center text-white font-bold text-lg">
-                  {featuredTestimonial?.clientName
-                    ? featuredTestimonial.clientName.slice(0, 2).toUpperCase()
+                  {featuredTestimonial?.name
+                    ? featuredTestimonial.name.slice(0, 2).toUpperCase()
                     : "ZH"}
                 </div>
                 <div>
                   <div className="font-bold text-[#10231f]">
-                    {featuredTestimonial?.clientName || "Zafora Holding"}
+                    {featuredTestimonial?.name || "Zafora Holding"}
                   </div>
                   <div className="text-sm text-[#65736f]">
-                    {featuredTestimonial?.clientTitle ||
+                    {featuredTestimonial?.role ||
                       "Tampa, FL, USA · Est. 2025"}
                   </div>
                 </div>

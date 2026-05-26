@@ -6,7 +6,7 @@ export const LoginBody = z.object({
 
 export const ChangePasswordBody = z.object({
   currentPassword: z.string().min(1),
-  newPassword: z.string().min(8),
+  newPassword: z.string().min(4),
 });
 
 export const SetupBody = z.object({

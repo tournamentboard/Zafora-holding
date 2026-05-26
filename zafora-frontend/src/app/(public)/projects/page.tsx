@@ -1,6 +1,7 @@
-"use client"
+"use client";
 import { useState } from "react";
-import { useListProjects, useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useProjects } from "@/src/modules/public/projects/services/projects.service";
+import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
 import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf } from "lucide-react";
@@ -36,13 +37,15 @@ const getSectorStyle = (sector: string) => {
 };
 
 export default function Projects() {
-  const { data: seoData } = useGetSiteSettings("seo_projects");
+  const { data: seoData } = useSiteSetting("seo_projects");
   usePageTitle("Project Pipeline", parseSeoSettings(seoData));
   const [sector, setSector] = useState("All");
   const [status, setStatus] = useState("All");
   const [search, setSearch] = useState("");
 
-  const { data: rawData, isLoading, error } = useListProjects({});
+  const { data: rawData, isLoading, error } = useProjects({});
+
+  const hasActiveFilters = sector !== "All" || status !== "All" || search !== "";
 
   // Client-side filtering supports multi-sector (comma-separated in DB)
   const data = {
@@ -155,11 +158,21 @@ export default function Projects() {
             </div>
           ) : data?.projects?.length === 0 ? (
             <div className="text-center py-24 border border-dashed border-[#e5ded3] rounded-[24px] bg-[#f7f4ef]">
-              <h3 className="text-2xl font-bold text-[#10231f] mb-3">No projects found</h3>
-              <p className="text-[#65736f] mb-6">Try adjusting your filters or search query.</p>
-              <Button variant="outline" className="rounded-full border-[#173f35] text-[#173f35]" onClick={() => { setSector("All"); setStatus("All"); setSearch(""); }}>
-                Clear Filters
-              </Button>
+              {hasActiveFilters ? (
+                <>
+                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">No projects found</h3>
+                  <p className="text-[#65736f] mb-6">Try adjusting your filters or search query.</p>
+                  <Button variant="outline" className="rounded-full border-[#173f35] text-[#173f35]" onClick={() => { setSector("All"); setStatus("All"); setSearch(""); }}>
+                    Clear Filters
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <BarChart3 className="h-12 w-12 mx-auto mb-4 text-[#8a958f] opacity-40" />
+                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">Pipeline under development</h3>
+                  <p className="text-[#65736f] max-w-sm mx-auto">Our project pipeline is being curated. Check back soon for infrastructure opportunities.</p>
+                </>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

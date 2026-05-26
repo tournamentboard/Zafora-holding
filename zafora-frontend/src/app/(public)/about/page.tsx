@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePageTitle } from "@/src/hooks/use-page-title";
 import { parseSeoSettings } from "@/src/hooks/use-seo-meta";
-import { useGetSiteSettings } from "@/src/lib/api-client-react";
+import { useSiteSetting } from "@/src/modules/public/home/services/home.service";
 import {
   Globe, ShieldCheck, Handshake, TrendingUp, Users, Building2,
   Landmark, Zap, Droplets, Truck, Stethoscope, ArrowRight,
@@ -55,13 +55,7 @@ const DEFAULTS = {
   teamHeadline: "The team behind the work",
   teamSubheadline: "Experienced operators who have led projects, not just advised on them.",
   teamLayout: "4",
-  team: [
-    { firstName: "James", lastName: "Okafor", name: "", title: "Founder & Chief Executive Officer", department: "Executive Leadership", bio: "Infrastructure strategist with 20+ years bridging African sovereign governments and international capital markets. Leads Zafora's strategic vision, senior government relationships, and institutional partnerships across Sub-Saharan Africa.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 1, status: "published" },
-    { firstName: "Amara", lastName: "Diallo", name: "", title: "Director of Infrastructure Advisory", department: "Advisory", bio: "Former senior consultant to the African Development Bank, specializing in PPP frameworks, DFI engagement, and sovereign project finance. Advises government clients on risk mitigation, project structuring, and multilateral capital mobilization.", location: "Washington, D.C., USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 2, status: "published" },
-    { firstName: "Sarah", lastName: "Mitchell", name: "", title: "Director of Operations", department: "Operations", bio: "Operations strategist with a decade managing complex, multi-stakeholder infrastructure programs across East Africa. Expert in compliance frameworks, project governance, and end-to-end delivery management for large-scale development initiatives.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 3, status: "published" },
-    { firstName: "Emmanuel", lastName: "Kwesi", name: "", title: "Head of Global Partnerships", department: "Partnerships", bio: "Relationship architect connecting institutional investors, government agencies, and engineering contractors to bankable African infrastructure opportunities. Deep network across the Americas, Europe, and Sub-Saharan Africa.", location: "New York, NY, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 4, status: "published" },
-    { firstName: "David", lastName: "Mensah", name: "", title: "Chief Financial Officer", department: "Finance", bio: "Infrastructure finance executive with deep expertise in project finance structuring, DFI co-financing, and sovereign debt instruments. Oversees Zafora's financial strategy, treasury operations, and capital mobilization across all active mandates.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 5, status: "published" },
-  ],
+  team: [],
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
     subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
@@ -138,9 +132,9 @@ function deepMerge(base: any, override: any): any {
 }
 
 export default function About() {
-  const { data: seoData } = useGetSiteSettings("seo_about");
+  const { data: seoData } = useSiteSetting("seo_about");
   usePageTitle("About Us", parseSeoSettings(seoData));
-  const { data: settingsData } = useGetSiteSettings("about");
+  const { data: settingsData } = useSiteSetting("about");
 
   let d = DEFAULTS;
   if (settingsData?.value) {

@@ -57,7 +57,7 @@ router.post(ROUTE_PATHS.AUTH.LOGIN, async (req, res) => {
   res.cookie(ACCESS_COOKIE, accessToken, ACCESS_COOKIE_OPTIONS);
   res.cookie(REFRESH_COOKIE, refreshToken, REFRESH_COOKIE_OPTIONS);
 
-  res.json({ ok: true, user: { id: user.userId, email: user.email, role: user.role } });
+  res.json({ ok: true, accessToken, refreshToken, user: { id: user.userId, email: user.email, role: user.role } });
 });
 
 // GET /api/auth/verify
@@ -82,7 +82,10 @@ router.get(ROUTE_PATHS.AUTH.VERIFY, (req, res) => {
 
 // POST /api/auth/refresh
 router.post(ROUTE_PATHS.AUTH.REFRESH, async (req, res) => {
-  const token = req.cookies?.[REFRESH_COOKIE] as string | undefined;
+  // Accept token from request body (localStorage flow) or cookie (SSR flow)
+  const token: string | undefined =
+    (req.body as { refreshToken?: string })?.refreshToken ||
+    req.cookies?.[REFRESH_COOKIE];
   if (!token) {
     res.status(401).json({ error: "No refresh token" });
     return;
@@ -117,7 +120,7 @@ router.post(ROUTE_PATHS.AUTH.REFRESH, async (req, res) => {
   res.cookie(ACCESS_COOKIE, newAccessToken, ACCESS_COOKIE_OPTIONS);
   res.cookie(REFRESH_COOKIE, newRefreshToken, REFRESH_COOKIE_OPTIONS);
 
-  res.json({ ok: true });
+  res.json({ ok: true, accessToken: newAccessToken, refreshToken: newRefreshToken });
 });
 
 // POST /api/auth/logout
@@ -215,7 +218,7 @@ router.post(ROUTE_PATHS.AUTH.SETUP, async (req, res) => {
   res.cookie(ACCESS_COOKIE, accessToken, ACCESS_COOKIE_OPTIONS);
   res.cookie(REFRESH_COOKIE, refreshToken, REFRESH_COOKIE_OPTIONS);
 
-  res.json({ ok: true, user: { id: userId, email: adminEmail, role: "admin" } });
+  res.json({ ok: true, accessToken, refreshToken, user: { id: userId, email: adminEmail, role: "admin" } });
 });
 
 // POST /api/auth/reset-password — emergency reset (for locked out admin)
