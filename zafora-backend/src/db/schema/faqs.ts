@@ -2,7 +2,7 @@ import { pgTable, text, serial, boolean, integer, timestamp } from "drizzle-orm/
 
 export const faqsTable = pgTable("faqs", {
   id: serial("id").primaryKey(),
-  question: text("question").notNull(),
+  question: text("question").notNull().unique(),
   answer: text("answer").notNull(),
   category: text("category").default("general"),
   page: text("page").default("general"),

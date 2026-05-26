@@ -19,11 +19,11 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: navData } = useGetSiteSettings("navigation");
   const { data: brandingData } = useGetSiteSettings("branding");
-  const motto = (() => {
+  const branding = (() => {
     try {
       const parsed = brandingData?.value ? JSON.parse(brandingData.value) : null;
-      return parsed?.tagline || "Infrastructure. Capital. Delivery.";
-    } catch { return "Infrastructure. Capital. Delivery."; }
+      return { logoUrl: parsed?.logoUrl || "", siteName: parsed?.siteName || "Zafora Holding" };
+    } catch { return { logoUrl: "", siteName: "Zafora Holding" }; }
   })();
 
   const links = (() => {
@@ -42,7 +42,11 @@ export default function Navbar() {
     <nav className="relative w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.97)" }}>
       <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <Image src={logo} alt="Zafora Holding" className="h-16 w-auto object-contain" />
+          {branding.logoUrl ? (
+            <img src={branding.logoUrl} alt={branding.siteName} className="h-16 w-auto object-contain" />
+          ) : (
+            <Image src={logo} alt={branding.siteName} className="h-16 w-auto object-contain" />
+          )}
         </Link>
 
         {/* Desktop Nav */}

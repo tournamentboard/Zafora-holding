@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 export const methodologyStepsTable = pgTable("methodology_steps", {
   id: serial("id").primaryKey(),
-  stepNumber: integer("step_number").notNull(),
+  stepNumber: integer("step_number").notNull().unique(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   iconName: text("icon_name"),

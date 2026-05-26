@@ -1,5 +1,6 @@
 /**
- * Seed script — populates Zafora DB with realistic dummy data.
+ * Seed script — populates Zafora DB with structural defaults.
+ * Safe to re-run: clears all seeded tables before inserting.
  * Run: npx tsx scripts/seed.ts
  */
 
@@ -20,109 +21,91 @@ import {
 async function seed() {
   console.log("🌱 Seeding database...\n");
 
-  // ── Projects ──────────────────────────────────────────────────────
+  // ── Clear all seeded tables (safe re-run) ──────────────────────────
+  console.log("Clearing existing seeded data...");
+  await db.delete(leadsTable);
+  await db.delete(documentsTable);
+  await db.delete(testimonialsTable);
+  await db.delete(projectsTable);
+  await db.delete(contentStatsTable);
+  await db.delete(methodologyStepsTable);
+  await db.delete(servicesTable);
+  await db.delete(faqsTable);
+  console.log("  ✓ Tables cleared\n");
+
+  // ── Projects ───────────────────────────────────────────────────────
   console.log("Inserting projects...");
   await db.insert(projectsTable).values([
     {
-      name: "Lagos Coastal Highway Expansion",
-      sector: "Infrastructure",
-      country: "Nigeria",
-      region: "West Africa",
+      name: "Rwanda Smart Grid Modernization",
+      sector: "Energy",
+      country: "Rwanda",
+      region: "East Africa",
       fundingStatus: "seeking_funding",
-      estimatedValue: "$340M",
-      zaforaRole: "Lead Financial Advisor",
-      partnerNeed: "EPC Contractor, DFI Co-funder",
-      description: "A 78 km coastal expressway connecting Apapa Port to Lekki Free Trade Zone, reducing freight transit time by 60%.",
-      interestCount: 14,
+      estimatedValue: "$95M",
+      zaforaRole: "Funding Advisor",
+      partnerNeed: "Technology Partner, Grid Operator",
+      description: "National smart grid deployment replacing aging infrastructure and enabling renewable energy integration across all 30 districts.",
     },
     {
-      name: "Nairobi Solar Power Plant — Phase II",
-      sector: "Energy",
+      name: "Mozambique LNG Access Roads",
+      sector: "Transport",
+      country: "Mozambique",
+      region: "Southern Africa",
+      fundingStatus: "funded",
+      estimatedValue: "$65M",
+      zaforaRole: "Contract Manager",
+      partnerNeed: "",
+      description: "Critical road infrastructure supporting LNG extraction operations in northern Mozambique, opening remote regions to economic activity.",
+    },
+    {
+      name: "Lagos-Ibadan Healthcare Infrastructure",
+      sector: "Healthcare",
+      country: "Nigeria",
+      region: "West Africa",
+      fundingStatus: "government_review",
+      estimatedValue: "$120M",
+      zaforaRole: "Procurement Advisor",
+      partnerNeed: "Healthcare Operator, Construction Firm",
+      description: "Network of 12 district hospitals along the Lagos-Ibadan corridor serving a population of 4 million people.",
+    },
+    {
+      name: "Nairobi Urban Water Resilience Program",
+      sector: "Water & Sanitation",
       country: "Kenya",
       region: "East Africa",
       fundingStatus: "partially_funded",
-      estimatedValue: "$95M",
-      zaforaRole: "Project Structuring & DFI Liaison",
-      partnerNeed: "Solar EPC, Local Utility Partner",
-      description: "200 MW utility-scale solar facility expanding Phase I capacity. IFC partial commitment secured; seeking co-investors.",
-      interestCount: 22,
+      estimatedValue: "$85M",
+      zaforaRole: "Project Manager",
+      partnerNeed: "Engineering Firm, Government Co-Sponsor",
+      description: "Rehabilitation and expansion of water infrastructure serving 1.2 million residents in Nairobi's informal settlements.",
     },
     {
-      name: "Accra Smart Water Distribution Network",
-      sector: "Water & Sanitation",
-      country: "Ghana",
+      name: "Sahel Solar Energy Corridor",
+      sector: "Energy",
+      country: "Senegal",
       region: "West Africa",
-      fundingStatus: "funded",
-      estimatedValue: "$58M",
-      zaforaRole: "Transaction Advisory",
-      partnerNeed: "Operations & Maintenance Partner",
-      description: "IoT-enabled water metering and distribution network serving 1.2 million residents in Greater Accra.",
-      interestCount: 9,
-    },
-    {
-      name: "Dar es Salaam Port Modernisation",
-      sector: "Maritime & Logistics",
-      country: "Tanzania",
-      region: "East Africa",
       fundingStatus: "seeking_funding",
       estimatedValue: "$210M",
-      zaforaRole: "PPP Structuring Advisor",
-      partnerNeed: "Port Operator, Construction Firm",
-      description: "Berth deepening, terminal automation, and cold-chain facility to position Dar es Salaam as East Africa's primary gateway port.",
-      interestCount: 18,
+      zaforaRole: "Development Partner",
+      partnerNeed: "Strategic Investor, Technical Partner",
+      description: "A 150MW solar generation corridor spanning three communities in the Sahel region, providing clean energy to 600,000 residents.",
     },
     {
-      name: "Abidjan Affordable Housing — Phase I",
-      sector: "Real Estate & Housing",
-      country: "Côte d'Ivoire",
-      region: "West Africa",
-      fundingStatus: "partially_funded",
-      estimatedValue: "$120M",
-      zaforaRole: "Financial Structuring & Investor Origination",
-      partnerNeed: "Local Developer, Impact Investor",
-      description: "3,500 affordable housing units targeting civil servants and low-to-middle income households in Abidjan's Yopougon district.",
-      interestCount: 11,
-    },
-    {
-      name: "Lusaka–Livingstone Railway Rehabilitation",
+      name: "Lamu Port Expansion Phase II",
       sector: "Transport",
-      country: "Zambia",
-      region: "Southern Africa",
-      fundingStatus: "seeking_funding",
-      estimatedValue: "$475M",
-      zaforaRole: "Lead Advisory & Government Interface",
-      partnerNeed: "Rolling Stock Supplier, Rail Operator",
-      description: "Full rehabilitation of 460 km rail corridor to enhance freight capacity between Lusaka and the tourism-heavy Livingstone corridor.",
-      interestCount: 7,
-    },
-    {
-      name: "Addis Ababa Industrial Park Expansion",
-      sector: "Industrial & Manufacturing",
-      country: "Ethiopia",
+      country: "Kenya",
       region: "East Africa",
-      fundingStatus: "funded",
-      estimatedValue: "$85M",
-      zaforaRole: "Investment Facilitation",
-      partnerNeed: "Light Manufacturing Tenants",
-      description: "Expansion of the Bole Lemi Industrial Park with 45 new factory shells targeting textile and agro-processing investors.",
-      interestCount: 31,
+      fundingStatus: "investor_ready",
+      estimatedValue: "$340M",
+      zaforaRole: "Lead Advisor",
+      partnerNeed: "EPC Contractor, DFI Co-Financier",
+      description: "Expansion of the Lamu Port to increase container throughput capacity by 300%, supporting Kenya's status as an East African logistics hub.",
     },
-    {
-      name: "Casablanca Green Bond Framework",
-      sector: "Finance & Capital Markets",
-      country: "Morocco",
-      region: "North Africa",
-      fundingStatus: "closed",
-      estimatedValue: "$150M",
-      zaforaRole: "Green Bond Structuring & Verification",
-      partnerNeed: "None — fully subscribed",
-      description: "Morocco's first sovereign green bond aligned with ICMA Green Bond Principles, proceeds allocated to renewable energy and climate adaptation.",
-      interestCount: 5,
-    },
-  ]).onConflictDoNothing();
-  console.log("  ✓ 8 projects inserted");
+  ]);
+  console.log("  ✓ 6 projects inserted");
 
-  // ── Services ──────────────────────────────────────────────────────
+  // ── Services ───────────────────────────────────────────────────────
   console.log("Inserting services...");
   await db.insert(servicesTable).values([
     {
@@ -209,54 +192,8 @@ async function seed() {
       displayOrder: 6,
       visible: true,
     },
-  ]).onConflictDoNothing();
+  ]);
   console.log("  ✓ 6 services inserted");
-
-  // ── Testimonials ──────────────────────────────────────────────────
-  console.log("Inserting testimonials...");
-  await db.insert(testimonialsTable).values([
-    {
-      name: "Dr. Amara Diallo",
-      company: "Ministry of Finance, Guinea",
-      role: "Director General, Infrastructure Finance",
-      quote: "Zafora's advisory team navigated a highly complex multi-creditor structure for our road concession. Their depth of knowledge of DFI requirements was invaluable in reaching financial close within 18 months.",
-      displayOrder: 1,
-      visible: true,
-    },
-    {
-      name: "Chidi Okonkwo",
-      company: "Pan-African Infrastructure Fund",
-      role: "Managing Partner",
-      quote: "We have co-invested alongside Zafora-advised projects in four countries. Their transaction structuring is rigorous and their government relationships open doors that other advisors cannot.",
-      displayOrder: 2,
-      visible: true,
-    },
-    {
-      name: "Fatima Al-Rashidi",
-      company: "African Development Bank",
-      role: "Principal Investment Officer",
-      quote: "The quality of Zafora's project preparation work consistently meets AfDB's pre-appraisal standards. They are one of the few Africa-focused advisors that truly understands our internal processes.",
-      displayOrder: 3,
-      visible: true,
-    },
-    {
-      name: "James Kariuki",
-      company: "Kenya Power & Lighting Company",
-      role: "Chief Finance Officer",
-      quote: "Zafora structured our green bond framework from scratch, including coordinating the second-party opinion and investor roadshow. The bond was 1.8x oversubscribed at issuance.",
-      displayOrder: 4,
-      visible: true,
-    },
-    {
-      name: "Nadia Mbeki",
-      company: "South African National Treasury",
-      role: "Head of PPP Unit",
-      quote: "Their PPP transaction advisory on the Gauteng wastewater concession set a new benchmark for procurement transparency and bankability in our market.",
-      displayOrder: 5,
-      visible: true,
-    },
-  ]).onConflictDoNothing();
-  console.log("  ✓ 5 testimonials inserted");
 
   // ── Content Stats ──────────────────────────────────────────────────
   console.log("Inserting content stats...");
@@ -267,7 +204,7 @@ async function seed() {
     { label: "Years of Experience", value: "18", suffix: "+", description: "Collective senior advisory experience on the continent", iconName: "Award", displayOrder: 4, visible: true },
     { label: "Government Partners", value: "47", suffix: "", description: "Ministries, agencies, and state-owned enterprises served", iconName: "Landmark", displayOrder: 5, visible: true },
     { label: "DFI Relationships", value: "22", suffix: "", description: "Active relationships with development finance institutions", iconName: "Building2", displayOrder: 6, visible: true },
-  ]).onConflictDoNothing();
+  ]);
   console.log("  ✓ 6 content stats inserted");
 
   // ── Methodology Steps ──────────────────────────────────────────────
@@ -321,286 +258,8 @@ async function seed() {
       displayOrder: 6,
       visible: true,
     },
-  ]).onConflictDoNothing();
+  ]);
   console.log("  ✓ 6 methodology steps inserted");
-
-  // ── Documents ──────────────────────────────────────────────────────
-  console.log("Inserting documents...");
-  await db.insert(documentsTable).values([
-    {
-      title: "Africa Infrastructure Outlook 2025",
-      documentType: "Research Report",
-      visibility: "public",
-      description: "Annual analysis of infrastructure investment trends, funding gaps, and priority sectors across Sub-Saharan and North Africa.",
-    },
-    {
-      title: "PPP Framework Guide for African Governments",
-      documentType: "Policy Guide",
-      visibility: "public",
-      description: "Practical guide for government procurement teams on structuring bankable PPP transactions from inception to financial close.",
-    },
-    {
-      title: "Zafora Holding — Corporate Profile 2025",
-      documentType: "Company Profile",
-      visibility: "public",
-      description: "Overview of Zafora's advisory practice, sector expertise, track record, and senior team.",
-    },
-    {
-      title: "DFI Engagement Handbook",
-      documentType: "Advisory Note",
-      visibility: "private",
-      description: "Internal handbook covering application processes, requirements, and relationship management for 22 DFI and MDB partners.",
-    },
-    {
-      title: "Green Bond Principles — Implementation Checklist",
-      documentType: "Template",
-      visibility: "public",
-      description: "Step-by-step checklist aligned with ICMA Green Bond Principles for issuers seeking sustainable capital market instruments.",
-    },
-    {
-      title: "Project Finance Modelling Standards",
-      documentType: "Technical Standard",
-      visibility: "private",
-      description: "Internal modelling standards and assumptions guide for Zafora project finance engagements.",
-    },
-  ]).onConflictDoNothing();
-  console.log("  ✓ 6 documents inserted");
-
-  // ── Leads ──────────────────────────────────────────────────────────
-  console.log("Inserting leads...");
-  await db.insert(leadsTable).values([
-    {
-      fullName: "Emmanuel Kwarteng",
-      organization: "Ghana Infrastructure Investment Fund",
-      email: "e.kwarteng@giif.gov.gh",
-      phone: "+233 30 291 0000",
-      country: "Ghana",
-      requestType: "consultation",
-      projectSector: "Transport",
-      message: "We are seeking advisory support on a toll road concession on the N1 corridor. Estimated investment $180M. We have government commitment but need help structuring for DFI financing.",
-      budgetFundingNeed: "$180M",
-      projectTimeline: "18–24 months",
-      roleType: "Government",
-      status: "qualified",
-      notes: "Strong mandate. Schedule intro call with structuring team.",
-    },
-    {
-      fullName: "Sophie Marchand",
-      organization: "Meridian Impact Capital",
-      email: "s.marchand@meridianimpact.com",
-      phone: "+33 1 42 00 0000",
-      country: "France",
-      requestType: "partnership",
-      projectSector: "Energy",
-      message: "We are an impact fund with $600M AUM looking to deploy into African renewable energy. Interested in co-investment opportunities on Zafora-advised projects.",
-      budgetFundingNeed: "Up to $50M per project",
-      projectTimeline: "Ongoing",
-      roleType: "Investor",
-      status: "in_progress",
-      notes: "Sent Nairobi Solar deck. Follow up on NDA.",
-    },
-    {
-      fullName: "Brigadier Kwame Asante",
-      organization: "Ministry of Works & Housing, Ghana",
-      email: "k.asante@mowh.gov.gh",
-      phone: "+233 30 266 4000",
-      country: "Ghana",
-      requestType: "government_advisory",
-      projectSector: "Water & Sanitation",
-      message: "Our ministry is preparing a PPP tender for water treatment in three regional capitals. We need an advisor experienced with IFC PS and AfDB procurement requirements.",
-      budgetFundingNeed: "$75M",
-      projectTimeline: "12 months to tender",
-      roleType: "Government",
-      status: "proposal_sent",
-    },
-    {
-      fullName: "Aisha Conteh",
-      organization: "Sierra Leone Investment Board",
-      email: "a.conteh@slib.sl",
-      phone: "+232 76 000 000",
-      country: "Sierra Leone",
-      requestType: "project_submission",
-      projectSector: "Ports & Logistics",
-      message: "We have a greenfield inland container depot project near Freetown Airport ready for private sector structuring. Government has allocated the land. Looking for a transaction advisor.",
-      budgetFundingNeed: "$35M",
-      projectTimeline: "24 months",
-      roleType: "Government",
-      status: "new",
-    },
-    {
-      fullName: "Rajesh Patel",
-      organization: "InfraAsia Partners",
-      email: "r.patel@infraasia.com",
-      phone: "+65 6880 0000",
-      country: "Singapore",
-      requestType: "partnership",
-      projectSector: "Industrial & Manufacturing",
-      message: "We are an Asian infrastructure fund looking to enter African markets through co-advisory or co-investment arrangements. Would like to explore collaboration.",
-      budgetFundingNeed: "$100M–$500M",
-      projectTimeline: "Strategic",
-      roleType: "Investor",
-      status: "reviewed",
-    },
-    {
-      fullName: "Dr. Fatou Ndiaye",
-      organization: "ECOWAS Commission",
-      email: "f.ndiaye@ecowas.int",
-      phone: "+229 21 31 0000",
-      country: "Benin",
-      requestType: "government_advisory",
-      projectSector: "Energy",
-      message: "ECOWAS is developing a regional power pool financing strategy. We need advisory support on the financial structuring of cross-border energy projects involving multiple member states.",
-      budgetFundingNeed: "$500M+",
-      projectTimeline: "36 months",
-      roleType: "Government",
-      status: "contacted",
-    },
-    {
-      fullName: "Michael Acheampong",
-      organization: "Volta River Authority",
-      email: "m.acheampong@vra.com.gh",
-      phone: "+233 30 221 6664",
-      country: "Ghana",
-      requestType: "funding",
-      projectSector: "Energy",
-      message: "We are exploring green bond issuance to fund our solar expansion programme. Interested in understanding structuring options and Zafora's experience in this space.",
-      budgetFundingNeed: "$200M",
-      projectTimeline: "9–12 months",
-      roleType: "Government",
-      status: "new",
-    },
-    {
-      fullName: "Priya Sundaram",
-      organization: "Global Infrastructure Partners",
-      email: "p.sundaram@globalinfra.com",
-      country: "United Kingdom",
-      requestType: "consultation",
-      projectSector: "Transport",
-      message: "GIP is evaluating toll road opportunities in West Africa. We would like an introductory briefing on Zafora's current pipeline and advisory capabilities in this sector.",
-      roleType: "Investor",
-      status: "closed",
-      notes: "Closed — no active mandate. Re-engage Q1 2026.",
-    },
-  ]).onConflictDoNothing();
-  console.log("  ✓ 8 leads inserted");
-
-  // ── Site Settings ──────────────────────────────────────────────────
-  console.log("Inserting site settings...");
-  await db.insert(siteSettingsTable).values([
-    {
-      key: "hero",
-      value: JSON.stringify({
-        headline: "Infrastructure Advisory for Africa's Next Chapter",
-        subheadline: "Zafora Holding connects governments, developers, and investors to structure, finance, and close transformative infrastructure projects across the continent.",
-        ctaLabel: "Explore Our Pipeline",
-        ctaLink: "/projects",
-        secondaryCtaLabel: "Submit a Project",
-        secondaryCtaLink: "/submit",
-      }),
-    },
-    {
-      key: "footer",
-      value: JSON.stringify({
-        tagline: "Connecting capital to Africa's infrastructure ambitions.",
-        address: "1 Finance Drive, Victoria Island, Lagos, Nigeria",
-        email: "Office@zaforaholding.com",
-        phone: "+234 1 700 0000",
-        linkedinUrl: "https://linkedin.com/company/zaforaholding",
-      }),
-    },
-    {
-      key: "branding",
-      value: JSON.stringify({
-        primaryColor: "#173f35",
-        accentColor: "#c59b4a",
-        logoText: "Zafora Holding",
-        tagline: "Infrastructure Advisory for Africa",
-      }),
-    },
-    {
-      key: "seo_home",
-      value: JSON.stringify({
-        title: "Zafora Holding — Infrastructure Advisory for Africa",
-        description: "Zafora Holding provides project finance, PPP, and transaction advisory services for infrastructure projects across Africa.",
-        keywords: "infrastructure advisory Africa, project finance, PPP advisory, DFI",
-      }),
-    },
-    {
-      key: "seo_projects",
-      value: JSON.stringify({
-        title: "Infrastructure Pipeline — Zafora Holding",
-        description: "Explore Zafora's active infrastructure project pipeline across energy, transport, water, and real estate in Africa.",
-        keywords: "Africa infrastructure projects, investment pipeline, project finance",
-      }),
-    },
-    {
-      key: "navigation",
-      value: JSON.stringify([
-        { id: "about", label: "About", href: "/about", visible: true, openNewTab: false, order: 0 },
-        { id: "services", label: "Services", href: "/services", visible: true, openNewTab: false, order: 1 },
-        { id: "pipeline", label: "Pipeline", href: "/projects", visible: true, openNewTab: false, order: 2 },
-        { id: "gov", label: "Government Review", href: "/government", visible: true, openNewTab: false, order: 3 },
-      ]),
-    },
-    {
-      key: "announcement_bar",
-      value: JSON.stringify({
-        enabled: false,
-        message: "Welcome to Zafora Holding — Africa's trusted infrastructure advisory partner.",
-        link: "/submit",
-        linkText: "Partner with us",
-        dismissible: true,
-        bgColor: "#173f35",
-        textColor: "#ffffff",
-      }),
-    },
-    {
-      key: "maintenance_mode",
-      value: JSON.stringify({
-        enabled: false,
-        headline: "We'll be back soon.",
-        message: "We're performing scheduled maintenance. Please check back shortly.",
-        showContactEmail: true,
-        estimatedTime: "",
-      }),
-    },
-    {
-      key: "legal_privacy",
-      value: JSON.stringify({
-        title: "Privacy Policy",
-        lastUpdated: "January 2025",
-        content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
-      }),
-    },
-    {
-      key: "legal_terms",
-      value: JSON.stringify({
-        title: "Terms of Service",
-        lastUpdated: "January 2025",
-        content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
-      }),
-    },
-    {
-      key: "section_visibility",
-      value: JSON.stringify({
-        home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
-        about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
-        services: { hero: true, stats: true, cards: true, cta: true },
-        projects: { hero: true, filter: true, grid: true },
-        government: { hero: true, stats: true, capability: true, framework: true, cta: true },
-        submit: { hero: true, form: true, sidebar: true },
-      }),
-    },
-    {
-      key: "notifications",
-      value: JSON.stringify({
-        adminEmail: process.env["ADMIN_EMAIL"] ?? "Office@zaforaholding.com",
-        notifyOnInquiry: true,
-        notifyOnInterest: true,
-      }),
-    },
-  ]).onConflictDoNothing();
-  console.log("  ✓ 12 site settings inserted");
 
   // ── FAQs ───────────────────────────────────────────────────────────
   console.log("Inserting FAQs...");
@@ -661,8 +320,251 @@ async function seed() {
       displayOrder: 7,
       visible: true,
     },
-  ]).onConflictDoNothing();
+  ]);
   console.log("  ✓ 7 FAQs inserted");
+
+  // ── Site Settings ──────────────────────────────────────────────────
+  console.log("Inserting site settings...");
+  await db
+    .insert(siteSettingsTable)
+    .values([
+      {
+        key: "hero",
+        value: JSON.stringify({
+          badge: "Open for Engagement · Est. 2025",
+          headline: "Structuring, funding, and delivering high-impact projects.",
+          subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
+          primaryBtnText: "Partner With Us",
+          primaryBtnLink: "/submit",
+          secondaryBtnText: "View Pipeline",
+          secondaryBtnLink: "/projects",
+          thirdBtnText: "Our Services",
+          thirdBtnLink: "/services",
+          featureBadge1: "Government-ready documentation",
+          featureBadge2: "PPP & funding advisory",
+          featureBadge3: "Project lifecycle governance",
+          panelCaption: "For governments, funders, and delivery partners.",
+          panelStat: "Open",
+          panelStatLabel: "Accepting Mandates",
+        }),
+      },
+      {
+        key: "footer",
+        value: JSON.stringify({
+          description: "Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm connecting governments, investors, and contractors with large-scale infrastructure projects.",
+          email: "Office@zaforaholding.com",
+          address: "3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607, USA",
+          phone: "",
+          copyright: "2025",
+        }),
+      },
+      {
+        key: "branding",
+        value: JSON.stringify({
+          siteName: "Zafora Holding",
+          tagline: "Infrastructure. Capital. Delivery.",
+          logoUrl: "",
+          faviconUrl: "",
+          primaryColor: "#173f35",
+          accentColor: "#c59b4a",
+          bgColor: "#f7f4ef",
+          footerColor: "#10231f",
+          bodyFont: "Inter",
+          headingFont: "Inter",
+        }),
+      },
+      {
+        key: "about",
+        value: JSON.stringify({
+          hero: {
+            headline: "Built for Africa's Infrastructure Reality",
+            subheadline: "Zafora Holding is a U.S.-based advisory firm purpose-built to structure, finance, and deliver infrastructure across Africa.",
+          },
+          story: "Zafora Holding was founded to address a critical gap in Africa's infrastructure market: the need for transaction advisors who understand both the complexity of DFI-financed deals and the political realities of African governments.\n\nWe operate at the intersection of capital markets, government strategy, and project delivery — bringing institutional-grade advisory to markets that have historically been underserved.",
+          mission: "To accelerate Africa's infrastructure development by connecting governments, investors, and contractors with the advisory expertise needed to close transformative deals.",
+          vision: "A continent where every bankable infrastructure project finds its capital.",
+          team: [],
+        }),
+      },
+      {
+        key: "seo_home",
+        value: JSON.stringify({
+          title: "Zafora Holding — Infrastructure Advisory for Africa",
+          description: "Zafora Holding provides project finance, PPP, and transaction advisory services for infrastructure projects across Africa.",
+          keywords: "infrastructure advisory Africa, project finance, PPP advisory, DFI",
+        }),
+      },
+      {
+        key: "seo_about",
+        value: JSON.stringify({
+          title: "About Zafora Holding — Infrastructure Advisory",
+          description: "Learn about Zafora Holding's mission, team, and track record in African infrastructure advisory.",
+          keywords: "Zafora Holding about, infrastructure advisory team, Africa",
+        }),
+      },
+      {
+        key: "seo_services",
+        value: JSON.stringify({
+          title: "Advisory Services — Zafora Holding",
+          description: "Explore Zafora's full-spectrum infrastructure advisory services: project finance, PPP, ESG, green finance, and more.",
+          keywords: "infrastructure advisory services, PPP advisory, project finance Africa",
+        }),
+      },
+      {
+        key: "seo_projects",
+        value: JSON.stringify({
+          title: "Infrastructure Pipeline — Zafora Holding",
+          description: "Explore Zafora's active infrastructure project pipeline across energy, transport, water, and real estate in Africa.",
+          keywords: "Africa infrastructure projects, investment pipeline, project finance",
+        }),
+      },
+      {
+        key: "seo_government",
+        value: JSON.stringify({
+          title: "Government Advisory — Zafora Holding",
+          description: "Zafora Holding works with governments and ministries across Africa to structure, procure, and deliver infrastructure.",
+          keywords: "government advisory Africa, PPP procurement, infrastructure ministry",
+        }),
+      },
+      {
+        key: "seo_submit",
+        value: JSON.stringify({
+          title: "Submit a Project — Zafora Holding",
+          description: "Submit your infrastructure project or advisory inquiry to Zafora Holding.",
+          keywords: "submit project, infrastructure advisory inquiry, Zafora contact",
+        }),
+      },
+      {
+        key: "navigation",
+        value: JSON.stringify([
+          { id: "about", label: "About", href: "/about", visible: true, openNewTab: false, order: 0 },
+          { id: "services", label: "Services", href: "/services", visible: true, openNewTab: false, order: 1 },
+          { id: "pipeline", label: "Pipeline", href: "/projects", visible: true, openNewTab: false, order: 2 },
+          { id: "gov", label: "Government Review", href: "/government-review", visible: true, openNewTab: false, order: 3 },
+        ]),
+      },
+      {
+        key: "services_page",
+        value: JSON.stringify({
+          hero: {
+            headline: "Advisory built for Africa's complexity.",
+            subheadline: "Comprehensive structuring, funding, and delivery solutions — tailored to the political, economic, and regulatory realities of African infrastructure.",
+            badge: "Six Specialized Practices",
+          },
+        }),
+      },
+      {
+        key: "government_page",
+        value: JSON.stringify({
+          hero: {
+            headline: "Government Advisory & PPP Structuring",
+            subheadline: "Supporting ministries and public agencies to plan, procure, and deliver infrastructure through bankable public-private partnerships.",
+            badge: "Sovereign-Grade Advisory",
+          },
+        }),
+      },
+      {
+        key: "submit_page",
+        value: JSON.stringify({
+          hero: {
+            headline: "Submit a Project or Inquiry",
+            subheadline: "Tell us about your project or advisory need. A senior Zafora advisor will respond within 48 business hours.",
+            badge: "Confidential & No Obligation",
+          },
+          sidebar: {
+            title: "Why work with Zafora?",
+            whyBullets: [
+              "34+ African markets covered",
+              "DFI and institutional investor network",
+              "Government-ready documentation",
+              "Senior advisor response within 48h",
+            ],
+          },
+        }),
+      },
+      {
+        key: "announcement_bar",
+        value: JSON.stringify({
+          enabled: false,
+          message: "Welcome to Zafora Holding — Africa's trusted infrastructure advisory partner.",
+          link: "/submit",
+          linkText: "Partner with us",
+          dismissible: true,
+          bgColor: "#173f35",
+          textColor: "#ffffff",
+        }),
+      },
+      {
+        key: "maintenance_mode",
+        value: JSON.stringify({
+          enabled: false,
+          headline: "We'll be back soon.",
+          message: "We're performing scheduled maintenance. Please check back shortly.",
+          showContactEmail: true,
+          estimatedTime: "",
+        }),
+      },
+      {
+        key: "legal_privacy",
+        value: JSON.stringify({
+          title: "Privacy Policy",
+          lastUpdated: "January 2025",
+          content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
+        }),
+      },
+      {
+        key: "legal_terms",
+        value: JSON.stringify({
+          title: "Terms of Service",
+          lastUpdated: "January 2025",
+          content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+        }),
+      },
+      {
+        key: "section_visibility",
+        value: JSON.stringify({
+          home: { hero: true, ticker: true, stats: true, services: true, methodology: true, testimonial: true, projects: true, sectors: true, cta: true },
+          about: { hero: true, stats: true, story: true, mvp: true, values: true, team: true, timeline: true, cta: true },
+          services: { hero: true, stats: true, cards: true, cta: true },
+          projects: { hero: true, filter: true, grid: true },
+          government: { hero: true, stats: true, capability: true, framework: true, cta: true },
+          submit: { hero: true, form: true, sidebar: true },
+        }),
+      },
+      {
+        key: "notifications",
+        value: JSON.stringify({
+          adminEmail: process.env["ADMIN_EMAIL"] ?? "Office@zaforaholding.com",
+          notifyOnInquiry: true,
+          notifyOnInterest: true,
+        }),
+      },
+      {
+        key: "site_images",
+        value: JSON.stringify({
+          home: {
+            heroPanel: "",
+            band1: "",
+            band2: "",
+            band3: "",
+            pillar1: "",
+            pillar2: "",
+            pillar3: "",
+            engage1: "",
+            engage2: "",
+            engage3: "",
+            collage1: "",
+            collage2: "",
+            collage3: "",
+            collage4: "",
+          },
+          services: { mosaicLeft: "", mosaicRight: "" },
+          government: { heroImage: "", mainLeft: "", mainRight: "" },
+        }),
+      },
+    ])
+    .onConflictDoNothing();
+  console.log("  ✓ Site settings inserted");
 
   console.log("\n✅ Seed complete.");
   process.exit(0);

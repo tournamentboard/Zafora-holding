@@ -46,6 +46,13 @@ export default function LeadsTable() {
   const { mutateAsync: updateLead } = useUpdateLead();
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [notesValue, setNotesValue] = useState("");
+  const [notesSaving, setNotesSaving] = useState(false);
+
+  const openLead = (lead: Lead) => {
+    setSelectedLead(lead);
+    setNotesValue(lead.notes ?? "");
+  };
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
@@ -54,6 +61,20 @@ export default function LeadsTable() {
       if (selectedLead?.id === id) setSelectedLead((p: Lead | null) => p ? { ...p, status: newStatus } : p);
     } catch {
       toast.error("Could not update status. Try again.");
+    }
+  };
+
+  const handleSaveNotes = async () => {
+    if (!selectedLead) return;
+    setNotesSaving(true);
+    try {
+      await updateLead({ id: selectedLead.id, data: { notes: notesValue } });
+      setSelectedLead((p) => p ? { ...p, notes: notesValue } : p);
+      toast.success("Notes saved.");
+    } catch {
+      toast.error("Could not save notes.");
+    } finally {
+      setNotesSaving(false);
     }
   };
 
@@ -127,7 +148,7 @@ export default function LeadsTable() {
           return (
             <div
               key={lead.id}
-              onClick={() => setSelectedLead(lead)}
+              onClick={() => openLead(lead)}
               className="bg-white border border-[#e5ded3] rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-[#c59b4a] transition-all cursor-pointer"
             >
               <div className="flex items-start justify-between gap-4">
@@ -269,6 +290,24 @@ export default function LeadsTable() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div>
+                <div className="text-xs font-semibold text-[#8a958f] uppercase mb-2">Internal Notes</div>
+                <textarea
+                  value={notesValue}
+                  onChange={(e) => setNotesValue(e.target.value)}
+                  placeholder="Add private notes about this lead…"
+                  rows={3}
+                  className="w-full border border-[#e5ded3] rounded-xl px-4 py-3 text-sm text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] bg-[#f7f4ef] resize-none"
+                />
+                <button
+                  onClick={handleSaveNotes}
+                  disabled={notesSaving}
+                  className="mt-2 px-4 py-2 rounded-lg bg-[#173f35] text-white text-xs font-bold hover:bg-[#245d4e] transition-colors disabled:opacity-60"
+                >
+                  {notesSaving ? "Saving…" : "Save Notes"}
+                </button>
               </div>
 
               <div className="flex gap-3 pt-2">
