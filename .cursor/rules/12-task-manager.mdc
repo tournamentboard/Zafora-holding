@@ -50,6 +50,7 @@ alwaysApply: true
 | R6 — Photo Upload | ⏳ Pending | PhotoUploadField + use-image-upload endpoint fix (blocks all admin image uploads) |
 | R7 — Auth Enhancements | ✅ Done | setup-status, setup, reset-password endpoints + ADMIN_SETUP_EMAIL env |
 | R8 — Seed Updates | ✅ Done | FAQs + new site_settings keys + 6 real projects seeded |
+| R8b — Seed Defaults Corrected | ✅ Done | services_page/government_page/submit_page seeds fixed; prod DB migrated + seeded |
 | R9 — Verification | ⏳ Pending | End-to-end verify all R1–R8 features in staging |
 | R10 — Admin Mobile Nav | ⏳ Pending | Port `Admin.tsx:619–637` horizontal tab bar to `AdminMobileNav.tsx` (mobile regression) |
 | R11 — Public Navbar Restore | ⏳ Pending | Restore h-40 + tagline (currently regressed to h-20) |
@@ -66,7 +67,7 @@ alwaysApply: true
 | use-image-upload endpoint fix | `hooks/use-image-upload.ts` (call `API.STORAGE.PRESIGN`) | P1 |
 | Create `lib/site-settings.ts` helper | `lib/site-settings.ts` | P2 |
 | Use section_visibility in public pages | All public RSC pages | P2 |
-| Complete SETTING_DEFAULTS | `content.service.ts` (4 keys + SEO OG) | P2 |
+| Complete SETTING_DEFAULTS | `content.service.ts` (4 keys + SEO OG) | ✅ Done |
 
 ## Cleanup Required (After F11)
 

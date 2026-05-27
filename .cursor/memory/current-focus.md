@@ -4,7 +4,19 @@ _Last updated: 2026-05-28_
 
 ---
 
-## Latest Round (2026-05-28 — artifacts/zafora cross-check)
+## Latest Round (2026-05-28 — Seed Defaults + Prod DB + Ticker)
+
+Three fixes applied:
+
+1. **Seed DB defaults corrected** — `services_page`, `government_page`, `submit_page` entries in `seed.ts` were all wrong/incomplete vs `SETTING_DEFAULTS` in `content.service.ts`. All three corrected and re-seeded.
+2. **Production DB migrated** — Schema pushed via `drizzle-kit push`, prod DB seeded with all data, S3 image URLs written into prod DB.
+3. **Homepage ticker fixed** — Was static due to `flex` container constraining `translateX(-50%)`. Fixed with `inline-flex` + `min-width: max-content` on `.ticker-track`.
+
+**⚠️ ACTION CLEARED** — Both dev and prod DBs are now in sync. No pending re-seed required.
+
+---
+
+## Previous Latest Round (2026-05-28 — artifacts/zafora cross-check)
 
 Verified every public page in Next.js against the corresponding Replit source file in `artifacts/zafora/src/pages/` line-by-line. Two latent regressions found and fixed:
 
@@ -189,6 +201,13 @@ Key gaps identified this round:
 - `zafora-frontend/src/modules/admin/content/components/TestimonialsManager.tsx` (TESTIMONIALS_PHOTOS)
 - `zafora-frontend/src/modules/admin/projects/components/ProjectsTable.tsx` (PROJECTS_IMAGES)
 - `zafora-frontend/src/modules/admin/content/components/ImagesEditor.tsx` (SITE_IMAGES_HOME/SERVICES/GOVERNMENT)
+
+## Last Edited Files (2026-05-28 — Seed Defaults + Prod DB + Ticker)
+
+- `zafora-backend/scripts/seed.ts` — corrected `services_page` (added stats+cta), `government_page` (headline/badge/subheadline), `submit_page` (headline/badge/subheadline/whyTitle/bullets/responseTime/responseDesc)
+- `zafora-frontend/src/app/(public)/page.tsx` — ticker markup: removed `flex whitespace-nowrap` wrapper; track is now bare `ticker-track inline-flex items-center`
+- `zafora-frontend/src/app/globals.css` — `.ticker-track` now has `display: inline-flex; min-width: max-content`
+- **DB updated**: prod Neon DB schema pushed + fully seeded + S3 image URLs written
 
 ## Last Edited Files (2026-05-28 — Homepage CSS + Font Audit)
 
