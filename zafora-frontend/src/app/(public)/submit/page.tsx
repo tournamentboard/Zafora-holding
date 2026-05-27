@@ -33,7 +33,7 @@ const DEFAULT_SETTINGS = {
       "No-obligation preliminary assessment",
       "Direct DFI and investor connections",
       "Full confidentiality guaranteed",
-      "Active in 12+ African countries",
+      "Pan-African infrastructure focus",
     ],
     responseTime: "48-hour response",
     responseDesc: "A senior advisor will review your submission and respond within two business days.",
@@ -160,12 +160,12 @@ export default function Submit() {
 
               {/* Stats */}
               <motion.div {...fadeInView(0.05)} className="bg-white border border-[#e5ded3] rounded-[28px] p-6">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#8a958f] mb-4">Our Track Record</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#8a958f] mb-4">What We Offer</h4>
                 <div className="space-y-4">
                   {[
-                    { icon: <TrendingUp className="h-4 w-4" />, value: "$2.4B+", label: "Value Advised" },
-                    { icon: <Globe className="h-4 w-4" />, value: "12+", label: "Countries" },
-                    { icon: <Users className="h-4 w-4" />, value: "95%", label: "Client Retention" },
+                    { icon: <TrendingUp className="h-4 w-4" />, value: "End-to-End", label: "Project Lifecycle" },
+                    { icon: <Globe className="h-4 w-4" />, value: "Pan-African", label: "Regional Coverage" },
+                    { icon: <Users className="h-4 w-4" />, value: "6 Sectors", label: "Infrastructure Focus" },
                   ].map((s, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl bg-[#f7f4ef] text-[#173f35] flex items-center justify-center shrink-0">{s.icon}</div>

@@ -1,472 +1,115 @@
----
-description: Replit code updates to sync into zafora-frontend / zafora-backend — full delta audit
-alwaysApply: false
----
+# Replit → Next.js Sync Tracker
 
-# Replit Update Code — Sync Audit
-
-_Last audited: **2026-05-26**_ (previous: 2026-05-24)
-
-This file documents **every difference** between the latest Replit code (`artifacts/`, `lib/`, `attached_assets/`) and the current migrated Next.js + Express codebase (`zafora-frontend/`, `zafora-backend/`).
-
-Source locations audited:
-- `artifacts/zafora/` — Replit React+Vite frontend (latest from client)
-- `artifacts/api-server/` — Replit Express backend (latest from client)
-- `lib/db/`, `lib/api-client-react/`, `lib/api-zod/` — Shared Replit packages
-- `attached_assets/` — Client specs and requirements docs
-
-> Status legend: ✅ Done · ⚠️ Partial · ❌ Pending · 🗑️ Deprecated/skip
+_Last audited: 2026-05-28. Source of truth: https://zafora-holdings-web.replit.app/_
 
 ---
 
-## 0. EXECUTIVE SUMMARY (2026-05-26)
+## Completed Syncs (2026-05-27 — Replit Textual Sync Round)
 
-| Area | Status | Note |
-|------|--------|------|
-| `faqs` table + module | ✅ | R1 complete |
-| Auth setup-status / setup / reset-password | ✅ | R7 complete |
-| 5 admin managers (FAQ/Announcement/Maintenance/Legal/SectionVisibility) | ✅ | R4 complete |
-| Privacy / Terms / Maintenance public pages | ✅ | R5 complete |
-| AnnouncementBar wired into `(public)/layout.tsx` | ✅ | R5 complete |
-| Sticky-header removal (FR-HEADER-001) | ✅ | R5 complete |
-| Seed FAQs + new settings keys | ✅ | R8 complete |
-| `api-client-react` removal from all `app/(public)/` pages | ✅ | Audit Round 2 |
-| DB unique constraints + clean seed | ✅ | Audit Round 3 |
-| 6 real projects seeded (no fabricated data) | ✅ | Audit Round 3 |
-| `branding.logoUrl` wired into Navbar + Footer | ✅ | Audit Round 3 |
-| Next.js `images.remotePatterns` | ✅ | v0.3.1 |
-| **Admin mobile tab bar (port `Admin.tsx:619–637`)** | ❌ | **P0 — primary mobile regression** |
-| **`AdminHeader` `ROUTE_META` for FAQ/Announcement/Maintenance/Legal/Section Visibility** | ❌ | **P0** |
-| **Public Navbar mobile layout (`h-40` + tagline restoration)** | ❌ | **P1** |
-| **`PhotoUploadField` + wire into 6 admin managers** | ❌ | **P1 (blocks F11)** |
-| **`use-image-upload.ts` calls wrong storage endpoint** | ❌ | **P1 (presign path mismatch)** |
-| Missing `SETTING_DEFAULTS` keys (services_page / government_page / submit_page / full about) | ⚠️ | **P2** |
-| `lib/site-settings.ts` + `section_visibility` on public RSC | ❌ | P2 |
-| `GET /storage/objects/*` public/private object serve | ❌ | P3 (or use CloudFront direct) |
-| F13 `generateMetadata()`, `sitemap.ts`, `robots.ts` | ❌ | P3 |
-| R9 end-to-end verification | ❌ | After P0–P2 land |
+| Item | Where | Status |
+|------|--------|--------|
+| Home FALLBACK_STATS → Pan-African/End-to-End/6/3 | `page.tsx` | ✅ Done |
+| Home HERO_DEFAULTS badge → "Strategic Infrastructure & Consulting · Est. 2025" | `page.tsx` | ✅ Done |
+| Home hero panel indicator → "Open for Engagement" gold dot | `page.tsx` | ✅ Done |
+| Home mini-card label → "Pipeline Status" | `page.tsx` | ✅ Done |
+| Home pipeline section header/desc/link reverted | `page.tsx` | ✅ Done |
+| Home pipeline empty-state placeholder block | `page.tsx` | ✅ Done |
+| Home About-teaser H2 + 2 paras reverted | `page.tsx` | ✅ Done |
+| About page DEFAULTS fully reverted (4 team cards, stats, whoWeAre, mvp, timeline) | `about/page.tsx` | ✅ Done |
+| Services stats → 6/Pan-African/End-to-End/100% + "Senior advisors" badge | `services/page.tsx` | ✅ Done |
+| Government stats → Pan-African/End-to-End/100%/6, CTA btn2 → "View Pipeline" | `government/page.tsx` | ✅ Done |
+| Submit sidebar bullet #5 → "Pan-African infrastructure focus" | `submit/page.tsx` | ✅ Done |
+| Submit stats card title → "What We Offer", rows → End-to-End/Pan-African/6 Sectors | `submit/page.tsx` | ✅ Done |
+| Projects empty state → "Pipeline under development" + 2 paras + "Submit a Mandate" CTA | `projects/page.tsx` | ✅ Done |
+| Footer Privacy Policy + Terms links restored | `GlobalLayout.tsx` | ✅ Done |
 
 ---
 
-## 1. DATABASE SCHEMA
+## Completed Syncs (2026-05-28 — Backend Defaults Sync)
 
-### 1.1 `faqs` table ✅
-Migrated to `zafora-backend/src/db/schema/faqs.ts` with `question.unique()` added beyond the Replit spec.
-
-### 1.2 No new columns
-Replit and migrated schemas for shared tables (`leads`, `projects`, `project_interests`, `documents`, `services`, `content_stats`, `methodology_steps`, `site_settings`, `testimonials`, `audit_logs`) are **identical** at the column level.
-
-### 1.3 Migrated-only tables
-`users`, `sessions` — required for JWT auth, not present in Replit (sessions via `express-session`).
-
-### 1.4 Unique constraints ADDED beyond Replit (Audit Round 3)
-| Table | Column | Status |
-|-------|--------|--------|
-| `projects` | `name` | ✅ live on Neon |
-| `services` | `name` | ✅ |
-| `faqs` | `question` | ✅ |
-| `content_stats` | `label` | ✅ |
-| `methodology_steps` | `step_number` | ✅ |
-| `documents` | `title` | ✅ |
-| `site_settings` | `key` | ✅ (pre-existing) |
-| `users` | `email` | ✅ (pre-existing) |
-| `sessions` | `session_id` | ✅ (pre-existing) |
+| Item | Where | Status |
+|------|--------|--------|
+| DEFAULT_STATS → Pan-African/End-to-End/6/3 (was $2.4B+/12+/95%) | `content.service.ts` | ✅ Done |
+| SETTING_DEFAULTS.about.whoWeAre → correct headline + 3 paras + 4 bullets | `content.service.ts` | ✅ Done |
+| SETTING_DEFAULTS.about.mvp → full Africa-anchored mission/vision/purpose | `content.service.ts` | ✅ Done |
+| SETTING_DEFAULTS.about.team → 4 org cards (Executive/Advisory/Operations/Partnerships) | `content.service.ts` | ✅ Done |
+| SETTING_DEFAULTS.about.timeline → 4 correct Replit timeline events | `content.service.ts` | ✅ Done |
+| seed.ts about value → team 4 cards + correct whoWeAre/mvp/timeline | `scripts/seed.ts` | ✅ Done |
 
 ---
 
-## 2. SITE SETTINGS DEFAULTS
+## Completed Syncs (2026-05-28 — artifacts/zafora Cross-Check)
 
-### 2.1 Status of each key
+Verified every Next.js page against the corresponding Replit source file in `artifacts/zafora/src/pages/`. Findings + fixes:
 
-**Source:** `artifacts/api-server/src/routes/content.ts` lines 25–282  
-**Target:** `zafora-backend/src/modules/content/content.service.ts` lines 123–259
+| Item | Where | Status |
+|------|--------|--------|
+| Home page (hero, stats, pillars, methodology, engagement, sectors, about-teaser, CTA) — matches Replit `Home.tsx` | `(public)/page.tsx` | ✅ Verified |
+| About page (hero, stats, identity, whoWeAre, mvp, values, team, timeline, sectors, cta) — matches Replit `About.tsx` | `(public)/about/page.tsx` | ✅ Verified |
+| Services page (hero, stats, badge, 6-card grid) — matches Replit `Services.tsx` | `(public)/services/page.tsx` | ✅ Verified |
+| Projects page (filters, empty state, card grid) — matches Replit `Projects.tsx` | `(public)/projects/page.tsx` | ✅ Verified |
+| Submit page (hero, sidebar, "What We Offer", form) — matches Replit `Submit.tsx` | `(public)/submit/page.tsx` | ✅ Verified |
+| Navbar + Footer (nav links, /government-review slug, services list, /admin link) — matches Replit `Navbar.tsx` + `Layout.tsx` | `Navbar.tsx`, `GlobalLayout.tsx` | ✅ Verified |
+| **`/government-review/page.tsx` had stale numeric stats (12+/$2.4B+/100%/10+) + "View Active Projects" CTA** — fixed to Pan-African/End-to-End/100%/6 + "View Pipeline" | `(public)/government-review/page.tsx` | ✅ Fixed |
+| **`seed.ts` footer.description mismatch with Replit `Layout.tsx::DEFAULT_FOOTER.description`** — updated to "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities…" + multi-line address + copyright 2026 | `scripts/seed.ts` | ✅ Fixed |
+| **`content.service.ts::SETTING_DEFAULTS.footer` mismatch** — same description + address + copyright update | `content.service.ts` | ✅ Fixed |
 
-| Key | Status | Notes |
-|-----|--------|-------|
-| `notifications` | ✅ | Migrated L124–128 |
-| `navigation` | ✅ | Migrated L129–134 (gov link → `/government-review`) |
-| `branding` | ✅ | Full 10-field shape — Audit Round 3 |
-| `hero` | ✅ | Full shape including `panelStatLabel: "Accepting Mandates"` |
-| `footer` | ✅ | `description` (not `tagline`) — Audit Round 3 |
-| `announcement_bar` | ✅ | |
-| `maintenance_mode` | ✅ | |
-| `legal_privacy` | ✅ | |
-| `legal_terms` | ✅ | |
-| `section_visibility` | ✅ in DB | ❌ Not consumed by public pages |
-| `seo_home` | ✅ | |
-| `seo_about` | ⚠️ Partial | Missing `ogTitle`, `ogDescription` |
-| `seo_services` | ⚠️ Partial | Missing OG fields |
-| `seo_projects` | ⚠️ Partial | Missing OG fields |
-| `seo_government` | ✅ | |
-| `seo_submit` | ✅ | |
-| `about` | ⚠️ Partial | Missing `whoWeAre`, full `values[]`, `team[]` placeholders, `timeline[]`, `cta` |
-| `services_page` | ⚠️ Seeded but not in `SETTING_DEFAULTS` map | Replit lines 66–84 |
-| `government_page` | ⚠️ Seeded but not in `SETTING_DEFAULTS` map | Replit lines 85–127 |
-| `submit_page` | ⚠️ Seeded but not in `SETTING_DEFAULTS` map | Replit lines 128–146 |
+### Cross-check methodology
+Read every page source in `artifacts/zafora/src/pages/` line-by-line and compared the `DEFAULT_SETTINGS` / `HERO_DEFAULTS` / `FALLBACK_*` literals, hero/stats blocks, sidebar copy, form enums, footer links, and nav slugs. Only two regressions surfaced — both listed above and resolved.
 
-### 2.2 Action — finish `SETTING_DEFAULTS`
-
-Copy the following Replit blocks into `content.service.ts` `SETTING_DEFAULTS`:
-
-1. **`services_page`** — full hero + stats + cta (Replit `content.ts` L66–84)
-2. **`government_page`** — full hero + stats + capability + cta + sidebar (Replit L85–127)
-3. **`submit_page`** — full hero + sidebar (Replit L128–146)
-4. **`about`** — add `whoWeAre`, `values[]`, empty `team[]`, `timeline[]`, `cta` (Replit L233–280)
-5. **`seo_about` / `seo_services` / `seo_projects`** — add `ogTitle`, `ogDescription` fields (Replit L160–180)
-
-### 2.3 Intentional divergence (do NOT change)
-
-- Migrated `navigation` gov link uses `/government-review` (matches actual route); Replit uses `/government`
-- Migrated `DEFAULT_STATS` uses real Zafora numbers from current `content_stats` table; do not revert to Replit hardcoded fallbacks
+### Note on About pull quote
+- Replit `About.tsx::DEFAULTS.identity.quote` is the global "We bridge global opportunities…" string.
+- The live Replit site displays the Africa-anchored quote ("Infrastructure development across Africa requires more than advisory…").
+- Therefore the live Replit DB overrides the code default. My seed already supplies the Africa-anchored override — no change needed.
 
 ---
 
-## 3. BACKEND ROUTES
+## Root Cause Analysis (why live site still showed wrong content after 2026-05-27)
 
-### 3.1 Endpoint parity — ALL CORE ROUTES MIGRATED ✅
+### Content Stats (numeric $2.4B+ etc.)
+- `content.service.ts::listContentStats()` inserts `DEFAULT_STATS` if the table is empty.
+- `DEFAULT_STATS` still contained the OLD numeric values (`$2.4B`, `12+`, `95%`).
+- The live Neon DB had no rows (or had old rows cleared) → `DEFAULT_STATS` inserted on first API call.
+- Fix: `DEFAULT_STATS` now matches `seed.ts` (Pan-African / End-to-End / 6 / 3).
+- **After deploying: run `npx tsx scripts/seed.ts` against Neon to replace DB rows.**
 
-| Replit path | Migrated path | Status |
-|-------------|---------------|--------|
-| `/admin/auth/*` | `/auth/*` | ✅ (path prefix renamed) |
-| `/leads/*` | same | ✅ |
-| `/projects/*` (+ interests) | same | ✅ |
-| `/documents/*` | same | ✅ |
-| `/services/*` | same | ✅ |
-| `/testimonials/*` | same | ✅ |
-| `/content/stats`, `/content/methodology`, `/content/settings/:key`, `/content/faqs` | same | ✅ |
-| `/stats`, `/stats/projects` | same | ✅ |
-| `/audit` | same | ✅ |
-| `/email/status`, `/email/test` | `/notifications/status`, `/notifications/test` | ✅ Renamed |
-| **`POST /storage/uploads/request-url`** | **`POST /storage/presign`** | ⚠️ **Path + body shape differ** |
-| **`GET /storage/public-objects/*filePath`** | — | ❌ **Missing** |
-| **`GET /storage/objects/*path`** | — | ❌ **Missing** |
+### About Page Leadership Empty
+- `about/page.tsx` uses `deepMerge(DEFAULTS, DB_value)`.
+- `deepMerge` replaces arrays entirely — if DB value has `team: []`, the merge returns `team: []`.
+- DB `about` row was seeded with `team: []` (seed.ts line 385).
+- `SETTING_DEFAULTS.about.team` in `content.service.ts` also had `team: []`.
+- Result: `deepMerge` overrode the frontend `DEFAULTS.team` (4 cards) with `[]`.
+- Fix: Both `seed.ts` and `SETTING_DEFAULTS` now supply the 4 org-unit cards.
+- **After deploying: run `npx tsx scripts/seed.ts` to replace the about DB row.**
 
-### 3.2 Storage module — gap detail
-
-**Migrated:** Only `POST /storage/presign` (AWS S3 presigned PUT)
-
-**Missing for full image upload pipeline:**
-
-| Need | Option A | Option B |
-|------|----------|----------|
-| Public read of uploaded image | Add `GET /storage/objects/:key` proxy that streams S3 | Use CloudFront direct URLs + `AWS_S3_CUSTOM_DOMAIN` env |
-| Private/authenticated reads | Same proxy with `requireAuth` | Signed GET URLs |
-
-**Recommended:** Option B — set `AWS_S3_CUSTOM_DOMAIN`, store final public URLs in DB. Avoids streaming through Express. Already provisioned in `.env` (line 27).
-
-### 3.3 Frontend storage hook mismatch
-
-**File:** `zafora-frontend/src/hooks/use-image-upload.ts` line 32
-
-```ts
-const urlRes = await fetch("/api/storage/uploads/request-url", { ... });  // ← Replit path
-```
-
-Should be migrated to:
-- Use `apiAxios.post(API.STORAGE.PRESIGN, ...)`
-- Handle new response shape `{ uploadUrl, publicUrl, key }` instead of `{ url }`
-- Return `publicUrl` to caller (replaces "build URL from key" pattern at line 59)
+### About Narrative / Mission / Vision / Purpose
+- Same deepMerge issue: DB `about.whoWeAre.headline` was "Who We Are" → overrode correct headline.
+- DB `about.mvp` had truncated mission/vision/purpose → overrode correct full text.
+- Fix: `SETTING_DEFAULTS` and `seed.ts` both updated with the Replit-correct full text.
 
 ---
 
-## 4. FRONTEND ADMIN COMPONENTS
+## Remaining Gaps (post 2026-05-28)
 
-### 4.1 Component parity table
-
-| Replit component | Migrated location | Status | Replit-only delta |
-|------------------|-------------------|--------|-------------------|
-| `AboutEditor.tsx` | `modules/admin/content/components/` | ⚠️ | Replit uses `PhotoUploadField` for team photos (L411) |
-| `AnnouncementManager.tsx` | same | ✅ | |
-| `AuditLogViewer.tsx` | `modules/admin/audit/components/` | ✅ | |
-| `BrandingManager.tsx` | `modules/admin/content/components/` | ⚠️ | Replit uses `PhotoUploadField` for logo/favicon (L159–171) |
-| `ContentStatsManager.tsx` | same | ✅ | |
-| `DashboardHome.tsx` | `modules/admin/dashboard/components/DashboardPage.tsx` | ✅ | Renamed |
-| `DocumentsTable.tsx` | `modules/admin/documents/components/` | ✅ | |
-| `FaqManager.tsx` | `modules/admin/faqs/components/` | ✅ | |
-| `ImagesEditor.tsx` | `modules/admin/content/components/` | ⚠️ | Uses `useImageUpload` but wrong API path |
-| `LeadsTable.tsx` | `modules/admin/leads/components/` | ✅ | Notes field added |
-| `LegalPagesEditor.tsx` | `modules/admin/content/components/` | ✅ | |
-| `MaintenanceManager.tsx` | same | ✅ | |
-| `MethodologyManager.tsx` | same | ✅ | |
-| `NavigationManager.tsx` | same | ✅ | |
-| **`PhotoUploadField.tsx`** | **—** | ❌ | **Reusable upload+preview** |
-| `ProjectsTable.tsx` | `modules/admin/projects/components/` | ⚠️ | Replit `PhotoUploadField` for `imageUrl` |
-| `SectionVisibilityManager.tsx` | `modules/admin/content/components/` | ✅ | Admin only; public not wired |
-| `ServicesManager.tsx` | same | ⚠️ | Replit `PhotoUploadField` |
-| `SettingsPanel.tsx` | `modules/admin/settings/components/` | ✅ | |
-| `SiteSettingsManager.tsx` | `modules/admin/content/components/` | ✅ | |
-| `TeamManager.tsx` | same | ⚠️ | Replit `PhotoUploadField` |
-| `TestimonialsManager.tsx` | same | ⚠️ | Replit `PhotoUploadField` (circle preview) |
-
-### 4.2 P0 — Admin mobile tab bar (CRITICAL)
-
-**Replit source:** `artifacts/zafora/src/pages/admin/Admin.tsx` lines **619–637**
-
-```tsx
-{/* Mobile tab bar */}
-<div className="md:hidden flex overflow-x-auto bg-white border-b border-[#e5ded3] px-2 py-2 gap-1.5 shrink-0">
-  {ALL_TABS.map(tab => { ... <button ...>{tab.label}</button> })}
-</div>
-```
-
-**Migrated target:** Create `zafora-frontend/src/modules/admin/shared/components/AdminMobileNav.tsx` and render in `AdminShell.tsx` between header and content.
-
-**Requirements:**
-- Horizontally scrollable pill nav (`overflow-x-auto`)
-- Pulls items from same source as `AdminSidebar.tsx` nav groups (Dashboard, Inquiries, Projects, Documents, Content sub-items, Audit, Settings, FAQ, Announcement, Section Visibility, Maintenance, Legal)
-- Active state matches `pathname`
-- `md:hidden` only — sidebar handles desktop
-
-### 4.3 P0 — Extend `AdminHeader` ROUTE_META
-
-**File:** `zafora-frontend/src/modules/admin/shared/components/AdminHeader.tsx` lines 9–17
-
-**Current entries:** only 7 routes (dashboard, leads, projects, documents, content, audit, settings)
-
-**Missing entries (add these):**
-```ts
-"/admin/faq":                { title: "FAQs",            subtitle: "..." },
-"/admin/announcement":       { title: "Announcement Bar", subtitle: "..." },
-"/admin/section-visibility": { title: "Section Visibility", subtitle: "..." },
-"/admin/maintenance":        { title: "Maintenance Mode", subtitle: "..." },
-"/admin/legal":              { title: "Legal Pages",      subtitle: "..." },
-```
-
-### 4.4 P1 — `PhotoUploadField` migration
-
-**Source:** `artifacts/zafora/src/components/admin/PhotoUploadField.tsx`  
-**Target:** `zafora-frontend/src/modules/admin/shared/components/PhotoUploadField.tsx`
-
-**Features to port:**
-- Two-mode input: paste URL OR upload via `useImageUpload`
-- Live preview (square / circle prop)
-- Error display
-- Loading state during upload
-
-**Wire into (6 places):**
-- `BrandingManager.tsx` — logo, favicon
-- `TeamManager.tsx` — team member photos
-- `AboutEditor.tsx` — team member photos in About tab
-- `ServicesManager.tsx` — service `imageUrl`
-- `ProjectsTable.tsx` — project `imageUrl`
-- `TestimonialsManager.tsx` — testimonial `photoUrl` (circular)
-
-**Blocks on:** F11 (`use-s3-upload`) + storage endpoint fix (§3.3)
+| Item | File | Priority |
+|------|------|---------|
+| Re-run seed against Neon prod DB | `scripts/seed.ts` | **P0 — must do** |
+| F13 SEO: generateMetadata, sitemap.ts, robots.ts | public pages | P2 |
+| F12 per-segment loading.tsx + error.tsx | admin route segments | P2 |
+| B9 Security: helmet + express-rate-limit | `src/app.ts` | P2 |
+| Cleanup deprecated libs after F11 | `lib/api-client-react` etc. | P3 |
 
 ---
 
-## 5. FRONTEND PUBLIC COMPONENTS
+## Data Source Map (where each piece of content lives)
 
-### 5.1 Component parity
-
-| Replit | Migrated | Status |
-|--------|----------|--------|
-| `components/AnnouncementBar.tsx` | `components/common/AnnouncementBar.tsx` | ⚠️ Missing Megaphone icon + message-keyed sessionStorage |
-| `components/layout/Navbar.tsx` | `components/common/Navbar.tsx` | ⚠️ Height regression (h-40 → h-20), tagline removed |
-| `components/layout/Layout.tsx` | `components/layout/GlobalLayout.tsx` + `PublicShell.tsx` | ✅ Plus `branding.logoUrl` wiring |
-| `components/ScrollToTop.tsx` | `components/ScrollToTop.tsx` | ✅ |
-| `pages/ExpressInterestModal.tsx` | `modules/public/modals/ExpressInterestModal.tsx` | ✅ |
-| All public `pages/*.tsx` | `app/(public)/*/page.tsx` | ✅ |
-
-### 5.2 P1 — Restore Replit Navbar mobile layout
-
-**Replit `Navbar.tsx`:**
-- Header height: `h-40` (mobile + desktop) — taller, branded feel
-- Tagline rendered from `branding.tagline` below logo
-- Mobile drawer positioned `absolute top-40` (matches header height)
-
-**Migrated `Navbar.tsx`:**
-- Header height: `h-20` — compact
-- No tagline rendered (parsed but unused)
-- Mobile drawer flows in document (not `absolute`)
-
-**Action:** Decide if compact `h-20` is intentional. If client expects the Replit look:
-- Increase header to `h-32` or `h-40`
-- Add tagline display under logo on mobile + desktop
-- Reposition mobile drawer accordingly
-
-### 5.3 P2 — AnnouncementBar polish
-
-Add Megaphone icon (`lucide-react`) and key dismiss `sessionStorage` by message content so a new message re-appears after the admin edits it.
-
----
-
-## 6. PUBLIC LAYOUT / SECTION VISIBILITY
-
-### 6.1 AnnouncementBar wiring ✅
-Wired in `app/(public)/layout.tsx` lines 26–27 via server-fetched setting.
-
-### 6.2 `lib/site-settings.ts` server helper — ❌ NOT CREATED
-
-**Target:** `zafora-frontend/src/lib/site-settings.ts`
-
-```ts
-import { apiClient } from "@/src/lib/api-helpers";
-import { API } from "@/src/lib/url-helpers";
-
-export async function getSectionVisibility(): Promise<Record<string, Record<string, boolean>>> {
-  try {
-    const setting = await apiClient.get(API.CONTENT.SETTINGS("section_visibility"));
-    return JSON.parse(setting.value || "{}");
-  } catch { return {}; }
-}
-```
-
-**Wire into all public RSC pages** — gate each section by `visibility[page]?.[section] !== false`.
-
-### 6.3 Sticky-header removal ✅
-Both Replit and migrated use `relative` nav. FR-HEADER-001 satisfied.
-
----
-
-## 7. ADMIN ROUTES + SIDEBAR
-
-### 7.1 ROUTES constants ✅
-`zafora-frontend/src/lib/url-helpers/routes.ts` has all 5 new admin routes (`FAQ`, `ANNOUNCEMENT`, `SECTION_VISIBILITY`, `MAINTENANCE`, `LEGAL`).
-
-### 7.2 API constants ✅
-`api-endpoints.ts` has `CONTENT.FAQS` + `CONTENT.FAQS_BY_ID`.
-
-### 7.3 Sidebar nav groups ✅
-"Site Control" group added with all 5 items. FAQ + Legal added to Content group.
-
-### 7.4 Thin admin route pages ✅
-All 5 `page.tsx` files exist under `app/(admin)/admin/*/`.
-
----
-
-## 8. SEED DATA
-
-### 8.1 Status (post Audit Round 3) ✅
-
-| Item | Status |
-|------|--------|
-| Seed fully idempotent (`DELETE` before insert) | ✅ |
-| FAQs (7 entries) | ✅ |
-| Site settings — all keys | ✅ |
-| Services (6) | ✅ |
-| Content stats (6) | ✅ |
-| Methodology steps (6) | ✅ |
-| Projects (6 REAL from client screenshot) | ✅ Rwanda Smart Grid, Mozambique LNG Roads, Lagos-Ibadan Healthcare, Nairobi Water, Sahel Solar Corridor, Lamu Port |
-| Testimonials | ✅ Removed (fabricated) — empty until admin adds real ones |
-| Leads | ✅ Removed (fabricated) |
-| Documents | ✅ Removed (placeholder) |
-
-### 8.2 Remaining
-None — seed is production-ready.
-
----
-
-## 9. FILES TO IGNORE — DO NOT PORT 🗑️
-
-| Pattern | Reason |
-|---------|--------|
-| `wouter` `<Link>` | Use `next/link` |
-| `useSeoMeta()` / `usePageTitle()` | Use `generateMetadata()` (F13) |
-| `useToast()` | Use `sonner` |
-| `@workspace/api-client-react` | Use module services + `apiAxios` |
-| `@workspace/db`, `@workspace/api-zod` | Use local schema + validators |
-| Vite config, `index.html`, `main.tsx` | Replaced by Next.js |
-| `react-router-dom` / `wouter` | Use App Router |
-| `express-session` | JWT |
-| `ObjectStorageService` (Replit GCS) | AWS S3 in B6 |
-| `useImageUpload` calling `/api/storage/uploads/request-url` | Rewrite for `/storage/presign` |
-| Components without `"use client"` | Add directive |
-| `Pasted-ProjectControls-OS-Pricing...txt` (attached_assets, NEW 2026-05-26) | **UNRELATED** — ProjectControls OS pricing spec, not Zafora |
-
----
-
-## 10. EXECUTION ORDER (UPDATED 2026-05-26)
-
-### ✅ DONE
-- R1: faqs schema + module + endpoints
-- R2: backend SETTING_DEFAULTS (partial — see §2)
-- R3: frontend admin module setup
-- R4: 5 admin manager components
-- R5: Privacy, Terms, Maintenance + layout wiring + sticky removal
-- R7: auth setup-status / setup / reset-password
-- R8: seed updates
-- Audit Round 1: 6 client requirement bug fixes
-- Audit Round 2: full `api-client-react` removal
-- Audit Round 3: DB unique constraints + clean seed + admin-public sync
-
-### ❌ PENDING (priority order)
-
-**P0 — Admin mobile + header coverage (smallest, fastest)**
-1. Create `AdminMobileNav.tsx` (horizontal scroll tab bar) — see §4.2
-2. Extend `AdminHeader.ROUTE_META` with 5 missing entries — see §4.3
-
-**P1 — Public Navbar + Image upload pipeline**
-3. Restore Navbar mobile/desktop layout (h-40 + tagline) — see §5.2
-4. Migrate `PhotoUploadField` + wire into 6 admin managers — see §4.4
-5. Fix `use-image-upload.ts` to call `API.STORAGE.PRESIGN` with new shape — see §3.3
-6. Add `AWS_S3_CUSTOM_DOMAIN` env on Vercel + Railway
-
-**P2 — Complete settings + section visibility**
-7. Add missing `SETTING_DEFAULTS` keys to backend (`services_page`, `government_page`, `submit_page`, full `about`, `seo_*.og*`) — see §2.2
-8. Create `lib/site-settings.ts` + use `getSectionVisibility()` in all public RSC pages — see §6.2
-
-**P3 — SEO + storage serve + verification**
-9. F13: `generateMetadata()` on each public page, `sitemap.ts`, `robots.ts`
-10. Optional: `GET /storage/objects/*` proxy (skip if using CloudFront direct)
-11. R9 end-to-end verification pass
-
-**Cleanup (after F11/P1):**
-- Delete `zafora-frontend/src/lib/api-client-react/`
-- Delete `zafora-frontend/src/lib/api-zod/`
-- Delete `zafora-frontend/src/lib/api-spec/`
-- Delete `zafora-frontend/src/lib/object-storage-web/`
-- Delete `zafora-frontend/src/lib/db/`
-
----
-
-## 11. SUMMARY DELTA TABLE (2026-05-26)
-
-| Area | Pending items | Lines of work |
-|------|---------------|---------------|
-| **Admin mobile nav** | 1 new component | ~80 lines |
-| **AdminHeader ROUTE_META** | 5 entries | ~10 lines |
-| **Public Navbar layout** | h-40 + tagline + drawer reposition | ~30 lines |
-| **PhotoUploadField + 6 wirings** | 1 new component + 6 edits | ~250 lines |
-| **use-image-upload fix** | Endpoint + response shape | ~30 lines |
-| **Storage object serve** | Optional proxy or CloudFront env | ~50 lines |
-| **SETTING_DEFAULTS completion** | 4 keys + SEO OG fields | ~150 lines (JSON) |
-| **lib/site-settings.ts + wiring** | 1 helper + 7 page edits | ~80 lines |
-| **F13 SEO** | `generateMetadata` + sitemap + robots | ~120 lines |
-
-**Total estimated remaining:** ~800 lines + JSON.
-
----
-
-## 12. SPEC DOCUMENT REFERENCES
-
-| Spec | File | Date |
-|------|------|------|
-| Full admin panel scope | `Pasted-Below-are-end-to-end-requirements-you-can-give-the-deve_1779511324719.txt` | 2026-05-23 |
-| Sticky header removal (FR-HEADER-001) | `Pasted-Requirement-Remove-Sticky-Fixed-Header-Behavior-Objecti_1779514498570.txt` | 2026-05-23 |
-| Duplicate of sticky-header spec | `Pasted-Requirement-Remove-Sticky-Fixed-Header-Behavior-Objecti_1779514683438.txt` | 2026-05-23 |
-| Landing page CMS (early) | `Pasted-requirements-for-a-Landing-Page-Management-Admin-Tool-s_1778107245185.txt` | 2026-05-06 |
-| Landing page admin tool variant | `Pasted-requirements-for-a-Landing-Page-Management-Admin-Tool-s_1778107194384.txt` | 2026-05-06 |
-| Landing page admin components | `Pasted-Zafora-Landing-Page-Admin-Components-1-Hero-Section-Man_1778126660932.txt` | 2026-05-07 |
-| Original site requirements | `Pasted-requirements-to-build-this-exact-Zafora-Holding-site-as_1778049697987.txt` | 2026-05-05 |
-| HTML mockup | `Pasted--DOCTYPE-html-html-lang-en-head-meta-charset-UTF-8-meta_1778050191511.txt` | 2026-05-05 |
-| Content admin panel | `Pasted-Zafora-Holding-Website-Content-Management-Admin-Panel-R_1778127640373.txt` | 2026-05-07 |
-| About Zafora content | `Pasted-About-Zafora-Holding-Bridging-global-opportunities-thro_1778128061843.txt` | 2026-05-07 |
-| Hero/modern enterprise version | `Pasted-Here-s-a-stronger-more-modern-enterprise-level-version-_1778105582277.txt` | 2026-05-06 |
-| **ProjectControls OS pricing (NEW 2026-05-26)** | `Pasted-ProjectControls-OS-Pricing-Section-Update-Requirements-_1779778613647.txt` | **UNRELATED — different product, skip** |
-
-Screenshots in `attached_assets/*.png` (5 new since 2026-05-23) are visual references for current Replit live site appearance.
-
----
-
-## 13. NEXT.JS IMAGE DOMAINS
-
-**Current `zafora-frontend/next.config.ts` whitelist:**
-- `images.unsplash.com`
-- `images.pexels.com`
-- `**.amazonaws.com` (for S3 uploads)
-- `**.cloudfront.net` (for CDN)
-
-**Audit result:** No image hostnames found in either codebase outside this whitelist. ✅ No changes needed.
-
-If client switches to a different CDN or image host, add the hostname to `remotePatterns`.
+| Content | Source | How it reaches page |
+|---------|--------|---------------------|
+| Content stats (Pan-African/End-to-End/6/3) | `content_stats` table (DB) | `GET /api/content/stats` → `useContentStats()` → fallback `FALLBACK_STATS` |
+| Methodology steps | `methodology_steps` table (DB) | `GET /api/content/methodology` → `useMethodologySteps()` → fallback `FALLBACK_STEPS` |
+| Site settings (hero, branding, about, etc.) | `site_settings` table (DB) | `GET /api/content/settings/:key` → `useSiteSetting(key)` → deepMerge with page DEFAULTS |
+| Projects | `projects` table (DB) | `GET /api/projects` → `useProjects()` |
+| Services | `services` table (DB) | `GET /api/services` → `useServices()` |
+| Testimonials | `testimonials` table (DB) | `GET /api/content/testimonials` |
+| FAQs | `faqs` table (DB) | `GET /api/content/faqs` |
+| Static copy fallbacks | In-component DEFAULTS / FALLBACK_* constants | Used when API data is loading or empty |

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ALLOWED_CONTENT_TYPES, MAX_FILE_SIZE_BYTES } from "@/shared/lib/object-storage.js";
+import { ALLOWED_S3_FOLDERS } from "@/shared/constants/storage-folders.js";
 
 export const PresignBody = z.object({
   fileName: z.string().min(1, "fileName is required"),
@@ -13,8 +14,7 @@ export const PresignBody = z.object({
     .int()
     .min(1, "File must be at least 1 byte")
     .max(MAX_FILE_SIZE_BYTES, "File exceeds 10 MB limit"),
-  folder: z
-    .string()
-    .regex(/^[a-z0-9-]+$/, "folder must be lowercase alphanumeric with dashes")
-    .default("uploads"),
+  folder: z.enum(ALLOWED_S3_FOLDERS, {
+    error: `folder must be one of: ${ALLOWED_S3_FOLDERS.join(", ")}`,
+  }),
 });

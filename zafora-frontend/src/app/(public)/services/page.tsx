@@ -18,9 +18,9 @@ const DEFAULT_SETTINGS = {
     badge: "Six Specialized Practices",
   },
   stats: [
-    { value: "$2.4B+", label: "Value Structured" },
-    { value: "12+", label: "Countries" },
-    { value: "45+", label: "Professionals" },
+    { value: "6", label: "Infrastructure Sectors" },
+    { value: "Pan-African", label: "Regional Reach" },
+    { value: "End-to-End", label: "Project Lifecycle" },
     { value: "100%", label: "Confidential" },
   ],
   cta: {
@@ -124,7 +124,7 @@ export default function Services() {
                   { icon: <ShieldCheck className="h-4 w-4" />, label: "ESG-compliant" },
                   { icon: <DollarSign className="h-4 w-4" />, label: "DFI-ready" },
                   { icon: <Target className="h-4 w-4" />, label: "End-to-end" },
-                  { icon: <Users className="h-4 w-4" />, label: "45+ experts" },
+                  { icon: <Users className="h-4 w-4" />, label: "Senior advisors" },
                 ].map((item, i) => (
                   <span key={i} className="inline-flex items-center gap-2 text-sm font-semibold text-[#173f35] bg-white border border-[#e5ded3] px-4 py-2 rounded-full">
                     {item.icon} {item.label}

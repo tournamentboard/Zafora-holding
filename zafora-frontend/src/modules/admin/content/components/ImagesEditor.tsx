@@ -5,6 +5,8 @@ import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../services/site-settings.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Info, ChevronDown, ChevronRight, Home, Settings2, Shield } from "lucide-react";
+import { STORAGE_FOLDER } from "@/src/lib/constants";
+import type { StorageFolder } from "@/src/lib/constants";
 
 const IMAGE_DEFAULTS = {
   home: {
@@ -47,11 +49,12 @@ function deepMerge(base: any, override: any): any {
   return result;
 }
 
-function ImageField({ label, hint, value, onChange }: {
-  label: string; hint?: string; value: string; onChange: (v: string) => void;
+function ImageField({ folder, label, hint, value, onChange }: {
+  folder: StorageFolder; label: string; hint?: string; value: string; onChange: (v: string) => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadFile, isUploading } = useImageUpload({
+    folder,
     onSuccess: (result) => onChange(result.publicUrl),
   });
 
@@ -181,6 +184,7 @@ export default function ImagesEditor() {
           <div>
             <p className="text-xs font-bold text-[#10231f] uppercase tracking-wide mb-3">Hero Section</p>
             <ImageField
+              folder={STORAGE_FOLDER.SITE_IMAGES_HOME}
               label="Hero Right Panel Photo"
               hint="The photo inside the dark green card on the right of the hero"
               value={f.home?.heroPanel ?? ""}
@@ -191,37 +195,37 @@ export default function ImagesEditor() {
           <div className="border-t border-[#f0e8dd] pt-4">
             <p className="text-xs font-bold text-[#10231f] uppercase tracking-wide mb-3">Image Band (3 photos below the ticker strip)</p>
             <div className="space-y-3">
-              <ImageField label="Band Photo 1 — Government Advisory" value={f.home?.band1 ?? ""} onChange={v => setImg("home", "band1", v)} />
-              <ImageField label="Band Photo 2 — Project Finance" value={f.home?.band2 ?? ""} onChange={v => setImg("home", "band2", v)} />
-              <ImageField label="Band Photo 3 — Execution Oversight" value={f.home?.band3 ?? ""} onChange={v => setImg("home", "band3", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Band Photo 1 — Government Advisory" value={f.home?.band1 ?? ""} onChange={v => setImg("home", "band1", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Band Photo 2 — Project Finance" value={f.home?.band2 ?? ""} onChange={v => setImg("home", "band2", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Band Photo 3 — Execution Oversight" value={f.home?.band3 ?? ""} onChange={v => setImg("home", "band3", v)} />
             </div>
           </div>
 
           <div className="border-t border-[#f0e8dd] pt-4">
             <p className="text-xs font-bold text-[#10231f] uppercase tracking-wide mb-3">Three Pillars Section (Governments · Investors · Contractors)</p>
             <div className="space-y-3">
-              <ImageField label="Pillar Card 1 — Governments" value={f.home?.pillar1 ?? ""} onChange={v => setImg("home", "pillar1", v)} />
-              <ImageField label="Pillar Card 2 — Investors & DFIs" value={f.home?.pillar2 ?? ""} onChange={v => setImg("home", "pillar2", v)} />
-              <ImageField label="Pillar Card 3 — Contractors & EPC" value={f.home?.pillar3 ?? ""} onChange={v => setImg("home", "pillar3", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Pillar Card 1 — Governments" value={f.home?.pillar1 ?? ""} onChange={v => setImg("home", "pillar1", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Pillar Card 2 — Investors & DFIs" value={f.home?.pillar2 ?? ""} onChange={v => setImg("home", "pillar2", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Pillar Card 3 — Contractors & EPC" value={f.home?.pillar3 ?? ""} onChange={v => setImg("home", "pillar3", v)} />
             </div>
           </div>
 
           <div className="border-t border-[#f0e8dd] pt-4">
             <p className="text-xs font-bold text-[#10231f] uppercase tracking-wide mb-3">Engagement Paths (How Would You Like to Engage?)</p>
             <div className="space-y-3">
-              <ImageField label="Engage Card 1 — For Governments" value={f.home?.engage1 ?? ""} onChange={v => setImg("home", "engage1", v)} />
-              <ImageField label="Engage Card 2 — For Investors" value={f.home?.engage2 ?? ""} onChange={v => setImg("home", "engage2", v)} />
-              <ImageField label="Engage Card 3 — For Contractors" value={f.home?.engage3 ?? ""} onChange={v => setImg("home", "engage3", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Engage Card 1 — For Governments" value={f.home?.engage1 ?? ""} onChange={v => setImg("home", "engage1", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Engage Card 2 — For Investors" value={f.home?.engage2 ?? ""} onChange={v => setImg("home", "engage2", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Engage Card 3 — For Contractors" value={f.home?.engage3 ?? ""} onChange={v => setImg("home", "engage3", v)} />
             </div>
           </div>
 
           <div className="border-t border-[#f0e8dd] pt-4">
             <p className="text-xs font-bold text-[#10231f] uppercase tracking-wide mb-3">About Teaser — 4-Photo Collage (right side)</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <ImageField label="Collage Photo 1 (tall, left column)" value={f.home?.collage1 ?? ""} onChange={v => setImg("home", "collage1", v)} />
-              <ImageField label="Collage Photo 2 (short, right top)" value={f.home?.collage2 ?? ""} onChange={v => setImg("home", "collage2", v)} />
-              <ImageField label="Collage Photo 3 (short, right bottom)" value={f.home?.collage3 ?? ""} onChange={v => setImg("home", "collage3", v)} />
-              <ImageField label="Collage Photo 4 (tall, right column)" value={f.home?.collage4 ?? ""} onChange={v => setImg("home", "collage4", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Collage Photo 1 (tall, left column)" value={f.home?.collage1 ?? ""} onChange={v => setImg("home", "collage1", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Collage Photo 2 (short, right top)" value={f.home?.collage2 ?? ""} onChange={v => setImg("home", "collage2", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Collage Photo 3 (short, right bottom)" value={f.home?.collage3 ?? ""} onChange={v => setImg("home", "collage3", v)} />
+              <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_HOME} label="Collage Photo 4 (tall, right column)" value={f.home?.collage4 ?? ""} onChange={v => setImg("home", "collage4", v)} />
             </div>
           </div>
         </div>
@@ -229,24 +233,27 @@ export default function ImagesEditor() {
 
       <SectionBlock title="Services Page Images" icon={<Settings2 size={16} />}>
         <p className="text-xs text-[#8a958f]">The mosaic photo grid shown in the Services page hero. Individual service card images are set per-service in the Services admin section.</p>
-        <ImageField label="Mosaic Left — Tall Photo" value={f.services?.mosaicLeft ?? ""} onChange={v => setImg("services", "mosaicLeft", v)} />
-        <ImageField label="Mosaic Right — Top Photo" value={f.services?.mosaicRight ?? ""} onChange={v => setImg("services", "mosaicRight", v)} />
+        <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_SERVICES} label="Mosaic Left — Tall Photo" value={f.services?.mosaicLeft ?? ""} onChange={v => setImg("services", "mosaicLeft", v)} />
+        <ImageField folder={STORAGE_FOLDER.SITE_IMAGES_SERVICES} label="Mosaic Right — Top Photo" value={f.services?.mosaicRight ?? ""} onChange={v => setImg("services", "mosaicRight", v)} />
       </SectionBlock>
 
       <SectionBlock title="Government Review Center Images" icon={<Shield size={16} />}>
         <ImageField
+          folder={STORAGE_FOLDER.SITE_IMAGES_GOVERNMENT}
           label="Full-Width Hero Banner"
           hint="The large panoramic image behind the page headline"
           value={f.government?.heroImage ?? ""}
           onChange={v => setImg("government", "heroImage", v)}
         />
         <ImageField
+          folder={STORAGE_FOLDER.SITE_IMAGES_GOVERNMENT}
           label="Content Section — Left Photo"
           hint="Left image in the two-photo grid mid-page"
           value={f.government?.mainLeft ?? ""}
           onChange={v => setImg("government", "mainLeft", v)}
         />
         <ImageField
+          folder={STORAGE_FOLDER.SITE_IMAGES_GOVERNMENT}
           label="Content Section — Right Photo"
           hint="Right image in the two-photo grid mid-page"
           value={f.government?.mainRight ?? ""}

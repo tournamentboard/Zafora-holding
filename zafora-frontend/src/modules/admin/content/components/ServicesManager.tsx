@@ -7,6 +7,7 @@ import {
 import { Plus, Pencil, Trash2, Check, X, Eye, EyeOff, Briefcase, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import type { CatalogService } from "@/src/lib/types";
 import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
+import { STORAGE_FOLDER } from "@/src/lib/constants";
 
 const ICON_OPTIONS = ["Briefcase","Landmark","ShieldCheck","TrendingUp","Globe","Award","DollarSign","Users","Building","Zap","Handshake","Target","BarChart2","FileText","Settings","Leaf","Wifi","Truck","Stethoscope"];
 const CATEGORY_OPTIONS = ["Advisory","Finance","Development","Compliance","Operations","Strategy","Other"];
@@ -107,6 +108,7 @@ function ServiceCard({ service, onSave, onDelete }: {
             </div>
             <div className="md:col-span-2">
               <PhotoUploadField
+                folder={STORAGE_FOLDER.SERVICES_IMAGES}
                 label="SERVICE IMAGE"
                 value={form.imageUrl ?? ""}
                 onChange={(v) => setForm((f) => ({ ...f, imageUrl: v || null }))}
