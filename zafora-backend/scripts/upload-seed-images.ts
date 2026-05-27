@@ -90,9 +90,12 @@ async function uploadToS3(
   return buildPublicUrl(key);
 }
 
+const FORCE = process.argv.includes("--force");
+
 /**
  * Download source → upload to S3 → return public URL.
- * Skips the download+upload step if the key already exists in S3.
+ * Skips the download+upload step if the key already exists in S3,
+ * unless --force is passed (forces re-upload to replace old images).
  */
 async function ensureS3Image(
   client: S3Client,
@@ -103,8 +106,8 @@ async function ensureS3Image(
   const exists = await s3KeyExists(client, key);
   const publicUrl = buildPublicUrl(key);
 
-  if (exists) {
-    console.log(`  ↩  [skip] ${label} — already in S3`);
+  if (exists && !FORCE) {
+    console.log(`  ↩  [skip] ${label} — already in S3 (use --force to replace)`);
     return publicUrl;
   }
 
@@ -112,7 +115,8 @@ async function ensureS3Image(
     const { buffer, contentType } = await downloadImage(sourceUrl);
     await uploadToS3(client, key, buffer, contentType);
     const sizeKb = Math.round(buffer.length / 1024);
-    console.log(`  ✓  [upload] ${label} — ${sizeKb}KB → ${key}`);
+    const action = exists ? "replace" : "upload";
+    console.log(`  ✓  [${action}] ${label} — ${sizeKb}KB → ${key}`);
     return publicUrl;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
@@ -125,24 +129,24 @@ async function ensureS3Image(
 
 const SITE_IMAGE_SOURCES = {
   home: {
-    heroPanel:  "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1200&q=80",
-    band1:      "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=900&q=80",
-    band2:      "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=80",
-    band3:      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80",
-    pillar1:    "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=700&q=80",
-    pillar2:    "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=700&q=80",
-    pillar3:    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=700&q=80",
-    engage1:    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=700&q=80",
-    engage2:    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=700&q=80",
-    engage3:    "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?auto=format&fit=crop&w=700&q=80",
-    collage1:   "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=600&q=80",
-    collage2:   "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80",
-    collage3:   "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=600&q=80",
-    collage4:   "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=80",
+    heroPanel:  "https://images.pexels.com/photos/3776969/pexels-photo-3776969.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
+    band1:      "https://images.pexels.com/photos/8761726/pexels-photo-8761726.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+    band2:      "https://images.pexels.com/photos/8124369/pexels-photo-8124369.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+    band3:      "https://images.pexels.com/photos/7698815/pexels-photo-7698815.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+    pillar1:    "https://images.pexels.com/photos/8487797/pexels-photo-8487797.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    pillar2:    "https://images.pexels.com/photos/8550496/pexels-photo-8550496.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    pillar3:    "https://images.pexels.com/photos/3894383/pexels-photo-3894383.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    engage1:    "https://images.pexels.com/photos/8761656/pexels-photo-8761656.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    engage2:    "https://images.pexels.com/photos/30688596/pexels-photo-30688596/free-photo-of-business-meeting-in-lagos-office-setting.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    engage3:    "https://images.pexels.com/photos/3680959/pexels-photo-3680959.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    collage1:   "https://images.pexels.com/photos/8487795/pexels-photo-8487795.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+    collage2:   "https://images.pexels.com/photos/1181415/pexels-photo-1181415.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+    collage3:   "https://images.pexels.com/photos/5298215/pexels-photo-5298215.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
+    collage4:   "https://images.pexels.com/photos/9301297/pexels-photo-9301297.jpeg?auto=compress&cs=tinysrgb&w=400&q=80",
   },
   services: {
-    mosaicLeft:  "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=700&q=80",
-    mosaicRight: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=700&q=80",
+    mosaicLeft:  "https://images.pexels.com/photos/8960946/pexels-photo-8960946.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
+    mosaicRight: "https://images.pexels.com/photos/8123842/pexels-photo-8123842.jpeg?auto=compress&cs=tinysrgb&w=600&q=80",
   },
   government: {
     heroImage:  "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1600&q=80",
@@ -181,27 +185,27 @@ const PROJECT_IMAGE_SOURCES: Record<string, { key: string; src: string }> = {
 const SERVICE_IMAGE_SOURCES: Record<string, { key: string; src: string }> = {
   "Government Advisory": {
     key: `${S3_FOLDERS.SERVICES_IMAGES}/government-advisory.jpg`,
-    src: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.pexels.com/photos/8761656/pexels-photo-8761656.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
   },
   "Contracting & Procurement": {
     key: `${S3_FOLDERS.SERVICES_IMAGES}/contracting-procurement.jpg`,
-    src: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.pexels.com/photos/30688596/pexels-photo-30688596/free-photo-of-business-meeting-in-lagos-office-setting.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
   },
   "Project Development": {
     key: `${S3_FOLDERS.SERVICES_IMAGES}/project-development.jpg`,
-    src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.pexels.com/photos/5298215/pexels-photo-5298215.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
   },
   "Funding Advisory": {
     key: `${S3_FOLDERS.SERVICES_IMAGES}/funding-advisory.jpg`,
-    src: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.pexels.com/photos/9301297/pexels-photo-9301297.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
   },
   "Project Management Support": {
     key: `${S3_FOLDERS.SERVICES_IMAGES}/project-management.jpg`,
-    src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.pexels.com/photos/3776969/pexels-photo-3776969.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
   },
   "Market Entry Consulting": {
     key: `${S3_FOLDERS.SERVICES_IMAGES}/market-entry.jpg`,
-    src: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.pexels.com/photos/33597033/pexels-photo-33597033/free-photo-of-workers-building-at-a-construction-site-in-kaduna.jpeg?auto=compress&cs=tinysrgb&w=900&q=80",
   },
 };
 

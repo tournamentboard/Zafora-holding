@@ -190,6 +190,12 @@ Key gaps identified this round:
 - `zafora-frontend/src/modules/admin/projects/components/ProjectsTable.tsx` (PROJECTS_IMAGES)
 - `zafora-frontend/src/modules/admin/content/components/ImagesEditor.tsx` (SITE_IMAGES_HOME/SERVICES/GOVERNMENT)
 
+## Last Edited Files (2026-05-28 — Homepage CSS + Font Audit)
+
+- `zafora-frontend/src/app/globals.css` — Added `ticker-track` scroll animation (was missing → ticker was static); added warm body radial gradient background; added `html { scroll-behavior: smooth }`; added `float-anim` + `pulse-ring` keyframes; mapped `--font-sans` to `--font-inter`; removed dark-mode media query (no dark mode in Zafora)
+- `zafora-frontend/src/app/layout.tsx` — Switched font from Geist to Inter (matches Replit design system); CSS variable now `--font-inter`
+- `zafora-frontend/src/app/(public)/page.tsx` — Updated testimonial map badge: "Pan-African / Coverage" → "12 / Markets" (matches Replit live site — 12 city dots on the map)
+
 ## Last Edited Files (2026-05-28 — Backend Defaults Sync)
 
 - `zafora-backend/src/modules/content/content.service.ts` — DEFAULT_STATS changed from numeric ($2.4B+/12+/95%) to qualitative (Pan-African/End-to-End/6/3); SETTING_DEFAULTS.about fully rewritten: whoWeAre (correct headline + 3 paras + 4 bullets), mvp (full Africa-anchored mission/vision/purpose), team (4 org-unit cards), timeline (4 events), values (6 correct titles + descs), cta (btn1/btn2 links)

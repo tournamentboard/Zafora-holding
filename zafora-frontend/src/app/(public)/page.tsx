@@ -529,18 +529,13 @@ export default function Home() {
 
       {/* ── SCROLLING TICKER ─────────────────────────────────────── */}
       <div className="py-4 bg-[#173f35] overflow-hidden border-y border-[#245d4e]" hidden={!isSectionVisible(visibility, "ticker")}>
-        <div className="flex whitespace-nowrap">
-          <div className="ticker-track flex items-center gap-0 shrink-0">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center text-white/70 text-sm font-semibold px-6"
-              >
-                {item}
-                <span className="ml-6 text-[#c59b4a] font-bold">·</span>
-              </span>
-            ))}
-          </div>
+        <div className="ticker-track inline-flex items-center">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} className="inline-flex items-center text-white/70 text-sm font-semibold px-6 whitespace-nowrap">
+              {item}
+              <span className="ml-6 text-[#c59b4a] font-bold">·</span>
+            </span>
+          ))}
         </div>
       </div>
 
