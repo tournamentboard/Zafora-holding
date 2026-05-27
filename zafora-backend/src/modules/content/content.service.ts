@@ -11,10 +11,10 @@ import type {
 // ── Default seed data ─────────────────────────────────────────────
 
 const DEFAULT_STATS = [
-  { label: "Project Value Advised", value: "$2.4B", suffix: "+", description: "Total value of infrastructure projects advised", iconName: "DollarSign", displayOrder: 0, visible: true },
-  { label: "African Countries Active", value: "12", suffix: "+", description: "Countries across the continent where Zafora operates", iconName: "Globe", displayOrder: 1, visible: true },
-  { label: "Client Retention Rate", value: "95", suffix: "%", description: "Percentage of clients who continue working with us", iconName: "Award", displayOrder: 2, visible: true },
-  { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Specialized sectors we cover end-to-end", iconName: "Briefcase", displayOrder: 3, visible: true },
+  { label: "Regional Coverage", value: "Pan-African", suffix: "", description: "Active across Sub-Saharan Africa, the Americas, and the Caribbean", iconName: "Globe", displayOrder: 0, visible: true },
+  { label: "Project Lifecycle", value: "End-to-End", suffix: "", description: "From origination and structuring through delivery and handover", iconName: "TrendingUp", displayOrder: 1, visible: true },
+  { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Energy, Water, Transport, Healthcare, Digital, and Agriculture", iconName: "Briefcase", displayOrder: 2, visible: true },
+  { label: "Core Service Pillars", value: "3", suffix: "", description: "Government Advisory, Project Finance, and Execution Oversight", iconName: "Award", displayOrder: 3, visible: true },
 ];
 
 const DEFAULT_STEPS = [
@@ -373,33 +373,50 @@ const SETTING_DEFAULTS: Record<string, object> = {
       contact: "Office@zaforaholding.com",
       markets: "Africa · Americas · Caribbean",
     },
+    whoWeAre: {
+      headline: "Built to close the gap between political ambition and investable infrastructure.",
+      paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
+      paragraph2: "We operate at the intersection of public ambition and private capital — structuring projects that meet international finance standards, attract DFI and institutional funding, and deliver measurable, lasting impact on the ground.",
+      paragraph3: "Our organization brings together expertise in sovereign advisory, project finance structuring, PPP frameworks, ESG compliance, and end-to-end project delivery — serving governments, investors, and contractors across Africa, the Americas, and the Caribbean.",
+      bullet1: "Sovereign advisory & project structuring",
+      bullet2: "DFI engagement & capital mobilization",
+      bullet3: "PPP design & concession management",
+      bullet4: "End-to-end delivery oversight",
+    },
     mvp: {
       sectionHeadline: "Mission, Vision & Purpose",
       sectionSubheadline: "Three commitments that define how we work — and why Zafora was built.",
       mission: "To structure bankable, deliverable infrastructure across Africa and emerging markets — connecting sovereign governments, development finance institutions, and private capital through trusted, execution-focused advisory.",
-      vision: "To be recognized as the most trusted infrastructure advisory and development partner for African governments and global investors.",
-      purpose: "To prove that infrastructure development in Africa can be transparent, scalable, and community-positive.",
+      vision: "To be recognized as the most trusted infrastructure advisory and development partner for African governments and global investors — setting the standard for transparent, impactful, and financially sustainable project delivery.",
+      purpose: "To prove that infrastructure development in Africa can be transparent, scalable, and community-positive — and to build a replicable model that creates lasting economic value across generations.",
     },
     values: [
-      { title: "Integrity", description: "We operate with full transparency in every advisory engagement.", icon: "ShieldCheck" },
-      { title: "Excellence", description: "World-class standards applied to every project we touch.", icon: "Award" },
-      { title: "Impact", description: "We measure success by the communities our projects serve.", icon: "Target" },
-      { title: "Partnership", description: "Long-term relationships with governments, investors, and contractors.", icon: "Handshake" },
+      { title: "Integrity First", description: "Every engagement is conducted with full transparency, ethical rigor, and accountability to all stakeholders — governments, investors, and communities alike.", icon: "ShieldCheck" },
+      { title: "Pan-African Vision", description: "We operate across borders with a deep understanding of Africa's political, economic, and regulatory landscapes — no market is too complex.", icon: "Globe" },
+      { title: "Partnership Model", description: "We don't just advise — we co-create. Zafora sits at the table as a long-term partner, sharing risk and aligning incentives with every client.", icon: "Handshake" },
+      { title: "Bankable Outcomes", description: "We structure projects to meet international finance standards — making them attractive to multilaterals, DFIs, and institutional capital.", icon: "Award" },
+      { title: "Execution Focus", description: "Advisory without delivery is incomplete. We track projects from concept to commissioning, ensuring commitments become reality on the ground.", icon: "TrendingUp" },
+      { title: "Excellence in Practice", description: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement.", icon: "Target" },
     ],
-    team: [],
+    team: [
+      { firstName: "Executive", lastName: "Team", name: "", title: "Founder & Executive Leadership", department: "Executive Office", bio: "Zafora's founding team drives the organization's strategic vision, senior government relationships, and capital mobilization mandates. The executive office oversees all active engagements and institutional partnerships across African and international markets.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 1, status: "published" },
+      { firstName: "Advisory", lastName: "Panel", name: "", title: "Infrastructure Advisory Panel", department: "Advisory", bio: "Our advisory panel encompasses specialists in PPP structuring, DFI engagement, sovereign project finance, and ESG compliance. Advisors are drawn from across Sub-Saharan Africa, the Americas, and global financial and development institutions.", location: "Global", photo: "", linkedin: "", email: "", visible: true, sortOrder: 2, status: "published" },
+      { firstName: "Operations", lastName: "Team", name: "", title: "Operations & Project Delivery", department: "Operations", bio: "The operations function governs every active engagement — managing project governance, compliance readiness, stakeholder coordination, and end-to-end delivery from origination through commissioning and handover.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 3, status: "published" },
+      { firstName: "Partnerships", lastName: "Team", name: "", title: "Global Partnerships", department: "Partnerships", bio: "Our partnerships function builds and manages relationships across sovereign governments, development finance institutions, institutional investors, international engineering contractors, and enterprise organizations throughout Africa and beyond.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true, sortOrder: 4, status: "published" },
+    ],
     timeline: [
-      { year: "2025", title: "Founded", description: "Zafora Holding incorporated in Tampa, Florida, USA." },
+      { year: "Jan 2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
+      { year: "Mid 2025", event: "Initiated market engagement and project origination activities across Sub-Saharan Africa, the Caribbean, and the Americas. Deepened focus on sovereign infrastructure advisory, PPP structuring, and DFI capital mobilization frameworks." },
+      { year: "Late 2025", event: "Advanced strategic advisory mandates and began formalizing pipeline of infrastructure projects across energy, transport, water, and digital sectors. Strengthened institutional partnerships and compliance infrastructure." },
+      { year: "2026", event: "Actively building project pipeline, deepening government and investor relationships, and positioning Zafora as the premier advisory bridge between African sovereign ambition and global capital markets." },
     ],
     cta: {
-      headline: "Partner with Zafora.",
-      subheadline: "Whether you represent a government, an investor, or an EPC contractor — we want to hear from you.",
-      btnText: "Start a Conversation",
-      btnLink: "/submit",
-    },
-    whoWeAre: {
-      headline: "Who We Are",
-      paragraph1: "Zafora Holding is a U.S.-based strategic infrastructure advisory and development company. We connect sovereign governments, institutional investors, and EPC contractors with bankable, high-impact infrastructure projects.",
-      paragraph2: "Founded in 2025, we operate at the intersection of government policy, capital markets, and on-the-ground delivery. Our team brings decades of combined experience across project finance, DFI relations, PPP structures, and infrastructure development across Africa.",
+      headline: "Ready to bring your project to life?",
+      subheadline: "Whether you're a government, investor, or contractor — we'd like to hear about your infrastructure ambitions.",
+      btn1Text: "Start a Conversation",
+      btn1Link: "/submit",
+      btn2Text: "Explore the Pipeline",
+      btn2Link: "/projects",
     },
   },
 };

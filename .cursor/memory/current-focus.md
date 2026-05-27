@@ -1,6 +1,6 @@
 # Current Focus
 
-_Last updated: 2026-05-26_
+_Last updated: 2026-05-27_
 
 ---
 
@@ -141,7 +141,44 @@ Key gaps identified this round:
 
 ---
 
-## Next Actions (Priority Order — Updated 2026-05-26 post Replit re-audit)
+## Last Edited Files (2026-05-27 — DB Seed Sync)
+
+- `zafora-backend/scripts/seed.ts` — Services replaced (Government Advisory, Contracting & Procurement, Project Development, Funding Advisory, Project Management Support, Market Entry Consulting); Content Stats replaced with 4 entries (Pan-African/End-to-End/6/3); Methodology Steps replaced (Origination→Handover); Hero badge fixed to "Strategic Infrastructure & Consulting · Est. 2025"; siteSettingsTable added to delete list; onConflictDoNothing removed (clean delete+insert). Seed executed successfully against Neon DB.
+
+## Last Edited Files (2026-05-27 — Replit Textual Sync)
+
+- `zafora-frontend/src/app/(public)/page.tsx` — HERO_DEFAULTS badge/panelStat/panelStatLabel restored to Replit; FALLBACK_STATS reverted to Pan-African/End-to-End/6 sectors/3 pillars; hero panel indicator = "Open for Engagement" (gold dot); mini-card label = "Pipeline Status"; project list header = "Project Pipeline"; empty-state added to hero mini-list; Pipeline Preview badge/H2/desc/link reverted; empty-state added to pipeline section; About teaser H2 + 2 paragraphs reverted to Replit copy
+- `zafora-frontend/src/app/(public)/about/page.tsx` — DEFAULTS fully reverted to Replit: teamHeadline/teamSubheadline, 4 team defaults, stats[1]="Africa · Americas Primary Markets", stats[2]="6 Core Practice Areas", whoWeAre (headline+3 paras+4 bullets), mvp (sectionSubheadline+mission+vision+purpose), timeline (all 4 events)
+- `zafora-frontend/src/app/(public)/services/page.tsx` — stats reverted to 6/Pan-African/End-to-End/100%; hero pill #4 = "Senior advisors"
+- `zafora-frontend/src/app/(public)/government/page.tsx` — stats reverted to Pan-African/End-to-End/100%/6; CTA btn2 = "View Pipeline"
+- `zafora-frontend/src/app/(public)/submit/page.tsx` — sidebar bullet #5 = "Pan-African infrastructure focus"; stats card title = "What We Offer", rows = End-to-End/Pan-African/6 Sectors
+- `zafora-frontend/src/app/(public)/projects/page.tsx` — filter empty state text corrected; genuine empty body expanded to 2 paragraphs + "Submit a Mandate" CTA button
+- `zafora-frontend/src/components/layout/GlobalLayout.tsx` — Privacy Policy + Terms of Service links restored to footer bottom bar
+
+## Last Edited Files (2026-05-27 — S3 Folder Structure)
+
+- `zafora-backend/src/shared/constants/storage-folders.ts` (new — S3_FOLDERS enum + ALLOWED_S3_FOLDERS)
+- `zafora-backend/src/modules/storage/storage.validator.ts` (folder: z.enum strict)
+- `zafora-frontend/src/lib/constants/storage.ts` (new — STORAGE_FOLDER + StorageFolder)
+- `zafora-frontend/src/lib/constants/index.ts` (exports STORAGE_FOLDER)
+- `zafora-frontend/src/hooks/use-image-upload.ts` (folder required param)
+- `zafora-frontend/src/modules/admin/shared/components/PhotoUploadField.tsx` (folder prop required)
+- `zafora-frontend/src/modules/admin/content/components/BrandingManager.tsx` (BRANDING_LOGO + BRANDING_FAVICON)
+- `zafora-frontend/src/modules/admin/content/components/TeamManager.tsx` (TEAM_PHOTOS)
+- `zafora-frontend/src/modules/admin/content/components/ServicesManager.tsx` (SERVICES_IMAGES)
+- `zafora-frontend/src/modules/admin/content/components/TestimonialsManager.tsx` (TESTIMONIALS_PHOTOS)
+- `zafora-frontend/src/modules/admin/projects/components/ProjectsTable.tsx` (PROJECTS_IMAGES)
+- `zafora-frontend/src/modules/admin/content/components/ImagesEditor.tsx` (SITE_IMAGES_HOME/SERVICES/GOVERNMENT)
+
+## Last Edited Files (2026-05-28 — Backend Defaults Sync)
+
+- `zafora-backend/src/modules/content/content.service.ts` — DEFAULT_STATS changed from numeric ($2.4B+/12+/95%) to qualitative (Pan-African/End-to-End/6/3); SETTING_DEFAULTS.about fully rewritten: whoWeAre (correct headline + 3 paras + 4 bullets), mvp (full Africa-anchored mission/vision/purpose), team (4 org-unit cards), timeline (4 events), values (6 correct titles + descs), cta (btn1/btn2 links)
+- `zafora-backend/scripts/seed.ts` — about site_settings value rewritten: full hero/stats/identity/whoWeAre/mvp/values/team(4)/timeline/cta/teamHeadline/teamSubheadline/teamLayout
+- `.cursor/rules/replit-update-code-to-sync.mdc` — populated with full change log, root cause analysis, data source map, and remaining gaps
+
+**⚠️ ACTION REQUIRED: Run `npx tsx scripts/seed.ts` in `zafora-backend/` against the Neon production DB to replace stale rows. This will fix the live site's empty projects, wrong stats, and empty team section.**
+
+## Next Actions (Priority Order — Updated 2026-05-27)
 
 **P0 — Mobile regressions** ✅ DONE
 **P1 — Public Navbar + Image upload pipeline** ✅ DONE

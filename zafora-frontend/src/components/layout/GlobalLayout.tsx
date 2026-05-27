@@ -178,7 +178,12 @@ export default function GlobalLayout({ children }: { children: ReactNode }) {
               &copy; {copyrightYear} Zafora Holding. All rights reserved. Tampa, FL, USA.
             </p>
             <div className="flex items-center gap-6 text-xs text-white/35">
-              <span>Government Consulting &middot; Project Development &middot; Global Partnerships</span>
+              <Link href="/privacy" className="hover:text-white/60 transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="hover:text-white/60 transition-colors">
+                Terms of Service
+              </Link>
               <Link href="/admin" className="hover:text-white/60 transition-colors">
                 Admin
               </Link>

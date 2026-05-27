@@ -1,6 +1,6 @@
 # Completed Tasks
 
-_Last updated: 2026-05-26_
+_Last updated: 2026-05-27_
 
 ---
 
@@ -215,6 +215,15 @@ _Last updated: 2026-05-26_
 - `AdminHeader.tsx` — "View Website" Globe link added to top bar
 - `projects/page.tsx` — `hasActiveFilters` flag; "Pipeline under development" state when DB is empty
 - `page.tsx` — `HERO_DEFAULTS.badge` = "Open for Engagement · Est. 2025"; hardcoded "Active Pipeline" → "Accepting Mandates"
+
+### S3 Folder Structure ✅ (2026-05-27)
+- `zafora-backend/src/shared/constants/storage-folders.ts` — S3_FOLDERS + ALLOWED_S3_FOLDERS enum
+- `zafora-backend/src/modules/storage/storage.validator.ts` — folder is now `z.enum(ALLOWED_S3_FOLDERS)` (strict)
+- `zafora-frontend/src/lib/constants/storage.ts` — STORAGE_FOLDER + StorageFolder type
+- `zafora-frontend/src/lib/constants/index.ts` — exports STORAGE_FOLDER
+- `zafora-frontend/src/hooks/use-image-upload.ts` — `folder: StorageFolder` now required
+- `zafora-frontend/src/modules/admin/shared/components/PhotoUploadField.tsx` — `folder` prop required
+- All callers wired: BrandingManager (logo/favicon), TeamManager, ServicesManager, TestimonialsManager, ProjectsTable, ImagesEditor (home/services/government)
 
 ### B6 — File Upload & Storage Module ✅ (2026-05-26)
 - `zafora-backend/src/shared/lib/object-storage.ts` — AWS S3 service: `getPresignedPutUrl()` + `deleteObject()`

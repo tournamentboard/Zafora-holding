@@ -5,6 +5,7 @@ import { useGetSiteSettings, useUpdateSiteSettings, siteSettingsKeys } from "../
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Palette, AlertCircle, ExternalLink } from "lucide-react";
 import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
+import { STORAGE_FOLDER } from "@/src/lib/constants";
 
 interface BrandingConfig {
   siteName: string;
@@ -159,6 +160,7 @@ export default function BrandingManager() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <PhotoUploadField
+            folder={STORAGE_FOLDER.BRANDING_LOGO}
             label="Logo"
             value={form.logoUrl}
             onChange={v => set("logoUrl", v)}
@@ -166,6 +168,7 @@ export default function BrandingManager() {
             hint="PNG or SVG recommended"
           />
           <PhotoUploadField
+            folder={STORAGE_FOLDER.BRANDING_FAVICON}
             label="Favicon"
             value={form.faviconUrl}
             onChange={v => set("faviconUrl", v)}

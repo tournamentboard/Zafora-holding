@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { Testimonial } from "@/src/lib/types";
 import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
+import { STORAGE_FOLDER } from "@/src/lib/constants";
 
 const EMPTY = { name: "", company: "", role: "", quote: "", photoUrl: "", displayOrder: 0, visible: true };
 
@@ -115,7 +116,7 @@ export default function TestimonialsManager() {
             <Field label="Name" value={newForm.name} onChange={(v) => setNewForm((f) => ({ ...f, name: v }))} placeholder="John Smith" />
             <Field label="Company" value={newForm.company} onChange={(v) => setNewForm((f) => ({ ...f, company: v }))} placeholder="Acme Capital" />
             <Field label="Role" value={newForm.role ?? ""} onChange={(v) => setNewForm((f) => ({ ...f, role: v }))} placeholder="Managing Director" />
-            <PhotoUploadField label="Photo (optional)" value={newForm.photoUrl ?? ""} onChange={(v) => setNewForm((f) => ({ ...f, photoUrl: v }))} placeholder="https://..." previewShape="circle" />
+            <PhotoUploadField folder={STORAGE_FOLDER.TESTIMONIALS_PHOTOS} label="Photo (optional)" value={newForm.photoUrl ?? ""} onChange={(v) => setNewForm((f) => ({ ...f, photoUrl: v }))} placeholder="https://..." previewShape="circle" />
           </div>
           <Field label="Quote" value={newForm.quote} onChange={(v) => setNewForm((f) => ({ ...f, quote: v }))} type="textarea" placeholder="What they said..." />
           <div className="flex gap-3 justify-end">
@@ -158,7 +159,7 @@ export default function TestimonialsManager() {
                     <Field label="Name" value={form.name} onChange={(v) => setField(item.id, "name", v)} />
                     <Field label="Company" value={form.company} onChange={(v) => setField(item.id, "company", v)} />
                     <Field label="Role" value={form.role ?? ""} onChange={(v) => setField(item.id, "role", v)} />
-                    <PhotoUploadField label="PHOTO URL" value={form.photoUrl ?? ""} onChange={(v) => setField(item.id, "photoUrl", v)} previewShape="circle" />
+                    <PhotoUploadField folder={STORAGE_FOLDER.TESTIMONIALS_PHOTOS} label="PHOTO URL" value={form.photoUrl ?? ""} onChange={(v) => setField(item.id, "photoUrl", v)} previewShape="circle" />
                   </div>
                   <Field label="Quote" value={form.quote} onChange={(v) => setField(item.id, "quote", v)} type="textarea" />
                   <div className="flex gap-3 justify-end">

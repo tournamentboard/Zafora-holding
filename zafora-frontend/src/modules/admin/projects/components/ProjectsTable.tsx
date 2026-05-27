@@ -12,6 +12,7 @@ import type { Project } from "@/src/lib/types";
 import InterestsModal from "@/src/modules/admin/modals/InterestsModal";
 import { Plus, Pencil, Trash2, X, MapPin, DollarSign, Eye, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
+import { STORAGE_FOLDER } from "@/src/lib/constants";
 
 const SECTORS = ["Energy","Water","Transport","Healthcare","Agriculture","Housing","Digital","Education","Logistics","Telecom"];
 const FUNDING_STATUSES = [
@@ -133,6 +134,7 @@ function ProjectForm({ defaultValues, onSubmit, buttonText, onCancel }: {
       </div>
       <div>
         <PhotoUploadField
+          folder={STORAGE_FOLDER.PROJECTS_IMAGES}
           label="Image (optional)"
           value={imageUrl}
           onChange={setImageUrl}

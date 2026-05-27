@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { apiAxios } from "@/src/lib/api-helpers";
 import { API } from "@/src/lib/url-helpers";
+import type { StorageFolder } from "@/src/lib/constants/storage";
 
 interface PresignResponse {
   uploadUrl: string;
@@ -14,11 +15,12 @@ interface UploadResult {
 }
 
 interface UseImageUploadOptions {
+  folder: StorageFolder;
   onSuccess?: (result: UploadResult) => void;
   onError?: (error: string) => void;
 }
 
-export function useImageUpload(options: UseImageUploadOptions = {}) {
+export function useImageUpload(options: UseImageUploadOptions) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -41,6 +43,7 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
           fileName: file.name,
           size: file.size,
           contentType: file.type,
+          folder: options.folder,
         });
 
         setProgress(40);
