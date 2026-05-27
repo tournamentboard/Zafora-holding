@@ -15,7 +15,10 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "migrate:passwords": "tsx --env-file=.env scripts/migrate-passwords.ts"
+    "migrate:passwords": "tsx --env-file=.env scripts/migrate-passwords.ts",
+    "seed": "tsx --env-file=.env scripts/seed.ts",
+    "seed:images": "tsx --env-file=.env scripts/upload-seed-images.ts",
+    "seed:images:reset": "tsx --env-file=.env scripts/reset-upload-images.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1053.0",

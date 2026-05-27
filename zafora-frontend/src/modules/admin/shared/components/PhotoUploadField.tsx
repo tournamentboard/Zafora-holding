@@ -3,8 +3,10 @@
 import { useRef } from "react";
 import { Loader2, Upload, X } from "lucide-react";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
+import type { StorageFolder } from "@/src/lib/constants/storage";
 
 interface PhotoUploadFieldProps {
+  folder: StorageFolder;
   label?: string;
   value: string;
   onChange: (v: string) => void;
@@ -14,6 +16,7 @@ interface PhotoUploadFieldProps {
 }
 
 export function PhotoUploadField({
+  folder,
   label,
   value,
   onChange,
@@ -23,6 +26,7 @@ export function PhotoUploadField({
 }: PhotoUploadFieldProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const { uploadFile, isUploading, error } = useImageUpload({
+    folder,
     onSuccess: (result) => onChange(result.publicUrl),
   });
 

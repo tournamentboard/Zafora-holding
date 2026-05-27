@@ -6,6 +6,7 @@
 
 import "dotenv/config";
 import { db } from "../src/db/index.js";
+import { eq } from "drizzle-orm";
 import {
   projectsTable,
   servicesTable,
@@ -21,6 +22,37 @@ import {
 async function seed() {
   console.log("🌱 Seeding database...\n");
 
+  // ── Preserve S3-backed image URLs before clearing ──────────────────
+  // site_images and project/service imageUrls are populated by
+  // upload-seed-images.ts. We save them here so a re-seed doesn't wipe them.
+  const [existingSiteImages] = await db
+    .select({ value: siteSettingsTable.value })
+    .from(siteSettingsTable)
+    .where(eq(siteSettingsTable.key, "site_images"))
+    .limit(1);
+
+  const existingProjectImages = await db
+    .select({ name: projectsTable.name, imageUrl: projectsTable.imageUrl })
+    .from(projectsTable);
+
+  const existingServiceImages = await db
+    .select({ name: servicesTable.name, imageUrl: servicesTable.imageUrl })
+    .from(servicesTable);
+
+  const savedProjectImages = Object.fromEntries(
+    existingProjectImages
+      .filter((p) => p.imageUrl)
+      .map((p) => [p.name, p.imageUrl]),
+  );
+
+  const savedServiceImages = Object.fromEntries(
+    existingServiceImages
+      .filter((s) => s.imageUrl)
+      .map((s) => [s.name, s.imageUrl]),
+  );
+
+  const savedSiteImagesValue = existingSiteImages?.value ?? null;
+
   // ── Clear all seeded tables (safe re-run) ──────────────────────────
   console.log("Clearing existing seeded data...");
   await db.delete(leadsTable);
@@ -31,6 +63,7 @@ async function seed() {
   await db.delete(methodologyStepsTable);
   await db.delete(servicesTable);
   await db.delete(faqsTable);
+  await db.delete(siteSettingsTable);
   console.log("  ✓ Tables cleared\n");
 
   // ── Projects ───────────────────────────────────────────────────────
@@ -109,86 +142,86 @@ async function seed() {
   console.log("Inserting services...");
   await db.insert(servicesTable).values([
     {
-      name: "Project Finance Advisory",
-      icon: "TrendingUp",
-      description: "End-to-end structuring of infrastructure project finance — from feasibility to financial close.",
+      name: "Government Advisory",
+      icon: "Landmark",
+      description: "Strategic advisory services for government agencies and ministries on infrastructure policy, procurement strategy, and project delivery frameworks.",
       bullets: [
-        "Bankable feasibility studies",
-        "Debt/equity structuring",
-        "DFI and MDB engagement",
-        "Financial model development",
+        "Policy & regulatory framework design",
+        "Public-private partnership structuring",
+        "Infrastructure master planning",
+        "Stakeholder engagement & facilitation",
       ],
-      category: "Advisory",
+      category: "Government",
       displayOrder: 1,
       visible: true,
     },
     {
-      name: "PPP Transaction Advisory",
-      icon: "Handshake",
-      description: "Designing and executing public-private partnership frameworks that attract private capital to public infrastructure.",
+      name: "Contracting & Procurement",
+      icon: "Briefcase",
+      description: "End-to-end contracting and procurement support, ensuring compliance, value for money, and transparent selection of contractors and vendors.",
       bullets: [
-        "PPP feasibility & value-for-money analysis",
-        "Tender document preparation",
-        "Bid evaluation & negotiation support",
-        "Contract management frameworks",
+        "Tender documentation & bid evaluation",
+        "Contractor prequalification",
+        "Contract negotiation & management",
+        "Compliance & audit support",
       ],
       category: "Advisory",
       displayOrder: 2,
       visible: true,
     },
     {
-      name: "Government Infrastructure Strategy",
-      icon: "Landmark",
-      description: "Supporting ministries and agencies to prioritise, plan, and procure infrastructure at national and regional scale.",
+      name: "Project Development",
+      icon: "TrendingUp",
+      description: "Comprehensive project development services from feasibility through financial close, covering technical, financial, and regulatory dimensions.",
       bullets: [
-        "National infrastructure pipeline assessment",
-        "Sector master planning",
-        "Procurement strategy design",
-        "Capacity building for government teams",
+        "Feasibility studies & scoping",
+        "Environmental & social impact assessment",
+        "Technical due diligence",
+        "Project structuring & bankability",
       ],
-      category: "Government",
+      category: "Development",
       displayOrder: 3,
       visible: true,
     },
     {
-      name: "Investor Origination & Matchmaking",
-      icon: "Users",
-      description: "Connecting fundable projects with the right mix of institutional, development finance, and private equity investors.",
+      name: "Funding Advisory",
+      icon: "Anchor",
+      description: "Access to DFI, multilateral, and private capital through our extensive network of funding partners across Africa and globally.",
       bullets: [
-        "Investor database & relationship management",
-        "Investment teaser & memorandum preparation",
-        "Roadshow coordination",
-        "Term sheet negotiation support",
+        "DFI & multilateral engagement (AfDB, World Bank, IFC)",
+        "Blended finance structuring",
+        "Grant & concessional finance access",
+        "Investor roadshows & capital raising",
       ],
-      category: "Investor Relations",
+      category: "Advisory",
       displayOrder: 4,
       visible: true,
     },
     {
-      name: "Environmental & Social Due Diligence",
-      icon: "Leaf",
-      description: "IFC Performance Standards-aligned ESDD to satisfy DFI requirements and mitigate project risk.",
+      name: "Project Management Support",
+      icon: "ShieldCheck",
+      description: "On-the-ground project management and oversight services ensuring delivery on time, on budget, and to specification.",
       bullets: [
-        "Environmental & Social Impact Assessment",
-        "Stakeholder engagement planning",
-        "E&S management system design",
-        "Lender E&S monitoring reports",
+        "Programme management office (PMO) setup",
+        "Progress monitoring & reporting",
+        "Risk management & mitigation",
+        "Quality assurance frameworks",
       ],
-      category: "Due Diligence",
+      category: "Delivery",
       displayOrder: 5,
       visible: true,
     },
     {
-      name: "Green & Sustainable Finance",
+      name: "Market Entry Consulting",
       icon: "Globe",
-      description: "Structuring green bonds, sustainability-linked loans, and climate finance instruments for African issuers.",
+      description: "Enabling international firms and investors to enter African markets with confidence through local intelligence and network access.",
       bullets: [
-        "Green Bond Framework development (ICMA aligned)",
-        "Second-party opinion coordination",
-        "Climate risk assessment",
-        "Impact reporting frameworks",
+        "Market assessment & opportunity mapping",
+        "Regulatory navigation",
+        "Local partner identification",
+        "Business licensing & registration support",
       ],
-      category: "Sustainable Finance",
+      category: "Consulting",
       displayOrder: 6,
       visible: true,
     },
@@ -198,63 +231,61 @@ async function seed() {
   // ── Content Stats ──────────────────────────────────────────────────
   console.log("Inserting content stats...");
   await db.insert(contentStatsTable).values([
-    { label: "Projects Advised", value: "120", suffix: "+", description: "Infrastructure projects across 30+ African countries", iconName: "Briefcase", displayOrder: 1, visible: true },
-    { label: "Capital Mobilised", value: "$4.2B", suffix: "", description: "Total project finance closed or in advanced stage", iconName: "TrendingUp", displayOrder: 2, visible: true },
-    { label: "Countries", value: "34", suffix: "+", description: "Active engagements across Sub-Saharan and North Africa", iconName: "Globe", displayOrder: 3, visible: true },
-    { label: "Years of Experience", value: "18", suffix: "+", description: "Collective senior advisory experience on the continent", iconName: "Award", displayOrder: 4, visible: true },
-    { label: "Government Partners", value: "47", suffix: "", description: "Ministries, agencies, and state-owned enterprises served", iconName: "Landmark", displayOrder: 5, visible: true },
-    { label: "DFI Relationships", value: "22", suffix: "", description: "Active relationships with development finance institutions", iconName: "Building2", displayOrder: 6, visible: true },
+    { label: "Regional Coverage", value: "Pan-African", suffix: "", description: "Active across Sub-Saharan Africa, the Americas, and the Caribbean", iconName: "Globe", displayOrder: 1, visible: true },
+    { label: "Project Lifecycle", value: "End-to-End", suffix: "", description: "From origination and structuring through delivery and handover", iconName: "TrendingUp", displayOrder: 2, visible: true },
+    { label: "Infrastructure Sectors", value: "6", suffix: "", description: "Energy, Water, Transport, Healthcare, Digital, and Agriculture", iconName: "Briefcase", displayOrder: 3, visible: true },
+    { label: "Core Service Pillars", value: "3", suffix: "", description: "Government Advisory, Project Finance, and Execution Oversight", iconName: "Award", displayOrder: 4, visible: true },
   ]);
-  console.log("  ✓ 6 content stats inserted");
+  console.log("  ✓ 4 content stats inserted");
 
   // ── Methodology Steps ──────────────────────────────────────────────
   console.log("Inserting methodology steps...");
   await db.insert(methodologyStepsTable).values([
     {
       stepNumber: 1,
-      title: "Project Scoping & Diagnostic",
-      description: "We conduct a rapid diagnostic to assess project readiness, identify key risks, and define the advisory scope — ensuring no engagement begins without a clear path to bankability.",
-      iconName: "Search",
+      title: "Origination & Screening",
+      description: "Identifying viable national projects and conducting preliminary technical and economic viability assessments.",
+      iconName: "Target",
       displayOrder: 1,
       visible: true,
     },
     {
       stepNumber: 2,
-      title: "Structuring & Modelling",
-      description: "Our team develops the optimal financial structure, building a bankable financial model that stress-tests key assumptions and satisfies DFI and commercial lender requirements.",
-      iconName: "BarChart2",
+      title: "Feasibility & Structuring",
+      description: "Developing bankable legal entities, ensuring ESG compliance, and establishing strong governance frameworks.",
+      iconName: "ShieldCheck",
       displayOrder: 2,
       visible: true,
     },
     {
       stepNumber: 3,
-      title: "Stakeholder & Regulator Alignment",
-      description: "We engage government ministries, regulatory bodies, and local communities to secure the approvals, permits, and political support that de-risk the project for investors.",
-      iconName: "Users",
+      title: "Capital Raising",
+      description: "Connecting projects with our global network of DFIs, sovereign wealth funds, and private equity.",
+      iconName: "DollarSign",
       displayOrder: 3,
       visible: true,
     },
     {
       stepNumber: 4,
-      title: "Investor Origination",
-      description: "Leveraging our network of DFIs, MDBs, impact funds, and institutional investors, we identify the right capital partners and manage competitive investor outreach processes.",
-      iconName: "Target",
+      title: "Procurement",
+      description: "Transparent, competitive tendering to select world-class EPC contractors and technology partners.",
+      iconName: "Handshake",
       displayOrder: 4,
       visible: true,
     },
     {
       stepNumber: 5,
-      title: "Negotiation & Documentation",
-      description: "We lead or support negotiations on term sheets, loan agreements, shareholder agreements, and concession contracts — protecting our client's interests at every stage.",
-      iconName: "FileCheck",
+      title: "Execution Oversight",
+      description: "Stringent project management, milestone tracking, and quality assurance during construction.",
+      iconName: "TrendingUp",
       displayOrder: 5,
       visible: true,
     },
     {
       stepNumber: 6,
-      title: "Financial Close & Handover",
-      description: "We manage the final conditions precedent, coordinate legal and financial close logistics, and provide a structured handover to the project implementation team.",
-      iconName: "CheckCircle",
+      title: "Operations & Handover",
+      description: "Ensuring smooth transition to operational phase with trained local personnel and O&M contracts.",
+      iconName: "Award",
       displayOrder: 6,
       visible: true,
     },
@@ -331,7 +362,7 @@ async function seed() {
       {
         key: "hero",
         value: JSON.stringify({
-          badge: "Open for Engagement · Est. 2025",
+          badge: "Strategic Infrastructure & Consulting · Est. 2025",
           headline: "Structuring, funding, and delivering high-impact projects.",
           subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
           primaryBtnText: "Partner With Us",
@@ -351,11 +382,11 @@ async function seed() {
       {
         key: "footer",
         value: JSON.stringify({
-          description: "Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm connecting governments, investors, and contractors with large-scale infrastructure projects.",
+          description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
           email: "Office@zaforaholding.com",
-          address: "3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607, USA",
+          address: "3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA",
           phone: "",
-          copyright: "2025",
+          copyright: "2026",
         }),
       },
       {
@@ -377,13 +408,76 @@ async function seed() {
         key: "about",
         value: JSON.stringify({
           hero: {
-            headline: "Built for Africa's Infrastructure Reality",
-            subheadline: "Zafora Holding is a U.S.-based advisory firm purpose-built to structure, finance, and deliver infrastructure across Africa.",
+            headline: "Bridging global opportunities through infrastructure intelligence.",
+            subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
+            badge: "About Zafora Holding",
+            btn1Text: "Work With Us",
+            btn1Link: "/submit",
+            btn2Text: "View Our Pipeline",
+            btn2Link: "/projects",
           },
-          story: "Zafora Holding was founded to address a critical gap in Africa's infrastructure market: the need for transaction advisors who understand both the complexity of DFI-financed deals and the political realities of African governments.\n\nWe operate at the intersection of capital markets, government strategy, and project delivery — bringing institutional-grade advisory to markets that have historically been underserved.",
-          mission: "To accelerate Africa's infrastructure development by connecting governments, investors, and contractors with the advisory expertise needed to close transformative deals.",
-          vision: "A continent where every bankable infrastructure project finds its capital.",
-          team: [],
+          stats: [
+            { value: "2025", label: "Founded — Tampa, FL, USA" },
+            { value: "Africa · Americas", label: "Primary Markets" },
+            { value: "6", label: "Core Practice Areas" },
+            { value: "Global", label: "Strategic Partnerships" },
+          ],
+          identity: {
+            quote: "Infrastructure development across Africa requires more than advisory. It requires a partner who structures projects that capital trusts, governments can deliver, and communities benefit from.",
+            quoteAttribution: "— Zafora Holding",
+            founded: "January 2025",
+            headquarters: "Tampa, FL, USA",
+            contact: "Office@zaforaholding.com",
+            markets: "Africa · Americas · Caribbean",
+          },
+          whoWeAre: {
+            headline: "Built to close the gap between political ambition and investable infrastructure.",
+            paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
+            paragraph2: "We operate at the intersection of public ambition and private capital — structuring projects that meet international finance standards, attract DFI and institutional funding, and deliver measurable, lasting impact on the ground.",
+            paragraph3: "Our organization brings together expertise in sovereign advisory, project finance structuring, PPP frameworks, ESG compliance, and end-to-end project delivery — serving governments, investors, and contractors across Africa, the Americas, and the Caribbean.",
+            bullet1: "Sovereign advisory & project structuring",
+            bullet2: "DFI engagement & capital mobilization",
+            bullet3: "PPP design & concession management",
+            bullet4: "End-to-end delivery oversight",
+          },
+          mvp: {
+            sectionHeadline: "Mission, Vision & Purpose",
+            sectionSubheadline: "Three commitments that define how we work — and why Zafora was built.",
+            mission: "To structure bankable, deliverable infrastructure across Africa and emerging markets — connecting sovereign governments, development finance institutions, and private capital through trusted, execution-focused advisory.",
+            vision: "To be recognized as the most trusted infrastructure advisory and development partner for African governments and global investors — setting the standard for transparent, impactful, and financially sustainable project delivery.",
+            purpose: "To prove that infrastructure development in Africa can be transparent, scalable, and community-positive — and to build a replicable model that creates lasting economic value across generations.",
+          },
+          values: [
+            { title: "Integrity First", desc: "Every engagement is conducted with full transparency, ethical rigor, and accountability to all stakeholders — governments, investors, and communities alike." },
+            { title: "Pan-African Vision", desc: "We operate across borders with a deep understanding of Africa's political, economic, and regulatory landscapes — no market is too complex." },
+            { title: "Partnership Model", desc: "We don't just advise — we co-create. Zafora sits at the table as a long-term partner, sharing risk and aligning incentives with every client." },
+            { title: "Bankable Outcomes", desc: "We structure projects to meet international finance standards — making them attractive to multilaterals, DFIs, and institutional capital." },
+            { title: "Execution Focus", desc: "Advisory without delivery is incomplete. We track projects from concept to commissioning, ensuring commitments become reality on the ground." },
+            { title: "Excellence in Practice", desc: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement." },
+          ],
+          team: [
+            { firstName: "Executive", lastName: "Team", name: "", title: "Founder & Executive Leadership", department: "Executive Office", bio: "Zafora's founding team drives the organization's strategic vision, senior government relationships, and capital mobilization mandates. The executive office oversees all active engagements and institutional partnerships across African and international markets.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 1, status: "published" },
+            { firstName: "Advisory", lastName: "Panel", name: "", title: "Infrastructure Advisory Panel", department: "Advisory", bio: "Our advisory panel encompasses specialists in PPP structuring, DFI engagement, sovereign project finance, and ESG compliance. Advisors are drawn from across Sub-Saharan Africa, the Americas, and global financial and development institutions.", location: "Global", photo: "", linkedin: "", email: "", visible: true, sortOrder: 2, status: "published" },
+            { firstName: "Operations", lastName: "Team", name: "", title: "Operations & Project Delivery", department: "Operations", bio: "The operations function governs every active engagement — managing project governance, compliance readiness, stakeholder coordination, and end-to-end delivery from origination through commissioning and handover.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 3, status: "published" },
+            { firstName: "Partnerships", lastName: "Team", name: "", title: "Global Partnerships", department: "Partnerships", bio: "Our partnerships function builds and manages relationships across sovereign governments, development finance institutions, institutional investors, international engineering contractors, and enterprise organizations throughout Africa and beyond.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true, sortOrder: 4, status: "published" },
+          ],
+          timeline: [
+            { year: "Jan 2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
+            { year: "Mid 2025", event: "Initiated market engagement and project origination activities across Sub-Saharan Africa, the Caribbean, and the Americas. Deepened focus on sovereign infrastructure advisory, PPP structuring, and DFI capital mobilization frameworks." },
+            { year: "Late 2025", event: "Advanced strategic advisory mandates and began formalizing pipeline of infrastructure projects across energy, transport, water, and digital sectors. Strengthened institutional partnerships and compliance infrastructure." },
+            { year: "2026", event: "Actively building project pipeline, deepening government and investor relationships, and positioning Zafora as the premier advisory bridge between African sovereign ambition and global capital markets." },
+          ],
+          cta: {
+            headline: "Ready to bring your project to life?",
+            subheadline: "Whether you're a government, investor, or contractor — we'd like to hear about your infrastructure ambitions.",
+            btn1Text: "Start a Conversation",
+            btn1Link: "/submit",
+            btn2Text: "Explore the Pipeline",
+            btn2Link: "/projects",
+          },
+          teamHeadline: "Our Organization",
+          teamSubheadline: "Senior advisors, operators, and partnership professionals aligned behind a single mandate: bankable, deliverable infrastructure.",
+          teamLayout: "4",
         }),
       },
       {
@@ -451,15 +545,63 @@ async function seed() {
             subheadline: "Comprehensive structuring, funding, and delivery solutions — tailored to the political, economic, and regulatory realities of African infrastructure.",
             badge: "Six Specialized Practices",
           },
+          stats: [
+            { value: "6", label: "Infrastructure Sectors" },
+            { value: "Pan-African", label: "Regional Reach" },
+            { value: "End-to-End", label: "Project Lifecycle" },
+            { value: "100%", label: "Confidential" },
+          ],
+          cta: {
+            headline: "Start with a confidential consultation.",
+            subheadline: "Our advisors will assess your project and propose the most effective pathway forward.",
+            btnText: "Start Conversation",
+            btnLink: "/submit",
+          },
         }),
       },
       {
         key: "government_page",
         value: JSON.stringify({
           hero: {
-            headline: "Government Advisory & PPP Structuring",
-            subheadline: "Supporting ministries and public agencies to plan, procure, and deliver infrastructure through bankable public-private partnerships.",
-            badge: "Sovereign-Grade Advisory",
+            headline: "Government Review Center",
+            subheadline: "Zafora partners with sovereign governments to structure, derisk, and deliver national infrastructure agendas. We translate political vision into bankable, executable projects.",
+            badge: "Government Portal",
+            btn1Text: "Request Capability Pack",
+            btn1Link: "/submit?type=government",
+            btn2Text: "Start a Project",
+            btn2Link: "/submit",
+          },
+          stats: [
+            { value: "Pan-African", label: "Regional Coverage" },
+            { value: "End-to-End", label: "Project Delivery" },
+            { value: "100%", label: "DFI-Compatible" },
+            { value: "6", label: "Infrastructure Sectors" },
+          ],
+          capability: {
+            headline: "The critical bridge between state ambition and global capital.",
+            paragraph1: "As a premier African infrastructure advisory, Zafora Holding acts as the critical bridge between state requirements and global capital markets. We understand that government projects must balance rapid delivery with long-term fiscal prudence.",
+            paragraph2: "Our approach ensures that projects are structured as independent, commercially viable entities capable of attracting DFI funding and private capital, without overburdening sovereign balance sheets.",
+          },
+          cta: {
+            headline: "Ready to advance your national agenda?",
+            subheadline: "Begin with a confidential briefing. Our senior advisors will assess your project and propose the most bankable structure.",
+            btn1Text: "Start a Confidential Briefing",
+            btn1Link: "/submit?type=government",
+            btn2Text: "View Pipeline",
+            btn2Link: "/projects",
+          },
+          sidebar: {
+            ctaTitle: "Request Capability Pack",
+            ctaDesc: "Government ministries and sovereign wealth funds can request our full credentials, track record, and compliance documentation.",
+            ctaBtnText: "Secure Access Request",
+            ctaBtnLink: "/submit?type=government",
+            commitments: [
+              "Full confidentiality on all submitted materials",
+              "Response within 48 business hours",
+              "No obligation preliminary assessment",
+              "Senior advisor assignment from day one",
+              "Alignment with African Union frameworks",
+            ],
           },
         }),
       },
@@ -467,18 +609,21 @@ async function seed() {
         key: "submit_page",
         value: JSON.stringify({
           hero: {
-            headline: "Submit a Project or Inquiry",
-            subheadline: "Tell us about your project or advisory need. A senior Zafora advisor will respond within 48 business hours.",
-            badge: "Confidential & No Obligation",
+            headline: "Submit Your Request",
+            subheadline: "Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, share your details below.",
+            badge: "Start a Conversation",
           },
           sidebar: {
-            title: "Why work with Zafora?",
+            whyTitle: "Why submit to Zafora?",
             whyBullets: [
-              "34+ African markets covered",
-              "DFI and institutional investor network",
-              "Government-ready documentation",
-              "Senior advisor response within 48h",
+              "Senior advisor review within 48 hours",
+              "No-obligation preliminary assessment",
+              "Direct DFI and investor connections",
+              "Full confidentiality guaranteed",
+              "Pan-African infrastructure focus",
             ],
+            responseTime: "48-hour response",
+            responseDesc: "A senior advisor will review your submission and respond within two business days.",
           },
         }),
       },
@@ -562,9 +707,50 @@ async function seed() {
           government: { heroImage: "", mainLeft: "", mainRight: "" },
         }),
       },
-    ])
-    .onConflictDoNothing();
+    ]);
   console.log("  ✓ Site settings inserted");
+
+  // ── Restore S3 image URLs if they existed before the clear ─────────
+  const hasRestorations =
+    savedSiteImagesValue ||
+    Object.keys(savedProjectImages).length > 0 ||
+    Object.keys(savedServiceImages).length > 0;
+
+  if (hasRestorations) {
+    console.log("\nRestoring S3 image URLs...");
+
+    if (savedSiteImagesValue) {
+      await db
+        .update(siteSettingsTable)
+        .set({ value: savedSiteImagesValue })
+        .where(eq(siteSettingsTable.key, "site_images"));
+      console.log("  ✓ site_images S3 URLs restored");
+    }
+
+    for (const [name, imageUrl] of Object.entries(savedProjectImages)) {
+      if (imageUrl) {
+        await db
+          .update(projectsTable)
+          .set({ imageUrl })
+          .where(eq(projectsTable.name, name));
+      }
+    }
+    if (Object.keys(savedProjectImages).length > 0) {
+      console.log(`  ✓ ${Object.keys(savedProjectImages).length} project image URLs restored`);
+    }
+
+    for (const [name, imageUrl] of Object.entries(savedServiceImages)) {
+      if (imageUrl) {
+        await db
+          .update(servicesTable)
+          .set({ imageUrl })
+          .where(eq(servicesTable.name, name));
+      }
+    }
+    if (Object.keys(savedServiceImages).length > 0) {
+      console.log(`  ✓ ${Object.keys(savedServiceImages).length} service image URLs restored`);
+    }
+  }
 
   console.log("\n✅ Seed complete.");
   process.exit(0);

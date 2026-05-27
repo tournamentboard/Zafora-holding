@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { PhotoUploadField } from "@/src/modules/admin/shared/components/PhotoUploadField";
+import { STORAGE_FOLDER } from "@/src/lib/constants";
 
 const TEAM_COLORS = [
   "bg-[#173f35]", "bg-[#245d4e]", "bg-[#c59b4a]",
@@ -248,6 +249,7 @@ export default function TeamManager() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-[#f0ebe3]">
                 <div>
                   <PhotoUploadField
+                    folder={STORAGE_FOLDER.TEAM_PHOTOS}
                     label="Photo (optional)"
                     value={member.photo ?? ""}
                     onChange={v => setField("photo", v)}

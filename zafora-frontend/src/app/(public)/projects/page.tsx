@@ -4,7 +4,8 @@ import { useProjects } from "@/src/modules/public/projects/services/projects.ser
 import { useSiteSetting, useSectionVisibility, isSectionVisible } from "@/src/modules/public/home/services/home.service";
 import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
-import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf } from "lucide-react";
+import { Search, DollarSign, Users, AlertCircle, MapPin, BarChart3, Zap, Droplets, Truck, Stethoscope, Wifi, Leaf, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { Input } from "@/src/components/ui/input";
 import { motion } from "framer-motion";
 
@@ -161,8 +162,8 @@ export default function Projects() {
             <div className="text-center py-24 border border-dashed border-[#e5ded3] rounded-[24px] bg-[#f7f4ef]">
               {hasActiveFilters ? (
                 <>
-                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">No projects found</h3>
-                  <p className="text-[#65736f] mb-6">Try adjusting your filters or search query.</p>
+                  <h3 className="text-2xl font-bold text-[#10231f] mb-3">No projects match your filters</h3>
+                  <p className="text-[#65736f] mb-6">Try adjusting your sector, status, or search query.</p>
                   <Button variant="outline" className="rounded-full border-[#173f35] text-[#173f35]" onClick={() => { setSector("All"); setStatus("All"); setSearch(""); }}>
                     Clear Filters
                   </Button>
@@ -171,7 +172,11 @@ export default function Projects() {
                 <>
                   <BarChart3 className="h-12 w-12 mx-auto mb-4 text-[#8a958f] opacity-40" />
                   <h3 className="text-2xl font-bold text-[#10231f] mb-3">Pipeline under development</h3>
-                  <p className="text-[#65736f] max-w-sm mx-auto">Our project pipeline is being curated. Check back soon for infrastructure opportunities.</p>
+                  <p className="text-[#65736f] max-w-sm mx-auto mb-4">We are actively onboarding infrastructure projects across Africa. New mandates are added as they are structured and validated.</p>
+                  <p className="text-[#65736f] max-w-sm mx-auto mb-6">Governments, investors, and contractors are welcome to submit a mandate for review.</p>
+                  <Link href="/submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#173f35] text-white font-bold hover:bg-[#245d4e] transition-all text-sm">
+                    Submit a Mandate <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </>
               )}
             </div>
