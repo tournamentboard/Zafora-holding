@@ -216,6 +216,12 @@ _Last updated: 2026-05-27_
 - `projects/page.tsx` — `hasActiveFilters` flag; "Pipeline under development" state when DB is empty
 - `page.tsx` — `HERO_DEFAULTS.badge` = "Open for Engagement · Est. 2025"; hardcoded "Active Pipeline" → "Accepting Mandates"
 
+### S3 Image Sync ✅ (2026-05-28)
+- `zafora-backend/scripts/upload-seed-images.ts` — new script: downloads 31 default images, uploads to correct S3 folders, updates site_images setting + projects.imageUrl + services.imageUrl in DB
+- `package.json` — added `seed` and `seed:images` npm scripts
+- `scripts/seed.ts` — now saves existing S3 image URLs before clearing tables, and restores them after re-seeding (idempotent)
+- All 31 images confirmed uploaded to S3 bucket (19 site-images, 6 projects, 6 services)
+
 ### S3 Folder Structure ✅ (2026-05-27)
 - `zafora-backend/src/shared/constants/storage-folders.ts` — S3_FOLDERS + ALLOWED_S3_FOLDERS enum
 - `zafora-backend/src/modules/storage/storage.validator.ts` — folder is now `z.enum(ALLOWED_S3_FOLDERS)` (strict)

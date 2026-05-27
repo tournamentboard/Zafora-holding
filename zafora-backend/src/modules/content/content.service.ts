@@ -162,11 +162,11 @@ const SETTING_DEFAULTS: Record<string, object> = {
     panelStatLabel: "Accepting Mandates",
   },
   footer: {
-    description: "Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm connecting governments, investors, and contractors with large-scale infrastructure projects.",
+    description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
     email: "Office@zaforaholding.com",
-    address: "3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607, USA",
+    address: "3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA",
     phone: "",
-    copyright: "2025",
+    copyright: "2026",
   },
   announcement_bar: {
     enabled: false,

@@ -38,6 +38,32 @@ _Last audited: 2026-05-28. Source of truth: https://zafora-holdings-web.replit.a
 
 ---
 
+## Completed Syncs (2026-05-28 — artifacts/zafora Cross-Check)
+
+Verified every Next.js page against the corresponding Replit source file in `artifacts/zafora/src/pages/`. Findings + fixes:
+
+| Item | Where | Status |
+|------|--------|--------|
+| Home page (hero, stats, pillars, methodology, engagement, sectors, about-teaser, CTA) — matches Replit `Home.tsx` | `(public)/page.tsx` | ✅ Verified |
+| About page (hero, stats, identity, whoWeAre, mvp, values, team, timeline, sectors, cta) — matches Replit `About.tsx` | `(public)/about/page.tsx` | ✅ Verified |
+| Services page (hero, stats, badge, 6-card grid) — matches Replit `Services.tsx` | `(public)/services/page.tsx` | ✅ Verified |
+| Projects page (filters, empty state, card grid) — matches Replit `Projects.tsx` | `(public)/projects/page.tsx` | ✅ Verified |
+| Submit page (hero, sidebar, "What We Offer", form) — matches Replit `Submit.tsx` | `(public)/submit/page.tsx` | ✅ Verified |
+| Navbar + Footer (nav links, /government-review slug, services list, /admin link) — matches Replit `Navbar.tsx` + `Layout.tsx` | `Navbar.tsx`, `GlobalLayout.tsx` | ✅ Verified |
+| **`/government-review/page.tsx` had stale numeric stats (12+/$2.4B+/100%/10+) + "View Active Projects" CTA** — fixed to Pan-African/End-to-End/100%/6 + "View Pipeline" | `(public)/government-review/page.tsx` | ✅ Fixed |
+| **`seed.ts` footer.description mismatch with Replit `Layout.tsx::DEFAULT_FOOTER.description`** — updated to "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities…" + multi-line address + copyright 2026 | `scripts/seed.ts` | ✅ Fixed |
+| **`content.service.ts::SETTING_DEFAULTS.footer` mismatch** — same description + address + copyright update | `content.service.ts` | ✅ Fixed |
+
+### Cross-check methodology
+Read every page source in `artifacts/zafora/src/pages/` line-by-line and compared the `DEFAULT_SETTINGS` / `HERO_DEFAULTS` / `FALLBACK_*` literals, hero/stats blocks, sidebar copy, form enums, footer links, and nav slugs. Only two regressions surfaced — both listed above and resolved.
+
+### Note on About pull quote
+- Replit `About.tsx::DEFAULTS.identity.quote` is the global "We bridge global opportunities…" string.
+- The live Replit site displays the Africa-anchored quote ("Infrastructure development across Africa requires more than advisory…").
+- Therefore the live Replit DB overrides the code default. My seed already supplies the Africa-anchored override — no change needed.
+
+---
+
 ## Root Cause Analysis (why live site still showed wrong content after 2026-05-27)
 
 ### Content Stats (numeric $2.4B+ etc.)

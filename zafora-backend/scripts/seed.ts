@@ -6,6 +6,7 @@
 
 import "dotenv/config";
 import { db } from "../src/db/index.js";
+import { eq } from "drizzle-orm";
 import {
   projectsTable,
   servicesTable,
@@ -20,6 +21,37 @@ import {
 
 async function seed() {
   console.log("🌱 Seeding database...\n");
+
+  // ── Preserve S3-backed image URLs before clearing ──────────────────
+  // site_images and project/service imageUrls are populated by
+  // upload-seed-images.ts. We save them here so a re-seed doesn't wipe them.
+  const [existingSiteImages] = await db
+    .select({ value: siteSettingsTable.value })
+    .from(siteSettingsTable)
+    .where(eq(siteSettingsTable.key, "site_images"))
+    .limit(1);
+
+  const existingProjectImages = await db
+    .select({ name: projectsTable.name, imageUrl: projectsTable.imageUrl })
+    .from(projectsTable);
+
+  const existingServiceImages = await db
+    .select({ name: servicesTable.name, imageUrl: servicesTable.imageUrl })
+    .from(servicesTable);
+
+  const savedProjectImages = Object.fromEntries(
+    existingProjectImages
+      .filter((p) => p.imageUrl)
+      .map((p) => [p.name, p.imageUrl]),
+  );
+
+  const savedServiceImages = Object.fromEntries(
+    existingServiceImages
+      .filter((s) => s.imageUrl)
+      .map((s) => [s.name, s.imageUrl]),
+  );
+
+  const savedSiteImagesValue = existingSiteImages?.value ?? null;
 
   // ── Clear all seeded tables (safe re-run) ──────────────────────────
   console.log("Clearing existing seeded data...");
@@ -350,11 +382,11 @@ async function seed() {
       {
         key: "footer",
         value: JSON.stringify({
-          description: "Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm connecting governments, investors, and contractors with large-scale infrastructure projects.",
+          description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
           email: "Office@zaforaholding.com",
-          address: "3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607, USA",
+          address: "3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA",
           phone: "",
-          copyright: "2025",
+          copyright: "2026",
         }),
       },
       {
@@ -626,6 +658,48 @@ async function seed() {
       },
     ]);
   console.log("  ✓ Site settings inserted");
+
+  // ── Restore S3 image URLs if they existed before the clear ─────────
+  const hasRestorations =
+    savedSiteImagesValue ||
+    Object.keys(savedProjectImages).length > 0 ||
+    Object.keys(savedServiceImages).length > 0;
+
+  if (hasRestorations) {
+    console.log("\nRestoring S3 image URLs...");
+
+    if (savedSiteImagesValue) {
+      await db
+        .update(siteSettingsTable)
+        .set({ value: savedSiteImagesValue })
+        .where(eq(siteSettingsTable.key, "site_images"));
+      console.log("  ✓ site_images S3 URLs restored");
+    }
+
+    for (const [name, imageUrl] of Object.entries(savedProjectImages)) {
+      if (imageUrl) {
+        await db
+          .update(projectsTable)
+          .set({ imageUrl })
+          .where(eq(projectsTable.name, name));
+      }
+    }
+    if (Object.keys(savedProjectImages).length > 0) {
+      console.log(`  ✓ ${Object.keys(savedProjectImages).length} project image URLs restored`);
+    }
+
+    for (const [name, imageUrl] of Object.entries(savedServiceImages)) {
+      if (imageUrl) {
+        await db
+          .update(servicesTable)
+          .set({ imageUrl })
+          .where(eq(servicesTable.name, name));
+      }
+    }
+    if (Object.keys(savedServiceImages).length > 0) {
+      console.log(`  ✓ ${Object.keys(savedServiceImages).length} service image URLs restored`);
+    }
+  }
 
   console.log("\n✅ Seed complete.");
   process.exit(0);

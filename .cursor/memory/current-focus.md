@@ -1,6 +1,19 @@
 # Current Focus
 
-_Last updated: 2026-05-27_
+_Last updated: 2026-05-28_
+
+---
+
+## Latest Round (2026-05-28 — artifacts/zafora cross-check)
+
+Verified every public page in Next.js against the corresponding Replit source file in `artifacts/zafora/src/pages/` line-by-line. Two latent regressions found and fixed:
+
+1. **`/government-review/page.tsx`** still shipped stale numeric stats (12+ / $2.4B+ / 100% / 10+) and CTA label "View Active Projects". Aligned to Replit `Government.tsx`: Pan-African / End-to-End / 100% / 6 + "View Pipeline".
+2. **`seed.ts` + `content.service.ts` footer.description** were out of sync with Replit `Layout.tsx::DEFAULT_FOOTER.description`. Aligned to "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities…" + multi-line address + copyright 2026.
+
+All other public pages (Home, About, Services, Projects, Submit) and the Navbar/Footer shell already match the Replit source exactly. Full per-page status documented in `.cursor/rules/replit-update-code-to-sync.mdc`.
+
+**⚠️ Still required: re-run `npx tsx scripts/seed.ts` in `zafora-backend/` against the Neon production DB to apply the updated `about` block, `DEFAULT_STATS`, and footer description.**
 
 ---
 
@@ -154,6 +167,13 @@ Key gaps identified this round:
 - `zafora-frontend/src/app/(public)/submit/page.tsx` — sidebar bullet #5 = "Pan-African infrastructure focus"; stats card title = "What We Offer", rows = End-to-End/Pan-African/6 Sectors
 - `zafora-frontend/src/app/(public)/projects/page.tsx` — filter empty state text corrected; genuine empty body expanded to 2 paragraphs + "Submit a Mandate" CTA button
 - `zafora-frontend/src/components/layout/GlobalLayout.tsx` — Privacy Policy + Terms of Service links restored to footer bottom bar
+
+## Last Edited Files (2026-05-28 — S3 Image Sync)
+
+- `zafora-backend/scripts/upload-seed-images.ts` (new — idempotent image upload script)
+- `zafora-backend/package.json` (added `seed` + `seed:images` scripts)
+- `zafora-backend/scripts/seed.ts` (preserve S3 image URLs across re-seeds)
+- **DB updated**: `site_images` (19 S3 URLs), all 6 `projects.imageUrl`, all 6 `services.imageUrl`
 
 ## Last Edited Files (2026-05-27 — S3 Folder Structure)
 
