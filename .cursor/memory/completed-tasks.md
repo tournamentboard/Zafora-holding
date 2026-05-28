@@ -288,6 +288,23 @@ _Last updated: 2026-05-27_
 
 ---
 
+---
+
+### Seed DB Defaults Corrected ✅ (2026-05-28)
+- `services_page` seed: added missing `stats` + `cta` sections (were falling to stale fallbacks)
+- `government_page` seed: headline "Government Advisory & PPP Structuring" → "Government Review Center"; badge "Sovereign-Grade Advisory" → "Government Portal"; subheadline corrected
+- `submit_page` seed: headline/badge/subheadline corrected; sidebar key `title` → `whyTitle`; bullets updated from 4 stale → 5 correct; added `responseTime` + `responseDesc`
+- Both dev + prod DBs re-seeded successfully
+
+### Production Database Migrated ✅ (2026-05-28)
+- Schema pushed to prod Neon DB via `drizzle-kit push`
+- Seed run against prod DB (6 projects, 6 services, 4 stats, 6 methodology, 7 FAQs, all site settings)
+- S3 image URLs written into prod DB via `upload-seed-images.ts` (14 site images, 6 projects, 6 services)
+
+### Homepage Ticker Fixed ✅ (2026-05-28)
+- Ticker was visible but static — root cause: `flex` parent constraining `translateX(-50%)` percentage
+- Fix: `ticker-track` switched to `inline-flex` + `min-width: max-content` in globals.css; removed `flex whitespace-nowrap` wrapper div in page.tsx
+
 ## Partially Done / In Progress
 
 ### lib/site-settings.ts ⚠️ (2026-05-25)

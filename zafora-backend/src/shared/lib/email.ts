@@ -3,8 +3,8 @@ import { db, siteSettingsTable } from "@/db/index.js";
 import { eq } from "drizzle-orm";
 
 const API_KEY = process.env["RESEND_API_KEY"];
-const FROM_EMAIL = process.env["RESEND_FROM_EMAIL"] || "Zafora Holding <onboarding@resend.dev>";
-const DEFAULT_ADMIN_EMAIL = process.env["ADMIN_EMAIL"] ?? "Office@zaforaholding.com";
+const FROM_EMAIL = process.env["RESEND_FROM_EMAIL"] ?? "";
+const DEFAULT_ADMIN_EMAIL = process.env["ADMIN_EMAIL"] ?? "";
 
 let _resend: Resend | null = null;
 function getResend(): Resend {
@@ -43,13 +43,13 @@ function emailWrapper(title: string, body: string): string {
   <tr><td align="center">
     <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
       <tr><td style="background:#173f35;padding:28px 36px;text-align:center;">
-        <p style="margin:0;font-size:11px;letter-spacing:3px;color:#c59b4a;text-transform:uppercase;font-weight:700;">Zafora Holding</p>
+        <p style="margin:0;font-size:11px;letter-spacing:3px;color:#c59b4a;text-transform:uppercase;font-weight:700;">Zafora Holdings</p>
         <h1 style="margin:8px 0 0;color:#fff;font-size:22px;font-weight:700;">${title}</h1>
       </td></tr>
       <tr><td style="padding:36px;">${body}</td></tr>
       <tr><td style="background:#f7f4ef;padding:20px 36px;text-align:center;">
-        <p style="margin:0;font-size:12px;color:#8a958f;">This is an automated notification from your Zafora admin panel.<br>
-        <a href="https://zaforaholding.com/admin" style="color:#173f35;font-weight:600;">Open Admin Panel</a></p>
+        <p style="margin:0;font-size:12px;color:#8a958f;">This is an automated notification from your Zafora Holdings admin panel.<br>
+        <a href="https://zaforaholdings.com/admin" style="color:#173f35;font-weight:600;">Open Admin Panel</a></p>
       </td></tr>
     </table>
   </td></tr>
@@ -96,7 +96,7 @@ export async function sendInquiryNotification(lead: {
       <p style="margin:0;font-size:14px;color:#10231f;line-height:1.6;">${lead.message}</p>
     </div>` : ""}
     <div style="text-align:center;">
-      <a href="https://zaforaholding.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">View in Admin Panel</a>
+      <a href="https://zaforaholdings.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">View in Admin Panel</a>
     </div>`;
 
   await resend.emails.send({
@@ -139,7 +139,7 @@ export async function sendInterestNotification(
       <p style="margin:0;font-size:14px;color:#10231f;line-height:1.6;">${interest.message}</p>
     </div>` : ""}
     <div style="text-align:center;">
-      <a href="https://zaforaholding.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">View in Admin Panel</a>
+      <a href="https://zaforaholdings.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">View in Admin Panel</a>
     </div>`;
 
   await resend.emails.send({
@@ -157,7 +157,7 @@ export async function sendTestEmail(toEmail: string): Promise<{ ok: boolean; err
     const body = `
       <p style="margin:0 0 20px;color:#65736f;font-size:14px;">Your email notifications are working correctly.</p>
       <div style="text-align:center;">
-        <a href="https://zaforaholding.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">Open Admin Panel</a>
+        <a href="https://zaforaholdings.com/admin" style="display:inline-block;background:#173f35;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">Open Admin Panel</a>
       </div>`;
     await resend.emails.send({
       from: FROM_EMAIL,

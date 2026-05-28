@@ -4,14 +4,14 @@ import LegalPageView from "@/src/modules/public/legal/components/LegalPageView";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Zafora Holding",
-  description: "Zafora Holding's Terms of Service — the terms governing use of our website.",
+  title: "Terms of Service — Zafora Holdings",
+  description: "Zafora Holdings's Terms of Service — the terms governing use of our website.",
 };
 
 const DEFAULT = {
   title: "Terms of Service",
   lastUpdated: "January 2025",
-  content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+  content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holdings and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holdings shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at office@zaforaholdings.com with any questions.",
 };
 
 export default async function TermsPage() {

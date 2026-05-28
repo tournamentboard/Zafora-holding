@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, Loader2, AlertTriangle } from "lucide-react";
@@ -21,6 +21,7 @@ function SetupForm() {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const set = (k: string, v: string) => { setValues((p) => ({ ...p, [k]: v })); setError(null); };
 
@@ -37,7 +38,8 @@ function SetupForm() {
       storeTokens(resp.data.accessToken, resp.data.refreshToken);
       const from = searchParams.get("from");
       const redirectTo = from && from.startsWith("/admin") ? from : ROUTES.ADMIN.ROOT;
-      window.location.replace(redirectTo);
+      // window.location.replace(redirectTo);
+      router.push(redirectTo);
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
       setError(msg ?? "Setup failed. Check the email matches ADMIN_SETUP_EMAIL on the server.");
@@ -50,7 +52,7 @@ function SetupForm() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-6" />
+          <Image src={logo} alt="Zafora Holdings" className="h-24 w-auto mx-auto mb-6" />
           <div className="inline-flex items-center gap-2 bg-[#173f35]/10 text-[#173f35] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
             <ShieldCheck size={12} /> First-Time Setup
           </div>
@@ -76,7 +78,7 @@ function SetupForm() {
                 <input
                   type="email"
                   autoComplete="email"
-                  placeholder="admin@zaforaholding.com"
+                  placeholder="admin@zaforaholdings.com"
                   value={values.adminEmail}
                   onChange={(e) => set("adminEmail", e.target.value)}
                   className={`w-full border rounded-xl pl-9 pr-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] ${error ? "border-red-400 bg-red-50" : "border-[#e5ded3] bg-[#f7f4ef]"}`}
@@ -172,7 +174,7 @@ function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-6" />
+          <Image src={logo} alt="Zafora Holdings" className="h-24 w-auto mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-[#10231f] mb-1">Reset Password</h1>
           <p className="text-[#65736f] text-sm">Enter the authorized admin email and choose a new password.</p>
         </div>
@@ -201,7 +203,7 @@ function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
                   <input
                     type="email"
                     autoComplete="email"
-                    placeholder="admin@zaforaholding.com"
+                    placeholder="admin@zaforaholdings.com"
                     value={values.adminEmail}
                     onChange={(e) => set("adminEmail", e.target.value)}
                     className={`w-full border rounded-xl pl-9 pr-4 py-3 text-[#10231f] placeholder-[#8a958f] focus:outline-none focus:ring-2 focus:ring-[#173f35] ${error ? "border-red-400 bg-red-50" : "border-[#e5ded3] bg-[#f7f4ef]"}`}
@@ -300,7 +302,7 @@ function LoginForm({ onForgot }: { onForgot: () => void }) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "#f7f4ef" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image src={logo} alt="Zafora Holding" className="h-24 w-auto mx-auto mb-6" />
+          <Image src={logo} alt="Zafora Holdings" className="h-24 w-auto mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-[#10231f] mb-1">Admin Sign In</h1>
           <p className="text-[#65736f] text-sm">Enter your password to access the admin panel</p>
         </div>

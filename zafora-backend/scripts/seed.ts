@@ -296,7 +296,7 @@ async function seed() {
   console.log("Inserting FAQs...");
   await db.insert(faqsTable).values([
     {
-      question: "What services does Zafora Holding offer?",
+      question: "What services does Zafora Holdings offer?",
       answer: "Full-spectrum infrastructure advisory — project finance, PPP structuring, government advisory, investor origination, ESG due diligence, and green finance. We advise governments, developers, and institutional investors at every stage of the project lifecycle.",
       category: "services",
       page: "general",
@@ -364,7 +364,7 @@ async function seed() {
         value: JSON.stringify({
           badge: "Strategic Infrastructure & Consulting · Est. 2025",
           headline: "Structuring, funding, and delivering high-impact projects.",
-          subheadline: "Zafora Holding connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
+          subheadline: "Zafora Holdings connects governments, investors, and contractors to develop and deliver critical infrastructure across Africa.",
           primaryBtnText: "Partner With Us",
           primaryBtnLink: "/submit",
           secondaryBtnText: "View Pipeline",
@@ -383,7 +383,7 @@ async function seed() {
         key: "footer",
         value: JSON.stringify({
           description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
-          email: "Office@zaforaholding.com",
+          email: "office@zaforaholdings.com",
           address: "3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA",
           phone: "",
           copyright: "2026",
@@ -392,7 +392,7 @@ async function seed() {
       {
         key: "branding",
         value: JSON.stringify({
-          siteName: "Zafora Holding",
+          siteName: "Zafora Holdings",
           tagline: "Infrastructure. Capital. Delivery.",
           logoUrl: "",
           faviconUrl: "",
@@ -409,8 +409,8 @@ async function seed() {
         value: JSON.stringify({
           hero: {
             headline: "Bridging global opportunities through infrastructure intelligence.",
-            subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
-            badge: "About Zafora Holding",
+            subheadline: "Zafora Holdings is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
+            badge: "About Zafora Holdings",
             btn1Text: "Work With Us",
             btn1Link: "/submit",
             btn2Text: "View Our Pipeline",
@@ -424,15 +424,15 @@ async function seed() {
           ],
           identity: {
             quote: "Infrastructure development across Africa requires more than advisory. It requires a partner who structures projects that capital trusts, governments can deliver, and communities benefit from.",
-            quoteAttribution: "— Zafora Holding",
+            quoteAttribution: "— Zafora Holdings",
             founded: "January 2025",
             headquarters: "Tampa, FL, USA",
-            contact: "Office@zaforaholding.com",
+            contact: "office@zaforaholdings.com",
             markets: "Africa · Americas · Caribbean",
           },
           whoWeAre: {
             headline: "Built to close the gap between political ambition and investable infrastructure.",
-            paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
+            paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holdings is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
             paragraph2: "We operate at the intersection of public ambition and private capital — structuring projects that meet international finance standards, attract DFI and institutional funding, and deliver measurable, lasting impact on the ground.",
             paragraph3: "Our organization brings together expertise in sovereign advisory, project finance structuring, PPP frameworks, ESG compliance, and end-to-end project delivery — serving governments, investors, and contractors across Africa, the Americas, and the Caribbean.",
             bullet1: "Sovereign advisory & project structuring",
@@ -462,7 +462,7 @@ async function seed() {
             { firstName: "Partnerships", lastName: "Team", name: "", title: "Global Partnerships", department: "Partnerships", bio: "Our partnerships function builds and manages relationships across sovereign governments, development finance institutions, institutional investors, international engineering contractors, and enterprise organizations throughout Africa and beyond.", location: "Global Markets", photo: "", linkedin: "", email: "", visible: true, sortOrder: 4, status: "published" },
           ],
           timeline: [
-            { year: "Jan 2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
+            { year: "Jan 2025", event: "Zafora Holdings established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
             { year: "Mid 2025", event: "Initiated market engagement and project origination activities across Sub-Saharan Africa, the Caribbean, and the Americas. Deepened focus on sovereign infrastructure advisory, PPP structuring, and DFI capital mobilization frameworks." },
             { year: "Late 2025", event: "Advanced strategic advisory mandates and began formalizing pipeline of infrastructure projects across energy, transport, water, and digital sectors. Strengthened institutional partnerships and compliance infrastructure." },
             { year: "2026", event: "Actively building project pipeline, deepening government and investor relationships, and positioning Zafora as the premier advisory bridge between African sovereign ambition and global capital markets." },
@@ -483,23 +483,23 @@ async function seed() {
       {
         key: "seo_home",
         value: JSON.stringify({
-          title: "Zafora Holding — Infrastructure Advisory for Africa",
-          description: "Zafora Holding provides project finance, PPP, and transaction advisory services for infrastructure projects across Africa.",
+          title: "Zafora Holdings — Infrastructure Advisory for Africa",
+          description: "Zafora Holdings provides project finance, PPP, and transaction advisory services for infrastructure projects across Africa.",
           keywords: "infrastructure advisory Africa, project finance, PPP advisory, DFI",
         }),
       },
       {
         key: "seo_about",
         value: JSON.stringify({
-          title: "About Zafora Holding — Infrastructure Advisory",
-          description: "Learn about Zafora Holding's mission, team, and track record in African infrastructure advisory.",
-          keywords: "Zafora Holding about, infrastructure advisory team, Africa",
+          title: "About Zafora Holdings — Infrastructure Advisory",
+          description: "Learn about Zafora Holdings's mission, team, and track record in African infrastructure advisory.",
+          keywords: "Zafora Holdings about, infrastructure advisory team, Africa",
         }),
       },
       {
         key: "seo_services",
         value: JSON.stringify({
-          title: "Advisory Services — Zafora Holding",
+          title: "Advisory Services — Zafora Holdings",
           description: "Explore Zafora's full-spectrum infrastructure advisory services: project finance, PPP, ESG, green finance, and more.",
           keywords: "infrastructure advisory services, PPP advisory, project finance Africa",
         }),
@@ -507,7 +507,7 @@ async function seed() {
       {
         key: "seo_projects",
         value: JSON.stringify({
-          title: "Infrastructure Pipeline — Zafora Holding",
+          title: "Infrastructure Pipeline — Zafora Holdings",
           description: "Explore Zafora's active infrastructure project pipeline across energy, transport, water, and real estate in Africa.",
           keywords: "Africa infrastructure projects, investment pipeline, project finance",
         }),
@@ -515,16 +515,16 @@ async function seed() {
       {
         key: "seo_government",
         value: JSON.stringify({
-          title: "Government Advisory — Zafora Holding",
-          description: "Zafora Holding works with governments and ministries across Africa to structure, procure, and deliver infrastructure.",
+          title: "Government Advisory — Zafora Holdings",
+          description: "Zafora Holdings works with governments and ministries across Africa to structure, procure, and deliver infrastructure.",
           keywords: "government advisory Africa, PPP procurement, infrastructure ministry",
         }),
       },
       {
         key: "seo_submit",
         value: JSON.stringify({
-          title: "Submit a Project — Zafora Holding",
-          description: "Submit your infrastructure project or advisory inquiry to Zafora Holding.",
+          title: "Submit a Project — Zafora Holdings",
+          description: "Submit your infrastructure project or advisory inquiry to Zafora Holdings.",
           keywords: "submit project, infrastructure advisory inquiry, Zafora contact",
         }),
       },
@@ -579,7 +579,7 @@ async function seed() {
           ],
           capability: {
             headline: "The critical bridge between state ambition and global capital.",
-            paragraph1: "As a premier African infrastructure advisory, Zafora Holding acts as the critical bridge between state requirements and global capital markets. We understand that government projects must balance rapid delivery with long-term fiscal prudence.",
+            paragraph1: "As a premier African infrastructure advisory, Zafora Holdings acts as the critical bridge between state requirements and global capital markets. We understand that government projects must balance rapid delivery with long-term fiscal prudence.",
             paragraph2: "Our approach ensures that projects are structured as independent, commercially viable entities capable of attracting DFI funding and private capital, without overburdening sovereign balance sheets.",
           },
           cta: {
@@ -610,7 +610,7 @@ async function seed() {
         value: JSON.stringify({
           hero: {
             headline: "Submit Your Request",
-            subheadline: "Initiate a dialogue with Zafora Holding. Whether you are a government entity, investor, or project developer, share your details below.",
+            subheadline: "Initiate a dialogue with Zafora Holdings. Whether you are a government entity, investor, or project developer, share your details below.",
             badge: "Start a Conversation",
           },
           sidebar: {
@@ -631,7 +631,7 @@ async function seed() {
         key: "announcement_bar",
         value: JSON.stringify({
           enabled: false,
-          message: "Welcome to Zafora Holding — Africa's trusted infrastructure advisory partner.",
+          message: "Welcome to Zafora Holdings — Africa's trusted infrastructure advisory partner.",
           link: "/submit",
           linkText: "Partner with us",
           dismissible: true,
@@ -654,7 +654,7 @@ async function seed() {
         value: JSON.stringify({
           title: "Privacy Policy",
           lastUpdated: "January 2025",
-          content: "Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.",
+          content: "Zafora Holdings is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at office@zaforaholdings.com with any questions.",
         }),
       },
       {
@@ -662,7 +662,7 @@ async function seed() {
         value: JSON.stringify({
           title: "Terms of Service",
           lastUpdated: "January 2025",
-          content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.",
+          content: "By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holdings and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holdings shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at office@zaforaholdings.com with any questions.",
         }),
       },
       {
@@ -679,7 +679,7 @@ async function seed() {
       {
         key: "notifications",
         value: JSON.stringify({
-          adminEmail: process.env["ADMIN_EMAIL"] ?? "Office@zaforaholding.com",
+          adminEmail: process.env["ADMIN_EMAIL"] ?? "",
           notifyOnInquiry: true,
           notifyOnInterest: true,
         }),

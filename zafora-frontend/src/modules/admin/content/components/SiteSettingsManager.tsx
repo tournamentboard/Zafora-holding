@@ -154,11 +154,11 @@ function FooterEditor() {
       <div className="grid grid-cols-1 gap-4">
         <FieldRow label="Company Description" value={form.description ?? ""} onChange={v => set("description", v)} type="textarea" placeholder="Brief company description shown in the footer" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FieldRow label="Email Address" value={form.email ?? ""} onChange={v => set("email", v)} placeholder="Office@zaforaholding.com" />
+          <FieldRow label="Email Address" value={form.email ?? ""} onChange={v => set("email", v)} placeholder="office@zaforaholdings.com" />
           <FieldRow label="Phone Number" value={form.phone ?? ""} onChange={v => set("phone", v)} placeholder="+1 (xxx) xxx-xxxx" />
         </div>
         <FieldRow label="Address (use new line for line 2)" value={form.address ?? ""} onChange={v => set("address", v)} type="textarea" placeholder={"3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA"} />
-        <FieldRow label="Copyright Year" value={form.copyright ?? ""} onChange={v => set("copyright", v)} placeholder="2025" hint="Used in '© 2025 Zafora Holding'" />
+        <FieldRow label="Copyright Year" value={form.copyright ?? ""} onChange={v => set("copyright", v)} placeholder="2025" hint="Used in '© 2025 Zafora Holdings'" />
       </div>
       <SaveBar onSave={() => save()} isPending={isPending} saved={saved} label="Save Footer Settings" />
     </div>
@@ -224,7 +224,7 @@ function SeoEditor() {
       ) : (
         <div className="bg-white border border-[#e5ded3] rounded-2xl p-5 space-y-4">
           <h4 className="font-bold text-[#10231f] text-sm">{SEO_PAGES.find(p => p.key === activePage)?.label}</h4>
-          <FieldRow label="Page Title" value={form.title ?? ""} onChange={v => set("title", v)} placeholder="e.g. About Us — Zafora Holding" hint="Shown in browser tab and Google search. Keep under 60 characters." />
+          <FieldRow label="Page Title" value={form.title ?? ""} onChange={v => set("title", v)} placeholder="e.g. About Us — Zafora Holdings" hint="Shown in browser tab and Google search. Keep under 60 characters." />
           <FieldRow label="Meta Description" value={form.description ?? ""} onChange={v => set("description", v)} type="textarea" placeholder="Short description of this page for search engines" hint="Shown under your link in Google. Keep under 160 characters." />
           <FieldRow label="Keywords" value={form.keywords ?? ""} onChange={v => set("keywords", v)} placeholder="infrastructure advisory, project finance, PPP" hint="Comma-separated keywords" />
           <div className="border-t border-[#e5ded3] pt-4">
@@ -443,7 +443,7 @@ function SubmitPageEditor() {
         <h4 className="font-bold text-[#10231f] text-sm">Hero Section</h4>
         <FieldRow label="Badge Text" value={form.hero?.badge ?? ""} onChange={v => setNested("hero", "badge", v)} placeholder="Start a Conversation" />
         <FieldRow label="Headline" value={form.hero?.headline ?? ""} onChange={v => setNested("hero", "headline", v)} type="textarea" placeholder="Submit Your Request" />
-        <FieldRow label="Subheadline" value={form.hero?.subheadline ?? ""} onChange={v => setNested("hero", "subheadline", v)} type="textarea" placeholder="Initiate a dialogue with Zafora Holding..." />
+        <FieldRow label="Subheadline" value={form.hero?.subheadline ?? ""} onChange={v => setNested("hero", "subheadline", v)} type="textarea" placeholder="Initiate a dialogue with Zafora Holdings..." />
       </div>
 
       <div className="bg-white border border-[#e5ded3] rounded-2xl p-5 space-y-4">

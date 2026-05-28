@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 
 const SITE_INFO = [
-  { icon: <Globe className="h-4 w-4" />, label: "Website", value: "zaforaholding.com" },
-  { icon: <Mail className="h-4 w-4" />, label: "Email", value: "Office@zaforaholding.com" },
+  { icon: <Globe className="h-4 w-4" />, label: "Website", value: "zaforaholdings.com" },
+  { icon: <Mail className="h-4 w-4" />, label: "Email", value: "office@zaforaholdings.com" },
   { icon: <MapPin className="h-4 w-4" />, label: "Address", value: "3030 N Rocky Point Dr W, Suite 150, Tampa, FL 33607" },
   { icon: <Phone className="h-4 w-4" />, label: "Admin path", value: "/admin" },
 ];
@@ -60,7 +60,7 @@ export default function SettingsPanel() {
   const [pwSuccess, setPwSuccess] = useState(false);
 
   const [emailConfigured, setEmailConfigured] = useState<boolean | null>(null);
-  const [notifEmail, setNotifEmail] = useState("Office@zaforaholding.com");
+  const [notifEmail, setNotifEmail] = useState("office@zaforaholdings.com");
   const [notifyOnInquiry, setNotifyOnInquiry] = useState(true);
   const [notifyOnInterest, setNotifyOnInterest] = useState(true);
   const [notifSaving, setNotifSaving] = useState(false);
