@@ -8,13 +8,13 @@ import { useGetSiteSettings, useUpdateSiteSettings } from "../services/site-sett
 const PRIVACY_DEFAULT = {
   title: "Privacy Policy",
   lastUpdated: "January 2025",
-  content: `Zafora Holding is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at Office@zaforaholding.com with any questions.`,
+  content: `Zafora Holdings is committed to protecting your privacy. This policy explains how we collect and use your information when you visit our website.\n\nWe collect information you voluntarily provide (name, email, company) and usage data. We use it to respond to inquiries and improve our services. We do not sell your personal data.\n\nContact us at office@zaforaholdings.com with any questions.`,
 };
 
 const TERMS_DEFAULT = {
   title: "Terms of Service",
   lastUpdated: "January 2025",
-  content: `By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holding and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holding shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at Office@zaforaholding.com with any questions.`,
+  content: `By accessing this website you agree to these Terms of Service.\n\nAll content on this site is the property of Zafora Holdings and protected by applicable laws. You may use this site for lawful purposes only.\n\nZafora Holdings shall not be liable for any indirect or consequential damages arising from use of this site.\n\nContact us at office@zaforaholdings.com with any questions.`,
 };
 
 type Page = "privacy" | "terms";

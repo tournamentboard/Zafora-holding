@@ -5,14 +5,14 @@ import Image from "next/image";
 import logo from "@/src/assets/logo.png";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Maintenance — Zafora Holding" };
+export const metadata: Metadata = { title: "Maintenance — Zafora Holdings" };
 
 const DEFAULT = {
   headline: "We'll be back soon.",
   message: "We're performing scheduled maintenance. Please check back shortly.",
   showContactEmail: true,
   estimatedTime: "",
-  contactEmail: "Office@zaforaholding.com",
+  contactEmail: "office@zaforaholdings.com",
 };
 
 export default async function MaintenancePage() {
@@ -36,7 +36,7 @@ export default async function MaintenancePage() {
       <div className="w-full max-w-lg text-center">
         <Image
           src={logo}
-          alt="Zafora Holding"
+          alt="Zafora Holdings"
           className="h-24 w-auto mx-auto mb-10 opacity-80"
           style={{ imageRendering: "auto" }}
         />

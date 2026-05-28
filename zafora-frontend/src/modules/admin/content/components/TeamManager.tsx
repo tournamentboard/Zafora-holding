@@ -277,7 +277,7 @@ export default function TeamManager() {
                     type="text"
                     value={member.email ?? ""}
                     onChange={e => setField("email", e.target.value)}
-                    placeholder="name@zaforaholding.com"
+                    placeholder="name@zaforaholdings.com"
                     className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
                   />
                 </div>

@@ -63,8 +63,8 @@ const DEFAULTS = {
   ],
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
-    subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
-    badge: "About Zafora Holding",
+    subheadline: "Zafora Holdings is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
+    badge: "About Zafora Holdings",
     btn1Text: "Work With Us", btn1Link: "/submit",
     btn2Text: "View Our Pipeline", btn2Link: "/projects",
   },
@@ -76,15 +76,15 @@ const DEFAULTS = {
   ],
   identity: {
     quote: "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets.",
-    quoteAttribution: "— Zafora Holding",
+    quoteAttribution: "— Zafora Holdings",
     founded: "January 2025",
     headquarters: "Tampa, FL, USA",
-    contact: "Office@zaforaholding.com",
+    contact: "office@zaforaholdings.com",
     markets: "Africa · Americas · Caribbean",
   },
   whoWeAre: {
     headline: "Built to close the gap between political ambition and investable infrastructure.",
-    paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
+    paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holdings is a U.S.-based strategic infrastructure advisory and development firm. We were established to address a persistent gap in African infrastructure: the disconnect between government intent, investor appetite, and execution capability.",
     paragraph2: "We operate at the intersection of public ambition and private capital — structuring projects that meet international finance standards, attract DFI and institutional funding, and deliver measurable, lasting impact on the ground.",
     paragraph3: "Our organization brings together expertise in sovereign advisory, project finance structuring, PPP frameworks, ESG compliance, and end-to-end project delivery — serving governments, investors, and contractors across Africa, the Americas, and the Caribbean.",
     bullet1: "Sovereign advisory & project structuring",
@@ -108,7 +108,7 @@ const DEFAULTS = {
     { title: "Excellence in Practice", desc: "We apply best-in-class global standards to every project — from technical due diligence to procurement frameworks and impact measurement." },
   ],
   timeline: [
-    { year: "Jan 2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
+    { year: "Jan 2025", event: "Zafora Holdings established in Tampa, Florida. The company began developing its operational framework, brand identity, infrastructure advisory methodology, and foundational relationships with government and institutional counterparties." },
     { year: "Mid 2025", event: "Initiated market engagement and project origination activities across Sub-Saharan Africa, the Caribbean, and the Americas. Deepened focus on sovereign infrastructure advisory, PPP structuring, and DFI capital mobilization frameworks." },
     { year: "Late 2025", event: "Advanced strategic advisory mandates and began formalizing pipeline of infrastructure projects across energy, transport, water, and digital sectors. Strengthened institutional partnerships and compliance infrastructure." },
     { year: "2026", event: "Actively building project pipeline, deepening government and investor relationships, and positioning Zafora as the premier advisory bridge between African sovereign ambition and global capital markets." },
@@ -212,7 +212,7 @@ export default function About() {
             {/* Left — Dark card */}
             <motion.div {...fade(0)} className="rounded-3xl bg-[#173f35] text-white p-10 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
-              <Image src={logo} alt="Zafora Holding" className="h-14 w-auto mb-8 opacity-90" style={{ filter: "brightness(0) invert(1)" }} />
+              <Image src={logo} alt="Zafora Holdings" className="h-14 w-auto mb-8 opacity-90" style={{ filter: "brightness(0) invert(1)" }} />
               <blockquote className="text-2xl font-semibold leading-snug mb-6 relative z-10">
                 "{d.identity.quote}"
               </blockquote>
