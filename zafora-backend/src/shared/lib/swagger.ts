@@ -6,8 +6,8 @@ const spec: OpenAPIV3.Document = {
     title: "Zafora Backend API",
     version: "1.0.0",
     description:
-      "REST API for Zafora Holding — infrastructure advisory platform.\n\n**Auth:** JWT cookies (`access_token` 15 min + `refresh_token` 7 days). Call `POST /api/auth/login` first; cookies are set automatically. Use `POST /api/auth/refresh` to rotate tokens. Protected routes are marked 🔒.",
-    contact: { email: "Office@zaforaholding.com" },
+      "REST API for Zafora Holdings — infrastructure advisory platform.\n\n**Auth:** JWT cookies (`access_token` 15 min + `refresh_token` 7 days). Call `POST /api/auth/login` first; cookies are set automatically. Use `POST /api/auth/refresh` to rotate tokens. Protected routes are marked 🔒.",
+    contact: { email: "office@zaforaholdings.com" },
   },
   servers: [
     { url: "http://localhost:4000", description: "Local development" },
@@ -997,7 +997,7 @@ const spec: OpenAPIV3.Document = {
                 type: "object",
                 required: ["value"],
                 properties: {
-                  value: { type: "string", description: "JSON-serialised string of the setting object", example: "{\"adminEmail\":\"admin@zaforaholding.com\"}" },
+                  value: { type: "string", description: "JSON-serialised string of the setting object", example: "{\"adminEmail\":\"admin@zaforaholdings.com\"}" },
                 },
               },
             },

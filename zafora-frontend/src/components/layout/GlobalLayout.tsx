@@ -10,7 +10,7 @@ import Image from "next/image";
 
 const DEFAULT_FOOTER = {
   description: "U.S.-based strategic infrastructure, investment, and consulting company bridging global opportunities across Africa, the Americas, the Caribbean, and emerging markets worldwide.",
-  email: "Office@zaforaholding.com",
+  email: "office@zaforaholdings.com",
   address: "3030 N Rocky Point Dr W, Suite 150\nTampa, FL 33607, USA",
   phone: "",
   copyright: String(new Date().getFullYear()),
@@ -76,14 +76,14 @@ export default function GlobalLayout({ children }: { children: ReactNode }) {
               {logoUrl ? (
                 <img
                   src={logoUrl}
-                  alt="Zafora Holding"
+                  alt="Zafora Holdings"
                   className="h-14 w-auto object-contain mb-5"
                   style={{ filter: "brightness(0) invert(1)" }}
                 />
               ) : (
                 <Image
                   src={logo}
-                  alt="Zafora Holding"
+                  alt="Zafora Holdings"
                   className="h-14 w-auto object-contain mb-5"
                   style={{ filter: "brightness(0) invert(1)" }}
                 />
@@ -175,7 +175,7 @@ export default function GlobalLayout({ children }: { children: ReactNode }) {
           {/* Bottom bar */}
           <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-white/35">
-              &copy; {copyrightYear} Zafora Holding. All rights reserved. Tampa, FL, USA.
+              &copy; {copyrightYear} Zafora Holdings. All rights reserved. Tampa, FL, USA.
             </p>
             <div className="flex items-center gap-6 text-xs text-white/35">
               <Link href="/privacy" className="hover:text-white/60 transition-colors">

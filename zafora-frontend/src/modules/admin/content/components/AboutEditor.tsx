@@ -30,8 +30,8 @@ const ABOUT_DEFAULTS = {
   sectorSubheadline: "Our practice spans critical infrastructure development across global markets.",
   hero: {
     headline: "Bridging global opportunities through infrastructure intelligence.",
-    subheadline: "Zafora Holding is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
-    badge: "About Zafora Holding",
+    subheadline: "Zafora Holdings is a U.S.-based strategic infrastructure, investment, and consulting company connecting governments, enterprises, investors, and contractors to scalable opportunities across global markets.",
+    badge: "About Zafora Holdings",
     btn1Text: "Work With Us", btn1Link: "/submit",
     btn2Text: "View Our Pipeline", btn2Link: "/projects",
   },
@@ -43,15 +43,15 @@ const ABOUT_DEFAULTS = {
   ],
   identity: {
     quote: "We bridge global opportunities through infrastructure intelligence, strategic partnerships, and technology-driven solutions — delivering long-term impact across emerging and developed markets.",
-    quoteAttribution: "— Zafora Holding",
+    quoteAttribution: "— Zafora Holdings",
     founded: "January 2025",
     headquarters: "Tampa, FL, USA",
-    contact: "Office@zaforaholding.com",
+    contact: "office@zaforaholdings.com",
     markets: "Africa · Americas · Caribbean",
   },
   whoWeAre: {
     headline: "A company built for global infrastructure opportunities.",
-    paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holding was built with a vision to bridge global opportunities through infrastructure intelligence, strategic partnerships, technology-driven solutions, and international business development.",
+    paragraph1: "Founded in January 2025 and headquartered in Tampa, Florida, Zafora Holdings was built with a vision to bridge global opportunities through infrastructure intelligence, strategic partnerships, technology-driven solutions, and international business development.",
     paragraph2: "We support public and private sector initiatives by connecting innovation, operational strategy, and scalable development opportunities across emerging and developed markets.",
     paragraph3: "Our organization is built around the belief that the future of infrastructure, technology, logistics, energy, communications, and smart development requires trusted partnerships, transparency, strategic execution, and long-term vision.",
     bullet1: "Strategic infrastructure development & modernization",
@@ -85,7 +85,7 @@ const ABOUT_DEFAULTS = {
     { firstName: "David", lastName: "Mensah", name: "", title: "Chief Financial Officer", department: "Finance", bio: "Infrastructure finance executive with deep expertise in project finance structuring, DFI co-financing, and sovereign debt instruments. Oversees Zafora's financial strategy, treasury operations, and capital mobilization across all active mandates.", location: "Tampa, FL, USA", photo: "", linkedin: "", email: "", visible: true, sortOrder: 5, status: "published" },
   ],
   timeline: [
-    { year: "2025", event: "Zafora Holding established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
+    { year: "2025", event: "Zafora Holdings established in Tampa, Florida. The company began developing its operational framework, brand identity, strategic partnerships, and long-term infrastructure vision focused on government, enterprise, and development opportunities." },
     { year: "Mid 2025", event: "Initiated relationship-building efforts and market research focused on infrastructure, technology, and development opportunities across Africa, the Caribbean, and emerging international markets. Expanded focus toward infrastructure intelligence, smart development, and strategic consulting." },
     { year: "Late 2025", event: "Began developing strategic initiatives involving infrastructure visibility systems, smart operational ecosystems, technology-enabled development strategies, and international business partnerships." },
     { year: "2026", event: "Continuing to build strategic relationships and positioning for international opportunities involving infrastructure, technology, consulting, operational transformation, and global development initiatives across emerging and established markets." },
@@ -239,7 +239,7 @@ export default function AboutEditor() {
       <SectionBlock title="Hero Section" icon={<Globe size={16} />} defaultOpen>
         <Field label="Headline" value={f.hero?.headline ?? ""} onChange={v => setNested("hero", "headline", v)} type="textarea" />
         <Field label="Sub-headline" value={f.hero?.subheadline ?? ""} onChange={v => setNested("hero", "subheadline", v)} type="textarea" />
-        <Field label="Badge Text" value={f.hero?.badge ?? ""} onChange={v => setNested("hero", "badge", v)} placeholder="About Zafora Holding" />
+        <Field label="Badge Text" value={f.hero?.badge ?? ""} onChange={v => setNested("hero", "badge", v)} placeholder="About Zafora Holdings" />
         <div className="grid grid-cols-2 gap-4">
           <Field label="Button 1 Text" value={f.hero?.btn1Text ?? ""} onChange={v => setNested("hero", "btn1Text", v)} placeholder="Work With Us" />
           <Field label="Button 1 Link" value={f.hero?.btn1Link ?? ""} onChange={v => setNested("hero", "btn1Link", v)} placeholder="/submit" />
@@ -263,11 +263,11 @@ export default function AboutEditor() {
       <SectionBlock title="Identity Card (dark green panel)" icon={<ShieldCheck size={16} />}>
         <p className="text-xs text-[#8a958f]">The dark green panel shown beside the "Who We Are" text.</p>
         <Field label="Company Quote" value={f.identity?.quote ?? ""} onChange={v => setNested("identity", "quote", v)} type="textarea" />
-        <Field label="Quote Attribution" value={f.identity?.quoteAttribution ?? ""} onChange={v => setNested("identity", "quoteAttribution", v)} placeholder="— Zafora Holding" />
+        <Field label="Quote Attribution" value={f.identity?.quoteAttribution ?? ""} onChange={v => setNested("identity", "quoteAttribution", v)} placeholder="— Zafora Holdings" />
         <div className="grid grid-cols-2 gap-3">
           <Field label="Founded" value={f.identity?.founded ?? ""} onChange={v => setNested("identity", "founded", v)} placeholder="January 2025" />
           <Field label="Headquarters" value={f.identity?.headquarters ?? ""} onChange={v => setNested("identity", "headquarters", v)} placeholder="Tampa, FL, USA" />
-          <Field label="Contact Email" value={f.identity?.contact ?? ""} onChange={v => setNested("identity", "contact", v)} placeholder="Office@zaforaholding.com" />
+          <Field label="Contact Email" value={f.identity?.contact ?? ""} onChange={v => setNested("identity", "contact", v)} placeholder="office@zaforaholdings.com" />
           <Field label="Markets" value={f.identity?.markets ?? ""} onChange={v => setNested("identity", "markets", v)} placeholder="Africa · Americas · Caribbean" />
         </div>
       </SectionBlock>
@@ -443,7 +443,7 @@ export default function AboutEditor() {
                       type="text"
                       value={member.email ?? ""}
                       onChange={e => setArrayItem("team", i, "email", e.target.value)}
-                      placeholder="name@zaforaholding.com"
+                      placeholder="name@zaforaholdings.com"
                       className="w-full border border-[#e5ded3] rounded-xl px-3 py-2.5 text-sm text-[#10231f] focus:outline-none focus:ring-2 focus:ring-[#173f35]/30 bg-white"
                     />
                   </div>

@@ -4,5 +4,5 @@ export const SESSION_TTL_SECONDS = SESSION_TTL_MS / 1000;
 export const DEFAULT_PAGE_LIMIT = 20;
 export const MAX_PAGE_LIMIT = 100;
 
-export const APP_NAME = "Zafora Holding";
-export const APP_URL = process.env["APP_URL"] ?? "https://zaforaholding.com";
+export const APP_NAME = "Zafora Holdings";
+export const APP_URL = process.env["APP_URL"] ?? "https://zaforaholdings.com";

@@ -12,14 +12,19 @@ import { eq } from "drizzle-orm";
 import { db, siteSettingsTable, usersTable } from "../src/db/index.js";
 import { hashPassword } from "../src/modules/auth/auth.service.js";
 
-const DEFAULT_PASSWORD = "zafora2024";
-const DEFAULT_EMAIL = process.env["ADMIN_EMAIL"] ?? "admin@zaforaholding.com";
+const DEFAULT_EMAIL = process.env["ADMIN_EMAIL"] ?? "";
+const ENV_PASSWORD = process.env["ADMIN_PASSWORD"] ?? "";
 
 async function run() {
+  if (!DEFAULT_EMAIL || !ENV_PASSWORD) {
+    console.error("❌ ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env");
+    process.exit(1);
+  }
+
   console.log("Starting password migration...");
 
   // 1. Read plaintext password from site_settings
-  let plaintext = DEFAULT_PASSWORD;
+  let plaintext = ENV_PASSWORD;
   const [row] = await db
     .select()
     .from(siteSettingsTable)
@@ -32,7 +37,7 @@ async function run() {
   } else if (row?.value?.startsWith("$2")) {
     console.log("Password in site_settings is already hashed — skipping site_settings update.");
   } else {
-    console.log(`No admin_password in site_settings. Using default: "${DEFAULT_PASSWORD}".`);
+    console.log(`No admin_password in site_settings. Using password from ADMIN_PASSWORD env var.`);
   }
 
   // 2. Hash the password
