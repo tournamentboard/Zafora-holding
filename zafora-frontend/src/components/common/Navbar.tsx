@@ -45,7 +45,7 @@ export default function Navbar() {
   return (
     <nav className="relative w-full border-b border-[#e5ded3]" style={{ background: "rgba(247,244,239,0.97)" }}>
       <div className="container mx-auto px-4 pt-0 md:px-8 py-3 flex items-center justify-between">
-        <Link href="/" className="flex flex-col gap-1 shrink-0">
+        <Link href="/" className="flex flex-col justify-center gap-1 shrink-0">
          <div
          className="h-[120px] w-auto overflow-hidden"
          >
@@ -56,7 +56,7 @@ export default function Navbar() {
           )}
          </div>
           {branding.tagline && (
-            <span className="text-[10px] text-[#8a958f] font-semibold tracking-widest uppercase leading-tight">
+            <span className="text-[7px] text-[#8a958f] mt-1 font-semibold tracking-widest uppercase leading-tight">
               {branding.tagline}
             </span>
           )}
